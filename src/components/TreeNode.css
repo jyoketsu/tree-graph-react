@@ -1,0 +1,25 @@
+.node-rect {
+  fill: none;
+  stroke-width: 1;
+}
+.node-rect.border-rect {
+  fill: #fff;
+  stroke: rgb(192, 192, 192);
+}
+.node-rect.selected {
+  fill: rgb(238, 238, 238);
+  stroke: #000000;
+}
+.node-text {
+  fill: #999;
+  font-family: 'Microsoft YaHei', sans-serif;
+}
+.node-text:hover {
+  cursor: pointer;
+}
+.node-text.selected {
+  fill: #000000;
+}
+text {
+  user-select: none;
+}

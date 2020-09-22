@@ -1,5 +1,6 @@
 import { getNodeWidth } from './util';
 import Node from '../interfaces/Node';
+import CNode from '../interfaces/CNode';
 import NodeMap from '../interfaces/NodeMap';
 
 export default function calculate(
@@ -61,7 +62,7 @@ export default function calculate(
   const keys = Object.keys(nodes);
   for (let index = 0; index < keys.length; index++) {
     const key = keys[index];
-    nodeList.push(nodes[key]);
+    nodeList.push(nodes[key] as CNode);
   }
 
   return {

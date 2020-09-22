@@ -3,10 +3,6 @@ export default interface CNode {
   name: string;
   father: string;
   sortList: string[];
-  x: number;
-  y: number;
-  width: number;
-  last_child_y?: number;
   // 是否收起子节点
   contract?: boolean;
   showAvatar?: boolean;
@@ -15,4 +11,9 @@ export default interface CNode {
   checked?: boolean;
   hour?: number;
   limitDay?: number;
+  // 以下为计算属性
+  x: number;
+  y: number;
+  width: number;
+  last_child_y: number;
 }
