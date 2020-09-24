@@ -88,6 +88,7 @@ function getNumberNum(str: string) {
   return res ? res.length : 0;
 }
 
+// 获取节点宽度
 function getNodeWidth(node: Node, fontSize: number, padding?: number) {
   const str = node.name;
   let full = getFullAngleNum(str);
@@ -112,6 +113,7 @@ function getNodeWidth(node: Node, fontSize: number, padding?: number) {
   );
 }
 
+// 获取额外信息宽度
 function getExtInfoWidth(node: Node) {
   const avatarWidth = node.showAvatar ? 22 : 0;
   const checkboxWidth = node.showCheckbox ? 18 : 0;
@@ -144,11 +146,10 @@ function nodeLocation(node: CNode, type: string, BLOCK_HEIGHT: number) {
     case 'status':
       return {
         x:
-          node.x ||
-          0 +
-            5 +
-            (node.showAvatar ? 22 + 2 : 0) +
-            (node.showCheckbox ? 18 + 2 : 0),
+          node.x +
+          5 +
+          (node.showAvatar ? 22 + 2 : 0) +
+          (node.showCheckbox ? 18 + 2 : 0),
         y: node.y + (BLOCK_HEIGHT - 22) / 2,
       };
     case 'text':
@@ -193,6 +194,7 @@ function addChildNode(nodes: NodeMap, selectedId: string) {
   };
 }
 
+// 向后新增同辈节点
 function addNext(nodes: NodeMap, selectedId: string) {
   let selectedNode = nodes[selectedId];
   let fatherNode = nodes[selectedNode.father];
@@ -240,27 +242,30 @@ function deleteNode(nodes: NodeMap, selectedId: string) {
   return nodes;
 }
 
-function dot(c_nodes: Node[], nodeId: string) {
-  let nodes = JSON.parse(JSON.stringify(c_nodes));
-  for (let index = 0; index < nodes.length; index++) {
-    let element = nodes[index];
+function dot(nodeMap: NodeMap, nodeId: string) {
+  let nodes = JSON.parse(JSON.stringify(nodeMap));
+  const keys = Object.keys(nodes);
+  for (let index = 0; index < keys.length; index++) {
+    const key = keys[index];
+    const element = nodes[key];
     delete element.width;
     delete element.x;
     delete element.y;
   }
-  let selectedNode = findNodeById(nodes, nodeId);
+  let selectedNode = nodes[nodeId];
   if (selectedNode) {
     selectedNode.contract = selectedNode.contract ? false : true;
   }
   return nodes;
 }
 
-function checkNode(c_nodes: CNode[], nodeId: string) {
-  let node = findNodeById(c_nodes, nodeId);
+function checkNode(nodeMap: NodeMap, nodeId: string) {
+  let nodes = JSON.parse(JSON.stringify(nodeMap));
+  let node = nodes[nodeId];
   if (node) {
     node.checked = !node.checked;
   }
-  return c_nodes;
+  return nodes;
 }
 
 function editNode(c_nodes: Node[], nodeId: string, prop: any) {

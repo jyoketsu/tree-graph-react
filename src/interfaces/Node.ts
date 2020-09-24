@@ -11,6 +11,7 @@ export default interface Node {
   checked?: boolean;
   hour?: number;
   limitDay?: number;
+  avatarUri?:string;
   // 以下为计算属性
   x?: number;
   y?: number;

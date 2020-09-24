@@ -13,6 +13,7 @@ const nodes = {
     sortList: ['002', '003', '004', '005'],
     contract: false,
     showAvatar: true,
+    avatarUri: 'https://psnine.com/Upload/game/11387.png',
     showCheckbox: true,
     checked: true,
     showStatus: true,
@@ -25,7 +26,7 @@ const nodes = {
     father: '001',
     sortList: ['006', '007'],
     contract: false,
-    showAvatar: true,
+    showAvatar: false,
     showCheckbox: true,
     checked: true,
     showStatus: true,
@@ -37,7 +38,7 @@ const nodes = {
     name: '項目狀態',
     father: '001',
     sortList: ['010', '011'],
-    showAvatar: true,
+    showAvatar: false,
     showCheckbox: true,
     checked: false,
     showStatus: true,
@@ -49,7 +50,7 @@ const nodes = {
     name: '項目會議',
     father: '001',
     sortList: [],
-    showAvatar: true,
+    showAvatar: false,
     showCheckbox: true,
     checked: false,
     showStatus: true,
@@ -61,7 +62,7 @@ const nodes = {
     name: '驗收',
     father: '001',
     sortList: [],
-    showAvatar: true,
+    showAvatar: false,
     showCheckbox: true,
     checked: false,
     showStatus: true,
@@ -74,7 +75,7 @@ const nodes = {
     father: '002',
     contract: false,
     sortList: ['008', '009'],
-    showAvatar: true,
+    showAvatar: false,
     showCheckbox: true,
     checked: false,
     showStatus: true,
@@ -86,7 +87,7 @@ const nodes = {
     name: '階段二',
     father: '002',
     sortList: [],
-    showAvatar: true,
+    showAvatar: false,
     showCheckbox: true,
     checked: false,
     showStatus: true,
@@ -98,7 +99,7 @@ const nodes = {
     name: '備份json文件',
     father: '006',
     sortList: [],
-    showAvatar: true,
+    showAvatar: false,
     showCheckbox: true,
     checked: false,
     showStatus: true,
@@ -110,7 +111,7 @@ const nodes = {
     name: '還原數據',
     father: '006',
     sortList: ['015'],
-    showAvatar: true,
+    showAvatar: false,
     showCheckbox: true,
     checked: false,
     showStatus: true,
@@ -122,7 +123,7 @@ const nodes = {
     name: '4月計劃',
     father: '003',
     sortList: [],
-    showAvatar: true,
+    showAvatar: false,
     showCheckbox: true,
     checked: true,
     showStatus: true,
@@ -135,7 +136,7 @@ const nodes = {
     father: '003',
     sortList: ['012', '013', '014'],
     contract: false,
-    showAvatar: true,
+    showAvatar: false,
     showCheckbox: true,
     checked: true,
     showStatus: true,
@@ -147,7 +148,7 @@ const nodes = {
     name: '原型、界面設計',
     father: '011',
     sortList: [],
-    showAvatar: true,
+    showAvatar: false,
     showCheckbox: true,
     checked: true,
     showStatus: true,
@@ -159,7 +160,7 @@ const nodes = {
     name: '開發',
     father: '011',
     sortList: [],
-    showAvatar: true,
+    showAvatar: false,
     showCheckbox: true,
     checked: true,
     showStatus: true,
@@ -171,7 +172,7 @@ const nodes = {
     name: '測試',
     father: '011',
     sortList: [],
-    showAvatar: true,
+    showAvatar: false,
     showCheckbox: true,
     checked: true,
     showStatus: true,
@@ -183,7 +184,7 @@ const nodes = {
     name: '還原數據-還原數據',
     father: '009',
     sortList: [],
-    showAvatar: true,
+    showAvatar: false,
     showCheckbox: true,
     checked: true,
     showStatus: true,
@@ -194,4 +195,12 @@ const nodes = {
 
 // By passing optional props to this story, you can control the props of the component when
 // you consume the story in a test.
-export const Default = () => <Tree nodes={nodes} startId="001" />;
+export const Default = () => (
+  <Tree
+    nodes={nodes}
+    startId="001"
+    handleClickExpand={node => console.log('---handleClickExpand---', node)}
+    handleCheck={node => console.log('---handleCheck---', node)}
+    handleClickNode={node => console.log('---handleClickNode---', node)}
+  />
+);

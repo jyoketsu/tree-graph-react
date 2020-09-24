@@ -1,9 +1,12 @@
-import React, { ReactChild, useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import './index.css';
 import NodeMap from './interfaces/NodeMap';
 import CNode from './interfaces/CNode';
-import calculate from './services/treeService';
 import TreeNode from './components/TreeNode';
+import Dot from './components/Dot';
+import Expand from './components/Expand';
+import calculate from './services/treeService';
+import { dot, checkNode } from './services/util';
 
 export interface Props {
   // 节点
@@ -26,7 +29,9 @@ export interface Props {
   avatarWidth?: number;
   checkBoxWidth?: number;
   pathWidth?: number;
-  children?: ReactChild;
+  handleClickExpand?: Function;
+  handleCheck?: Function;
+  handleClickNode?: Function;
 }
 
 // Please do not use types off of a default export module or else Storybook Docs will suffer.
@@ -43,7 +48,12 @@ export const Tree = ({
   avatarWidth,
   checkBoxWidth,
   pathWidth,
+  handleClickExpand,
+  handleCheck,
+  handleClickNode,
 }: Props) => {
+  let clickTimeId: NodeJS.Timeout;
+
   const ITEM_HEIGHT = itemHeight || 50;
   const BLOCK_HEIGHT = blockHeight || 30;
   const FONT_SIZE = fontSize || 14;
@@ -53,6 +63,7 @@ export const Tree = ({
   const PATH_WIDTH = pathWidth || 1.5;
   const UNCONTROLLED = uncontrolled === undefined ? true : uncontrolled;
 
+  const [nodeMap, setNodeMap] = useState(nodes);
   const [secondStartX, setSecondStartX] = useState<number | undefined>(0);
   const [secondEndX, setSecondEndX] = useState<number | undefined>(0);
   const [cnodes, setcnodes] = useState<CNode[]>([]);
@@ -66,7 +77,7 @@ export const Tree = ({
 
   useEffect(() => {
     const cal = calculate(
-      nodes,
+      nodeMap,
       startId,
       singleColumn,
       ITEM_HEIGHT,
@@ -80,7 +91,7 @@ export const Tree = ({
     setSecondStartX(cal.second_start_x);
     setSecondEndX(cal.second_end_x);
     setisSingle(cal.isSingle);
-  }, []);
+  }, [nodeMap]);
 
   // 有父节点时的左侧水平线条
   function fatherPath(node: CNode) {
@@ -116,6 +127,39 @@ export const Tree = ({
     const M = `M ${node.x + node.width / 2} ${node.y}`;
     const V = `V ${node.y - (ITEM_HEIGHT * 1.5 - BLOCK_HEIGHT) / 2}`;
     return `${M} ${V}`;
+  }
+
+  // 展开/收起节点
+  function handleExpand(node: CNode) {
+    if (UNCONTROLLED) {
+      let nodes = dot(nodeMap, node._key);
+      setNodeMap(nodes);
+    }
+    if (handleClickExpand) {
+      handleClickExpand(node);
+    }
+  }
+  // check节点
+  function check(node: CNode, e: MouseEvent) {
+    e.stopPropagation();
+    if (UNCONTROLLED) {
+      let nodes = checkNode(nodeMap, node._key);
+      setNodeMap(nodes);
+    }
+    if (handleCheck) {
+      handleCheck(node);
+    }
+  }
+
+  // 单击节点
+  function clickNode(node: CNode) {
+    clearTimeout(clickTimeId);
+    clickTimeId = setTimeout(function() {
+      setselected(node);
+      if (handleClickNode) {
+        handleClickNode(node);
+      }
+    }, 250);
   }
 
   return (
@@ -203,6 +247,8 @@ export const Tree = ({
               startId={startId}
               alias={new Date().getTime()}
               selected={selected}
+              handleCheck={check}
+              handleClickNode={clickNode}
             />
             {isSingle ? (
               node.x && node.y ? (
@@ -280,6 +326,17 @@ export const Tree = ({
                 ) : null}
               </g>
             )}
+            <Dot node={node} BLOCK_HEIGHT={BLOCK_HEIGHT} />
+            <Expand
+              node={node}
+              BLOCK_HEIGHT={BLOCK_HEIGHT}
+              handleClickExpand={() => handleExpand(node)}
+              position={
+                node._key === startId && !singleColumn
+                  ? 'bottomCenter'
+                  : 'leftBottom'
+              }
+            />
           </g>
         ))}
       </svg>
