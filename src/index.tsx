@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef, useImperativeHandle } from 'react';
+// import styles from './style.module.css';
 import './index.css';
 import NodeMap from './interfaces/NodeMap';
 import CNode from './interfaces/CNode';
@@ -332,6 +333,7 @@ export const Tree = React.forwardRef(
     return (
       <div
         className="svg-wrapper"
+        // className={styles.svgwrapper}
         tabIndex={-1}
         ref={containerRef}
         onKeyDown={(e: any) => handleKeyDown(e)}
