@@ -1,172 +1,69 @@
-# TSDX React w/ Storybook User Guide
+```
+████████╗██████╗ ███████╗███████╗     ██████╗ ██████╗  █████╗ ██████╗ ██╗  ██╗
+╚══██╔══╝██╔══██╗██╔════╝██╔════╝    ██╔════╝ ██╔══██╗██╔══██╗██╔══██╗██║  ██║
+   ██║   ██████╔╝█████╗  █████╗█████╗██║  ███╗██████╔╝███████║██████╔╝███████║
+   ██║   ██╔══██╗██╔══╝  ██╔══╝╚════╝██║   ██║██╔══██╗██╔══██║██╔═══╝ ██╔══██║
+   ██║   ██║  ██║███████╗███████╗    ╚██████╔╝██║  ██║██║  ██║██║     ██║  ██║
+   ╚═╝   ╚═╝  ╚═╝╚══════╝╚══════╝     ╚═════╝ ╚═╝  ╚═╝╚═╝  ╚═╝╚═╝     ╚═╝  ╚═╝
 
-Congrats! You just saved yourself hours of work by bootstrapping this project with TSDX. Let’s get you oriented with what’s here and how to use it.
-
-> This TSDX setup is meant for developing React component libraries (not apps!) that can be published to NPM. If you’re looking to build a React-based app, you should use `create-react-app`, `razzle`, `nextjs`, `gatsby`, or `react-static`.
-
-> If you’re new to TypeScript and React, checkout [this handy cheatsheet](https://github.com/sw-yx/react-typescript-cheatsheet/)
-
-## Commands
-
-TSDX scaffolds your new library inside `/src`, and also sets up a [Parcel-based](https://parceljs.org) playground for it inside `/example`.
-
-The recommended workflow is to run TSDX in one terminal:
-
-```bash
-npm start # or yarn start
 ```
 
-This builds to `/dist` and runs the project in watch mode so any edits you save inside `src` causes a rebuild to `/dist`.
+## [在線DEMO及文檔](https://jyoketsu.github.io/tree-graph-react/)
 
-Then run either Storybook or the example playground:
+## 操作
 
-### Storybook
+| 操作                | 按鍵             |
+| ------------------- | ---------------- |
+| 新增子節點          | Tab              |
+| 新增兄弟節點        | Enter            |
+| 刪除節點            | Delete           |
+| 保存樹（file 模式） | Command/Ctrl + S |
 
-Run inside another terminal:
+## 組件方法
+| 方法名                | 說明             |
+| ------------------- | ---------------- |
+| addNext          | 添加節點              |
+| addChild        | 添加子節點            |
+| deleteNode            | 刪除節點           |
 
-```bash
-yarn storybook
-```
+## 組件屬性
 
-This loads the stories from `./stories`.
+| 屬性                 | 說明                 | 類型     | 是否必須 | 默認值 |
+| -------------------- | -------------------- | -------- | -------- | ------ |
+| nodes                | 節點                 | Array    | 是       | -      |
+| startId              | 根節點 id            | String   | 是       | -      |
+| singleColumn         | 是否是單列視圖       | Boolean  | 否       | false  |
+| uncontrolled         | 是否為非受控組件     | Boolean  | 否       | true   |
+| ITEM_HEIGHT          | 節點元素高度         | Number   | 否       | 50     |
+| BLOCK_HEIGHT         | 節點塊高度           | Number   | 否       | 30     |
+| FONT_SIZE            | 節點字體大小         | Number   | 否       | 14     |
+| INDENT               | 縮進                 | Number   | 否       | 25     |
+| AVATAR_WIDTH         | 頭像寬度             | Number   | 否       | 22     |
+| CHECK_BOX_WIDTH      | 勾選框寬度           | Number   | 否       | 18     |
+| handleClickNode      | 點擊節點事件         | Function | 否       | -      |
+| handleDbClickNode      | 雙擊節點事件         | Function | 否       | -      |
+| handleClickExpand       | 點擊收起/展開事件    | Function | 否       | -      |
+| handleCheck          | 點擊勾選框事件       | Function | 否       | -      |
+| handleChangeNodeText | 更改節點名事件       | Function | 否       | -      |
+| handleAddNext        | 向後添加兄弟節點事件 | Function | 否       | -      |
+| handleAddChild       | 添加子節點事件       | Function | 否       | -      |
+| handleDeleteNode     | 刪除節點事件         | Function | 否       | -      |
+| handleSave           | 保存樹               | Function | 否       | -      |
+| handleDrag           | 拖拽节点               | Function | 否       | -      |
 
-> NOTE: Stories should reference the components as if using the library, similar to the example playground. This means importing from the root project directory. This has been aliased in the tsconfig and the storybook webpack config as a helper.
+## 節點屬性
 
-### Example
-
-Then run the example inside another:
-
-```bash
-cd example
-npm i # or yarn to install dependencies
-npm start # or yarn start
-```
-
-The default example imports and live reloads whatever is in `/dist`, so if you are seeing an out of date component, make sure TSDX is running in watch mode like we recommend above. **No symlinking required**, we use [Parcel's aliasing](https://parceljs.org/module_resolution.html#aliases).
-
-To do a one-off build, use `npm run build` or `yarn build`.
-
-To run tests, use `npm test` or `yarn test`.
-
-## Configuration
-
-Code quality is set up for you with `prettier`, `husky`, and `lint-staged`. Adjust the respective fields in `package.json` accordingly.
-
-### Jest
-
-Jest tests are set up to run with `npm test` or `yarn test`.
-
-#### Setup Files
-
-This is the folder structure we set up for you:
-
-```txt
-/example
-  index.html
-  index.tsx       # test your component here in a demo app
-  package.json
-  tsconfig.json
-/src
-  index.tsx       # EDIT THIS
-/test
-  blah.test.tsx   # EDIT THIS
-.gitignore
-package.json
-README.md         # EDIT THIS
-tsconfig.json
-```
-
-#### React Testing Library
-
-We do not set up `react-testing-library` for you yet, we welcome contributions and documentation on this.
-
-### Rollup
-
-TSDX uses [Rollup](https://rollupjs.org) as a bundler and generates multiple rollup configs for various module formats and build settings. See [Optimizations](#optimizations) for details.
-
-### TypeScript
-
-`tsconfig.json` is set up to interpret `dom` and `esnext` types, as well as `react` for `jsx`. Adjust according to your needs.
-
-## Continuous Integration
-
-### GitHub Actions
-
-A simple action is included that runs these steps on all pushes:
-
-- Installs deps w/ cache
-- Lints, tests, and builds
-
-## Optimizations
-
-Please see the main `tsdx` [optimizations docs](https://github.com/palmerhq/tsdx#optimizations). In particular, know that you can take advantage of development-only optimizations:
-
-```js
-// ./types/index.d.ts
-declare var __DEV__: boolean;
-
-// inside your code...
-if (__DEV__) {
-  console.log('foo');
-}
-```
-
-You can also choose to install and use [invariant](https://github.com/palmerhq/tsdx#invariant) and [warning](https://github.com/palmerhq/tsdx#warning) functions.
-
-## Module Formats
-
-CJS, ESModules, and UMD module formats are supported.
-
-The appropriate paths are configured in `package.json` and `dist/index.js` accordingly. Please report if any issues are found.
-
-## Deploying the Example Playground
-
-The Playground is just a simple [Parcel](https://parceljs.org) app, you can deploy it anywhere you would normally deploy that. Here are some guidelines for **manually** deploying with the Netlify CLI (`npm i -g netlify-cli`):
-
-```bash
-cd example # if not already in the example folder
-npm run build # builds to dist
-netlify deploy # deploy the dist folder
-```
-
-Alternatively, if you already have a git repo connected, you can set up continuous deployment with Netlify:
-
-```bash
-netlify init
-# build command: yarn build && cd example && yarn && yarn build
-# directory to deploy: example/dist
-# pick yes for netlify.toml
-```
-
-## Named Exports
-
-Per Palmer Group guidelines, [always use named exports.](https://github.com/palmerhq/typescript#exports) Code split inside your React app instead of your React library.
-
-## Including Styles
-
-There are many ways to ship styles, including with CSS-in-JS. TSDX has no opinion on this, configure how you like.
-
-For vanilla CSS, you can include it at the root directory and add it to the `files` section in your `package.json`, so that it can be imported separately by your users and run through their bundler's loader.
-
-## Publishing to NPM
-
-We recommend using [np](https://github.com/sindresorhus/np).
-
-## Usage with Lerna
-
-When creating a new package with TSDX within a project set up with Lerna, you might encounter a `Cannot resolve dependency` error when trying to run the `example` project. To fix that you will need to make changes to the `package.json` file _inside the `example` directory_.
-
-The problem is that due to the nature of how dependencies are installed in Lerna projects, the aliases in the example project's `package.json` might not point to the right place, as those dependencies might have been installed in the root of your Lerna project.
-
-Change the `alias` to point to where those packages are actually installed. This depends on the directory structure of your Lerna project, so the actual path might be different from the diff below.
-
-```diff
-   "alias": {
--    "react": "../node_modules/react",
--    "react-dom": "../node_modules/react-dom"
-+    "react": "../../../node_modules/react",
-+    "react-dom": "../../../node_modules/react-dom"
-   },
-```
-
-An alternative to fixing this problem would be to remove aliases altogether and define the dependencies referenced as aliases as dev dependencies instead. [However, that might cause other problems.](https://github.com/palmerhq/tsdx/issues/64)
+| 屬性         | 說明                 | 類型    |
+| ------------ | -------------------- | ------- |
+| id           | 節點 id              | String  |
+| text         | 節點文本             | String  |
+| fatherId     | 父節點 id            | String  |
+| children     | 子節點 id            | Array   |
+| contract     | 是否收起子節點       | Boolean |
+| showAvatar   | 是否顯示頭像         | Boolean |
+| avatarUri    | 頭像地址             | String  |
+| showCheckbox | 是否顯示勾選框       | Boolean |
+| checked      | 是否勾選             | Boolean |
+| showStatus   | 是否顯示節點狀態     | Boolean |
+| hour         | 節點（任務）工時     | Number  |
+| limitDay     | 節點（任務）剩余天數 | Number  
