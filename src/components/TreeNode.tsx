@@ -16,6 +16,7 @@ interface Props {
   selected: CNode | null;
   handleCheck: CheckFunc;
   handleClickNode: Function;
+  handleDbClickNode: Function;
 }
 const TreeNode = ({
   node,
@@ -26,6 +27,7 @@ const TreeNode = ({
   selected,
   handleCheck,
   handleClickNode,
+  handleDbClickNode,
 }: Props) => {
   function rectClassName(node: CNode) {
     // 选中的节点
@@ -51,7 +53,10 @@ const TreeNode = ({
   const statusLocationRes = location(node, 'status');
 
   return node.x && node.y ? (
-    <g onClick={() => handleClickNode(node)}>
+    <g
+      onClick={() => handleClickNode(node)}
+      onDoubleClick={() => handleDbClickNode(node)}
+    >
       {/* 外框 */}
       <rect
         className={`node-rect ${rectClassName(node)}`}

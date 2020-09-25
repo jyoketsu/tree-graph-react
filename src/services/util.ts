@@ -100,7 +100,7 @@ function getNodeWidth(node: Node, fontSize: number, padding?: number) {
   }
   const width = textWidth(fontSize);
 
-  const paddingWidth = padding ? padding * 1.5 : 10;
+  const paddingWidth = padding ? padding * 1.5 : 15;
   const extInfoWidth = getExtInfoWidth(node);
 
   return (
@@ -163,19 +163,11 @@ function nodeLocation(node: CNode, type: string, BLOCK_HEIGHT: number) {
   }
 }
 
-function changeNodeText(nodes: NodeMap, id: string, text: string) {
-  let node = nodes[id];
-  if (!text) {
-    text = '新增节点';
-  }
-  node.name = text;
-  return nodes;
-}
-
-function addChildNode(nodes: NodeMap, selectedId: string) {
+function addChildNode(nodeMap: NodeMap, selectedId: string) {
+  let nodes = { ...nodeMap };
   const childNode: Node = {
     _key: guid(8, 16),
-    name: '',
+    name: '未命名节点',
     father: selectedId,
     sortList: [],
     showAvatar: false,
@@ -195,12 +187,13 @@ function addChildNode(nodes: NodeMap, selectedId: string) {
 }
 
 // 向后新增同辈节点
-function addNext(nodes: NodeMap, selectedId: string) {
+function addNextNode(nodeMap: NodeMap, selectedId: string) {
+  let nodes = { ...nodeMap };
   let selectedNode = nodes[selectedId];
   let fatherNode = nodes[selectedNode.father];
   const nextNode: Node = {
     _key: guid(8, 16),
-    name: '',
+    name: '未命名节点',
     father: fatherNode._key,
     sortList: [],
     showAvatar: false,
@@ -220,7 +213,8 @@ function addNext(nodes: NodeMap, selectedId: string) {
   };
 }
 
-function deleteNode(nodes: NodeMap, selectedId: string) {
+function deleteNode(nodeMap: NodeMap, selectedId: string) {
+  let nodes = { ...nodeMap };
   let selectedNode = nodes[selectedId];
   let fatherNode = nodes[selectedNode.father];
   let brotherKeys = fatherNode.sortList;
@@ -243,7 +237,7 @@ function deleteNode(nodes: NodeMap, selectedId: string) {
 }
 
 function dot(nodeMap: NodeMap, nodeId: string) {
-  let nodes = JSON.parse(JSON.stringify(nodeMap));
+  let nodes = { ...nodeMap };
   const keys = Object.keys(nodes);
   for (let index = 0; index < keys.length; index++) {
     const key = keys[index];
@@ -260,11 +254,21 @@ function dot(nodeMap: NodeMap, nodeId: string) {
 }
 
 function checkNode(nodeMap: NodeMap, nodeId: string) {
-  let nodes = JSON.parse(JSON.stringify(nodeMap));
+  let nodes = { ...nodeMap };
   let node = nodes[nodeId];
   if (node) {
     node.checked = !node.checked;
   }
+  return nodes;
+}
+
+function changeNodeText(nodeMap: NodeMap, id: string, text: string) {
+  let nodes = { ...nodeMap };
+  let node = nodes[id];
+  if (!text) {
+    text = '未命名节点';
+  }
+  node.name = text;
   return nodes;
 }
 
@@ -440,7 +444,7 @@ export {
   nodeLocation,
   changeNodeText,
   addChildNode,
-  addNext,
+  addNextNode,
   deleteNode,
   dot,
   checkNode,

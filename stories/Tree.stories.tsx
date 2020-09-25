@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { Tree, Props } from '../src';
 
 export default {
@@ -195,12 +195,50 @@ const nodes = {
 
 // By passing optional props to this story, you can control the props of the component when
 // you consume the story in a test.
-export const Default = () => (
-  <Tree
-    nodes={nodes}
-    startId="001"
-    handleClickExpand={node => console.log('---handleClickExpand---', node)}
-    handleCheck={node => console.log('---handleCheck---', node)}
-    handleClickNode={node => console.log('---handleClickNode---', node)}
-  />
-);
+
+export const Default = () => {
+  const treeRef = useRef(null);
+  return (
+    <div>
+      <button
+        onClick={() => alert(JSON.stringify(treeRef.current.saveNodes()))}
+      >
+        保存
+      </button>
+      <button onClick={() => treeRef.current.addNext()}>添加节点</button>
+      <button onClick={() => treeRef.current.addChild()}>添加子节点</button>
+      <button onClick={() => treeRef.current.deleteNode()}>删除节点</button>
+      <Tree
+        ref={treeRef}
+        nodes={nodes}
+        startId="001"
+        handleClickExpand={(node: any) =>
+          console.log('---handleClickExpand---', node.name)
+        }
+        handleCheck={(node: any) => console.log('---handleCheck---', node.name)}
+        handleClickNode={(node: any) =>
+          console.log('---handleClickNode---', node.name)
+        }
+        handleDbClickNode={(node: any) =>
+          console.log('---handleDbClickNode---', node.name)
+        }
+        handleChangeNodeText={(nodeId: string, value: string) =>
+          console.log('---handleChangeNodeText---', nodeId, value)
+        }
+        handleAddNext={(selected: any, addedNode: any) =>
+          console.log(
+            '---handleChangeNodeText---',
+            selected.name,
+            addedNode?.name
+          )
+        }
+        handleAddChild={(selected: any, addedNode: any) =>
+          console.log('---handleAddChild---', selected.name, addedNode?.name)
+        }
+        handleDeleteNode={(selected: any, addedNode: any) =>
+          console.log('---handleDeleteNode---', selected.name, addedNode?.name)
+        }
+      />
+    </div>
+  );
+};
