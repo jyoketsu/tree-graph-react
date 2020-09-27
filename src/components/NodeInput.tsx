@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import './NodeInput.css';
 import CNode from '../interfaces/CNode';
-import ClickOutside from './ClickOutside';
+import { ClickOutside } from '@jyoketsu/click-outside-react';
 
 interface Props {
   selected: CNode | null;

@@ -1,9 +1,6 @@
 import React, { useRef } from 'react';
 import { Tree, Props } from '../src';
-
-export default {
-  title: 'Tree',
-};
+import { Meta, Story } from '@storybook/react';
 
 const nodes = {
   '001': {
@@ -381,10 +378,17 @@ const nodes2 = {
   },
 };
 
-// By passing optional props to this story, you can control the props of the component when
-// you consume the story in a test.
+const meta: Meta = {
+  title: 'Tree',
+  component: Tree,
+  parameters: {
+    controls: { expanded: true },
+  },
+};
 
-export const MultiCol = () => {
+export default meta;
+
+const Template: Story<Props> = args => {
   const treeRef = useRef(null);
   return (
     <div>
@@ -396,71 +400,28 @@ export const MultiCol = () => {
       <button onClick={() => treeRef.current.addNext()}>添加节点</button>
       <button onClick={() => treeRef.current.addChild()}>添加子节点</button>
       <button onClick={() => treeRef.current.deleteNode()}>删除节点</button>
-      <Tree
-        ref={treeRef}
-        nodes={nodes}
-        startId="001"
-        handleClickExpand={(node: any) =>
-          console.log('---handleClickExpand---', node.name)
-        }
-        handleCheck={(node: any) => console.log('---handleCheck---', node.name)}
-        handleClickNode={(node: any) =>
-          console.log('---handleClickNode---', node.name)
-        }
-        handleDbClickNode={(node: any) =>
-          console.log('---handleDbClickNode---', node.name)
-        }
-        handleChangeNodeText={(nodeId: string, value: string) =>
-          console.log('---handleChangeNodeText---', nodeId, value)
-        }
-        handleAddNext={(selected: any, addedNode: any) =>
-          console.log(
-            '---handleChangeNodeText---',
-            selected.name,
-            addedNode?.name
-          )
-        }
-        handleAddChild={(selected: any, addedNode: any) =>
-          console.log('---handleAddChild---', selected.name, addedNode?.name)
-        }
-        handleDeleteNode={(selected: any, addedNode: any) =>
-          console.log('---handleDeleteNode---', selected.name, addedNode?.name)
-        }
-      />
+      <Tree ref={treeRef} {...args} />
     </div>
   );
 };
 
-export const SingleCol = () => {
-  const treeRef = useRef(null);
-  return (
-    <div>
-      <button
-        onClick={() => alert(JSON.stringify(treeRef.current.saveNodes()))}
-      >
-        保存
-      </button>
-      <button onClick={() => treeRef.current.addNext()}>添加节点</button>
-      <button onClick={() => treeRef.current.addChild()}>添加子节点</button>
-      <button onClick={() => treeRef.current.deleteNode()}>删除节点</button>
-      <Tree ref={treeRef} nodes={nodes} startId="001" singleColumn={true} />
-    </div>
-  );
+export const MultiCol = Template.bind({});
+MultiCol.args = {
+  nodes: nodes,
+  startId: '001',
+  singleColumn: false,
 };
 
-export const TreeMenu = () => {
-  const treeRef = useRef(null);
-  return (
-    <div>
-      <button
-        onClick={() => alert(JSON.stringify(treeRef.current.saveNodes()))}
-      >
-        保存
-      </button>
-      <button onClick={() => treeRef.current.addNext()}>添加节点</button>
-      <button onClick={() => treeRef.current.addChild()}>添加子节点</button>
-      <button onClick={() => treeRef.current.deleteNode()}>删除节点</button>
-      <Tree ref={treeRef} nodes={nodes2} startId="001" singleColumn={true} />
-    </div>
-  );
+export const SingleCol = Template.bind({});
+SingleCol.args = {
+  nodes: nodes,
+  startId: '001',
+  singleColumn: true,
+};
+
+export const TreeMenu = Template.bind({});
+TreeMenu.args = {
+  nodes: nodes2,
+  startId: '001',
+  singleColumn: true,
 };

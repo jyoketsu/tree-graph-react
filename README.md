@@ -8,30 +8,48 @@
 
 ```
 
-## [在線DEMO及文檔](https://jyoketsu.github.io/tree-graph-react/)
+## [live demo](https://jyoketsu.github.io/tree-graph-react/)
 
-## 操作
+## Installation
+
+```bash
+yarn add tree-graph-react
+```
+
+or
+
+```
+npm i tree-graph-react
+```
+****
+## operate
 
 | 操作                | 按鍵             |
 | ------------------- | ---------------- |
+| 編輯節點名          | DoubleClick              |
 | 新增子節點          | Tab              |
 | 新增兄弟節點        | Enter            |
 | 刪除節點            | Delete           |
 | 保存樹（file 模式） | Command/Ctrl + S |
 
-## 組件方法
+<br/>
+
+## Functions
 | 方法名                | 說明             |
 | ------------------- | ---------------- |
 | addNext          | 添加節點              |
 | addChild        | 添加子節點            |
 | deleteNode            | 刪除節點           |
 
-## 組件屬性
+<br/>
+
+## Props
 
 | 屬性                 | 說明                 | 類型     | 是否必須 | 默認值 |
 | -------------------- | -------------------- | -------- | -------- | ------ |
 | nodes                | 節點                 | Array    | 是       | -      |
 | startId              | 根節點 id            | String   | 是       | -      |
+| ref              | 通過ref調用組件內部方法            | -   | 否       | -      |
 | singleColumn         | 是否是單列視圖       | Boolean  | 否       | false  |
 | uncontrolled         | 是否為非受控組件     | Boolean  | 否       | true   |
 | ITEM_HEIGHT          | 節點元素高度         | Number   | 否       | 50     |
@@ -51,14 +69,14 @@
 | handleSave           | 保存樹               | Function | 否       | -      |
 | handleDrag           | 拖拽节点               | Function | 否       | -      |
 
-## 節點屬性
+## Node Props
 
 | 屬性         | 說明                 | 類型    |
 | ------------ | -------------------- | ------- |
-| id           | 節點 id              | String  |
-| text         | 節點文本             | String  |
-| fatherId     | 父節點 id            | String  |
-| children     | 子節點 id            | Array   |
+| _key           | 節點 id              | String  |
+| name         | 節點文本             | String  |
+| father     | 父節點 id            | String  |
+| sortList     | 子節點 id            | Array   |
 | contract     | 是否收起子節點       | Boolean |
 | showAvatar   | 是否顯示頭像         | Boolean |
 | avatarUri    | 頭像地址             | String  |
