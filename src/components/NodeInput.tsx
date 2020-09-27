@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import './NodeInput.css';
+import React, { useState, useEffect, useRef } from 'react';
 import CNode from '../interfaces/CNode';
 import { ClickOutside } from '@jyoketsu/click-outside-react';
 
@@ -16,6 +15,7 @@ const NodeInput = ({
   FONT_SIZE,
   handleChangeNodeText,
 }: Props) => {
+  const inputRef = useRef<any>(null);
   const [value, setValue] = useState(selected?.name);
 
   function handleCommit(event: KeyboardEvent) {
@@ -24,23 +24,34 @@ const NodeInput = ({
     }
   }
 
+  const handleClickoutside = () => {
+    if (selected && inputRef && inputRef.current) {
+      handleChangeNodeText(selected._key, inputRef.current.value);
+    }
+  };
+
   useEffect(() => {
     setValue(selected?.name);
   }, [selected]);
 
   return (
-    <ClickOutside
-      onClickOutside={() => handleChangeNodeText(selected?._key, value)}
-    >
+    <ClickOutside onClickOutside={handleClickoutside}>
       <input
         className="node-input"
         style={{
+          boxSizing: 'border-box',
+          border: '1px solid #000000',
+          borderRadius: '4px',
+          padding: '0 5px',
+          outline: 'none',
+          position: 'absolute',
           width: `${selected?.width}px`,
           height: `${BLOCK_HEIGHT || 30}px`,
           fontSize: `${FONT_SIZE || 14}px`,
           top: `${selected?.y}px`,
           left: `${selected?.x}px`,
         }}
+        ref={inputRef}
         autoFocus={true}
         placeholder="请输入节点名"
         value={value}

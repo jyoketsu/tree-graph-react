@@ -1,5 +1,4 @@
 import React from 'react';
-import './TreeNode.css';
 import CNode from '../interfaces/CNode';
 import { nodeLocation } from '../services/util';
 
@@ -52,6 +51,19 @@ const TreeNode = ({
   const checkLocationRes = location(node, 'checkbox');
   const statusLocationRes = location(node, 'status');
 
+  const nodeRectClassName = rectClassName(node);
+  let nodeRectStyle = {};
+  switch (nodeRectClassName) {
+    case 'border-rect':
+      nodeRectStyle = { fill: '#fff', stroke: 'rgb(192, 192, 192)' };
+      break;
+    case 'selected':
+      nodeRectStyle = { fill: 'rgb(238, 238, 238)', stroke: '#000000' };
+      break;
+    default:
+      break;
+  }
+
   return node.x && node.y ? (
     <g
       onClick={() => handleClickNode(node)}
@@ -59,13 +71,14 @@ const TreeNode = ({
     >
       {/* 外框 */}
       <rect
-        className={`node-rect ${rectClassName(node)}`}
+        className="node-rect"
         x={node.x}
         y={node.y}
         rx={4}
         ry={4}
         width={node.width}
         height={BLOCK_HEIGHT}
+        style={{ ...nodeRectStyle, ...{ fill: 'none', strokeWidth: 1 } }}
       />
 
       {/* 头像/图片 */}
@@ -141,11 +154,16 @@ const TreeNode = ({
 
       {/* 文字 */}
       <text
-        className={`node-text ${rectClassName(node)}`}
+        className="node-text"
         x={textLocationRes?.x}
         y={textLocationRes?.y}
         dominantBaseline="middle"
         fontSize={FONT_SIZE}
+        style={{
+          fill: nodeRectClassName === 'selected' ? '#ƒ000000' : '#999',
+          fontFamily: "'Microsoft YaHei', sans-serif",
+          userSelect: 'none',
+        }}
       >
         {node.name}
       </text>

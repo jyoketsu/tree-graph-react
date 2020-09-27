@@ -1,5 +1,4 @@
 import React from 'react';
-import './Expand.css';
 import CNode from '../interfaces/CNode';
 
 interface Props {

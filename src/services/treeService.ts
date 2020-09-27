@@ -36,12 +36,10 @@ export default function calculate(
   if (!isSingle) {
     if (!root.contract) {
       const secondLevel = getStarts(nodes, root);
+
       for (let index = 0; index < secondLevel.length; index++) {
         const element = secondLevel[index];
-        if (!element) {
-          console.error(`Can't find the node with the id ${index}`);
-          continue;
-        }
+
         if (index === 0) {
           SECOND_START_NODE_ID = element?._key;
           location(nodes, element, 10, ITEM_HEIGHT * 1.5);
@@ -87,7 +85,12 @@ export default function calculate(
     const secondLevel = [];
     const childrenIds = root.sortList || [];
     for (let index = 0; index < childrenIds.length; index++) {
-      secondLevel.push(nodes[childrenIds[index]]);
+      const element = nodes[childrenIds[index]];
+      if (element) {
+        secondLevel.push(element);
+      } else {
+        console.error(`Can't find the node with the id ${childrenIds[index]}`);
+      }
     }
     return secondLevel;
   }

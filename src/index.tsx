@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef, useImperativeHandle } from 'react';
-// import styles from './style.module.css';
-import './index.css';
 import NodeMap from './interfaces/NodeMap';
 import CNode from './interfaces/CNode';
 import TreeNode from './components/TreeNode';
@@ -129,6 +127,7 @@ export const Tree = React.forwardRef(
           if (node._key === toSelectedKey) {
             setselected(node);
             setToSelectedKey('');
+            setshowNewInput(true);
             break;
           }
         }
@@ -252,7 +251,6 @@ export const Tree = React.forwardRef(
         const res = addNextNode(nodeMap, selected._key);
         setToSelectedKey(res.addedNode._key);
         setNodeMap(res.nodes);
-        setshowNewInput(true);
         if (handleAddNext) {
           handleAddNext(selected, res.addedNode);
         }
@@ -272,7 +270,6 @@ export const Tree = React.forwardRef(
         const res = addChildNode(nodeMap, selected._key);
         setToSelectedKey(res.addedNode._key);
         setNodeMap(res.nodes);
-        setshowNewInput(true);
         if (handleAddChild) {
           handleAddChild(selected, res.addedNode);
         }
@@ -333,6 +330,10 @@ export const Tree = React.forwardRef(
     return (
       <div
         className="svg-wrapper"
+        style={{
+          position: 'relative',
+          outline: 'none',
+        }}
         // className={styles.svgwrapper}
         tabIndex={-1}
         ref={containerRef}
