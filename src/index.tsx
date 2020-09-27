@@ -434,7 +434,7 @@ export const Tree = React.forwardRef(
                       stroke="rgb(192,192,192)"
                       strokeWidth={PATH_WIDTH}
                     />
-                    {node.sortList.length && !node.contract ? (
+                    {node.sortList && node.sortList.length && !node.contract ? (
                       <path
                         d={childPath(node)}
                         fill="none"
@@ -462,6 +462,7 @@ export const Tree = React.forwardRef(
                   {/* 线条：纵线 */}
                   {node.x &&
                   node.y &&
+                  node.sortList &&
                   node.sortList.length &&
                   !node.contract &&
                   node._key !== startId ? (
@@ -475,6 +476,7 @@ export const Tree = React.forwardRef(
 
                   {/* 根节点底部线条 */}
                   {node._key === startId &&
+                  node.sortList &&
                   node.sortList.length &&
                   !node.contract ? (
                     <path
@@ -485,6 +487,7 @@ export const Tree = React.forwardRef(
                     />
                   ) : null}
                   {node._key === startId &&
+                  node.sortList &&
                   node.sortList.length &&
                   !node.contract ? (
                     <path

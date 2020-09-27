@@ -35,7 +35,7 @@ const TreeNode = ({
       return 'selected';
     } else if (
       // 有边框的节点
-      node.sortList.length ||
+      (node.sortList && node.sortList.length) ||
       node.father === startId ||
       node._key === startId
     ) {

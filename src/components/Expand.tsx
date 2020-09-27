@@ -39,7 +39,7 @@ const Expand = ({ node, BLOCK_HEIGHT, position, handleClickExpand }: Props) => {
     }
   }
 
-  return node.x && node.y && node.sortList.length ? (
+  return node.x && node.y && node.sortList && node.sortList.length ? (
     <g>
       {node.contract ? (
         <use

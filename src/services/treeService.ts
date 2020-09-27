@@ -14,10 +14,14 @@ export default function calculate(
   nodes = JSON.parse(JSON.stringify(nodes));
   // 根节点
   const root = nodes[startId];
+  if (!root) {
+    console.error(`Can't find the root node`);
+  }
   const rootWidth = getNodeWidth(root, FONT_SIZE);
   root.width = rootWidth;
   // 是否是单列：参数单列或者根节点只有一个子节点为单列
-  const isSingle = singleColumn || root.sortList.length === 1;
+  const isSingle =
+    singleColumn || (root.sortList && root.sortList.length === 1);
 
   let MAX_X = rootWidth;
   let MAX_Y = ITEM_HEIGHT;
@@ -34,6 +38,10 @@ export default function calculate(
       const secondLevel = getStarts(nodes, root);
       for (let index = 0; index < secondLevel.length; index++) {
         const element = secondLevel[index];
+        if (!element) {
+          console.error(`Can't find the node with the id ${index}`);
+          continue;
+        }
         if (index === 0) {
           SECOND_START_NODE_ID = element?._key;
           location(nodes, element, 10, ITEM_HEIGHT * 1.5);
@@ -77,8 +85,9 @@ export default function calculate(
 
   function getStarts(nodes: NodeMap, root: Node) {
     const secondLevel = [];
-    for (let index = 0; index < root.sortList.length; index++) {
-      secondLevel.push(nodes[root.sortList[index]]);
+    const childrenIds = root.sortList || [];
+    for (let index = 0; index < childrenIds.length; index++) {
+      secondLevel.push(nodes[childrenIds[index]]);
     }
     return secondLevel;
   }
@@ -88,7 +97,7 @@ export default function calculate(
     node.x = x;
     node.y = y;
     node.width = nodeWidth;
-    const childrenIds = node.sortList;
+    const childrenIds = node.sortList || [];
     let childX = x + INDENT;
     let childY = y;
     let lastChildY = y;
@@ -109,6 +118,14 @@ export default function calculate(
     if (!node.contract) {
       // 遍历子节点
       for (let index = 0; index < childrenIds.length; index++) {
+        const element = nodes[childrenIds[index]];
+        if (!element) {
+          console.error(
+            `Can't find the node with the id ${childrenIds[index]}`
+          );
+          continue;
+        }
+
         if (index === 0) {
           childY += ITEM_HEIGHT * 1.3;
           lastChildY += ITEM_HEIGHT * 1.3;
@@ -119,7 +136,7 @@ export default function calculate(
         if (childY > MAX_Y) {
           MAX_Y = childY;
         }
-        const element = nodes[childrenIds[index]];
+
         childY = location(nodes, element, childX, childY);
         // 非最后一个子节点
         if (index + 1 !== childrenIds.length) {
