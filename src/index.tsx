@@ -108,6 +108,10 @@ export const Tree = React.forwardRef(
       addChild,
     }));
 
+    useEffect(() => {
+      setNodeMap(nodes);
+    }, [nodes]);
+
     // 根据nodeMap计算渲染所需数据
     useEffect(() => {
       console.log('根据nodeMap计算渲染所需数据');

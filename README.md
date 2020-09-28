@@ -1,3 +1,4 @@
+# Tree graph for React / React树状思维导图组件
 ```
 ████████╗██████╗ ███████╗███████╗     ██████╗ ██████╗  █████╗ ██████╗ ██╗  ██╗
 ╚══██╔══╝██╔══██╗██╔════╝██╔════╝    ██╔════╝ ██╔══██╗██╔══██╗██╔══██╗██║  ██║
@@ -69,14 +70,14 @@ const MyComp = () => <Tree nodes={nodes} startId="rootKey" />;
 | INDENT               | 縮進                      | Number   | 否       | 25     |
 | AVATAR_WIDTH         | 頭像寬度                  | Number   | 否       | 22     |
 | CHECK_BOX_WIDTH      | 勾選框寬度                | Number   | 否       | 18     |
-| handleClickNode      | 點擊節點事件              | Function | 否       | -      |
-| handleDbClickNode    | 雙擊節點事件              | Function | 否       | -      |
-| handleClickExpand    | 點擊收起/展開事件         | Function | 否       | -      |
-| handleCheck          | 點擊勾選框事件            | Function | 否       | -      |
-| handleChangeNodeText | 更改節點名事件            | Function | 否       | -      |
-| handleAddNext        | 向後添加兄弟節點事件      | Function | 否       | -      |
-| handleAddChild       | 添加子節點事件            | Function | 否       | -      |
-| handleDeleteNode     | 刪除節點事件              | Function | 否       | -      |
+| handleClickNode      | 點擊節點事件,参数：node              | Function | 否       | -      |
+| handleDbClickNode    | 雙擊節點事件,参数：node              | Function | 否       | -      |
+| handleClickExpand    | 點擊收起/展開事件,参数：node         | Function | 否       | -      |
+| handleCheck          | 點擊勾選框事件,参数：node            | Function | 否       | -      |
+| handleChangeNodeText | 更改節點名事件,参数：nodeId, text            | Function | 否       | -      |
+| handleAddNext        | 向後添加兄弟節點事件,参数：selectedNode      | Function | 否       | -      |
+| handleAddChild       | 添加子節點事件,参数：selectedNode            | Function | 否       | -      |
+| handleDeleteNode     | 刪除節點事件,参数：selectedNode              | Function | 否       | -      |
 | handleSave           | 保存樹                    | Function | 否       | -      |
 | handleDrag           | 拖拽节点                  | Function | 否       | -      |
 
