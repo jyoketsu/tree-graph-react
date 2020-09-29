@@ -53,7 +53,7 @@ const NodeInput = ({
         }}
         ref={inputRef}
         autoFocus={true}
-        placeholder="请输入节点名"
+        placeholder="请输入名称"
         value={value}
         onChange={e => setValue(e.target.value)}
         onKeyDown={(e: any) => handleCommit(e)}

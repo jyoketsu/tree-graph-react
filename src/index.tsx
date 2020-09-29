@@ -20,6 +20,10 @@ export interface Props {
   nodes: NodeMap;
   // 根节点id
   startId: string;
+  // 选中节点id
+  selectedId?: string;
+  // 是否显示输入框
+  renameSelectedNode?: boolean;
   //  非受控模式
   uncontrolled?: boolean;
   // 是否单列
@@ -54,6 +58,8 @@ export const Tree = React.forwardRef(
     {
       nodes,
       startId,
+      selectedId,
+      renameSelectedNode,
       uncontrolled,
       singleColumn,
       itemHeight,
@@ -100,19 +106,40 @@ export const Tree = React.forwardRef(
 
     const containerRef = useRef<HTMLDivElement>(null);
 
+    // 暴露方法
     useImperativeHandle(ref, () => ({
-      hello: () => console.log('hello world!'),
       deleteNode: deletenode,
       saveNodes,
       addNext,
       addChild,
     }));
 
+    // 参数nodes发生改变，重设nodeMap
     useEffect(() => {
       setNodeMap(nodes);
     }, [nodes]);
 
-    // 根据nodeMap计算渲染所需数据
+    useEffect(() => {
+      // 参数选中的节点
+      if (selectedId) {
+        const node = cnodes.find(item => item._key === selectedId);
+        if (node) {
+          setselected(node);
+          if (handleClickNode) {
+            handleClickNode(node);
+          }
+          // 参数，是否显示输入框
+          if (renameSelectedNode) {
+            setshowNewInput(false);
+            setTimeout(() => {
+              setshowNewInput(true);
+            }, 1000);
+          }
+        }
+      }
+    }, [selectedId, renameSelectedNode, cnodes]);
+
+    // nodeMap发生改变，根据nodeMap计算渲染所需数据
     useEffect(() => {
       console.log('根据nodeMap计算渲染所需数据');
       const cal = calculate(

@@ -410,6 +410,8 @@ MultiCol.args = {
   nodes: nodes,
   startId: '001',
   singleColumn: false,
+  // selectedId: '004',
+  // renameSelectedNode: true,
 };
 
 export const SingleCol = Template.bind({});

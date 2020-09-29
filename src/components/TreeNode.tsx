@@ -165,7 +165,7 @@ const TreeNode = ({
           userSelect: 'none',
         }}
       >
-        {node.name}
+        {node.name || '未命名文件'}
       </text>
     </g>
   ) : null;

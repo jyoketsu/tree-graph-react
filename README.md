@@ -61,6 +61,8 @@ const MyComp = () => <Tree nodes={nodes} startId="rootKey" />;
 | -------------------- | ------------------------- | -------- | -------- | ------ |
 | nodes                | 節點                      | Array    | 是       | -      |
 | startId              | 根節點 id                 | String   | 是       | -      |
+| selectedId           | 選中的節點id               | String   | 是       | -      |
+| renameSelectedNode   | 是否重命名選中的節點         | String   | 是       | -      |
 | ref                  | 通過 ref 調用組件內部方法 | -        | 否       | -      |
 | singleColumn         | 是否是單列視圖            | Boolean  | 否       | false  |
 | uncontrolled         | 是否為非受控組件          | Boolean  | 否       | true   |
