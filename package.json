@@ -1,5 +1,8 @@
 {
-  "version": "0.1.8",
+  "name": "tree-graph-react",
+  "author": "xujie <jyoketsu@gmail.com>",
+  "description": "Tree graph for React / React树状思维导图组件",
+  "version": "0.1.9",
   "license": "MIT",
   "main": "dist/index.js",
   "typings": "dist/index.d.ts",
@@ -34,10 +37,7 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "name": "tree-graph-react",
-  "author": "xujie <jyoketsu@gmail.com>",
   "module": "dist/treegraph.esm.js",
-  "description": "Tree graph for React / React树状思维导图组件",
   "devDependencies": {
     "@babel/core": "^7.11.6",
     "@storybook/addon-actions": "^6.0.21",
