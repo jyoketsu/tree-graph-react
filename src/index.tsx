@@ -171,7 +171,7 @@ export const Tree = React.forwardRef(
       setSecondStartX(cal.second_start_x);
       setSecondEndX(cal.second_end_x);
       setisSingle(cal.isSingle);
-    }, [nodeMap]);
+    }, [nodeMap, startId, singleColumn]);
 
     // 有父节点时的左侧水平线条
     function fatherPath(node: CNode) {
@@ -481,8 +481,11 @@ export const Tree = React.forwardRef(
                   {/* 线条：左侧横线 */}
                   {node.x &&
                   node.y &&
+                  // 有父节点
                   node.father &&
-                  node.father !== startId ? (
+                  // 父节点不为开始节点
+                  node.father !== startId &&
+                  node._key !== startId ? (
                     <path
                       d={fatherPath(node)}
                       fill="none"
