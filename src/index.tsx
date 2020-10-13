@@ -5,6 +5,7 @@ import TreeNode from './components/TreeNode';
 import Dot from './components/Dot';
 import Expand from './components/Expand';
 import NodeInput from './components/NodeInput';
+import NodeOptions from './components/NodeOptions';
 import calculate from './services/treeService';
 import {
   dot,
@@ -21,9 +22,7 @@ export interface Props {
   // 根节点id
   startId: string;
   // 选中节点id
-  selectedId?: string;
-  // 是否显示输入框
-  renameSelectedNode?: boolean;
+  defaultSelectedId?: string;
   //  非受控模式
   uncontrolled?: boolean;
   // 是否单列
@@ -40,6 +39,9 @@ export interface Props {
   avatarWidth?: number;
   checkBoxWidth?: number;
   pathWidth?: number;
+  disableShortcut?: boolean;
+  showNodeOptions?: boolean;
+  nodeOptions?: any;
   handleClickExpand?: Function;
   handleCheck?: Function;
   handleClickNode?: Function;
@@ -48,6 +50,7 @@ export interface Props {
   handleAddNext?: Function;
   handleAddChild?: Function;
   handleDeleteNode?: Function;
+  handleClickOptionsButton?: Function;
   ref?: any;
 }
 
@@ -58,8 +61,7 @@ export const Tree = React.forwardRef(
     {
       nodes,
       startId,
-      selectedId,
-      renameSelectedNode,
+      defaultSelectedId,
       uncontrolled,
       singleColumn,
       itemHeight,
@@ -69,6 +71,9 @@ export const Tree = React.forwardRef(
       // avatarWidth,
       // checkBoxWidth,
       pathWidth,
+      disableShortcut,
+      showNodeOptions,
+      nodeOptions,
       handleClickExpand,
       handleCheck,
       handleClickNode,
@@ -77,6 +82,7 @@ export const Tree = React.forwardRef(
       handleAddNext,
       handleAddChild,
       handleDeleteNode,
+      handleClickOptionsButton,
     }: Props,
     ref
   ) => {
@@ -98,11 +104,11 @@ export const Tree = React.forwardRef(
     // const [maxX, setmaxX] = useState(0);
     const [maxY, setmaxY] = useState(0);
     const [maxEnd, setmaxEnd] = useState(0);
-    const [selected, setselected] = useState<CNode | null>(null);
-    const [toSelectedKey, setToSelectedKey] = useState('');
+    const [selectedId, setselectedId] = useState<string | null>(null);
     const [showInput, setshowInput] = useState(false);
     const [showNewInput, setshowNewInput] = useState(false);
     const [isSingle, setisSingle] = useState(singleColumn);
+    const [showOptions, setShowOptions] = useState(false);
 
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -112,32 +118,19 @@ export const Tree = React.forwardRef(
       saveNodes,
       addNext,
       addChild,
+      rename: function() {
+        if (selectedId) {
+          setshowInput(true);
+        } else {
+          alert('请先选中节点');
+        }
+      },
     }));
 
     // 参数nodes发生改变，重设nodeMap
     useEffect(() => {
       setNodeMap(nodes);
     }, [nodes]);
-
-    useEffect(() => {
-      // 参数选中的节点
-      if (selectedId) {
-        const node = cnodes.find(item => item._key === selectedId);
-        if (node) {
-          setselected(node);
-          if (handleClickNode) {
-            handleClickNode(node);
-          }
-          // 参数，是否显示输入框
-          if (renameSelectedNode) {
-            setshowNewInput(false);
-            setTimeout(() => {
-              setshowNewInput(true);
-            }, 1000);
-          }
-        }
-      }
-    }, [selectedId, renameSelectedNode, cnodes]);
 
     // nodeMap发生改变，根据nodeMap计算渲染所需数据
     useEffect(() => {
@@ -151,19 +144,6 @@ export const Tree = React.forwardRef(
         FONT_SIZE
       );
 
-      // 如果有待选中的节点key，选中节点
-      if (toSelectedKey) {
-        for (let index = 0; index < cal.nodes.length; index++) {
-          const node = cal.nodes[index];
-          if (node._key === toSelectedKey) {
-            setselected(node);
-            setToSelectedKey('');
-            setshowNewInput(true);
-            break;
-          }
-        }
-      }
-
       setcnodes(cal.nodes);
       // setmaxX(cal.max_x);
       setmaxY(cal.max_y);
@@ -172,6 +152,13 @@ export const Tree = React.forwardRef(
       setSecondEndX(cal.second_end_x);
       setisSingle(cal.isSingle);
     }, [nodeMap, startId, singleColumn]);
+
+    useEffect(() => {
+      if (defaultSelectedId) {
+        setShowOptions(false);
+        setselectedId(defaultSelectedId);
+      }
+    }, [defaultSelectedId]);
 
     // 有父节点时的左侧水平线条
     function fatherPath(node: CNode) {
@@ -214,7 +201,7 @@ export const Tree = React.forwardRef(
     function clickNode(node: CNode) {
       clearTimeout(clickTimeId);
       clickTimeId = setTimeout(function() {
-        setselected(node);
+        setselectedId(node._key);
         if (handleClickNode) {
           handleClickNode(node);
         }
@@ -224,7 +211,7 @@ export const Tree = React.forwardRef(
     // 双击节点
     function dbClickNode(node: CNode) {
       clearTimeout(clickTimeId);
-      setselected(node);
+      setselectedId(node._key);
       setshowInput(true);
       if (handleDbClickNode) {
         handleDbClickNode(node);
@@ -272,63 +259,76 @@ export const Tree = React.forwardRef(
 
     // 添加平级节点
     function addNext() {
-      if (!selected) {
+      if (!selectedId) {
         return alert('请先选中节点！');
       }
-      if (selected._key === startId) {
+      if (selectedId === startId) {
         return alert('根节点无法添加兄弟节点！');
       }
+      setShowOptions(false);
       if (UNCONTROLLED) {
-        const res = addNextNode(nodeMap, selected._key);
-        setToSelectedKey(res.addedNode._key);
-        setNodeMap(res.nodes);
+        const res = addNextNode(nodeMap, selectedId);
+
         if (handleAddNext) {
-          handleAddNext(selected, res.addedNode);
+          handleAddNext(selectedId, res.addedNode);
         }
+
+        setselectedId(res.addedNode._key);
+        setNodeMap(res.nodes);
+        setshowInput(true);
       } else {
         if (handleAddNext) {
-          handleAddNext(selected);
+          handleAddNext(selectedId);
         }
       }
     }
 
     // 添加子节点
     function addChild() {
-      if (!selected) {
+      if (!selectedId) {
         return alert('请先选中节点！');
       }
+
+      setShowOptions(false);
       if (UNCONTROLLED) {
-        const res = addChildNode(nodeMap, selected._key);
-        setToSelectedKey(res.addedNode._key);
-        setNodeMap(res.nodes);
+        const res = addChildNode(nodeMap, selectedId);
+
         if (handleAddChild) {
-          handleAddChild(selected, res.addedNode);
+          handleAddChild(selectedId, res.addedNode);
         }
+
+        setselectedId(res.addedNode._key);
+        setNodeMap(res.nodes);
+        setshowInput(true);
       } else {
         if (handleAddChild) {
-          handleAddChild(selected);
+          handleAddChild(selectedId);
         }
       }
     }
 
     // 删除节点
     function deletenode() {
-      if (!selected?._key) {
+      if (!selectedId) {
         return alert('请先选中节点！');
       }
-      if (selected._key === startId) {
+      if (selectedId === startId) {
         return alert('根节点不允许删除！');
       }
+
+      setShowOptions(false);
       if (UNCONTROLLED) {
-        let nodes = deleteNode(nodeMap, selected._key);
-        setselected(null);
-        setNodeMap(nodes);
+        let nodes = deleteNode(nodeMap, selectedId);
+
         if (handleDeleteNode) {
-          handleDeleteNode(selected);
+          handleDeleteNode(selectedId);
         }
+
+        setselectedId(null);
+        setNodeMap(nodes);
       } else {
         if (handleDeleteNode) {
-          handleDeleteNode(selected);
+          handleDeleteNode(selectedId);
         }
       }
     }
@@ -338,7 +338,7 @@ export const Tree = React.forwardRef(
     }
 
     function handleKeyDown(event: KeyboardEvent) {
-      if (showInput || showNewInput) {
+      if (disableShortcut || showInput || showNewInput) {
         return;
       }
       event.preventDefault();
@@ -358,6 +358,14 @@ export const Tree = React.forwardRef(
       }
     }
 
+    function handleClick(e: MouseEvent) {
+      e.stopPropagation();
+      if (handleClickOptionsButton) {
+        handleClickOptionsButton();
+      }
+      setShowOptions(true);
+    }
+
     return (
       <div
         className="svg-wrapper"
@@ -372,8 +380,8 @@ export const Tree = React.forwardRef(
       >
         <svg
           className="tree-svg"
-          viewBox={`0 0 ${maxEnd + 15} ${maxY + ITEM_HEIGHT}`}
-          width={maxEnd + 15}
+          viewBox={`0 0 ${maxEnd + 35} ${maxY + ITEM_HEIGHT}`}
+          width={maxEnd + 35}
           height={maxY + ITEM_HEIGHT}
         >
           <defs>
@@ -452,10 +460,12 @@ export const Tree = React.forwardRef(
                 FONT_SIZE={FONT_SIZE}
                 startId={startId}
                 alias={new Date().getTime()}
-                selected={selected}
+                selected={selectedId}
+                showNodeOptions={showNodeOptions || false}
                 handleCheck={check}
                 handleClickNode={clickNode}
                 handleDbClickNode={dbClickNode}
+                openOptions={handleClick}
               />
               {isSingle ? (
                 node.x && node.y ? (
@@ -560,7 +570,19 @@ export const Tree = React.forwardRef(
           ))}
         </svg>
         {showInput || showNewInput ? (
-          <NodeInput selected={selected} handleChangeNodeText={changeText} />
+          <NodeInput
+            selectedId={selectedId}
+            nodeList={cnodes}
+            handleChangeNodeText={changeText}
+          />
+        ) : null}
+        {selectedId && showOptions && nodeOptions ? (
+          <NodeOptions
+            selectedId={selectedId}
+            nodeList={cnodes}
+            content={nodeOptions}
+            handleClose={() => setShowOptions(false)}
+          />
         ) : null}
       </div>
     );

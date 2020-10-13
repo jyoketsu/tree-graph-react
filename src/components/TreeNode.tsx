@@ -12,10 +12,12 @@ interface Props {
   BLOCK_HEIGHT: number;
   FONT_SIZE: number;
   alias: number;
-  selected: CNode | null;
+  selected: string | null;
+  showNodeOptions: boolean;
   handleCheck: CheckFunc;
   handleClickNode: Function;
   handleDbClickNode: Function;
+  openOptions: Function;
 }
 const TreeNode = ({
   node,
@@ -24,13 +26,15 @@ const TreeNode = ({
   FONT_SIZE,
   alias,
   selected,
+  showNodeOptions,
   handleCheck,
   handleClickNode,
   handleDbClickNode,
+  openOptions,
 }: Props) => {
   function rectClassName(node: CNode) {
     // 选中的节点
-    if (selected && selected._key === node._key) {
+    if (selected === node._key) {
       return 'selected';
     } else if (
       // 有边框的节点
@@ -167,6 +171,35 @@ const TreeNode = ({
       >
         {node.name || '未命名文件'}
       </text>
+      {showNodeOptions && selected === node._key ? (
+        <g onClick={(e) => openOptions(e)}>
+          <circle
+            cx={node.x + node.width + BLOCK_HEIGHT / 2 + 5}
+            cy={node.y + BLOCK_HEIGHT / 2}
+            r={BLOCK_HEIGHT / 2}
+            fill="white"
+            stroke="#ddd"
+          />
+          <circle
+            cx={node.x + node.width + BLOCK_HEIGHT / 2 + 5 - 6}
+            cy={node.y + BLOCK_HEIGHT / 2}
+            r={2}
+            fill="#757676"
+          />
+          <circle
+            cx={node.x + node.width + BLOCK_HEIGHT / 2 + 5}
+            cy={node.y + BLOCK_HEIGHT / 2}
+            r={2}
+            fill="#757676"
+          />
+          <circle
+            cx={node.x + node.width + BLOCK_HEIGHT / 2 + 5 + 6}
+            cy={node.y + BLOCK_HEIGHT / 2}
+            r={2}
+            fill="#757676"
+          />
+        </g>
+      ) : null}
     </g>
   ) : null;
 };

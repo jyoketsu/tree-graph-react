@@ -400,7 +400,29 @@ const Template: Story<Props> = args => {
       <button onClick={() => treeRef.current.addNext()}>添加节点</button>
       <button onClick={() => treeRef.current.addChild()}>添加子节点</button>
       <button onClick={() => treeRef.current.deleteNode()}>删除节点</button>
-      <Tree ref={treeRef} {...args} />
+      <Tree
+        ref={treeRef}
+        {...args}
+        nodeOptions={
+          <div
+            style={{
+              display: 'flex',
+              flexDirection: 'column',
+              background: '#FFF',
+              padding: '5px',
+            }}
+          >
+            <button onClick={() => treeRef.current.rename()}>重命名</button>
+            <button onClick={() => treeRef.current.addNext()}>添加节点</button>
+            <button onClick={() => treeRef.current.addChild()}>
+              添加子节点
+            </button>
+            <button onClick={() => treeRef.current.deleteNode()}>
+              删除节点
+            </button>
+          </div>
+        }
+      />
     </div>
   );
 };
@@ -412,6 +434,8 @@ MultiCol.args = {
   singleColumn: false,
   // selectedId: '004',
   // renameSelectedNode: true,
+  defaultSelectedId: '003',
+  showNodeOptions: true,
 };
 
 export const SingleCol = Template.bind({});
