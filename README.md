@@ -85,7 +85,7 @@ const MyComp = () => <Tree nodes={nodes} startId="rootKey" />;
 | handleAddNext            | 向後添加兄弟節點事件,参数：selectedNode | Function  | 否       | -      |
 | handleAddChild           | 添加子節點事件,参数：selectedNode       | Function  | 否       | -      |
 | handleDeleteNode         | 刪除節點事件,参数：selectedNode         | Function  | 否       | -      |
-| handleClickOptionsButton | 点击选项按钮                            | Function  | 否       | -      |
+| handleClickOptionsButton | 点击选项按钮,参数：selectedNode         | Function  | 否       | -      |
 | handleSave               | 保存樹                                  | Function  | 否       | -      |
 | handleDrag               | 拖拽节点                                | Function  | 否       | -      |
 

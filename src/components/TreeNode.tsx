@@ -82,7 +82,7 @@ const TreeNode = ({
         ry={4}
         width={node.width}
         height={BLOCK_HEIGHT}
-        style={{ ...nodeRectStyle, ...{ fill: 'none', strokeWidth: 1 } }}
+        style={{ ...nodeRectStyle, ...{ fillOpacity: 0, strokeWidth: 1 } }}
       />
 
       {/* 头像/图片 */}
@@ -172,12 +172,12 @@ const TreeNode = ({
         {node.name || '未命名文件'}
       </text>
       {showNodeOptions && selected === node._key ? (
-        <g onClick={(e) => openOptions(e)}>
+        <g onClick={e => openOptions(node, e)}>
           <circle
             cx={node.x + node.width + BLOCK_HEIGHT / 2 + 5}
             cy={node.y + BLOCK_HEIGHT / 2}
             r={BLOCK_HEIGHT / 2}
-            fill="white"
+            fillOpacity={0}
             stroke="#ddd"
           />
           <circle

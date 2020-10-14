@@ -358,10 +358,10 @@ export const Tree = React.forwardRef(
       }
     }
 
-    function handleClick(e: MouseEvent) {
+    function handleClick(node: CNode, e: MouseEvent) {
       e.stopPropagation();
       if (handleClickOptionsButton) {
-        handleClickOptionsButton();
+        handleClickOptionsButton(node);
       }
       setShowOptions(true);
     }
