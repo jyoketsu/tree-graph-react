@@ -1,5 +1,5 @@
 import React, { useRef } from 'react';
-import { Tree, Props } from '../src';
+import { Tree, TreeProps } from '../src';
 import { Meta, Story } from '@storybook/react';
 
 const nodes = {
@@ -388,7 +388,7 @@ const meta: Meta = {
 
 export default meta;
 
-const Template: Story<Props> = args => {
+const Template: Story<TreeProps> = args => {
   const treeRef = useRef(null);
   return (
     <div>

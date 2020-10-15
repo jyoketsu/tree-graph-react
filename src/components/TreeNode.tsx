@@ -14,6 +14,7 @@ interface Props {
   alias: number;
   selected: string | null;
   showNodeOptions: boolean;
+  hideBorder?: boolean;
   handleCheck: CheckFunc;
   handleClickNode: Function;
   handleDbClickNode: Function;
@@ -26,6 +27,7 @@ const TreeNode = ({
   FONT_SIZE,
   alias,
   selected,
+  hideBorder,
   showNodeOptions,
   handleCheck,
   handleClickNode,
@@ -38,9 +40,10 @@ const TreeNode = ({
       return 'selected';
     } else if (
       // 有边框的节点
-      (node.sortList && node.sortList.length) ||
-      node.father === startId ||
-      node._key === startId
+      !hideBorder &&
+      ((node.sortList && node.sortList.length) ||
+        node.father === startId ||
+        node._key === startId)
     ) {
       return 'border-rect';
     } else return '';

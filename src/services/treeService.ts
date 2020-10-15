@@ -9,7 +9,9 @@ export default function calculate(
   singleColumn: boolean | undefined,
   ITEM_HEIGHT: number,
   INDENT: number,
-  FONT_SIZE: number
+  FONT_SIZE: number,
+  startX?: number,
+  startY?: number
 ) {
   nodes = JSON.parse(JSON.stringify(nodes));
   // 根节点
@@ -31,6 +33,8 @@ export default function calculate(
   let second_end_x;
   let SECOND_START_NODE_ID: string | undefined;
   let SECOND_END_NODE_ID: string | undefined;
+
+  let nodeList: CNode[] = [];
 
   // 多列视图
   if (!isSingle) {
@@ -59,17 +63,18 @@ export default function calculate(
     // 根节点坐标
     root.x = (MAX_END - root.width) / 2;
     root.y = 1;
+    nodeList.push(root as CNode);
   } else {
     // 单列视图
-    location(nodes, root, 10, 10);
+    location(nodes, root, startX || 10, startY || 10);
   }
 
-  let nodeList = [];
-  const keys = Object.keys(nodes);
-  for (let index = 0; index < keys.length; index++) {
-    const key = keys[index];
-    nodeList.push(nodes[key] as CNode);
-  }
+  // let nodeList = [];
+  // const keys = Object.keys(nodes);
+  // for (let index = 0; index < keys.length; index++) {
+  //   const key = keys[index];
+  //   nodeList.push(nodes[key] as CNode);
+  // }
 
   return {
     max_x: MAX_X,
@@ -130,8 +135,8 @@ export default function calculate(
         }
 
         if (index === 0) {
-          childY += ITEM_HEIGHT * 1.3;
-          lastChildY += ITEM_HEIGHT * 1.3;
+          childY += ITEM_HEIGHT * 1;
+          lastChildY += ITEM_HEIGHT * 1;
         } else {
           childY += ITEM_HEIGHT;
           lastChildY += ITEM_HEIGHT;
@@ -149,6 +154,7 @@ export default function calculate(
     }
 
     node.last_child_y = lastChildY;
+    nodeList.push(node as CNode);
     return childY;
   }
 }

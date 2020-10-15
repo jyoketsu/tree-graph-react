@@ -12,6 +12,7 @@ export default interface Node {
   hour?: number;
   limitDay?: number;
   avatarUri?:string;
+  icon?:string;
   // 以下为计算属性
   x?: number;
   y?: number;
