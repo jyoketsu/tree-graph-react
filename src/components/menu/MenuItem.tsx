@@ -9,9 +9,9 @@ interface Props {
   color: string;
   BLOCK_HEIGHT: number;
   FONT_SIZE: number;
-  alias: number;
   selected: string | null;
   showNodeOptions: boolean;
+  showIcon: boolean;
   handleClickNode: Function;
   handleDbClickNode: Function;
   openOptions: Function;
@@ -23,8 +23,8 @@ const TreeNode = ({
   color,
   BLOCK_HEIGHT,
   FONT_SIZE,
-  alias,
   selected,
+  showIcon,
   showNodeOptions,
   handleClickNode,
   handleDbClickNode,
@@ -38,7 +38,7 @@ const TreeNode = ({
   }
 
   function location(node: CNode, type: string) {
-    return nodeLocation(node, type, BLOCK_HEIGHT, 16);
+    return nodeLocation(node, type, BLOCK_HEIGHT, showIcon, 16);
   }
 
   const textLocationRes = location(node, 'text');
@@ -68,29 +68,16 @@ const TreeNode = ({
       />
 
       {/* 图标 */}
-      {node.icon
-        ? [
-            <clipPath
-              key="avatar-path"
-              id={`${alias}-avatar-clip-${node._key}`}
-            >
-              <circle
-                cx={iconLocationRes ? iconLocationRes.x + 11 : 0}
-                cy={iconLocationRes ? iconLocationRes.y + 11 : 0}
-                r="11"
-              />
-            </clipPath>,
-            <image
-              key="avatar-image"
-              x={iconLocationRes?.x}
-              y={iconLocationRes?.y}
-              width="22"
-              height="22"
-              xlinkHref={node.icon}
-              // clipPath={`url(#${alias}-avatar-clip-${node._key})`}
-            />,
-          ]
-        : null}
+      {showIcon && node.icon ? (
+        <image
+          key="avatar-image"
+          x={iconLocationRes?.x}
+          y={iconLocationRes?.y}
+          width="22"
+          height="22"
+          xlinkHref={node.icon}
+        />
+      ) : null}
 
       {/* 文字 */}
       <text

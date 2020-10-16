@@ -75,19 +75,20 @@ const MyComp = () => <Tree nodes={nodes} startId="rootKey" />;
 | avatarWidth              | 頭像寬度                                | Number    | 否       | 22     |
 | checkBoxWidth            | 勾選框寬度                              | Number    | 否       | 18     |
 | disableShortcut          | 是否禁用快捷鍵                          | Number    | 否       | -      |
-| showNodeOptions          | 是否显示节点选项菜单                    | boolean   | 否       | -      |
-| nodeOptions              | 节点选项菜单内容                        | component | 否       | -      |
+| showNodeOptions          | 是否顯示節點選項菜單                    | boolean   | 否       | -      |
+| showIcon                 | 是否顯示圖標                            | boolean   | 否       | true   |
+| nodeOptions              | 節點選項菜單內容                        | component | 否       | -      |
 | handleClickNode          | 點擊節點事件,参数：node                 | Function  | 否       | -      |
 | handleDbClickNode        | 雙擊節點事件,参数：node                 | Function  | 否       | -      |
 | handleClickExpand        | 點擊收起/展開事件,参数：node            | Function  | 否       | -      |
 | handleCheck              | 點擊勾選框事件,参数：node               | Function  | 否       | -      |
 | handleChangeNodeText     | 更改節點名事件,参数：nodeId, text       | Function  | 否       | -      |
 | handleAddNext            | 向後添加兄弟節點事件,参数：selectedNode | Function  | 否       | -      |
-| handleAddChild           | 添加子節點事件,参数：selectedNode       | Function  | 否       | -      |
-| handleDeleteNode         | 刪除節點事件,参数：selectedNode         | Function  | 否       | -      |
-| handleClickOptionsButton | 点击选项按钮,参数：selectedNode         | Function  | 否       | -      |
+| handleAddChild           | 添加子節點事件,參數：selectedNode       | Function  | 否       | -      |
+| handleDeleteNode         | 刪除節點事件,參數：selectedNode         | Function  | 否       | -      |
+| handleClickOptionsButton | 點擊選項按鈕,參數：selectedNode         | Function  | 否       | -      |
 | handleSave               | 保存樹                                  | Function  | 否       | -      |
-| handleDrag               | 拖拽节点                                | Function  | 否       | -      |
+| handleDrag               | 拖拽節點                                | Function  | 否       | -      |
 
 ## Menu Props
 
@@ -109,8 +110,9 @@ const MyComp = () => <Tree nodes={nodes} startId="rootKey" />;
 | fontSize                 | 節點字體大小                            | Number    | 否       | 14      |
 | indent                   | 縮進                                    | Number    | 否       | 25      |
 | disableShortcut          | 是否禁用快捷鍵                          | Number    | 否       | -       |
-| showNodeOptions          | 是否显示节点选项菜单                    | boolean   | 否       | -       |
-| nodeOptions              | 节点选项菜单内容                        | component | 否       | -       |
+| showNodeOptions          | 是否顯示節點選項菜單                    | boolean   | 否       | -       |
+| showIcon                 | 是否顯示圖標                            | boolean   | 否       | true    |
+| nodeOptions              | 節點選項菜單內容                        | component | 否       | -       |
 | handleClickNode          | 點擊節點事件,参数：node                 | Function  | 否       | -       |
 | handleDbClickNode        | 雙擊節點事件,参数：node                 | Function  | 否       | -       |
 | handleClickExpand        | 點擊收起/展開事件,参数：node            | Function  | 否       | -       |
@@ -118,9 +120,9 @@ const MyComp = () => <Tree nodes={nodes} startId="rootKey" />;
 | handleAddNext            | 向後添加兄弟節點事件,参数：selectedNode | Function  | 否       | -       |
 | handleAddChild           | 添加子節點事件,参数：selectedNode       | Function  | 否       | -       |
 | handleDeleteNode         | 刪除節點事件,参数：selectedNode         | Function  | 否       | -       |
-| handleClickOptionsButton | 点击选项按钮,参数：selectedNode         | Function  | 否       | -       |
+| handleClickOptionsButton | 點擊選項按鈕,參數：selectedNode         | Function  | 否       | -       |
 | handleSave               | 保存樹                                  | Function  | 否       | -       |
-| handleDrag               | 拖拽节点                                | Function  | 否       | -       |
+| handleDrag               | 拖拽節點                                | Function  | 否       | -       |
 
 ## Node Props
 

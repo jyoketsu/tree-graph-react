@@ -11,6 +11,7 @@ const nodes = {
     contract: false,
     showAvatar: true,
     avatarUri: 'https://psnine.com/Upload/game/11387.png',
+    icon: 'https://cdn-icare.qingtime.cn/rooter.svg',
     showCheckbox: true,
     checked: true,
     showStatus: true,
@@ -29,6 +30,7 @@ const nodes = {
     showStatus: true,
     hour: 0.1,
     limitDay: -23,
+    icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
   },
   '003': {
     _key: '003',
@@ -41,6 +43,7 @@ const nodes = {
     showStatus: true,
     hour: 0.1,
     limitDay: 2,
+    icon: 'https://cdn-icare.qingtime.cn/favFolder.svg',
   },
   '004': {
     _key: '004',

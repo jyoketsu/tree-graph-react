@@ -14,6 +14,7 @@ interface Props {
   alias: number;
   selected: string | null;
   showNodeOptions: boolean;
+  showIcon: boolean;
   hideBorder?: boolean;
   handleCheck: CheckFunc;
   handleClickNode: Function;
@@ -27,6 +28,7 @@ const TreeNode = ({
   FONT_SIZE,
   alias,
   selected,
+  showIcon,
   hideBorder,
   showNodeOptions,
   handleCheck,
@@ -50,24 +52,26 @@ const TreeNode = ({
   }
 
   function location(node: CNode, type: string) {
-    return nodeLocation(node, type, BLOCK_HEIGHT);
+    return nodeLocation(node, type, BLOCK_HEIGHT, showIcon);
   }
 
   const textLocationRes = location(node, 'text');
   const circleLocationRes = location(node, 'avatar');
   const checkLocationRes = location(node, 'checkbox');
   const statusLocationRes = location(node, 'status');
+  const iconLocationRes = location(node, 'icon');
 
   const nodeRectClassName = rectClassName(node);
   let nodeRectStyle = {};
   switch (nodeRectClassName) {
     case 'border-rect':
-      nodeRectStyle = { fill: '#fff', stroke: 'rgb(192, 192, 192)' };
+      nodeRectStyle = { fill: '#FFF', stroke: '#D9D9D9' };
       break;
     case 'selected':
-      nodeRectStyle = { fill: 'rgb(238, 238, 238)', stroke: '#000000' };
+      nodeRectStyle = { fill: '#FFF', stroke: '#333333', strokeWidth: 2 };
       break;
     default:
+      nodeRectStyle = { fillOpacity: 0 };
       break;
   }
 
@@ -85,9 +89,21 @@ const TreeNode = ({
         ry={4}
         width={node.width}
         height={BLOCK_HEIGHT}
-        style={{ ...nodeRectStyle, ...{ fillOpacity: 0, strokeWidth: 1 } }}
+        filter="url(#filterShadow)"
+        style={{ ...nodeRectStyle, ...{ strokeWidth: 1 } }}
       />
 
+      {/* 图标 */}
+      {showIcon && node.icon ? (
+        <image
+          key="avatar-image"
+          x={iconLocationRes?.x}
+          y={iconLocationRes?.y}
+          width="22"
+          height="22"
+          xlinkHref={node.icon}
+        />
+      ) : null}
       {/* 头像/图片 */}
       {node.showAvatar
         ? [
@@ -167,7 +183,7 @@ const TreeNode = ({
         dominantBaseline="middle"
         fontSize={FONT_SIZE}
         style={{
-          fill: nodeRectClassName === 'selected' ? '#ƒ000000' : '#999',
+          fill: nodeRectClassName === 'selected' ? '#333333' : '#999',
           fontFamily: "'Microsoft YaHei', sans-serif",
           userSelect: 'none',
         }}
@@ -180,7 +196,7 @@ const TreeNode = ({
             cx={node.x + node.width + BLOCK_HEIGHT / 2 + 5}
             cy={node.y + BLOCK_HEIGHT / 2}
             r={BLOCK_HEIGHT / 2}
-            fillOpacity={0}
+            fill="#FFF"
             stroke="#ddd"
           />
           <circle

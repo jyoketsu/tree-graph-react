@@ -42,6 +42,7 @@ export interface TreeProps {
   disableShortcut?: boolean;
   showNodeOptions?: boolean;
   nodeOptions?: any;
+  showIcon?: boolean;
   handleClickExpand?: Function;
   handleCheck?: Function;
   handleClickNode?: Function;
@@ -74,6 +75,7 @@ export const Tree = React.forwardRef(
       disableShortcut,
       showNodeOptions,
       nodeOptions,
+      showIcon,
       handleClickExpand,
       handleCheck,
       handleClickNode,
@@ -96,6 +98,7 @@ export const Tree = React.forwardRef(
     // const CHECK_BOX_WIDTH = checkBoxWidth || 18;
     const PATH_WIDTH = pathWidth || 1.5;
     const UNCONTROLLED = uncontrolled === undefined ? true : uncontrolled;
+    const SHOW_ICON = showIcon === undefined ? true : showIcon;
 
     const [nodeMap, setNodeMap] = useState(nodes);
     const [secondStartX, setSecondStartX] = useState<number | undefined>(0);
@@ -141,7 +144,8 @@ export const Tree = React.forwardRef(
         singleColumn,
         ITEM_HEIGHT,
         INDENT,
-        FONT_SIZE
+        FONT_SIZE,
+        SHOW_ICON
       );
 
       setcnodes(cal.nodes);
@@ -385,6 +389,30 @@ export const Tree = React.forwardRef(
           height={maxY + ITEM_HEIGHT}
         >
           <defs>
+            <filter id="filterShadow" x="0" y="0" width="200%" height="200%">
+              <feOffset
+                result="offOut"
+                in="SourceAlpha"
+                dx="2"
+                dy="4"
+              ></feOffset>
+              <feColorMatrix
+                result="matrixOut"
+                in="offOut"
+                type="matrix"
+                values="0.3 0 0 0 0 
+                     0 0.3 0 0 0 
+                     0 0 0.3 0 0 
+                     0 0 0 0.3 0"
+              ></feColorMatrix>
+              <feGaussianBlur
+                result="blurOut"
+                in="matrixOut"
+                stdDeviation="1"
+              ></feGaussianBlur>
+              <feBlend in="SourceGraphic" in2="blurOut" mode="normal"></feBlend>
+            </filter>
+
             <g
               id="contract"
               width="10"
@@ -461,6 +489,7 @@ export const Tree = React.forwardRef(
                 startId={startId}
                 alias={new Date().getTime()}
                 selected={selectedId}
+                showIcon={SHOW_ICON}
                 showNodeOptions={showNodeOptions || false}
                 handleCheck={check}
                 handleClickNode={clickNode}

@@ -44,6 +44,7 @@ export interface MenuProps {
   checkBoxWidth?: number;
   disableShortcut?: boolean;
   showNodeOptions?: boolean;
+  showIcon?: boolean;
   nodeOptions?: any;
   handleClickExpand?: Function;
   handleClickNode?: Function;
@@ -73,6 +74,7 @@ export const MenuTree = React.forwardRef(
       disableShortcut,
       showNodeOptions,
       nodeOptions,
+      showIcon,
       handleClickExpand,
       handleClickNode,
       handleDbClickNode,
@@ -94,6 +96,7 @@ export const MenuTree = React.forwardRef(
     // const AVATAR_WIDTH = avatarWidth || 22;
     // const CHECK_BOX_WIDTH = checkBoxWidth || 18;
     const UNCONTROLLED = uncontrolled === undefined ? true : uncontrolled;
+    const SHOW_ICON = showIcon === undefined ? true : showIcon
 
     const [nodeMap, setNodeMap] = useState(nodes);
     const [cnodes, setcnodes] = useState<CNode[]>([]);
@@ -136,6 +139,7 @@ export const MenuTree = React.forwardRef(
         ITEM_HEIGHT,
         INDENT,
         FONT_SIZE,
+        SHOW_ICON,
         0.1,
         0.1
       );
@@ -408,8 +412,8 @@ export const MenuTree = React.forwardRef(
                 width={WIDTH}
                 selectedBackgroundColor={selectedBackgroundColor || '#00CDD3'}
                 color={color || '#CDD0D2'}
-                alias={new Date().getTime()}
                 selected={selectedId}
+                showIcon={SHOW_ICON}
                 showNodeOptions={showNodeOptions || false}
                 handleClickNode={clickNode}
                 handleDbClickNode={dbClickNode}
