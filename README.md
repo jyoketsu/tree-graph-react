@@ -48,12 +48,13 @@ const MyComp = () => <Tree nodes={nodes} startId="rootKey" />;
 
 ## Functions
 
-| 方法名     | 說明       |
-| ---------- | ---------- |
-| addNext    | 添加節點   |
-| addChild   | 添加子節點 |
-| deleteNode | 刪除節點   |
-| rename     | 重命名     |
+| 方法名       | 說明         |
+| ------------ | ------------ |
+| addNext      | 添加節點     |
+| addChild     | 添加子節點   |
+| deleteNode   | 刪除節點     |
+| rename       | 重命名       |
+| closeOptions | 關閉選項面板 |
 
 <br/>
 
@@ -77,6 +78,9 @@ const MyComp = () => <Tree nodes={nodes} startId="rootKey" />;
 | disableShortcut          | 是否禁用快捷鍵                          | Number    | 否       | -      |
 | showNodeOptions          | 是否顯示節點選項菜單                    | boolean   | 否       | -      |
 | showIcon                 | 是否顯示圖標                            | boolean   | 否       | true   |
+| showAvatar               | 是否顯示頭像                            | Boolean   |
+| avatarUri                | 頭像地址                                | String    |
+| showCheckbox             | 是否顯示勾選框                          | Boolean   |
 | nodeOptions              | 節點選項菜單內容                        | component | 否       | -      |
 | handleClickNode          | 點擊節點事件,参数：node                 | Function  | 否       | -      |
 | handleDbClickNode        | 雙擊節點事件,参数：node                 | Function  | 否       | -      |
@@ -86,7 +90,8 @@ const MyComp = () => <Tree nodes={nodes} startId="rootKey" />;
 | handleAddNext            | 向後添加兄弟節點事件,参数：selectedNode | Function  | 否       | -      |
 | handleAddChild           | 添加子節點事件,參數：selectedNode       | Function  | 否       | -      |
 | handleDeleteNode         | 刪除節點事件,參數：selectedNode         | Function  | 否       | -      |
-| handleClickOptionsButton | 點擊選項按鈕,參數：selectedNode         | Function  | 否       | -      |
+| handleClickOptionsButton | 點擊選項按鈕,參數：clickNode            | Function  | 否       | -      |
+| handleClickDot           | 點擊圓點                                | Function  | 否       | -      |
 | handleSave               | 保存樹                                  | Function  | 否       | -      |
 | handleDrag               | 拖拽節點                                | Function  | 否       | -      |
 
@@ -126,17 +131,14 @@ const MyComp = () => <Tree nodes={nodes} startId="rootKey" />;
 
 ## Node Props
 
-| 屬性         | 說明                 | 類型    |
-| ------------ | -------------------- | ------- |
-| \_key        | 節點 id              | String  |
-| name         | 節點文本             | String  |
-| father       | 父節點 id            | String  |
-| sortList     | 子節點 id            | Array   |
-| contract     | 是否收起子節點       | Boolean |
-| showAvatar   | 是否顯示頭像         | Boolean |
-| avatarUri    | 頭像地址             | String  |
-| showCheckbox | 是否顯示勾選框       | Boolean |
-| checked      | 是否勾選             | Boolean |
-| showStatus   | 是否顯示節點狀態     | Boolean |
-| hour         | 節點（任務）工時     | Number  |
-| limitDay     | 節點（任務）剩余天數 | Number  |
+| 屬性       | 說明                 | 類型    |
+| ---------- | -------------------- | ------- |
+| \_key      | 節點 id              | String  |
+| name       | 節點文本             | String  |
+| father     | 父節點 id            | String  |
+| sortList   | 子節點 id            | Array   |
+| contract   | 是否收起子節點       | Boolean |
+| checked    | 是否勾選             | Boolean |
+| showStatus | 是否顯示節點狀態     | Boolean |
+| hour       | 節點（任務）工時     | Number  |
+| limitDay   | 節點（任務）剩余天數 | Number  |

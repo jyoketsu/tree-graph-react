@@ -38,7 +38,16 @@ const TreeNode = ({
   }
 
   function location(node: CNode, type: string) {
-    return nodeLocation(node, type, BLOCK_HEIGHT, showIcon, 16);
+    return nodeLocation(
+      node,
+      type,
+      BLOCK_HEIGHT,
+      showIcon,
+      false,
+      false,
+      false,
+      16
+    );
   }
 
   const textLocationRes = location(node, 'text');

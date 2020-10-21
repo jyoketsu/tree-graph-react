@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { Tree, TreeProps } from '../src';
 import { Meta, Story } from '@storybook/react';
+import { ClickOutside } from '@jyoketsu/click-outside-react';
 
 const nodes = {
   '001': {
@@ -9,12 +10,12 @@ const nodes = {
     father: '',
     sortList: ['002', '003', '004', '005'],
     contract: false,
-    showAvatar: true,
+
     avatarUri: 'https://psnine.com/Upload/game/11387.png',
     icon: 'https://cdn-icare.qingtime.cn/rooter.svg',
-    showCheckbox: true,
+
     checked: true,
-    showStatus: true,
+
     hour: 0.1,
     limitDay: -23,
   },
@@ -24,10 +25,9 @@ const nodes = {
     father: '001',
     sortList: ['006', '007'],
     contract: false,
-    showAvatar: false,
-    showCheckbox: true,
+
     checked: true,
-    showStatus: true,
+
     hour: 0.1,
     limitDay: -23,
     icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
@@ -37,10 +37,9 @@ const nodes = {
     name: '項目狀態',
     father: '001',
     sortList: ['010', '011'],
-    showAvatar: false,
-    showCheckbox: true,
+
     checked: false,
-    showStatus: true,
+
     hour: 0.1,
     limitDay: 2,
     icon: 'https://cdn-icare.qingtime.cn/favFolder.svg',
@@ -50,10 +49,9 @@ const nodes = {
     name: '項目會議',
     father: '001',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: true,
+
     checked: false,
-    showStatus: true,
+
     hour: 0.1,
     limitDay: 2,
   },
@@ -62,10 +60,9 @@ const nodes = {
     name: '驗收',
     father: '001',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: true,
+
     checked: false,
-    showStatus: true,
+
     hour: 0.1,
     limitDay: 2,
   },
@@ -75,10 +72,9 @@ const nodes = {
     father: '002',
     contract: false,
     sortList: ['008', '009'],
-    showAvatar: false,
-    showCheckbox: true,
+
     checked: false,
-    showStatus: true,
+
     hour: 0.1,
     limitDay: 2,
   },
@@ -87,10 +83,9 @@ const nodes = {
     name: '階段二',
     father: '002',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: true,
+
     checked: false,
-    showStatus: true,
+
     hour: 0.1,
     limitDay: 2,
   },
@@ -99,10 +94,9 @@ const nodes = {
     name: '備份json文件',
     father: '006',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: true,
+
     checked: false,
-    showStatus: true,
+
     hour: 0.1,
     limitDay: 2,
   },
@@ -111,10 +105,9 @@ const nodes = {
     name: '還原數據',
     father: '006',
     sortList: ['015'],
-    showAvatar: false,
-    showCheckbox: true,
+
     checked: false,
-    showStatus: true,
+
     hour: 0.1,
     limitDay: 2,
   },
@@ -123,10 +116,9 @@ const nodes = {
     name: '4月計劃',
     father: '003',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: true,
+
     checked: true,
-    showStatus: true,
+
     hour: 0.1,
     limitDay: 2,
   },
@@ -136,10 +128,9 @@ const nodes = {
     father: '003',
     sortList: ['012', '013', '014'],
     contract: false,
-    showAvatar: false,
-    showCheckbox: true,
+
     checked: true,
-    showStatus: true,
+
     hour: 0.1,
     limitDay: 2,
   },
@@ -148,10 +139,9 @@ const nodes = {
     name: '原型、界面設計',
     father: '011',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: true,
+
     checked: true,
-    showStatus: true,
+
     hour: 0.1,
     limitDay: 2,
   },
@@ -160,10 +150,9 @@ const nodes = {
     name: '開發',
     father: '011',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: true,
+
     checked: true,
-    showStatus: true,
+
     hour: 0.1,
     limitDay: 2,
   },
@@ -172,10 +161,9 @@ const nodes = {
     name: '測試',
     father: '011',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: true,
+
     checked: true,
-    showStatus: true,
+
     hour: 0.1,
     limitDay: 2,
   },
@@ -184,10 +172,9 @@ const nodes = {
     name: '還原數據-還原數據',
     father: '009',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: true,
+
     checked: true,
-    showStatus: true,
+
     hour: 0.1,
     limitDay: 2,
   },
@@ -200,11 +187,11 @@ const nodes2 = {
     father: '',
     sortList: ['002', '003', '004', '005'],
     contract: false,
-    showAvatar: false,
+
     avatarUri: 'https://psnine.com/Upload/game/11387.png',
-    showCheckbox: false,
+
     checked: true,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: -23,
   },
@@ -214,10 +201,9 @@ const nodes2 = {
     father: '001',
     sortList: ['006', '007'],
     contract: false,
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: true,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: -23,
   },
@@ -226,10 +212,9 @@ const nodes2 = {
     name: '項目狀態',
     father: '001',
     sortList: ['010', '011'],
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: false,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: 2,
   },
@@ -238,10 +223,9 @@ const nodes2 = {
     name: '項目會議',
     father: '001',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: false,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: 2,
   },
@@ -250,10 +234,9 @@ const nodes2 = {
     name: '驗收',
     father: '001',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: false,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: 2,
   },
@@ -263,10 +246,9 @@ const nodes2 = {
     father: '002',
     contract: false,
     sortList: ['008', '009'],
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: false,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: 2,
   },
@@ -275,10 +257,9 @@ const nodes2 = {
     name: '階段二',
     father: '002',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: false,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: 2,
   },
@@ -287,10 +268,9 @@ const nodes2 = {
     name: '備份json文件',
     father: '006',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: false,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: 2,
   },
@@ -299,10 +279,9 @@ const nodes2 = {
     name: '還原數據',
     father: '006',
     sortList: ['015'],
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: false,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: 2,
   },
@@ -311,10 +290,9 @@ const nodes2 = {
     name: '4月計劃',
     father: '003',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: true,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: 2,
   },
@@ -324,10 +302,9 @@ const nodes2 = {
     father: '003',
     sortList: ['012', '013', '014'],
     contract: false,
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: true,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: 2,
   },
@@ -336,10 +313,9 @@ const nodes2 = {
     name: '原型、界面設計',
     father: '011',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: true,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: 2,
   },
@@ -348,10 +324,7 @@ const nodes2 = {
     name: '開發',
     father: '011',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: false,
     checked: true,
-    showStatus: false,
     hour: 0.1,
     limitDay: 2,
   },
@@ -360,10 +333,7 @@ const nodes2 = {
     name: '測試',
     father: '011',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: false,
     checked: true,
-    showStatus: false,
     hour: 0.1,
     limitDay: 2,
   },
@@ -372,10 +342,7 @@ const nodes2 = {
     name: '還原數據-還原數據',
     father: '009',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: false,
     checked: true,
-    showStatus: false,
     hour: 0.1,
     limitDay: 2,
   },
@@ -407,23 +374,27 @@ const Template: Story<TreeProps> = args => {
         ref={treeRef}
         {...args}
         nodeOptions={
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              background: '#FFF',
-              padding: '5px',
-            }}
-          >
-            <button onClick={() => treeRef.current.rename()}>重命名</button>
-            <button onClick={() => treeRef.current.addNext()}>添加节点</button>
-            <button onClick={() => treeRef.current.addChild()}>
-              添加子节点
-            </button>
-            <button onClick={() => treeRef.current.deleteNode()}>
-              删除节点
-            </button>
-          </div>
+          <ClickOutside onClickOutside={() => treeRef.current.closeOptions()}>
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                background: '#FFF',
+                padding: '5px',
+              }}
+            >
+              <button onClick={() => treeRef.current.rename()}>重命名</button>
+              <button onClick={() => treeRef.current.addNext()}>
+                添加节点
+              </button>
+              <button onClick={() => treeRef.current.addChild()}>
+                添加子节点
+              </button>
+              <button onClick={() => treeRef.current.deleteNode()}>
+                删除节点
+              </button>
+            </div>
+          </ClickOutside>
         }
       />
     </div>
@@ -439,6 +410,10 @@ MultiCol.args = {
   // renameSelectedNode: true,
   defaultSelectedId: '003',
   showNodeOptions: true,
+  showAvatar:true,
+  showCheckbox:true,
+  showStatus:true,
+  handleClickDot: (node: any) => console.log('---handleClickDot---', node),
 };
 
 export const SingleCol = Template.bind({});

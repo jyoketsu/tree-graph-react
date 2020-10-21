@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CNode from '../interfaces/CNode';
 import { nodeLocation } from '../services/util';
 
@@ -14,7 +14,11 @@ interface Props {
   alias: number;
   selected: string | null;
   showNodeOptions: boolean;
+  nodeOptionsOpened: boolean;
   showIcon: boolean;
+  showAvatar: boolean;
+  showCheckbox: boolean;
+  showStatus: boolean;
   hideBorder?: boolean;
   handleCheck: CheckFunc;
   handleClickNode: Function;
@@ -29,13 +33,18 @@ const TreeNode = ({
   alias,
   selected,
   showIcon,
+  showAvatar,
+  showCheckbox,
+  showStatus,
   hideBorder,
   showNodeOptions,
+  nodeOptionsOpened,
   handleCheck,
   handleClickNode,
   handleDbClickNode,
   openOptions,
 }: Props) => {
+  const [hover, sethover] = useState(false);
   function rectClassName(node: CNode) {
     // 选中的节点
     if (selected === node._key) {
@@ -52,7 +61,15 @@ const TreeNode = ({
   }
 
   function location(node: CNode, type: string) {
-    return nodeLocation(node, type, BLOCK_HEIGHT, showIcon);
+    return nodeLocation(
+      node,
+      type,
+      BLOCK_HEIGHT,
+      showIcon,
+      showAvatar,
+      showCheckbox,
+      showStatus
+    );
   }
 
   const textLocationRes = location(node, 'text');
@@ -79,8 +96,17 @@ const TreeNode = ({
     <g
       onClick={() => handleClickNode(node)}
       onDoubleClick={() => handleDbClickNode(node)}
+      onMouseEnter={() => sethover(true)}
+      onMouseLeave={() => sethover(false)}
     >
       {/* 外框 */}
+      <rect
+        x={node.x}
+        y={node.y}
+        width={node.width + BLOCK_HEIGHT}
+        height={BLOCK_HEIGHT}
+        fillOpacity={0}
+      />
       <rect
         className="node-rect"
         x={node.x}
@@ -105,7 +131,7 @@ const TreeNode = ({
         />
       ) : null}
       {/* 头像/图片 */}
-      {node.showAvatar
+      {showAvatar && node.avatarUri
         ? [
             <clipPath
               key="avatar-path"
@@ -130,7 +156,7 @@ const TreeNode = ({
         : null}
 
       {/* 勾选框 */}
-      {node.showCheckbox ? (
+      {showCheckbox ? (
         <use
           key="checkbox"
           href={`#checkbox-${node.checked ? 'checked' : 'uncheck'}`}
@@ -141,7 +167,7 @@ const TreeNode = ({
       ) : null}
 
       {/* 任务状态 */}
-      {node.showStatus
+      {showStatus
         ? [
             <use
               key="status"
@@ -190,14 +216,16 @@ const TreeNode = ({
       >
         {node.name || '未命名文件'}
       </text>
-      {showNodeOptions && selected === node._key ? (
+      {/* 选项/更多按钮 */}
+      {(showNodeOptions && hover) || nodeOptionsOpened ? (
         <g onClick={e => openOptions(node, e)}>
           <circle
             cx={node.x + node.width + BLOCK_HEIGHT / 2 + 5}
             cy={node.y + BLOCK_HEIGHT / 2}
             r={BLOCK_HEIGHT / 2}
-            fill="#FFF"
-            stroke="#ddd"
+            // fill="#FFF"
+            // stroke="#ddd"
+            fillOpacity={0}
           />
           <circle
             cx={node.x + node.width + BLOCK_HEIGHT / 2 + 5 - 6}

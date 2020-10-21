@@ -9,10 +9,12 @@ const nodes = {
     father: '',
     sortList: ['002', '003', '004', '005'],
     contract: false,
-    icon: 'https://i.loli.net/2020/10/15/4SFsZLDU8bdWjGR.png',
-    showCheckbox: false,
+
+    avatarUri: 'https://psnine.com/Upload/game/11387.png',
+    icon: 'https://cdn-icare.qingtime.cn/rooter.svg',
+
     checked: true,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: -23,
   },
@@ -22,52 +24,46 @@ const nodes = {
     father: '001',
     sortList: ['006', '007'],
     contract: false,
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: true,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: -23,
-    icon: 'https://i.loli.net/2020/10/15/4SFsZLDU8bdWjGR.png',
+    icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
   },
   '003': {
     _key: '003',
     name: '項目狀態',
     father: '001',
     sortList: ['010', '011'],
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: false,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: 2,
-    icon: 'https://i.loli.net/2020/10/15/mET1O2e6I8jrs4M.png',
+    icon: 'https://cdn-icare.qingtime.cn/favFolder.svg',
   },
   '004': {
     _key: '004',
     name: '項目會議',
     father: '001',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: false,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: 2,
-    icon: 'https://i.loli.net/2020/10/15/4SFsZLDU8bdWjGR.png',
   },
   '005': {
     _key: '005',
     name: '驗收',
     father: '001',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: false,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: 2,
-    icon: 'https://i.loli.net/2020/10/15/4SFsZLDU8bdWjGR.png',
   },
   '006': {
     _key: '006',
@@ -75,65 +71,55 @@ const nodes = {
     father: '002',
     contract: false,
     sortList: ['008', '009'],
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: false,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: 2,
-    icon: 'https://i.loli.net/2020/10/15/4SFsZLDU8bdWjGR.png',
   },
   '007': {
     _key: '007',
     name: '階段二',
     father: '002',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: false,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: 2,
-    icon: 'https://i.loli.net/2020/10/15/4SFsZLDU8bdWjGR.png',
   },
   '008': {
     _key: '008',
     name: '備份json文件',
     father: '006',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: false,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: 2,
-    icon: 'https://i.loli.net/2020/10/15/mET1O2e6I8jrs4M.png',
   },
   '009': {
     _key: '009',
     name: '還原數據',
     father: '006',
     sortList: ['015'],
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: false,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: 2,
-    icon: 'https://i.loli.net/2020/10/15/4SFsZLDU8bdWjGR.png',
   },
   '010': {
     _key: '010',
     name: '4月計劃',
     father: '003',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: true,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: 2,
-    icon: 'https://i.loli.net/2020/10/15/4SFsZLDU8bdWjGR.png',
   },
   '011': {
     _key: '011',
@@ -141,65 +127,55 @@ const nodes = {
     father: '003',
     sortList: ['012', '013', '014'],
     contract: false,
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: true,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: 2,
-    icon: 'https://i.loli.net/2020/10/15/4SFsZLDU8bdWjGR.png',
   },
   '012': {
     _key: '012',
     name: '原型、界面設計',
     father: '011',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: true,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: 2,
-    icon: 'https://i.loli.net/2020/10/15/mET1O2e6I8jrs4M.png',
   },
   '013': {
     _key: '013',
     name: '開發',
     father: '011',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: true,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: 2,
-    icon: 'https://i.loli.net/2020/10/15/mET1O2e6I8jrs4M.png',
   },
   '014': {
     _key: '014',
     name: '測試',
     father: '011',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: true,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: 2,
-    icon: 'https://i.loli.net/2020/10/15/mET1O2e6I8jrs4M.png',
   },
   '015': {
     _key: '015',
     name: '還原數據-還原數據',
     father: '009',
     sortList: [],
-    showAvatar: false,
-    showCheckbox: false,
+
     checked: true,
-    showStatus: false,
+
     hour: 0.1,
     limitDay: 2,
-    icon: 'https://i.loli.net/2020/10/15/mET1O2e6I8jrs4M.png',
   },
 };
 

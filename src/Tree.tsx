@@ -43,6 +43,9 @@ export interface TreeProps {
   showNodeOptions?: boolean;
   nodeOptions?: any;
   showIcon?: boolean;
+  showAvatar?: boolean;
+  showCheckbox?: boolean;
+  showStatus?: boolean;
   handleClickExpand?: Function;
   handleCheck?: Function;
   handleClickNode?: Function;
@@ -52,6 +55,7 @@ export interface TreeProps {
   handleAddChild?: Function;
   handleDeleteNode?: Function;
   handleClickOptionsButton?: Function;
+  handleClickDot?: Function;
   ref?: any;
 }
 
@@ -76,6 +80,9 @@ export const Tree = React.forwardRef(
       showNodeOptions,
       nodeOptions,
       showIcon,
+      showAvatar,
+      showCheckbox,
+      showStatus,
       handleClickExpand,
       handleCheck,
       handleClickNode,
@@ -85,6 +92,7 @@ export const Tree = React.forwardRef(
       handleAddChild,
       handleDeleteNode,
       handleClickOptionsButton,
+      handleClickDot,
     }: TreeProps,
     ref
   ) => {
@@ -99,6 +107,9 @@ export const Tree = React.forwardRef(
     const PATH_WIDTH = pathWidth || 1.5;
     const UNCONTROLLED = uncontrolled === undefined ? true : uncontrolled;
     const SHOW_ICON = showIcon === undefined ? true : showIcon;
+    const SHOW_AVATAR = showAvatar === undefined ? false : showAvatar;
+    const SHOW_CHECKBOX = showCheckbox === undefined ? false : showCheckbox;
+    const SHOW_STATUS = showStatus === undefined ? false : showStatus;
 
     const [nodeMap, setNodeMap] = useState(nodes);
     const [secondStartX, setSecondStartX] = useState<number | undefined>(0);
@@ -111,7 +122,7 @@ export const Tree = React.forwardRef(
     const [showInput, setshowInput] = useState(false);
     const [showNewInput, setshowNewInput] = useState(false);
     const [isSingle, setisSingle] = useState(singleColumn);
-    const [showOptions, setShowOptions] = useState(false);
+    const [showOptionsNode, setShowOptionsNode] = useState<CNode | null>(null);
 
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -127,6 +138,9 @@ export const Tree = React.forwardRef(
         } else {
           alert('请先选中节点');
         }
+      },
+      closeOptions: function() {
+        setShowOptionsNode(null);
       },
     }));
 
@@ -145,7 +159,10 @@ export const Tree = React.forwardRef(
         ITEM_HEIGHT,
         INDENT,
         FONT_SIZE,
-        SHOW_ICON
+        SHOW_ICON,
+        SHOW_AVATAR,
+        SHOW_CHECKBOX,
+        SHOW_STATUS
       );
 
       setcnodes(cal.nodes);
@@ -159,7 +176,7 @@ export const Tree = React.forwardRef(
 
     useEffect(() => {
       if (defaultSelectedId) {
-        setShowOptions(false);
+        setShowOptionsNode(null);
         setselectedId(defaultSelectedId);
       }
     }, [defaultSelectedId]);
@@ -269,7 +286,7 @@ export const Tree = React.forwardRef(
       if (selectedId === startId) {
         return alert('根节点无法添加兄弟节点！');
       }
-      setShowOptions(false);
+      setShowOptionsNode(null);
       if (UNCONTROLLED) {
         const res = addNextNode(nodeMap, selectedId);
 
@@ -293,7 +310,7 @@ export const Tree = React.forwardRef(
         return alert('请先选中节点！');
       }
 
-      setShowOptions(false);
+      setShowOptionsNode(null);
       if (UNCONTROLLED) {
         const res = addChildNode(nodeMap, selectedId);
 
@@ -320,7 +337,7 @@ export const Tree = React.forwardRef(
         return alert('根节点不允许删除！');
       }
 
-      setShowOptions(false);
+      setShowOptionsNode(null);
       if (UNCONTROLLED) {
         let nodes = deleteNode(nodeMap, selectedId);
 
@@ -362,12 +379,19 @@ export const Tree = React.forwardRef(
       }
     }
 
-    function handleClick(node: CNode, e: MouseEvent) {
+    function clickOptionsButton(node: CNode, e: MouseEvent) {
       e.stopPropagation();
       if (handleClickOptionsButton) {
         handleClickOptionsButton(node);
       }
-      setShowOptions(true);
+      clickNode(node);
+      setShowOptionsNode(node);
+    }
+
+    function clickDot(node: CNode) {
+      if (handleClickDot) {
+        handleClickDot(node);
+      }
     }
 
     return (
@@ -490,11 +514,19 @@ export const Tree = React.forwardRef(
                 alias={new Date().getTime()}
                 selected={selectedId}
                 showIcon={SHOW_ICON}
+                showAvatar={SHOW_AVATAR}
+                showStatus={SHOW_STATUS}
+                showCheckbox={SHOW_CHECKBOX}
                 showNodeOptions={showNodeOptions || false}
+                nodeOptionsOpened={
+                  showOptionsNode && node._key === showOptionsNode._key
+                    ? true
+                    : false
+                }
                 handleCheck={check}
                 handleClickNode={clickNode}
                 handleDbClickNode={dbClickNode}
-                openOptions={handleClick}
+                openOptions={clickOptionsButton}
               />
               {isSingle ? (
                 node.x && node.y ? (
@@ -584,7 +616,11 @@ export const Tree = React.forwardRef(
                   ) : null}
                 </g>
               )}
-              <Dot node={node} BLOCK_HEIGHT={BLOCK_HEIGHT} />
+              <Dot
+                node={node}
+                BLOCK_HEIGHT={BLOCK_HEIGHT}
+                handleClick={clickDot}
+              />
               <Expand
                 node={node}
                 BLOCK_HEIGHT={BLOCK_HEIGHT}
@@ -605,12 +641,11 @@ export const Tree = React.forwardRef(
             handleChangeNodeText={changeText}
           />
         ) : null}
-        {selectedId && showOptions && nodeOptions ? (
+        {selectedId && showOptionsNode && nodeOptions ? (
           <NodeOptions
-            selectedId={selectedId}
-            nodeList={cnodes}
+            node={showOptionsNode}
             content={nodeOptions}
-            handleClose={() => setShowOptions(false)}
+            handleClose={() => setShowOptionsNode(null)}
           />
         ) : null}
       </div>

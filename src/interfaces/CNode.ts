@@ -5,9 +5,6 @@ export default interface CNode {
   sortList: string[];
   // 是否收起子节点
   contract?: boolean;
-  showAvatar?: boolean;
-  showCheckbox?: boolean;
-  showStatus?: boolean;
   checked?: boolean;
   hour?: number;
   limitDay?: number;
