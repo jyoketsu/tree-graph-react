@@ -10,11 +10,11 @@ interface Props {
   BLOCK_HEIGHT: number;
   FONT_SIZE: number;
   selected: string | null;
-  showNodeOptions: boolean;
+  showMoreButton: boolean;
   showIcon: boolean;
   handleClickNode: Function;
   handleDbClickNode: Function;
-  openOptions: Function;
+  clickMore: Function;
 }
 const TreeNode = ({
   node,
@@ -25,10 +25,10 @@ const TreeNode = ({
   FONT_SIZE,
   selected,
   showIcon,
-  showNodeOptions,
+  showMoreButton,
   handleClickNode,
   handleDbClickNode,
-  openOptions,
+  clickMore,
 }: Props) => {
   function rectClassName(node: CNode) {
     // 选中的节点
@@ -103,8 +103,8 @@ const TreeNode = ({
       >
         {node.name || '未命名文件'}
       </text>
-      {showNodeOptions && selected === node._key ? (
-        <g onClick={e => openOptions(node, e)}>
+      {showMoreButton && selected === node._key ? (
+        <g onClick={e => clickMore(node, e)}>
           <circle
             cx={node.x + node.width + BLOCK_HEIGHT / 2 + 5}
             cy={node.y + BLOCK_HEIGHT / 2}

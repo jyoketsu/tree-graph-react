@@ -380,7 +380,6 @@ const Template: Story<TreeProps> = args => {
                 display: 'flex',
                 flexDirection: 'column',
                 background: '#FFF',
-                padding: '5px',
               }}
             >
               <button onClick={() => treeRef.current.rename()}>重命名</button>
@@ -409,11 +408,13 @@ MultiCol.args = {
   // selectedId: '004',
   // renameSelectedNode: true,
   defaultSelectedId: '003',
-  showNodeOptions: true,
-  showAvatar:true,
-  showCheckbox:true,
-  showStatus:true,
+  showMoreButton: true,
+  showAvatar: true,
+  showCheckbox: true,
+  showStatus: true,
   handleClickDot: (node: any) => console.log('---handleClickDot---', node),
+  handleClickMoreButton: (node: any) =>
+    console.log('---handleClickMoreButton---', node),
 };
 
 export const SingleCol = Template.bind({});

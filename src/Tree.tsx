@@ -40,7 +40,7 @@ export interface TreeProps {
   checkBoxWidth?: number;
   pathWidth?: number;
   disableShortcut?: boolean;
-  showNodeOptions?: boolean;
+  showMoreButton?: boolean;
   nodeOptions?: any;
   showIcon?: boolean;
   showAvatar?: boolean;
@@ -54,7 +54,7 @@ export interface TreeProps {
   handleAddNext?: Function;
   handleAddChild?: Function;
   handleDeleteNode?: Function;
-  handleClickOptionsButton?: Function;
+  handleClickMoreButton?: Function;
   handleClickDot?: Function;
   ref?: any;
 }
@@ -77,7 +77,7 @@ export const Tree = React.forwardRef(
       // checkBoxWidth,
       pathWidth,
       disableShortcut,
-      showNodeOptions,
+      showMoreButton,
       nodeOptions,
       showIcon,
       showAvatar,
@@ -91,7 +91,7 @@ export const Tree = React.forwardRef(
       handleAddNext,
       handleAddChild,
       handleDeleteNode,
-      handleClickOptionsButton,
+      handleClickMoreButton,
       handleClickDot,
     }: TreeProps,
     ref
@@ -379,13 +379,15 @@ export const Tree = React.forwardRef(
       }
     }
 
-    function clickOptionsButton(node: CNode, e: MouseEvent) {
-      e.stopPropagation();
-      if (handleClickOptionsButton) {
-        handleClickOptionsButton(node);
-      }
+    function clickOptionsButton(node: CNode) {
       clickNode(node);
       setShowOptionsNode(node);
+    }
+
+    function clickMore(node: CNode) {
+      if (handleClickMoreButton) {
+        handleClickMoreButton(node);
+      }
     }
 
     function clickDot(node: CNode) {
@@ -517,7 +519,7 @@ export const Tree = React.forwardRef(
                 showAvatar={SHOW_AVATAR}
                 showStatus={SHOW_STATUS}
                 showCheckbox={SHOW_CHECKBOX}
-                showNodeOptions={showNodeOptions || false}
+                showMoreButton={showMoreButton || false}
                 nodeOptionsOpened={
                   showOptionsNode && node._key === showOptionsNode._key
                     ? true
@@ -526,7 +528,7 @@ export const Tree = React.forwardRef(
                 handleCheck={check}
                 handleClickNode={clickNode}
                 handleDbClickNode={dbClickNode}
-                openOptions={clickOptionsButton}
+                clickMore={clickMore}
               />
               {isSingle ? (
                 node.x && node.y ? (
@@ -620,6 +622,7 @@ export const Tree = React.forwardRef(
                 node={node}
                 BLOCK_HEIGHT={BLOCK_HEIGHT}
                 handleClick={clickDot}
+                openOptions={clickOptionsButton}
               />
               <Expand
                 node={node}

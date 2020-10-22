@@ -13,7 +13,7 @@ interface Props {
   FONT_SIZE: number;
   alias: number;
   selected: string | null;
-  showNodeOptions: boolean;
+  showMoreButton: boolean;
   nodeOptionsOpened: boolean;
   showIcon: boolean;
   showAvatar: boolean;
@@ -23,7 +23,7 @@ interface Props {
   handleCheck: CheckFunc;
   handleClickNode: Function;
   handleDbClickNode: Function;
-  openOptions: Function;
+  clickMore: Function;
 }
 const TreeNode = ({
   node,
@@ -37,14 +37,15 @@ const TreeNode = ({
   showCheckbox,
   showStatus,
   hideBorder,
-  showNodeOptions,
+  showMoreButton,
   nodeOptionsOpened,
   handleCheck,
   handleClickNode,
   handleDbClickNode,
-  openOptions,
+  clickMore,
 }: Props) => {
   const [hover, sethover] = useState(false);
+  const [hoverMore, setHoverMore] = useState(false);
   function rectClassName(node: CNode) {
     // 选中的节点
     if (selected === node._key) {
@@ -217,15 +218,19 @@ const TreeNode = ({
         {node.name || '未命名文件'}
       </text>
       {/* 选项/更多按钮 */}
-      {(showNodeOptions && hover) || nodeOptionsOpened ? (
-        <g onClick={e => openOptions(node, e)}>
+      {(showMoreButton && hover) || nodeOptionsOpened ? (
+        <g
+          onClick={() => clickMore(node)}
+          onMouseEnter={() => setHoverMore(true)}
+          onMouseLeave={() => setHoverMore(false)}
+        >
           <circle
             cx={node.x + node.width + BLOCK_HEIGHT / 2 + 5}
             cy={node.y + BLOCK_HEIGHT / 2}
             r={BLOCK_HEIGHT / 2}
-            // fill="#FFF"
+            fill="rgb(220, 224, 226)"
             // stroke="#ddd"
-            fillOpacity={0}
+            fillOpacity={hoverMore ? 1 : 0}
           />
           <circle
             cx={node.x + node.width + BLOCK_HEIGHT / 2 + 5 - 6}

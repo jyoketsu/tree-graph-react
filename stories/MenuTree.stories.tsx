@@ -202,5 +202,5 @@ export const Default = Template.bind({});
 Default.args = {
   nodes: nodes,
   startId: '001',
-  // showNodeOptions: true,
+  // showMoreButton: true,
 };

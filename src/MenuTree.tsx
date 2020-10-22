@@ -4,7 +4,6 @@ import CNode from './interfaces/CNode';
 import MenuItem from './components/menu/MenuItem';
 import Expander from './components/menu/Expander';
 import MenuInput from './components/menu/MenuInput';
-import NodeOptions from './components/NodeOptions';
 import calculate from './services/treeService';
 import {
   dot,
@@ -43,7 +42,7 @@ export interface MenuProps {
   avatarWidth?: number;
   checkBoxWidth?: number;
   disableShortcut?: boolean;
-  showNodeOptions?: boolean;
+  showMoreButton?: boolean;
   showIcon?: boolean;
   nodeOptions?: any;
   handleClickExpand?: Function;
@@ -53,7 +52,7 @@ export interface MenuProps {
   handleAddNext?: Function;
   handleAddChild?: Function;
   handleDeleteNode?: Function;
-  handleClickOptionsButton?: Function;
+  handleClickMoreButton?: Function;
   ref?: any;
 }
 export const MenuTree = React.forwardRef(
@@ -72,8 +71,7 @@ export const MenuTree = React.forwardRef(
       fontSize,
       indent,
       disableShortcut,
-      showNodeOptions,
-      nodeOptions,
+      showMoreButton,
       showIcon,
       handleClickExpand,
       handleClickNode,
@@ -82,7 +80,7 @@ export const MenuTree = React.forwardRef(
       handleAddNext,
       handleAddChild,
       handleDeleteNode,
-      handleClickOptionsButton,
+      handleClickMoreButton,
     }: MenuProps,
     ref
   ) => {
@@ -96,7 +94,7 @@ export const MenuTree = React.forwardRef(
     // const AVATAR_WIDTH = avatarWidth || 22;
     // const CHECK_BOX_WIDTH = checkBoxWidth || 18;
     const UNCONTROLLED = uncontrolled === undefined ? true : uncontrolled;
-    const SHOW_ICON = showIcon === undefined ? true : showIcon
+    const SHOW_ICON = showIcon === undefined ? true : showIcon;
 
     const [nodeMap, setNodeMap] = useState(nodes);
     const [cnodes, setcnodes] = useState<CNode[]>([]);
@@ -105,7 +103,6 @@ export const MenuTree = React.forwardRef(
     const [selectedId, setselectedId] = useState<string | null>(null);
     const [showInput, setshowInput] = useState(false);
     const [showNewInput, setshowNewInput] = useState(false);
-    const [showOptions, setShowOptions] = useState(false);
 
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -140,6 +137,9 @@ export const MenuTree = React.forwardRef(
         INDENT,
         FONT_SIZE,
         SHOW_ICON,
+        false,
+        false,
+        false,
         0.1,
         0.1
       );
@@ -151,7 +151,6 @@ export const MenuTree = React.forwardRef(
 
     useEffect(() => {
       if (defaultSelectedId) {
-        setShowOptions(false);
         setselectedId(defaultSelectedId);
       }
     }, [defaultSelectedId]);
@@ -213,7 +212,6 @@ export const MenuTree = React.forwardRef(
       if (selectedId === startId) {
         return alert('根节点无法添加兄弟节点！');
       }
-      setShowOptions(false);
       if (UNCONTROLLED) {
         const res = addNextNode(nodeMap, selectedId);
 
@@ -237,7 +235,6 @@ export const MenuTree = React.forwardRef(
         return alert('请先选中节点！');
       }
 
-      setShowOptions(false);
       if (UNCONTROLLED) {
         const res = addChildNode(nodeMap, selectedId);
 
@@ -264,7 +261,6 @@ export const MenuTree = React.forwardRef(
         return alert('根节点不允许删除！');
       }
 
-      setShowOptions(false);
       if (UNCONTROLLED) {
         let nodes = deleteNode(nodeMap, selectedId);
 
@@ -306,12 +302,11 @@ export const MenuTree = React.forwardRef(
       }
     }
 
-    function handleClick(node: CNode, e: MouseEvent) {
+    function handleClickMore(node: CNode, e: MouseEvent) {
       e.stopPropagation();
-      if (handleClickOptionsButton) {
-        handleClickOptionsButton(node);
+      if (handleClickMoreButton) {
+        handleClickMoreButton(node);
       }
-      setShowOptions(true);
     }
 
     return (
@@ -414,10 +409,10 @@ export const MenuTree = React.forwardRef(
                 color={color || '#CDD0D2'}
                 selected={selectedId}
                 showIcon={SHOW_ICON}
-                showNodeOptions={showNodeOptions || false}
+                showMoreButton={showMoreButton || false}
                 handleClickNode={clickNode}
                 handleDbClickNode={dbClickNode}
-                openOptions={handleClick}
+                clickMore={handleClickMore}
               />
               <Expander
                 node={node}
@@ -435,14 +430,6 @@ export const MenuTree = React.forwardRef(
             selectedId={selectedId}
             nodeList={cnodes}
             handleChangeNodeText={changeText}
-          />
-        ) : null}
-        {selectedId && showOptions && nodeOptions ? (
-          <NodeOptions
-            selectedId={selectedId}
-            nodeList={cnodes}
-            content={nodeOptions}
-            handleClose={() => setShowOptions(false)}
           />
         ) : null}
       </div>
