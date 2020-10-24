@@ -420,7 +420,7 @@ export const Tree = React.forwardRef(
                 result="offOut"
                 in="SourceAlpha"
                 dx="2"
-                dy="4"
+                dy="2"
               ></feOffset>
               <feColorMatrix
                 result="matrixOut"

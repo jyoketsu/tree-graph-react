@@ -29,7 +29,7 @@ npm i tree-graph-react
 ## Usage
 
 ```jsx
-import { Tree } from 'tree-graph-react';
+import { Tree, MenuTree, MiniMenu } from 'tree-graph-react';
 
 const MyComp = () => <Tree nodes={nodes} startId="rootKey" />;
 ```
@@ -128,6 +128,20 @@ const MyComp = () => <Tree nodes={nodes} startId="rootKey" />;
 | handleClickMoreButton   | 點擊更多按鈕,參數：clickNode            | Function  | 否       | -       |
 | handleSave              | 保存樹                                  | Function  | 否       | -       |
 | handleDrag              | 拖拽節點                                | Function  | 否       | -       |
+
+## MiniMenu Props
+
+| 屬性                    | 說明                    | 類型     | 是否必須 | 默認值  |
+| ----------------------- | ----------------------- | -------- | -------- | ------- |
+| nodes                   | 節點                    | Array    | 是       | -       |
+| startId                 | 根節點 id               | String   | 是       | -       |
+| width                   | 菜單寬度                | string   | 否       | 48      |
+| backgroundColor         | 菜單背景色              | string   | 否       | #333333 |
+| selectedBackgroundColor | 選中的菜單背景色        | string   | 否       | #00CDD3 |
+| color                   | 選中的菜單背景色        | string   | 否       | #CDD0D2 |
+| itemHeight              | 節點元素高度            | Number   | 否       | 48      |
+| fontSize                | 節點字體大小            | Number   | 否       | 14      |
+| handleClickNode         | 點擊節點事件,参数：node | Function | 否       | -       |
 
 ## Node Props
 

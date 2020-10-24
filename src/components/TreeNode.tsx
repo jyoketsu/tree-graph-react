@@ -116,8 +116,20 @@ const TreeNode = ({
         ry={4}
         width={node.width}
         height={BLOCK_HEIGHT}
-        filter="url(#filterShadow)"
-        style={{ ...nodeRectStyle, ...{ strokeWidth: 1 } }}
+        filter={
+          nodeRectClassName !== 'selected' && node.father === startId
+            ? 'url(#filterShadow)'
+            : 'unset'
+        }
+        style={{
+          ...nodeRectStyle,
+          ...{
+            strokeWidth:
+              nodeRectClassName === 'selected' && node.father === startId
+                ? 2
+                : 1,
+          },
+        }}
       />
 
       {/* 图标 */}
