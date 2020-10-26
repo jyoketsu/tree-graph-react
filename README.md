@@ -31,7 +31,184 @@ npm i tree-graph-react
 ```jsx
 import { Tree, MenuTree, MiniMenu } from 'tree-graph-react';
 
-const MyComp = () => <Tree nodes={nodes} startId="rootKey" />;
+const nodes = {
+  '001': {
+    _key: '001',
+    name: '項目管理',
+    father: '',
+    sortList: ['002', '003', '004', '005'],
+    contract: false,
+
+    avatarUri: 'https://psnine.com/Upload/game/11387.png',
+    icon: 'https://cdn-icare.qingtime.cn/rooter.svg',
+
+    checked: true,
+
+    hour: 0.1,
+    limitDay: -23,
+  },
+  '002': {
+    _key: '002',
+    name: '計劃進度',
+    father: '001',
+    sortList: ['006', '007'],
+    contract: false,
+
+    checked: true,
+
+    hour: 0.1,
+    limitDay: -23,
+    icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
+  },
+  '003': {
+    _key: '003',
+    name: '項目狀態',
+    father: '001',
+    sortList: ['010', '011'],
+
+    checked: false,
+
+    hour: 0.1,
+    limitDay: 2,
+    icon: 'https://cdn-icare.qingtime.cn/favFolder.svg',
+  },
+  '004': {
+    _key: '004',
+    name: '項目會議',
+    father: '001',
+    sortList: [],
+
+    checked: false,
+
+    hour: 0.1,
+    limitDay: 2,
+  },
+  '005': {
+    _key: '005',
+    name: '驗收',
+    father: '001',
+    sortList: [],
+
+    checked: false,
+
+    hour: 0.1,
+    limitDay: 2,
+  },
+  '006': {
+    _key: '006',
+    name: '階段壹',
+    father: '002',
+    contract: false,
+    sortList: ['008', '009'],
+
+    checked: false,
+
+    hour: 0.1,
+    limitDay: 2,
+  },
+  '007': {
+    _key: '007',
+    name: '階段二',
+    father: '002',
+    sortList: [],
+
+    checked: false,
+
+    hour: 0.1,
+    limitDay: 2,
+  },
+  '008': {
+    _key: '008',
+    name: '備份json文件',
+    father: '006',
+    sortList: [],
+
+    checked: false,
+
+    hour: 0.1,
+    limitDay: 2,
+  },
+  '009': {
+    _key: '009',
+    name: '還原數據',
+    father: '006',
+    sortList: ['015'],
+
+    checked: false,
+
+    hour: 0.1,
+    limitDay: 2,
+  },
+  '010': {
+    _key: '010',
+    name: '4月計劃',
+    father: '003',
+    sortList: [],
+
+    checked: true,
+
+    hour: 0.1,
+    limitDay: 2,
+  },
+  '011': {
+    _key: '011',
+    name: '5月計劃',
+    father: '003',
+    sortList: ['012', '013', '014'],
+    contract: false,
+
+    checked: true,
+
+    hour: 0.1,
+    limitDay: 2,
+  },
+  '012': {
+    _key: '012',
+    name: '原型、界面設計',
+    father: '011',
+    sortList: [],
+
+    checked: true,
+
+    hour: 0.1,
+    limitDay: 2,
+  },
+  '013': {
+    _key: '013',
+    name: '開發',
+    father: '011',
+    sortList: [],
+
+    checked: true,
+
+    hour: 0.1,
+    limitDay: 2,
+  },
+  '014': {
+    _key: '014',
+    name: '測試',
+    father: '011',
+    sortList: [],
+
+    checked: true,
+
+    hour: 0.1,
+    limitDay: 2,
+  },
+  '015': {
+    _key: '015',
+    name: '還原數據-還原數據',
+    father: '009',
+    sortList: [],
+
+    checked: true,
+
+    hour: 0.1,
+    limitDay: 2,
+  },
+};
+
+const MyComp = () => <Tree nodes={nodes} startId="001" />;
 ```
 
 ## operate
@@ -62,7 +239,7 @@ const MyComp = () => <Tree nodes={nodes} startId="rootKey" />;
 
 | 屬性                  | 說明                                    | 類型      | 是否必須 | 默認值 |
 | --------------------- | --------------------------------------- | --------- | -------- | ------ |
-| nodes                 | 節點                                    | Array     | 是       | -      |
+| nodes                 | 節點                                    | Object    | 是       | -      |
 | startId               | 根節點 id                               | String    | 是       | -      |
 | defaultSelectedId     | 選中的節點 id                           | String    | 是       | -      |
 | renameSelectedNode    | 是否重命名選中的節點                    | String    | 是       | -      |
@@ -99,7 +276,7 @@ const MyComp = () => <Tree nodes={nodes} startId="rootKey" />;
 
 | 屬性                    | 說明                                    | 類型      | 是否必須 | 默認值  |
 | ----------------------- | --------------------------------------- | --------- | -------- | ------- |
-| nodes                   | 節點                                    | Array     | 是       | -       |
+| nodes                   | 節點                                    | Object    | 是       | -       |
 | startId                 | 根節點 id                               | String    | 是       | -       |
 | width                   | 菜單寬度                                | string    | 否       | 320     |
 | backgroundColor         | 菜單背景色                              | string    | 否       | #333333 |
@@ -131,17 +308,18 @@ const MyComp = () => <Tree nodes={nodes} startId="rootKey" />;
 
 ## MiniMenu Props
 
-| 屬性                    | 說明                    | 類型     | 是否必須 | 默認值  |
-| ----------------------- | ----------------------- | -------- | -------- | ------- |
-| nodes                   | 節點                    | Array    | 是       | -       |
-| startId                 | 根節點 id               | String   | 是       | -       |
-| width                   | 菜單寬度                | string   | 否       | 48      |
-| backgroundColor         | 菜單背景色              | string   | 否       | #333333 |
-| selectedBackgroundColor | 選中的菜單背景色        | string   | 否       | #00CDD3 |
-| color                   | 選中的菜單背景色        | string   | 否       | #CDD0D2 |
-| itemHeight              | 節點元素高度            | Number   | 否       | 48      |
-| fontSize                | 節點字體大小            | Number   | 否       | 14      |
-| handleClickNode         | 點擊節點事件,参数：node | Function | 否       | -       |
+| 屬性                    | 說明                         | 類型     | 是否必須 | 默認值  |
+| ----------------------- | ---------------------------- | -------- | -------- | ------- |
+| nodes                   | 節點                         | Object   | 是       | -       |
+| startId                 | 根節點 id                    | String   | 是       | -       |
+| width                   | 菜單寬度                     | string   | 否       | 48      |
+| backgroundColor         | 菜單背景色                   | string   | 否       | #333333 |
+| selectedBackgroundColor | 選中的菜單背景色             | string   | 否       | #00CDD3 |
+| color                   | 選中的菜單背景色             | string   | 否       | #CDD0D2 |
+| itemHeight              | 節點元素高度                 | Number   | 否       | 48      |
+| fontSize                | 節點字體大小                 | Number   | 否       | 14      |
+| handleClickNode         | 點擊節點事件,参数：node      | Function | 否       | -       |
+| handleClickExpand       | 點擊收起/展開事件,参数：node | Function | 否       | -       |
 
 ## Node Props
 

@@ -24,7 +24,11 @@ interface Props {
   handleClickNode: Function;
   handleDbClickNode: Function;
   clickMore: Function;
+  openOptions: Function;
 }
+
+let timer: NodeJS.Timeout;
+
 const TreeNode = ({
   node,
   startId,
@@ -43,9 +47,23 @@ const TreeNode = ({
   handleClickNode,
   handleDbClickNode,
   clickMore,
+  openOptions,
 }: Props) => {
   const [hover, sethover] = useState(false);
   const [hoverMore, setHoverMore] = useState(false);
+
+  function handleMouseEnter() {
+    setHoverMore(true);
+    timer = setTimeout(() => {
+      openOptions(node);
+    }, 600);
+  }
+
+  function handleMouseLeave() {
+    setHoverMore(false);
+    clearTimeout(timer);
+  }
+
   function rectClassName(node: CNode) {
     // 选中的节点
     if (selected === node._key) {
@@ -233,8 +251,8 @@ const TreeNode = ({
       {(showMoreButton && hover) || nodeOptionsOpened ? (
         <g
           onClick={() => clickMore(node)}
-          onMouseEnter={() => setHoverMore(true)}
-          onMouseLeave={() => setHoverMore(false)}
+          onMouseEnter={handleMouseEnter}
+          onMouseLeave={handleMouseLeave}
         >
           <circle
             cx={node.x + node.width + BLOCK_HEIGHT / 2 + 5}

@@ -11,6 +11,7 @@ interface IContextProps {
   height: number;
   setSelectedId: Function;
   handleClickNode?: Function;
+  handleClickExpand?: Function;
 }
 const ThemeContext = React.createContext({} as IContextProps);
 
@@ -32,6 +33,7 @@ export interface MiniMenuProps {
   // 节点字体大小
   fontSize?: number;
   handleClickNode?: Function;
+  handleClickExpand?: Function;
 }
 
 export const MiniMenu = ({
@@ -52,6 +54,7 @@ export const MiniMenu = ({
   // 节点字体大小
   fontSize,
   handleClickNode,
+  handleClickExpand,
 }: MiniMenuProps) => {
   const WIDTH = width || 48;
   const ITEM_HEIGHT = itemHeight || 48;
@@ -102,6 +105,7 @@ export const MiniMenu = ({
           handleClickNode,
           setSelectedId,
           selectedBackgroundColor: SEL_BKCOLOR,
+          handleClickExpand,
         }}
       >
         {rootNode.sortList.map(key =>
@@ -139,6 +143,13 @@ const MenuItem = ({ node, firstLevel, selectedId }: ItemProps) => {
     if (configProps.handleClickNode) {
       configProps.setSelectedId(node._key);
       configProps.handleClickNode(node);
+    }
+  }
+
+  function clickExpand(e: React.MouseEvent) {
+    e.stopPropagation();
+    if (configProps.handleClickExpand) {
+      configProps.handleClickExpand(node);
     }
   }
 
@@ -188,19 +199,23 @@ const MenuItem = ({ node, firstLevel, selectedId }: ItemProps) => {
             overflow: 'hidden',
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',
+            color: hover ? '#FFF' : color,
           }}
         >
           {node.name}
         </span>
       ) : null}
       {!firstLevel && node.sortList.length ? (
-        <div style={{ position: 'absolute', right: '3px' }}>
+        <div
+          style={{ position: 'absolute', right: '3px' }}
+          onClick={(e: React.MouseEvent) => clickExpand(e)}
+        >
           <svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1">
             <g>
               <path
                 d={`M ${12 / 4} 0 L ${12 / 4 + 12 / 2} ${12 / 2} L ${12 /
                   4} ${12} Z`}
-                fill={color}
+                fill={hover ? '#FFF' : color}
               ></path>
             </g>
           </svg>

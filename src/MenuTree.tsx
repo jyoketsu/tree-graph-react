@@ -89,7 +89,7 @@ export const MenuTree = React.forwardRef(
     const ITEM_HEIGHT = itemHeight || 32;
     const BLOCK_HEIGHT = blockHeight || 30;
     const FONT_SIZE = fontSize || 14;
-    const INDENT = indent || 25;
+    const INDENT = indent || 18;
     const WIDTH = width || 320;
     // const AVATAR_WIDTH = avatarWidth || 22;
     // const CHECK_BOX_WIDTH = checkBoxWidth || 18;
@@ -195,12 +195,12 @@ export const MenuTree = React.forwardRef(
       if (UNCONTROLLED) {
         let nodes = changeNodeText(nodeMap, nodeId, text);
         setNodeMap(nodes);
-        if (containerRef && containerRef.current) {
-          containerRef.current.focus();
-        }
       }
       if (handleChangeNodeText) {
         handleChangeNodeText(nodeId, text);
+      }
+      if (containerRef && containerRef.current) {
+        containerRef.current.focus();
       }
     }
 

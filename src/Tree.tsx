@@ -269,12 +269,12 @@ export const Tree = React.forwardRef(
       if (UNCONTROLLED) {
         let nodes = changeNodeText(nodeMap, nodeId, text);
         setNodeMap(nodes);
-        if (containerRef && containerRef.current) {
-          containerRef.current.focus();
-        }
       }
       if (handleChangeNodeText) {
         handleChangeNodeText(nodeId, text);
+      }
+      if (containerRef && containerRef.current) {
+        containerRef.current.focus();
       }
     }
 
@@ -520,6 +520,7 @@ export const Tree = React.forwardRef(
                 showStatus={SHOW_STATUS}
                 showCheckbox={SHOW_CHECKBOX}
                 showMoreButton={showMoreButton || false}
+                openOptions={clickOptionsButton}
                 nodeOptionsOpened={
                   showOptionsNode && node._key === showOptionsNode._key
                     ? true
@@ -622,7 +623,6 @@ export const Tree = React.forwardRef(
                 node={node}
                 BLOCK_HEIGHT={BLOCK_HEIGHT}
                 handleClick={clickDot}
-                openOptions={clickOptionsButton}
               />
               <Expand
                 node={node}

@@ -19,11 +19,9 @@ const nodes = {
     _key: '002',
     name: '計劃進度',
     father: '001',
-    sortList: ['006', '007'],
+    sortList: ['006', '007', '016', '017', '018', '019'],
     contract: false,
-
     checked: true,
-
     hour: 0.1,
     limitDay: -23,
     icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
@@ -79,9 +77,7 @@ const nodes = {
     name: '階段二',
     father: '002',
     sortList: [],
-
     checked: false,
-
     hour: 0.1,
     limitDay: 2,
   },
@@ -174,6 +170,42 @@ const nodes = {
     hour: 0.1,
     limitDay: 2,
   },
+  '016': {
+    _key: '016',
+    name: '階段二',
+    father: '002',
+    sortList: [],
+    checked: false,
+    hour: 0.1,
+    limitDay: 2,
+  },
+  '017': {
+    _key: '017',
+    name: '階段二',
+    father: '002',
+    sortList: [],
+    checked: false,
+    hour: 0.1,
+    limitDay: 2,
+  },
+  '018': {
+    _key: '018',
+    name: '階段二',
+    father: '002',
+    sortList: [],
+    checked: false,
+    hour: 0.1,
+    limitDay: 2,
+  },
+  '019': {
+    _key: '019',
+    name: '階段二',
+    father: '002',
+    sortList: [],
+    checked: false,
+    hour: 0.1,
+    limitDay: 2,
+  },
 };
 
 const meta: Meta = {
@@ -200,4 +232,5 @@ Default.args = {
   nodes: nodes,
   startId: '001',
   handleClickNode: (node: any) => console.log('---handleClickNode---', node),
+  handleClickExpand:(node: any) => console.log('---handleClickExpand---', node),
 };

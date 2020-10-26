@@ -11,9 +11,7 @@ interface Props {
 const NodeOptions = ({ node, content, BLOCK_HEIGHT, handleClose }: Props) => {
   const blockHeight = BLOCK_HEIGHT || 30;
   const top = node.y + blockHeight + 5;
-  const paddingLeft = 5;
-  const dotWidth = 9;
-  const left = node ? node.x - paddingLeft - dotWidth - 25 : 0;
+  const left = node ? node.x + node.width : 0;
 
   return (
     <div

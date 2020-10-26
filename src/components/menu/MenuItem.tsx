@@ -30,6 +30,7 @@ const TreeNode = ({
   handleDbClickNode,
   clickMore,
 }: Props) => {
+  const LEFT = 16;
   function rectClassName(node: CNode) {
     // 选中的节点
     if (selected === node._key) {
@@ -38,7 +39,7 @@ const TreeNode = ({
   }
 
   function location(node: CNode, type: string) {
-    return nodeLocation(
+    let res = nodeLocation(
       node,
       type,
       BLOCK_HEIGHT,
@@ -46,8 +47,16 @@ const TreeNode = ({
       false,
       false,
       false,
-      16
+      LEFT
     );
+    if (node.sortList && node.sortList.length) {
+      return res;
+    } else {
+      return {
+        x: res ? res.x - LEFT : 0,
+        y: res?.y,
+      };
+    }
   }
 
   const textLocationRes = location(node, 'text');
