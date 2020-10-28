@@ -39,9 +39,10 @@ const nodes = {
     sortList: ['010', '011'],
 
     checked: false,
-
+    color: '#fff',
+    backgroundColor: '#90B44B',
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 222,
     icon: 'https://cdn-icare.qingtime.cn/favFolder.svg',
   },
   '004': {
@@ -83,7 +84,7 @@ const nodes = {
     name: '階段二',
     father: '002',
     sortList: [],
-
+    color: '#8D742A',
     checked: false,
 
     hour: 0.1,
@@ -108,7 +109,7 @@ const nodes = {
 
     checked: false,
 
-    hour: 0.1,
+    hour: 11,
     limitDay: 2,
   },
   '010': {
@@ -150,7 +151,8 @@ const nodes = {
     name: '開發',
     father: '011',
     sortList: [],
-
+    color: '#fff',
+    backgroundColor: '#66BAB7',
     checked: true,
 
     hour: 0.1,
@@ -415,6 +417,8 @@ MultiCol.args = {
   handleClickDot: (node: any) => console.log('---handleClickDot---', node),
   handleClickMoreButton: (node: any) =>
     console.log('---handleClickMoreButton---', node),
+  handleShiftUpDown: (id: string, sortList: string[], type: 'up' | 'down') =>
+    console.log('---handleShiftUpDown---', id, sortList, type),
 };
 
 export const SingleCol = Template.bind({});

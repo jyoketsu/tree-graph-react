@@ -219,6 +219,8 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | 新增子節點          | Tab              |
 | 新增兄弟節點        | Enter            |
 | 刪除節點            | Delete           |
+| 向上移動節點        | shift + ↑        |
+| 向下移動節點        | shift + ↓        |
 | 保存樹（file 模式） | Command/Ctrl + S |
 
 <br/>
@@ -251,6 +253,7 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | fontSize              | 節點字體大小                            | Number    | 否       | 14     |
 | indent                | 縮進                                    | Number    | 否       | 25     |
 | avatarWidth           | 頭像寬度                                | Number    | 否       | 22     |
+| pathWidth             | 線條寬度                                | Number    | 否       | 1      |
 | checkBoxWidth         | 勾選框寬度                              | Number    | 否       | 18     |
 | disableShortcut       | 是否禁用快捷鍵                          | Number    | 否       | -      |
 | showMoreButton        | 是否顯示節點更多按鈕                    | boolean   | 否       | -      |
@@ -258,6 +261,7 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | showAvatar            | 是否顯示頭像                            | Boolean   |
 | avatarUri             | 頭像地址                                | String    |
 | showCheckbox          | 是否顯示勾選框                          | Boolean   |
+| showStatus            | 是否顯示節點狀態                        | Boolean   |
 | nodeOptions           | 節點選項菜單內容                        | component | 否       | -      |
 | handleClickNode       | 點擊節點事件,参数：node                 | Function  | 否       | -      |
 | handleDbClickNode     | 雙擊節點事件,参数：node                 | Function  | 否       | -      |
@@ -269,6 +273,7 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | handleDeleteNode      | 刪除節點事件,參數：selectedNode         | Function  | 否       | -      |
 | handleClickMoreButton | 點擊更多按鈕,參數：clickNode            | Function  | 否       | -      |
 | handleClickDot        | 點擊圓點                                | Function  | 否       | -      |
+| handleShiftUpDown     | 向上/向下移動節點                       | Function  | 否       | -      |
 | handleSave            | 保存樹                                  | Function  | 否       | -      |
 | handleDrag            | 拖拽節點                                | Function  | 否       | -      |
 
@@ -323,14 +328,17 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 
 ## Node Props
 
-| 屬性       | 說明                 | 類型    |
-| ---------- | -------------------- | ------- |
-| \_key      | 節點 id              | String  |
-| name       | 節點文本             | String  |
-| father     | 父節點 id            | String  |
-| sortList   | 子節點 id            | Array   |
-| contract   | 是否收起子節點       | Boolean |
-| checked    | 是否勾選             | Boolean |
-| showStatus | 是否顯示節點狀態     | Boolean |
-| hour       | 節點（任務）工時     | Number  |
-| limitDay   | 節點（任務）剩余天數 | Number  |
+| 屬性            | 說明                 | 類型    |
+| --------------- | -------------------- | ------- |
+| \_key           | 節點 id              | String  |
+| name            | 節點文本             | String  |
+| father          | 父節點 id            | String  |
+| sortList        | 子節點 id            | Array   |
+| contract        | 是否收起子節點       | Boolean |
+| checked         | 是否勾選             | Boolean |
+| avatarUri       | 頭像圖片地址         | String  |
+| icon            | 圖標圖片地址         | String  |
+| color           | 節點字體顏色         | String  |
+| backgroundColor | 節點背景色           | String  |
+| hour            | 節點（任務）工時     | Number  |
+| limitDay        | 節點（任務）剩余天數 | Number  |

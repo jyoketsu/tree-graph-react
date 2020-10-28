@@ -5,10 +5,19 @@ interface Props {
   node: CNode;
   BLOCK_HEIGHT: number;
   handleClick: Function;
+  openOptions: Function;
   position?: string;
 }
 
-const Dot = ({ node, BLOCK_HEIGHT, handleClick, position }: Props) => {
+let timer: NodeJS.Timeout;
+
+const Dot = ({
+  node,
+  BLOCK_HEIGHT,
+  handleClick,
+  openOptions,
+  position,
+}: Props) => {
   const [hover, sethover] = useState(false);
   const pos = position ? position : 'left';
 
@@ -25,17 +34,26 @@ const Dot = ({ node, BLOCK_HEIGHT, handleClick, position }: Props) => {
 
   function handleMouseEnter() {
     sethover(true);
+    timer = setTimeout(() => {
+      openOptions(node);
+    }, 500);
   }
 
   function handleMouseLeave() {
     sethover(false);
+    clearTimeout(timer);
+  }
+
+  function handleClickDot() {
+    clearTimeout(timer);
+    handleClick(node);
   }
 
   return node.x && node.y ? (
     <g
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      onClick={() => handleClick(node)}
+      onClick={handleClickDot}
     >
       {/* 圆点 */}
       <circle

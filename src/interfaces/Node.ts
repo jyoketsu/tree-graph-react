@@ -8,8 +8,10 @@ export default interface Node {
   checked?: boolean;
   hour?: number;
   limitDay?: number;
-  avatarUri?:string;
-  icon?:string;
+  avatarUri?: string;
+  icon?: string;
+  color?: string;
+  backgroundColor?:string;
   // 以下为计算属性
   x?: number;
   y?: number;

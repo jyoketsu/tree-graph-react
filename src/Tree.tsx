@@ -6,6 +6,7 @@ import Dot from './components/Dot';
 import Expand from './components/Expand';
 import NodeInput from './components/NodeInput';
 import NodeOptions from './components/NodeOptions';
+import DragNode from './components/DragNode';
 import calculate from './services/treeService';
 import {
   dot,
@@ -14,6 +15,7 @@ import {
   addNextNode,
   addChildNode,
   deleteNode,
+  changeSortList,
 } from './services/util';
 
 export interface TreeProps {
@@ -56,6 +58,7 @@ export interface TreeProps {
   handleDeleteNode?: Function;
   handleClickMoreButton?: Function;
   handleClickDot?: Function;
+  handleShiftUpDown?: Function;
   ref?: any;
 }
 
@@ -93,6 +96,7 @@ export const Tree = React.forwardRef(
       handleDeleteNode,
       handleClickMoreButton,
       handleClickDot,
+      handleShiftUpDown,
     }: TreeProps,
     ref
   ) => {
@@ -104,7 +108,7 @@ export const Tree = React.forwardRef(
     const INDENT = indent || 25;
     // const AVATAR_WIDTH = avatarWidth || 22;
     // const CHECK_BOX_WIDTH = checkBoxWidth || 18;
-    const PATH_WIDTH = pathWidth || 1.5;
+    const PATH_WIDTH = pathWidth || 1;
     const UNCONTROLLED = uncontrolled === undefined ? true : uncontrolled;
     const SHOW_ICON = showIcon === undefined ? true : showIcon;
     const SHOW_AVATAR = showAvatar === undefined ? false : showAvatar;
@@ -123,6 +127,12 @@ export const Tree = React.forwardRef(
     const [showNewInput, setshowNewInput] = useState(false);
     const [isSingle, setisSingle] = useState(singleColumn);
     const [showOptionsNode, setShowOptionsNode] = useState<CNode | null>(null);
+
+    const [showDragNode, setShowDragNode] = useState(false);
+    const [clickX, setClickX] = useState(0);
+    const [clickY, setClickY] = useState(0);
+    const [movedNodeX, setMovedNodeX] = useState(0);
+    const [movedNodeY, setMovedNodeY] = useState(0);
 
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -309,21 +319,53 @@ export const Tree = React.forwardRef(
       if (!selectedId) {
         return alert('请先选中节点！');
       }
-
       setShowOptionsNode(null);
       if (UNCONTROLLED) {
         const res = addChildNode(nodeMap, selectedId);
-
         if (handleAddChild) {
           handleAddChild(selectedId, res.addedNode);
         }
-
         setselectedId(res.addedNode._key);
         setNodeMap(res.nodes);
         setshowInput(true);
       } else {
         if (handleAddChild) {
           handleAddChild(selectedId);
+        }
+      }
+    }
+
+    // 節點上移
+    function shiftUp() {
+      if (!selectedId) {
+        return alert('请先选中节点！');
+      }
+      const res = changeSortList(nodeMap, selectedId, 'up');
+
+      if (res) {
+        if (UNCONTROLLED) {
+          setNodeMap(res.nodes);
+        } else {
+          if (handleShiftUpDown) {
+            handleShiftUpDown(selectedId, res.brotherKeys, 'up');
+          }
+        }
+      }
+    }
+
+    // 節點下移
+    function shiftDown() {
+      if (!selectedId) {
+        return alert('请先选中节点！');
+      }
+      const res = changeSortList(nodeMap, selectedId, 'down');
+      if (res) {
+        if (UNCONTROLLED) {
+          setNodeMap(res.nodes);
+        } else {
+          if (handleShiftUpDown) {
+            handleShiftUpDown(selectedId, res.brotherKeys, 'down');
+          }
         }
       }
     }
@@ -363,6 +405,7 @@ export const Tree = React.forwardRef(
         return;
       }
       event.preventDefault();
+
       switch (event.key) {
         case 'Enter':
           addNext();
@@ -373,6 +416,16 @@ export const Tree = React.forwardRef(
         case 'Delete':
         case 'Backspace':
           deletenode();
+          break;
+        case 'ArrowUp':
+          if (event.shiftKey) {
+            shiftUp();
+          }
+          break;
+        case 'ArrowDown':
+          if (event.shiftKey) {
+            shiftDown();
+          }
           break;
         default:
           break;
@@ -396,6 +449,43 @@ export const Tree = React.forwardRef(
       }
     }
 
+    function handleDragStart(e: any) {
+      if (e.target.classList.contains('selected')) {
+        e.stopPropagation();
+        setShowDragNode(true);
+        setClickX(e.clientX);
+        setClickY(e.clientY);
+        setMovedNodeX(0);
+        setMovedNodeY(0);
+      }
+    }
+
+    function handleMoveNode(e: React.MouseEvent) {
+      if (showDragNode) {
+        e.stopPropagation();
+        let movedX = 0;
+        let movedY = 0;
+        movedX = e.clientX - clickX;
+        movedY = e.clientY - clickY;
+
+        setMovedNodeX(movedNodeX + movedX);
+        setMovedNodeY(movedNodeY + movedY);
+
+        setClickX(e.clientX);
+        setClickY(e.clientY);
+      }
+    }
+
+    function handleDragEnd(e: React.MouseEvent) {
+      if (showDragNode) {
+        e.stopPropagation();
+        setShowDragNode(false);
+        if (Math.abs(movedNodeX) < 5 || Math.abs(movedNodeY) < 5) {
+          return;
+        }
+      }
+    }
+
     return (
       <div
         className="svg-wrapper"
@@ -407,6 +497,10 @@ export const Tree = React.forwardRef(
         tabIndex={-1}
         ref={containerRef}
         onKeyDown={(e: any) => handleKeyDown(e)}
+        onMouseDown={handleDragStart}
+        onMouseMove={handleMoveNode}
+        onMouseUp={handleDragEnd}
+        onMouseLeave={handleDragEnd}
       >
         <svg
           className="tree-svg"
@@ -520,12 +614,12 @@ export const Tree = React.forwardRef(
                 showStatus={SHOW_STATUS}
                 showCheckbox={SHOW_CHECKBOX}
                 showMoreButton={showMoreButton || false}
-                openOptions={clickOptionsButton}
-                nodeOptionsOpened={
-                  showOptionsNode && node._key === showOptionsNode._key
-                    ? true
-                    : false
-                }
+                // openOptions={clickOptionsButton}
+                // nodeOptionsOpened={
+                //   showOptionsNode && node._key === showOptionsNode._key
+                //     ? true
+                //     : false
+                // }
                 handleCheck={check}
                 handleClickNode={clickNode}
                 handleDbClickNode={dbClickNode}
@@ -623,6 +717,7 @@ export const Tree = React.forwardRef(
                 node={node}
                 BLOCK_HEIGHT={BLOCK_HEIGHT}
                 handleClick={clickDot}
+                openOptions={clickOptionsButton}
               />
               <Expand
                 node={node}
@@ -636,7 +731,27 @@ export const Tree = React.forwardRef(
               />
             </g>
           ))}
+          {/* 拖拽用節點 */}
+          {showDragNode &&
+          (Math.abs(movedNodeX) > 5 || Math.abs(movedNodeY) > 5) ? (
+            <DragNode
+              selectedId={selectedId}
+              nodeList={cnodes}
+              BLOCK_HEIGHT={BLOCK_HEIGHT}
+              FONT_SIZE={FONT_SIZE}
+              alias={new Date().getTime()}
+              selected={selectedId}
+              showIcon={SHOW_ICON}
+              showAvatar={SHOW_AVATAR}
+              showStatus={SHOW_STATUS}
+              showCheckbox={SHOW_CHECKBOX}
+              movedNodeX={movedNodeX}
+              movedNodeY={movedNodeY}
+            />
+          ) : null}
         </svg>
+
+        {/* 節點名輸入框 */}
         {showInput || showNewInput ? (
           <NodeInput
             selectedId={selectedId}
@@ -644,7 +759,12 @@ export const Tree = React.forwardRef(
             handleChangeNodeText={changeText}
           />
         ) : null}
-        {selectedId && showOptionsNode && nodeOptions ? (
+
+        {/* 選項菜單 */}
+        {selectedId &&
+        showOptionsNode &&
+        nodeOptions &&
+        selectedId === showOptionsNode._key ? (
           <NodeOptions
             node={showOptionsNode}
             content={nodeOptions}

@@ -254,6 +254,39 @@ function addNextNode(nodeMap: NodeMap, selectedId: string) {
   };
 }
 
+function changeSortList(
+  nodeMap: NodeMap,
+  selectedId: string,
+  type: 'up' | 'down'
+) {
+  let nodes = { ...nodeMap };
+  let selectedNode = nodes[selectedId];
+  let fatherNode = nodes[selectedNode.father];
+  let brotherKeys = fatherNode.sortList;
+  const index = brotherKeys.indexOf(selectedId);
+  if (type === 'up') {
+    if (index === 0) {
+      return null;
+    }
+    [brotherKeys[index - 1], brotherKeys[index]] = [
+      brotherKeys[index],
+      brotherKeys[index - 1],
+    ];
+  } else if (type === 'down') {
+    if (index + 1 === brotherKeys.length) {
+      return null;
+    }
+    [brotherKeys[index], brotherKeys[index + 1]] = [
+      brotherKeys[index + 1],
+      brotherKeys[index],
+    ];
+  }
+  return {
+    nodes,
+    brotherKeys,
+  };
+}
+
 function deleteNode(nodeMap: NodeMap, selectedId: string) {
   let nodes = { ...nodeMap };
   let selectedNode = nodes[selectedId];
@@ -493,4 +526,5 @@ export {
   save,
   dragEnd,
   dragSort,
+  changeSortList,
 };

@@ -14,7 +14,6 @@ interface Props {
   alias: number;
   selected: string | null;
   showMoreButton: boolean;
-  nodeOptionsOpened: boolean;
   showIcon: boolean;
   showAvatar: boolean;
   showCheckbox: boolean;
@@ -24,10 +23,11 @@ interface Props {
   handleClickNode: Function;
   handleDbClickNode: Function;
   clickMore: Function;
-  openOptions: Function;
+  // nodeOptionsOpened: boolean;
+  // openOptions: Function;
 }
 
-let timer: NodeJS.Timeout;
+// let timer: NodeJS.Timeout;
 
 const TreeNode = ({
   node,
@@ -42,26 +42,31 @@ const TreeNode = ({
   showStatus,
   hideBorder,
   showMoreButton,
-  nodeOptionsOpened,
   handleCheck,
   handleClickNode,
   handleDbClickNode,
   clickMore,
-  openOptions,
-}: Props) => {
+}: // nodeOptionsOpened,
+// openOptions,
+Props) => {
   const [hover, sethover] = useState(false);
   const [hoverMore, setHoverMore] = useState(false);
 
   function handleMouseEnter() {
     setHoverMore(true);
-    timer = setTimeout(() => {
-      openOptions(node);
-    }, 600);
+    // timer = setTimeout(() => {
+    //   openOptions(node);
+    // }, 600);
   }
 
   function handleMouseLeave() {
     setHoverMore(false);
-    clearTimeout(timer);
+    // clearTimeout(timer);
+  }
+
+  function handleClickMore() {
+    // clearTimeout(timer);
+    clickMore(node);
   }
 
   function rectClassName(node: CNode) {
@@ -98,16 +103,28 @@ const TreeNode = ({
   const iconLocationRes = location(node, 'icon');
 
   const nodeRectClassName = rectClassName(node);
+
+  const backgroundColor = node.backgroundColor ? node.backgroundColor : '#FFF';
+
   let nodeRectStyle = {};
   switch (nodeRectClassName) {
     case 'border-rect':
-      nodeRectStyle = { fill: '#FFF', stroke: '#D9D9D9' };
+      nodeRectStyle = {
+        fill: backgroundColor,
+        stroke: '#D9D9D9',
+      };
       break;
     case 'selected':
-      nodeRectStyle = { fill: '#FFF', stroke: '#333333', strokeWidth: 2 };
+      nodeRectStyle = {
+        fill: backgroundColor,
+        stroke: '#333333',
+        strokeWidth: 2,
+      };
       break;
     default:
-      nodeRectStyle = { fillOpacity: 0 };
+      nodeRectStyle = node.backgroundColor
+        ? { fill: backgroundColor, stroke: backgroundColor }
+        : { fillOpacity: 0 };
       break;
   }
 
@@ -127,7 +144,7 @@ const TreeNode = ({
         fillOpacity={0}
       />
       <rect
-        className="node-rect"
+        className={`node-rect ${selected === node._key ? 'selected' : ''}`}
         x={node.x}
         y={node.y}
         rx={4}
@@ -135,7 +152,9 @@ const TreeNode = ({
         width={node.width}
         height={BLOCK_HEIGHT}
         filter={
-          nodeRectClassName !== 'selected' && node.father === startId
+          nodeRectClassName !== 'selected' &&
+          node.father === startId &&
+          !node.backgroundColor
             ? 'url(#filterShadow)'
             : 'unset'
         }
@@ -202,7 +221,9 @@ const TreeNode = ({
         ? [
             <use
               key="status"
-              href={`#status${node.limitDay || 0 < 0 ? '-overdue' : ''}`}
+              href={`#status${
+                node.limitDay && node.limitDay < 0 ? '-overdue' : ''
+              }`}
               x={statusLocationRes?.x}
               y={statusLocationRes?.y}
             />,
@@ -217,16 +238,22 @@ const TreeNode = ({
                 y={statusLocationRes ? statusLocationRes.y + 13 : 0}
                 fontSize="10"
                 fontWeight="800"
+                style={{ userSelect: 'none' }}
               >
-                {Math.abs(node.limitDay || 0)}
+                {node.limitDay !== undefined
+                  ? Math.abs(node.limitDay) > 99
+                    ? '99+'
+                    : Math.abs(node.limitDay)
+                  : '-'}
               </text>
               <text
                 x={statusLocationRes ? statusLocationRes.x + 18 : 0}
                 y={statusLocationRes ? statusLocationRes.y + 5 : 0}
                 fontSize="6"
                 fontWeight="800"
+                style={{ userSelect: 'none' }}
               >
-                {node.hour}
+                {node.hour ? (node.hour > 9 ? '9+' : node.hour) : '-'}
               </text>
             </g>,
           ]
@@ -234,13 +261,18 @@ const TreeNode = ({
 
       {/* 文字 */}
       <text
-        className="node-text"
+        className={`node-text ${selected === node._key ? 'selected' : ''}`}
         x={textLocationRes?.x}
         y={textLocationRes?.y}
         dominantBaseline="middle"
         fontSize={FONT_SIZE}
         style={{
-          fill: nodeRectClassName === 'selected' ? '#333333' : '#999',
+          fill:
+            nodeRectClassName === 'selected'
+              ? '#333333'
+              : node.color
+              ? node.color
+              : '#999',
           fontFamily: "'Microsoft YaHei', sans-serif",
           userSelect: 'none',
         }}
@@ -248,9 +280,10 @@ const TreeNode = ({
         {node.name || '未命名文件'}
       </text>
       {/* 选项/更多按钮 */}
-      {(showMoreButton && hover) || nodeOptionsOpened ? (
+      {showMoreButton && hover ? (
+        // || nodeOptionsOpened
         <g
-          onClick={() => clickMore(node)}
+          onClick={handleClickMore}
           onMouseEnter={handleMouseEnter}
           onMouseLeave={handleMouseLeave}
         >
