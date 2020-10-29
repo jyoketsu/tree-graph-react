@@ -69,6 +69,7 @@ const NodeInput = ({
           onChange={e => setValue(e.target.value)}
           onKeyDown={(e: any) => handleCommit(e)}
           onMouseDown={(e: React.MouseEvent) => e.stopPropagation()}
+          onMouseMove={(e: React.MouseEvent) => e.stopPropagation()}
           onContextMenu={(e: React.MouseEvent) => e.stopPropagation()}
         />
       ) : null}

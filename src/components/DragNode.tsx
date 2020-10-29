@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import CNode from '../interfaces/CNode';
+import DragInfo from '../interfaces/DragInfo';
 import { nodeLocation } from '../services/util';
 
 interface Props {
@@ -15,6 +16,7 @@ interface Props {
   showStatus: boolean;
   movedNodeX: number;
   movedNodeY: number;
+  dragInfo: DragInfo | null;
 }
 
 const DragNode = ({
@@ -29,6 +31,7 @@ const DragNode = ({
   showStatus,
   movedNodeX,
   movedNodeY,
+  dragInfo,
 }: Props) => {
   const [node, setNode] = useState<CNode | null>(null);
 
@@ -67,15 +70,19 @@ const DragNode = ({
   const backgroundColor = node.backgroundColor ? node.backgroundColor : '#FFF';
 
   return node.x && node.y ? (
-    <g>
+    <g style={{ pointerEvents: 'none' }}>
+      {/* 橫線，用於標識拖拽的位置 */}
+      {dragInfo && dragInfo.placement !== 'in' ? (
+        <line
+          x1={node.x - 50 + movedNodeX}
+          x2={node.x + node.width + 50 + movedNodeX}
+          y1={node.y + BLOCK_HEIGHT / 2 + movedNodeY}
+          y2={node.y + BLOCK_HEIGHT / 2 + movedNodeY}
+          stroke="#33A6B8"
+          strokeWidth={2}
+        />
+      ) : null}
       {/* 外框 */}
-      <rect
-        x={node.x + movedNodeX}
-        y={node.y + movedNodeY}
-        width={node.width + BLOCK_HEIGHT}
-        height={BLOCK_HEIGHT}
-        fillOpacity={0}
-      />
       <rect
         className="node-rect"
         x={node.x + movedNodeX}
@@ -86,6 +93,7 @@ const DragNode = ({
         height={BLOCK_HEIGHT}
         style={{
           fill: backgroundColor,
+          fillOpacity: 0.5,
           stroke: '#333333',
         }}
       />

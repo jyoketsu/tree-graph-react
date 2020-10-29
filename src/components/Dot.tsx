@@ -6,6 +6,7 @@ interface Props {
   BLOCK_HEIGHT: number;
   handleClick: Function;
   openOptions: Function;
+  dragStarted: boolean;
   position?: string;
 }
 
@@ -16,6 +17,7 @@ const Dot = ({
   BLOCK_HEIGHT,
   handleClick,
   openOptions,
+  dragStarted,
   position,
 }: Props) => {
   const [hover, sethover] = useState(false);
@@ -33,15 +35,19 @@ const Dot = ({
   }
 
   function handleMouseEnter() {
-    sethover(true);
-    timer = setTimeout(() => {
-      openOptions(node);
-    }, 500);
+    if (!dragStarted) {
+      sethover(true);
+      timer = setTimeout(() => {
+        openOptions(node);
+      }, 500);
+    }
   }
 
   function handleMouseLeave() {
-    sethover(false);
-    clearTimeout(timer);
+    if (!dragStarted) {
+      sethover(false);
+      clearTimeout(timer);
+    }
   }
 
   function handleClickDot() {

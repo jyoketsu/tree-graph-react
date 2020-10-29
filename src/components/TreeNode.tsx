@@ -1,14 +1,20 @@
 import React, { useState } from 'react';
 import CNode from '../interfaces/CNode';
+import DragInfo from '../interfaces/DragInfo';
 import { nodeLocation } from '../services/util';
 
 interface CheckFunc {
   (node: CNode, event: MouseEvent): void;
 }
 
+interface setDragInfoFunc {
+  (dragInfo: DragInfo): void;
+}
+
 interface Props {
   node: CNode;
   startId: string;
+  ITEM_HEIGHT: number;
   BLOCK_HEIGHT: number;
   FONT_SIZE: number;
   alias: number;
@@ -25,6 +31,8 @@ interface Props {
   clickMore: Function;
   // nodeOptionsOpened: boolean;
   // openOptions: Function;
+  setDragInfo: setDragInfoFunc;
+  dragStarted: boolean;
 }
 
 // let timer: NodeJS.Timeout;
@@ -32,6 +40,7 @@ interface Props {
 const TreeNode = ({
   node,
   startId,
+  ITEM_HEIGHT,
   BLOCK_HEIGHT,
   FONT_SIZE,
   alias,
@@ -46,20 +55,41 @@ const TreeNode = ({
   handleClickNode,
   handleDbClickNode,
   clickMore,
+  setDragInfo,
+  dragStarted,
 }: // nodeOptionsOpened,
 // openOptions,
 Props) => {
   const [hover, sethover] = useState(false);
   const [hoverMore, setHoverMore] = useState(false);
+  const [y, setY] = useState(0);
 
-  function handleMouseEnter() {
+  function handleMouseEnter(e: React.MouseEvent) {
+    sethover(true);
+    setY(e.clientY);
+    if (dragStarted) {
+      setDragInfo({ targetNodeKey: node._key, placement: 'in' });
+    }
+  }
+
+  function handleMouseLeave(e: React.MouseEvent) {
+    sethover(false);
+    if (dragStarted) {
+      setDragInfo({
+        targetNodeKey: node._key,
+        placement: e.clientY - y > 0 ? 'down' : 'up',
+      });
+    }
+  }
+
+  function handleMouseEnterMore() {
     setHoverMore(true);
     // timer = setTimeout(() => {
     //   openOptions(node);
     // }, 600);
   }
 
-  function handleMouseLeave() {
+  function handleMouseLeaveMore() {
     setHoverMore(false);
     // clearTimeout(timer);
   }
@@ -107,42 +137,52 @@ Props) => {
   const backgroundColor = node.backgroundColor ? node.backgroundColor : '#FFF';
 
   let nodeRectStyle = {};
-  switch (nodeRectClassName) {
-    case 'border-rect':
-      nodeRectStyle = {
-        fill: backgroundColor,
-        stroke: '#D9D9D9',
-      };
-      break;
-    case 'selected':
-      nodeRectStyle = {
-        fill: backgroundColor,
-        stroke: '#333333',
-        strokeWidth: 2,
-      };
-      break;
-    default:
-      nodeRectStyle = node.backgroundColor
-        ? { fill: backgroundColor, stroke: backgroundColor }
-        : { fillOpacity: 0 };
-      break;
+  if (dragStarted && hover) {
+    nodeRectStyle = {
+      fill: '#FFF',
+      stroke: '#333333',
+      strokeWidth: 2,
+    };
+  } else {
+    switch (nodeRectClassName) {
+      case 'border-rect':
+        nodeRectStyle = {
+          fill: backgroundColor,
+          stroke: '#D9D9D9',
+        };
+        break;
+      case 'selected':
+        nodeRectStyle = {
+          fill: backgroundColor,
+          stroke: '#333333',
+          strokeWidth: node.father === startId ? 2 : 1,
+        };
+        break;
+      default:
+        nodeRectStyle = node.backgroundColor
+          ? { fill: backgroundColor, stroke: backgroundColor }
+          : { fillOpacity: 0 };
+        break;
+    }
   }
 
   return node.x && node.y ? (
     <g
       onClick={() => handleClickNode(node)}
       onDoubleClick={() => handleDbClickNode(node)}
-      onMouseEnter={() => sethover(true)}
-      onMouseLeave={() => sethover(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
       {/* 外框 */}
+      {/* 隱式外框，用戶擴大鼠標感應面積 */}
       <rect
         x={node.x}
-        y={node.y}
+        y={node.y + BLOCK_HEIGHT / 2 - (ITEM_HEIGHT * 0.9) / 2}
         width={node.width + BLOCK_HEIGHT}
-        height={BLOCK_HEIGHT}
+        height={ITEM_HEIGHT * 0.9}
         fillOpacity={0}
       />
+      {/* 顯式外框 */}
       <rect
         className={`node-rect ${selected === node._key ? 'selected' : ''}`}
         x={node.x}
@@ -160,12 +200,6 @@ Props) => {
         }
         style={{
           ...nodeRectStyle,
-          ...{
-            strokeWidth:
-              nodeRectClassName === 'selected' && node.father === startId
-                ? 2
-                : 1,
-          },
         }}
       />
 
@@ -280,12 +314,12 @@ Props) => {
         {node.name || '未命名文件'}
       </text>
       {/* 选项/更多按钮 */}
-      {showMoreButton && hover ? (
+      {showMoreButton && hover && !dragStarted ? (
         // || nodeOptionsOpened
         <g
           onClick={handleClickMore}
-          onMouseEnter={handleMouseEnter}
-          onMouseLeave={handleMouseLeave}
+          onMouseEnter={handleMouseEnterMore}
+          onMouseLeave={handleMouseLeaveMore}
         >
           <circle
             cx={node.x + node.width + BLOCK_HEIGHT / 2 + 5}

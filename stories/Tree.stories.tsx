@@ -407,6 +407,7 @@ MultiCol.args = {
   nodes: nodes,
   startId: '001',
   singleColumn: false,
+  // uncontrolled: false,
   // selectedId: '004',
   // renameSelectedNode: true,
   defaultSelectedId: '003',
@@ -419,6 +420,7 @@ MultiCol.args = {
     console.log('---handleClickMoreButton---', node),
   handleShiftUpDown: (id: string, sortList: string[], type: 'up' | 'down') =>
     console.log('---handleShiftUpDown---', id, sortList, type),
+  handleDrag: (dragInfo: any) => console.log('---handleDrag----', dragInfo),
 };
 
 export const SingleCol = Template.bind({});

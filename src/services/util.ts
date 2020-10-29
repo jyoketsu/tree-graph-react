@@ -1,6 +1,7 @@
 import Node from '../interfaces/Node';
 import CNode from '../interfaces/CNode';
 import NodeMap from '../interfaces/NodeMap';
+import DragInfo from '../interfaces/DragInfo';
 
 function findNodeById(nodes: CNode[], id: string) {
   return nodes.find((node: CNode) => node._key === id);
@@ -367,110 +368,42 @@ function save(c_nodes: Node[]) {
   return nodes;
 }
 
-function dragEnd(c_nodes: CNode[], blockHeight: number, x: number, y: number) {
-  let minDiff;
-  let node;
-  for (let index = 0; index < c_nodes.length; index++) {
-    const element = c_nodes[index];
-    if (!element) {
-      return;
-    }
-    const diff = Math.abs(x - element.x) + Math.abs(y - element.y);
-    if (minDiff === undefined) {
-      minDiff = diff;
-      node = element;
-    } else if (diff < minDiff) {
-      minDiff = diff;
-      node = element;
-    }
-  }
-  if (!node) {
-    return;
-  }
-  const diffX = x - node.x;
-  const diffY = y - node.y;
-  let position;
-  if (Math.abs(diffX) < node.width && Math.abs(diffY) < blockHeight) {
-    position = 'inside';
-  } else if (diffX < 0 && diffY < 0) {
-    position = 'top-left';
-  } else if (diffX < 0 && diffY > 0) {
-    position = 'bottom-left';
-  } else if (diffX > 0 && diffY < 0) {
-    position = 'top-right';
-  } else {
-    position = 'bottom-right';
-  }
-  return {
-    targetNode: node,
-    targetPosition: position,
-  };
-}
-
-function dragSort(
-  nodes: CNode[],
-  selectedId: string,
-  targetNodeId: string,
-  position: string,
-  arrange: string
-) {
-  let selectedNode = findNodeById(nodes, selectedId);
-  let targetNode = findNodeById(nodes, targetNodeId);
+function dragSort(map: NodeMap, selectedId: string, dragInfo: DragInfo) {
+  let nodeMap = { ...map };
+  let selectedNode = nodeMap[selectedId];
+  let targetNode = nodeMap[dragInfo.targetNodeKey];
   if (!selectedNode || !targetNode) {
-    return nodes;
+    return null;
   }
-  switch (position) {
-    case 'inside':
+  switch (dragInfo.placement) {
+    case 'in':
       // 从选中节点的父节点的children中删除当前id
-      let selectedNodeFather = findNodeById(nodes, selectedNode.father);
+      let selectedNodeFather = nodeMap[selectedNode.father];
       if (!selectedNodeFather) {
         break;
       }
       let sortList = selectedNodeFather.sortList;
       sortList.splice(sortList.indexOf(selectedNode._key), 1);
-      selectedNode.father = targetNodeId;
+      selectedNode.father = dragInfo.targetNodeKey;
       // 将当前id添加到目标节点children中
       targetNode.sortList.push(selectedNode._key);
       break;
-    case 'top-left':
-      if (arrange === 'vertical') {
-        addSibling('before');
-      } else {
-        addSibling('before');
-      }
-      break;
-    case 'top-right':
-      if (arrange === 'vertical') {
-        addSibling('before');
-      } else {
-        addSibling('next');
-      }
-      break;
-    case 'bottom-left':
-      if (arrange === 'vertical') {
-        addSibling('next');
-      } else {
-        addSibling('before');
-      }
-      break;
-    case 'bottom-right':
-      if (arrange === 'vertical') {
-        addSibling('next');
-      } else {
-        addSibling('next');
-      }
+    case 'up':
+    case 'down':
+      addSibling(dragInfo.placement);
       break;
     default:
       break;
   }
-  return nodes;
-  function addSibling(type: string) {
+  return nodeMap;
+
+  function addSibling(type: 'up' | 'down') {
     if (!selectedNode || !targetNode) {
       return;
     }
     if (selectedNode.father === targetNode.father) {
       // 从选中节点的父节点的children中删除当前id
-      let father = findNodeById(nodes, targetNode.father);
+      let father = nodeMap[targetNode.father];
       if (!father) {
         return;
       }
@@ -478,15 +411,15 @@ function dragSort(
       sortList.splice(sortList.indexOf(selectedNode._key), 1);
       // 将当前id添加到目标节点的父节点children中
       sortList.splice(
-        type === 'next'
-          ? sortList.indexOf(targetNodeId) + 1
-          : sortList.indexOf(targetNodeId),
+        type === 'down'
+          ? sortList.indexOf(dragInfo.targetNodeKey) + 1
+          : sortList.indexOf(dragInfo.targetNodeKey),
         0,
         selectedId
       );
     } else {
       // 从选中节点的父节点的children中删除当前id
-      let selectedNodeFather = findNodeById(nodes, selectedNode.father);
+      let selectedNodeFather = nodeMap[selectedNode.father];
       if (!selectedNodeFather) {
         return;
       }
@@ -494,15 +427,15 @@ function dragSort(
       sortList.splice(sortList.indexOf(selectedNode._key), 1);
       selectedNode.father = targetNode.father;
       // 将当前id添加到目标节点的父节点children中
-      let targetFather = findNodeById(nodes, targetNode.father);
+      let targetFather = nodeMap[targetNode.father];
       if (!targetFather) {
         return;
       }
       let children2 = targetFather.sortList;
       children2.splice(
-        type === 'next'
-          ? children2.indexOf(targetNodeId) + 1
-          : children2.indexOf(targetNodeId),
+        type === 'down'
+          ? children2.indexOf(dragInfo.targetNodeKey) + 1
+          : children2.indexOf(dragInfo.targetNodeKey),
         0,
         selectedId
       );
@@ -524,7 +457,6 @@ export {
   checkNode,
   editNode,
   save,
-  dragEnd,
   dragSort,
   changeSortList,
 };

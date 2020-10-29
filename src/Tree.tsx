@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef, useImperativeHandle } from 'react';
 import NodeMap from './interfaces/NodeMap';
 import CNode from './interfaces/CNode';
+import DragInfo from './interfaces/DragInfo';
 import TreeNode from './components/TreeNode';
 import Dot from './components/Dot';
 import Expand from './components/Expand';
@@ -16,6 +17,7 @@ import {
   addChildNode,
   deleteNode,
   changeSortList,
+  dragSort,
 } from './services/util';
 
 export interface TreeProps {
@@ -59,6 +61,7 @@ export interface TreeProps {
   handleClickMoreButton?: Function;
   handleClickDot?: Function;
   handleShiftUpDown?: Function;
+  handleDrag?: Function;
   ref?: any;
 }
 
@@ -97,6 +100,7 @@ export const Tree = React.forwardRef(
       handleClickMoreButton,
       handleClickDot,
       handleShiftUpDown,
+      handleDrag,
     }: TreeProps,
     ref
   ) => {
@@ -128,11 +132,15 @@ export const Tree = React.forwardRef(
     const [isSingle, setisSingle] = useState(singleColumn);
     const [showOptionsNode, setShowOptionsNode] = useState<CNode | null>(null);
 
+    // 拖拽節點相關的狀態
+    const [dragStarted, setDragStarted] = useState(false);
     const [showDragNode, setShowDragNode] = useState(false);
     const [clickX, setClickX] = useState(0);
     const [clickY, setClickY] = useState(0);
     const [movedNodeX, setMovedNodeX] = useState(0);
     const [movedNodeY, setMovedNodeY] = useState(0);
+    // 拖拽的相關信息
+    const [dragInfo, setDragInfo] = useState<DragInfo | null>(null);
 
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -450,9 +458,11 @@ export const Tree = React.forwardRef(
     }
 
     function handleDragStart(e: any) {
-      if (e.target.classList.contains('selected')) {
+      if (selectedId && e.target.classList.contains('selected')) {
         e.stopPropagation();
+        setDragStarted(true);
         setShowDragNode(true);
+        setDragInfo({ targetNodeKey: selectedId, placement: 'in' });
         setClickX(e.clientX);
         setClickY(e.clientY);
         setMovedNodeX(0);
@@ -461,7 +471,7 @@ export const Tree = React.forwardRef(
     }
 
     function handleMoveNode(e: React.MouseEvent) {
-      if (showDragNode) {
+      if (dragStarted) {
         e.stopPropagation();
         let movedX = 0;
         let movedY = 0;
@@ -477,11 +487,44 @@ export const Tree = React.forwardRef(
     }
 
     function handleDragEnd(e: React.MouseEvent) {
-      if (showDragNode) {
+      if (dragStarted && dragInfo && selectedId) {
         e.stopPropagation();
-        setShowDragNode(false);
-        if (Math.abs(movedNodeX) < 5 || Math.abs(movedNodeY) < 5) {
-          return;
+        setDragStarted(false);
+        const selectedNode = nodeMap[selectedId];
+        // 判斷拖拽是否無效
+        if (
+          // 拖拽對象為自己：無效
+          dragInfo.targetNodeKey === selectedId ||
+          // 拖動對象為拖動節點的父節點：無效
+          (selectedNode &&
+            selectedNode.father === dragInfo.targetNodeKey &&
+            dragInfo.placement === 'in')
+        ) {
+          setDragInfo(null);
+          // 動畫：移動到最初的選中節點
+          const fps = 30;
+          const animeTime = 500;
+          const stepX = movedNodeX / fps;
+          const stepY = movedNodeY / fps;
+          const interval = setInterval(() => {
+            setMovedNodeX(movedNodeX => movedNodeX - stepX);
+            setMovedNodeY(movedNodeY => movedNodeY - stepY);
+          }, Math.floor(animeTime / fps));
+
+          setTimeout(() => {
+            setShowDragNode(false);
+            clearInterval(interval);
+          }, animeTime);
+        } else if (selectedNode) {
+          setShowDragNode(false);
+          if (UNCONTROLLED) {
+            const res = dragSort(nodeMap, selectedId, dragInfo);
+            if (res) {
+              setNodeMap(res);
+            }
+          } else if (handleDrag) {
+            handleDrag(dragInfo);
+          }
         }
       }
     }
@@ -604,6 +647,7 @@ export const Tree = React.forwardRef(
             <g key={node._key} className={`node-group-${node._key}`}>
               <TreeNode
                 node={node}
+                ITEM_HEIGHT={ITEM_HEIGHT}
                 BLOCK_HEIGHT={BLOCK_HEIGHT}
                 FONT_SIZE={FONT_SIZE}
                 startId={startId}
@@ -624,6 +668,8 @@ export const Tree = React.forwardRef(
                 handleClickNode={clickNode}
                 handleDbClickNode={dbClickNode}
                 clickMore={clickMore}
+                setDragInfo={setDragInfo}
+                dragStarted={dragStarted}
               />
               {isSingle ? (
                 node.x && node.y ? (
@@ -718,6 +764,7 @@ export const Tree = React.forwardRef(
                 BLOCK_HEIGHT={BLOCK_HEIGHT}
                 handleClick={clickDot}
                 openOptions={clickOptionsButton}
+                dragStarted={dragStarted}
               />
               <Expand
                 node={node}
@@ -747,6 +794,7 @@ export const Tree = React.forwardRef(
               showCheckbox={SHOW_CHECKBOX}
               movedNodeX={movedNodeX}
               movedNodeY={movedNodeY}
+              dragInfo={dragInfo}
             />
           ) : null}
         </svg>

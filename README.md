@@ -275,7 +275,14 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | handleClickDot        | 點擊圓點                                | Function  | 否       | -      |
 | handleShiftUpDown     | 向上/向下移動節點                       | Function  | 否       | -      |
 | handleSave            | 保存樹                                  | Function  | 否       | -      |
-| handleDrag            | 拖拽節點                                | Function  | 否       | -      |
+| handleDrag            | 拖拽節點,參數：dragInfo                 | Function  | 否       | -      |
+
+```javascript
+interface DragInfo {
+  targetNodeKey: string;
+  placement: 'up' | 'down' | 'in';
+}
+```
 
 ## Menu Props
 
