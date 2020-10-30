@@ -18,7 +18,18 @@ import {
   deleteNode,
   changeSortList,
   dragSort,
+  pasteNode,
 } from './services/util';
+
+const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
+
+interface PasteFunc {
+  (
+    pasteNodeKey: string,
+    pasteType: 'copy' | 'cut' | null,
+    targetNodeKey: string
+  ): void;
+}
 
 export interface TreeProps {
   // 节点
@@ -62,6 +73,7 @@ export interface TreeProps {
   handleClickDot?: Function;
   handleShiftUpDown?: Function;
   handleDrag?: Function;
+  handlePaste?: PasteFunc;
   ref?: any;
 }
 
@@ -101,6 +113,7 @@ export const Tree = React.forwardRef(
       handleClickDot,
       handleShiftUpDown,
       handleDrag,
+      handlePaste,
     }: TreeProps,
     ref
   ) => {
@@ -141,6 +154,11 @@ export const Tree = React.forwardRef(
     const [movedNodeY, setMovedNodeY] = useState(0);
     // 拖拽的相關信息
     const [dragInfo, setDragInfo] = useState<DragInfo | null>(null);
+
+    // 粘貼的節點key
+    const [pasteNodeKey, setPasteNodeKey] = useState<string | null>(null);
+    // 粘貼方式
+    const [pasteType, setPasteType] = useState<'copy' | 'cut' | null>(null);
 
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -414,6 +432,8 @@ export const Tree = React.forwardRef(
       }
       event.preventDefault();
 
+      const commandKey = isMac ? event.metaKey : event.ctrlKey;
+
       switch (event.key) {
         case 'Enter':
           addNext();
@@ -433,6 +453,46 @@ export const Tree = React.forwardRef(
         case 'ArrowDown':
           if (event.shiftKey) {
             shiftDown();
+          }
+          break;
+        // 複製
+        case 'c':
+          if (commandKey && selectedId) {
+            setPasteNodeKey(selectedId);
+            setPasteType('copy');
+          }
+          break;
+        // 剪切
+        case 'x':
+          if (commandKey && selectedId) {
+            // 根節點不允許剪切
+            if (selectedId === startId) {
+              setPasteNodeKey(null);
+              setPasteType(null);
+              return;
+            }
+            setPasteNodeKey(selectedId);
+            setPasteType('cut');
+          }
+          break;
+        // 粘貼
+        case 'v':
+          if (commandKey && pasteType && pasteNodeKey && selectedId) {
+            if (UNCONTROLLED) {
+              const res = pasteNode(
+                nodeMap,
+                pasteNodeKey,
+                pasteType,
+                selectedId
+              );
+              if (res) {
+                setNodeMap(res);
+              }
+            } else if (handlePaste) {
+              handlePaste(pasteNodeKey, pasteType, selectedId);
+            }
+            setPasteNodeKey(null);
+            setPasteType(null);
           }
           break;
         default:

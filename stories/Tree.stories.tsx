@@ -421,6 +421,8 @@ MultiCol.args = {
   handleShiftUpDown: (id: string, sortList: string[], type: 'up' | 'down') =>
     console.log('---handleShiftUpDown---', id, sortList, type),
   handleDrag: (dragInfo: any) => console.log('---handleDrag----', dragInfo),
+  handlePaste: (pasteNodeKey: string, pasteType: string, selectedId: string) =>
+    console.log('---handlePaste---', pasteNodeKey, pasteType, selectedId),
 };
 
 export const SingleCol = Template.bind({});

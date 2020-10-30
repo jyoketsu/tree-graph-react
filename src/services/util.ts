@@ -368,6 +368,56 @@ function save(c_nodes: Node[]) {
   return nodes;
 }
 
+function pasteNode(
+  map: NodeMap,
+  pasteNodeKey: string,
+  pasteType: 'copy' | 'cut',
+  targetNodeKey: string
+) {
+  let nodeMap = { ...map };
+  let pasteNode = nodeMap[pasteNodeKey];
+  let targetNode = nodeMap[targetNodeKey];
+  if (pasteType === 'cut') {
+    if (pasteNodeKey === targetNodeKey) {
+      return null;
+    }
+    // 從選中節點的父節點的children中刪除當前id
+    let selectedNodeFather = nodeMap[pasteNode.father];
+    if (!selectedNodeFather) {
+      return;
+    }
+    let sortList = selectedNodeFather.sortList;
+    sortList.splice(sortList.indexOf(pasteNode._key), 1);
+    pasteNode.father = targetNodeKey;
+    // 將當前id添加到目標節點children中
+    targetNode.sortList.push(pasteNode._key);
+    return nodeMap;
+  } else if (pasteType === 'copy') {
+    const suffix = guid(8, 16);
+    const newNode = copyNode(pasteNode, suffix);
+    // 將newNode的id添加到目標節點children中
+    targetNode.sortList.push(newNode._key);
+    return nodeMap;
+  } else {
+    return null;
+  }
+
+  function copyNode(node: Node, suffix: string) {
+    let newNode = JSON.parse(JSON.stringify(node));
+    newNode._key = `${newNode._key}-${suffix}`;
+    const sortList = newNode.sortList;
+    for (let index = 0; index < sortList.length; index++) {
+      const childKey = sortList[index];
+      if (nodeMap[childKey]) {
+        let node = copyNode(nodeMap[childKey], suffix);
+        newNode.sortList[index] = node._key;
+      }
+    }
+    nodeMap[newNode._key] = newNode;
+    return newNode;
+  }
+}
+
 function dragSort(map: NodeMap, selectedId: string, dragInfo: DragInfo) {
   let nodeMap = { ...map };
   let selectedNode = nodeMap[selectedId];
@@ -377,7 +427,7 @@ function dragSort(map: NodeMap, selectedId: string, dragInfo: DragInfo) {
   }
   switch (dragInfo.placement) {
     case 'in':
-      // 从选中节点的父节点的children中删除当前id
+      // 從選中節點的父節點的children中刪除當前id
       let selectedNodeFather = nodeMap[selectedNode.father];
       if (!selectedNodeFather) {
         break;
@@ -385,7 +435,7 @@ function dragSort(map: NodeMap, selectedId: string, dragInfo: DragInfo) {
       let sortList = selectedNodeFather.sortList;
       sortList.splice(sortList.indexOf(selectedNode._key), 1);
       selectedNode.father = dragInfo.targetNodeKey;
-      // 将当前id添加到目标节点children中
+      // 將當前id添加到目標節點children中
       targetNode.sortList.push(selectedNode._key);
       break;
     case 'up':
@@ -402,14 +452,14 @@ function dragSort(map: NodeMap, selectedId: string, dragInfo: DragInfo) {
       return;
     }
     if (selectedNode.father === targetNode.father) {
-      // 从选中节点的父节点的children中删除当前id
+      // 從選中節點的父節點的children中刪除當前id
       let father = nodeMap[targetNode.father];
       if (!father) {
         return;
       }
       let sortList = father.sortList;
       sortList.splice(sortList.indexOf(selectedNode._key), 1);
-      // 将当前id添加到目标节点的父节点children中
+      // 將當前id添加到目標節點的父節點children中
       sortList.splice(
         type === 'down'
           ? sortList.indexOf(dragInfo.targetNodeKey) + 1
@@ -418,7 +468,7 @@ function dragSort(map: NodeMap, selectedId: string, dragInfo: DragInfo) {
         selectedId
       );
     } else {
-      // 从选中节点的父节点的children中删除当前id
+      // 從選中節點的父節點的children中刪除當前id
       let selectedNodeFather = nodeMap[selectedNode.father];
       if (!selectedNodeFather) {
         return;
@@ -426,7 +476,7 @@ function dragSort(map: NodeMap, selectedId: string, dragInfo: DragInfo) {
       let sortList = selectedNodeFather.sortList;
       sortList.splice(sortList.indexOf(selectedNode._key), 1);
       selectedNode.father = targetNode.father;
-      // 将当前id添加到目标节点的父节点children中
+      // 將當前id添加到目標節點的父節點children中
       let targetFather = nodeMap[targetNode.father];
       if (!targetFather) {
         return;
@@ -459,4 +509,5 @@ export {
   save,
   dragSort,
   changeSortList,
+  pasteNode,
 };
