@@ -144,9 +144,11 @@ export const MenuTree = React.forwardRef(
         0.1
       );
 
-      setcnodes(cal.nodes);
-      // setmaxX(cal.max_x);
-      setmaxY(cal.max_y);
+      if (cal) {
+        setcnodes(cal.nodes);
+        // setmaxX(cal.max_x);
+        setmaxY(cal.max_y);
+      }
     }, [nodeMap, startId]);
 
     useEffect(() => {
@@ -302,8 +304,7 @@ export const MenuTree = React.forwardRef(
       }
     }
 
-    function handleClickMore(node: CNode, e: MouseEvent) {
-      e.stopPropagation();
+    function handleClickMore(node: CNode) {
       if (handleClickMoreButton) {
         handleClickMoreButton(node);
       }

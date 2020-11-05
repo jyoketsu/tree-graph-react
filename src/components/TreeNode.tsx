@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import CNode from '../interfaces/CNode';
+import Dot from '../components/Dot';
 import DragInfo from '../interfaces/DragInfo';
 import { nodeLocation } from '../services/util';
 
@@ -29,8 +30,9 @@ interface Props {
   handleClickNode: Function;
   handleDbClickNode: Function;
   clickMore: Function;
+  handleClickDot: Function;
   // nodeOptionsOpened: boolean;
-  // openOptions: Function;
+  openOptions: Function;
   setDragInfo: setDragInfoFunc;
   dragStarted: boolean;
 }
@@ -57,11 +59,12 @@ const TreeNode = ({
   clickMore,
   setDragInfo,
   dragStarted,
+  openOptions,
+  handleClickDot,
 }: // nodeOptionsOpened,
-// openOptions,
 Props) => {
   const [hover, sethover] = useState(false);
-  const [hoverMore, setHoverMore] = useState(false);
+  // const [hoverMore, setHoverMore] = useState(false);
   const [y, setY] = useState(0);
 
   function handleMouseEnter(e: React.MouseEvent) {
@@ -82,17 +85,17 @@ Props) => {
     }
   }
 
-  function handleMouseEnterMore() {
-    setHoverMore(true);
-    // timer = setTimeout(() => {
-    //   openOptions(node);
-    // }, 600);
-  }
+  // function handleMouseEnterMore() {
+  //   setHoverMore(true);
+  //   // timer = setTimeout(() => {
+  //   //   openOptions(node);
+  //   // }, 600);
+  // }
 
-  function handleMouseLeaveMore() {
-    setHoverMore(false);
-    // clearTimeout(timer);
-  }
+  // function handleMouseLeaveMore() {
+  //   setHoverMore(false);
+  //   // clearTimeout(timer);
+  // }
 
   function handleClickMore() {
     // clearTimeout(timer);
@@ -318,16 +321,15 @@ Props) => {
         // || nodeOptionsOpened
         <g
           onClick={handleClickMore}
-          onMouseEnter={handleMouseEnterMore}
-          onMouseLeave={handleMouseLeaveMore}
+          // onMouseEnter={handleMouseEnterMore}
+          // onMouseLeave={handleMouseLeaveMore}
         >
           <circle
             cx={node.x + node.width + BLOCK_HEIGHT / 2 + 5}
             cy={node.y + BLOCK_HEIGHT / 2}
             r={BLOCK_HEIGHT / 2}
             fill="rgb(220, 224, 226)"
-            // stroke="#ddd"
-            fillOpacity={hoverMore ? 1 : 0}
+            // fillOpacity={hoverMore ? 1 : 0}
           />
           <circle
             cx={node.x + node.width + BLOCK_HEIGHT / 2 + 5 - 6}
@@ -349,6 +351,14 @@ Props) => {
           />
         </g>
       ) : null}
+      <Dot
+        node={node}
+        BLOCK_HEIGHT={BLOCK_HEIGHT}
+        handleClick={handleClickDot}
+        openOptions={openOptions}
+        dragStarted={dragStarted}
+        nodeHover={hover}
+      />
     </g>
   ) : null;
 };

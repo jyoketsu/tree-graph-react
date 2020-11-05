@@ -8,6 +8,7 @@ interface Props {
   openOptions: Function;
   dragStarted: boolean;
   position?: string;
+  nodeHover?: boolean;
 }
 
 let timer: NodeJS.Timeout;
@@ -19,6 +20,7 @@ const Dot = ({
   openOptions,
   dragStarted,
   position,
+  nodeHover,
 }: Props) => {
   const [hover, sethover] = useState(false);
   const pos = position ? position : 'left';
@@ -62,23 +64,39 @@ const Dot = ({
       onClick={handleClickDot}
     >
       {/* 圆点 */}
-      <circle
-        id="dot-hover"
-        cx={getX()}
-        cy={node.y + BLOCK_HEIGHT / 2}
-        r={9}
-        fill="#bbbfc4"
-        cursor="pointer"
-        fillOpacity={hover ? 1 : 0}
-      />
-      <circle
-        id="dot"
-        cx={getX()}
-        cy={node.y + BLOCK_HEIGHT / 2}
-        r={4}
-        fill="#666"
-        cursor={hover ? 'pointer' : 'auto'}
-      />
+      {!node.dotIcon ? (
+        <circle
+          id="dot-hover"
+          cx={getX()}
+          cy={node.y + BLOCK_HEIGHT / 2}
+          r={9}
+          fill="#bbbfc4"
+          cursor="pointer"
+          // fillOpacity={hover ? 1 : 0}
+          fillOpacity={nodeHover ? 1 : 0}
+        />
+      ) : null}
+      {!node.dotIcon ? (
+        <circle
+          id="dot"
+          cx={getX()}
+          cy={node.y + BLOCK_HEIGHT / 2}
+          r={4}
+          fill="#666"
+          cursor={hover ? 'pointer' : 'auto'}
+        />
+      ) : null}
+
+      {node.dotIcon ? (
+        <image
+          key="avatar-image"
+          x={getX() - (nodeHover ? 9 : 4)}
+          y={node.y + BLOCK_HEIGHT / 2 - (nodeHover ? 9 : 4)}
+          width={nodeHover ? 18 : 8}
+          height={nodeHover ? 18 : 8}
+          xlinkHref={node.icon}
+        />
+      ) : null}
     </g>
   ) : null;
 };

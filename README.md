@@ -276,7 +276,7 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | handleDeleteNode      | 刪除節點事件,參數：selectedNode                      | Function  | 否       | -      |
 | handleClickMoreButton | 點擊更多按鈕,參數：clickNode                         | Function  | 否       | -      |
 | handleClickDot        | 點擊圓點                                             | Function  | 否       | -      |
-| handleShiftUpDown     | 向上/向下移動節點                                    | Function  | 否       | -      |
+| handleShiftUpDown     | 向上/向下移動節點，參數 id, sortList, type           | Function  | 否       | -      |
 | handleSave            | 保存樹                                               | Function  | 否       | -      |
 | handleDrag            | 拖拽節點,參數：dragInfo                              | Function  | 否       | -      |
 | handlePaste           | 複製節點：參數：pasteNodeKey,pasteType,targetNodeKey | Function  | 否       | -      |
@@ -308,7 +308,7 @@ interface DragInfo {
 | fontSize                | 節點字體大小                            | Number    | 否       | 14      |
 | indent                  | 縮進                                    | Number    | 否       | 25      |
 | disableShortcut         | 是否禁用快捷鍵                          | Number    | 否       | -       |
-| showMoreButton          | 是否顯示節點選項菜單                    | boolean   | 否       | -       |
+| showMoreButton          | 是否顯示節點選項菜單                    | boolean   | 否       | false       |
 | showIcon                | 是否顯示圖標                            | boolean   | 否       | true    |
 | nodeOptions             | 節點選項菜單內容                        | component | 否       | -       |
 | handleClickNode         | 點擊節點事件,参数：node                 | Function  | 否       | -       |

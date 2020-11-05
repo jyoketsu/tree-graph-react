@@ -202,7 +202,7 @@ const MenuItem = ({ node, firstLevel, selectedId }: ItemProps) => {
             color: hover ? '#FFF' : color,
           }}
         >
-          {node.name}
+          {node.name || '未命名节点'}
         </span>
       ) : null}
       {!firstLevel && node.sortList.length ? (
@@ -239,9 +239,10 @@ const MenuItem = ({ node, firstLevel, selectedId }: ItemProps) => {
               borderRadius: '4px',
             }}
           >
-            {node.sortList.map(key =>
-              nodes[key] ? <MenuItem key={key} node={nodes[key]} /> : null
-            )}
+            {node.sortList &&
+              node.sortList.map(key =>
+                nodes[key] ? <MenuItem key={key} node={nodes[key]} /> : null
+              )}
           </div>
         </div>
       ) : null}

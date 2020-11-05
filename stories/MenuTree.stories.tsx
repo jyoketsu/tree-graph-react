@@ -202,5 +202,7 @@ export const Default = Template.bind({});
 Default.args = {
   nodes: nodes,
   startId: '001',
-  // showMoreButton: true,
+  showMoreButton: true,
+  handleClickMoreButton: (node: any) =>
+    console.log('---handleClickMoreButton---', node),
 };

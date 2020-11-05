@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import CNode from '../../interfaces/CNode';
 import { nodeLocation } from '../../services/util';
 
@@ -31,6 +31,9 @@ const TreeNode = ({
   clickMore,
 }: Props) => {
   const LEFT = 16;
+
+  const [hover, sethover] = useState(false);
+
   function rectClassName(node: CNode) {
     // 选中的节点
     if (selected === node._key) {
@@ -49,14 +52,19 @@ const TreeNode = ({
       false,
       LEFT
     );
-    if (node.sortList && node.sortList.length) {
-      return res;
-    } else {
-      return {
-        x: res ? res.x - LEFT : 0,
-        y: res?.y,
-      };
-    }
+    // if (node.sortList && node.sortList.length) {
+    //   return res;
+    // } else {
+    //   return {
+    //     x: res ? res.x - LEFT : 0,
+    //     y: res?.y,
+    //   };
+    // }
+    return res;
+  }
+
+  function handleClickMore() {
+    clickMore(node);
   }
 
   const textLocationRes = location(node, 'text');
@@ -68,6 +76,8 @@ const TreeNode = ({
     <g
       onClick={() => handleClickNode(node)}
       onDoubleClick={() => handleDbClickNode(node)}
+      onMouseEnter={() => sethover(true)}
+      onMouseLeave={() => sethover(false)}
     >
       {/* 外框 */}
       <rect
@@ -112,32 +122,31 @@ const TreeNode = ({
       >
         {node.name || '未命名文件'}
       </text>
-      {showMoreButton && selected === node._key ? (
-        <g onClick={e => clickMore(node, e)}>
+      {showMoreButton && hover ? (
+        <g onClick={handleClickMore}>
           <circle
             cx={node.x + node.width + BLOCK_HEIGHT / 2 + 5}
             cy={node.y + BLOCK_HEIGHT / 2}
             r={BLOCK_HEIGHT / 2}
             fillOpacity={0}
-            stroke="#ddd"
           />
           <circle
             cx={node.x + node.width + BLOCK_HEIGHT / 2 + 5 - 6}
             cy={node.y + BLOCK_HEIGHT / 2}
             r={2}
-            fill="#757676"
+            fill={nodeRectClassName === 'selected' ? '#FFF' : color}
           />
           <circle
             cx={node.x + node.width + BLOCK_HEIGHT / 2 + 5}
             cy={node.y + BLOCK_HEIGHT / 2}
             r={2}
-            fill="#757676"
+            fill={nodeRectClassName === 'selected' ? '#FFF' : color}
           />
           <circle
             cx={node.x + node.width + BLOCK_HEIGHT / 2 + 5 + 6}
             cy={node.y + BLOCK_HEIGHT / 2}
             r={2}
-            fill="#757676"
+            fill={nodeRectClassName === 'selected' ? '#FFF' : color}
           />
         </g>
       ) : null}

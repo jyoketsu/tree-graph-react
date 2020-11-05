@@ -22,6 +22,7 @@ export default function calculate(
   const root = nodes[startId];
   if (!root) {
     console.error(`Can't find the root node`);
+    return;
   }
   const rootWidth = getNodeWidth(
     root,
@@ -57,7 +58,7 @@ export default function calculate(
 
         if (index === 0) {
           SECOND_START_NODE_ID = element?._key;
-          location(nodes, element, 10, ITEM_HEIGHT * 1.5);
+          location(nodes, element, 15, ITEM_HEIGHT * 1.5);
         } else {
           if (index + 1 === secondLevel.length) {
             SECOND_END_NODE_ID = element?._key;

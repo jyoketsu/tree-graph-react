@@ -10,7 +10,7 @@ const nodes = {
     father: '',
     sortList: ['002', '003', '004', '005'],
     contract: false,
-
+    dotIcon: 'https://psnine.com/Upload/game/11387.png',
     avatarUri: 'https://psnine.com/Upload/game/11387.png',
     icon: 'https://cdn-icare.qingtime.cn/rooter.svg',
 

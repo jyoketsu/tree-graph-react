@@ -3,7 +3,6 @@ import NodeMap from './interfaces/NodeMap';
 import CNode from './interfaces/CNode';
 import DragInfo from './interfaces/DragInfo';
 import TreeNode from './components/TreeNode';
-import Dot from './components/Dot';
 import Expand from './components/Expand';
 import NodeInput from './components/NodeInput';
 import NodeOptions from './components/NodeOptions';
@@ -198,16 +197,18 @@ export const Tree = React.forwardRef(
         SHOW_ICON,
         SHOW_AVATAR,
         SHOW_CHECKBOX,
-        SHOW_STATUS
+        SHOW_STATUS,
       );
 
-      setcnodes(cal.nodes);
-      // setmaxX(cal.max_x);
-      setmaxY(cal.max_y);
-      setmaxEnd(cal.max_end);
-      setSecondStartX(cal.second_start_x);
-      setSecondEndX(cal.second_end_x);
-      setisSingle(cal.isSingle);
+      if (cal) {
+        setcnodes(cal.nodes);
+        // setmaxX(cal.max_x);
+        setmaxY(cal.max_y);
+        setmaxEnd(cal.max_end);
+        setSecondStartX(cal.second_start_x);
+        setSecondEndX(cal.second_end_x);
+        setisSingle(cal.isSingle);
+      }
     }, [nodeMap, startId, singleColumn]);
 
     useEffect(() => {
@@ -705,32 +706,6 @@ export const Tree = React.forwardRef(
           </defs>
           {cnodes.map(node => (
             <g key={node._key} className={`node-group-${node._key}`}>
-              <TreeNode
-                node={node}
-                ITEM_HEIGHT={ITEM_HEIGHT}
-                BLOCK_HEIGHT={BLOCK_HEIGHT}
-                FONT_SIZE={FONT_SIZE}
-                startId={startId}
-                alias={new Date().getTime()}
-                selected={selectedId}
-                showIcon={SHOW_ICON}
-                showAvatar={SHOW_AVATAR}
-                showStatus={SHOW_STATUS}
-                showCheckbox={SHOW_CHECKBOX}
-                showMoreButton={showMoreButton || false}
-                // openOptions={clickOptionsButton}
-                // nodeOptionsOpened={
-                //   showOptionsNode && node._key === showOptionsNode._key
-                //     ? true
-                //     : false
-                // }
-                handleCheck={check}
-                handleClickNode={clickNode}
-                handleDbClickNode={dbClickNode}
-                clickMore={clickMore}
-                setDragInfo={setDragInfo}
-                dragStarted={dragStarted}
-              />
               {isSingle ? (
                 node.x && node.y ? (
                   <g className="multi-column">
@@ -819,11 +794,31 @@ export const Tree = React.forwardRef(
                   ) : null}
                 </g>
               )}
-              <Dot
+              <TreeNode
                 node={node}
+                ITEM_HEIGHT={ITEM_HEIGHT}
                 BLOCK_HEIGHT={BLOCK_HEIGHT}
-                handleClick={clickDot}
+                FONT_SIZE={FONT_SIZE}
+                startId={startId}
+                alias={new Date().getTime()}
+                selected={selectedId}
+                showIcon={SHOW_ICON}
+                showAvatar={SHOW_AVATAR}
+                showStatus={SHOW_STATUS}
+                showCheckbox={SHOW_CHECKBOX}
+                showMoreButton={showMoreButton || false}
                 openOptions={clickOptionsButton}
+                // nodeOptionsOpened={
+                //   showOptionsNode && node._key === showOptionsNode._key
+                //     ? true
+                //     : false
+                // }
+                handleClickDot={clickDot}
+                handleCheck={check}
+                handleClickNode={clickNode}
+                handleDbClickNode={dbClickNode}
+                clickMore={clickMore}
+                setDragInfo={setDragInfo}
                 dragStarted={dragStarted}
               />
               <Expand
