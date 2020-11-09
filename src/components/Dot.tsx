@@ -90,11 +90,11 @@ const Dot = ({
       {node.dotIcon ? (
         <image
           key="avatar-image"
-          x={getX() - (nodeHover ? 9 : 4)}
-          y={node.y + BLOCK_HEIGHT / 2 - (nodeHover ? 9 : 4)}
-          width={nodeHover ? 18 : 8}
-          height={nodeHover ? 18 : 8}
-          xlinkHref={node.icon}
+          x={getX() - (nodeHover ? 9 : 5)}
+          y={node.y + BLOCK_HEIGHT / 2 - (nodeHover ? 9 : 5)}
+          width={nodeHover ? 18 : 10}
+          height={nodeHover ? 18 : 10}
+          xlinkHref={node.dotIcon}
         />
       ) : null}
     </g>

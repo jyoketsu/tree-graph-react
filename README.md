@@ -308,7 +308,7 @@ interface DragInfo {
 | fontSize                | 節點字體大小                            | Number    | 否       | 14      |
 | indent                  | 縮進                                    | Number    | 否       | 25      |
 | disableShortcut         | 是否禁用快捷鍵                          | Number    | 否       | -       |
-| showMoreButton          | 是否顯示節點選項菜單                    | boolean   | 否       | false       |
+| showMoreButton          | 是否顯示節點選項菜單                    | boolean   | 否       | false   |
 | showIcon                | 是否顯示圖標                            | boolean   | 否       | true    |
 | nodeOptions             | 節點選項菜單內容                        | component | 否       | -       |
 | handleClickNode         | 點擊節點事件,参数：node                 | Function  | 否       | -       |
@@ -349,6 +349,7 @@ interface DragInfo {
 | checked         | 是否勾選             | Boolean |
 | avatarUri       | 頭像圖片地址         | String  |
 | icon            | 圖標圖片地址         | String  |
+| dotIcon         | 圓點圖標圖片地址     | String  |
 | color           | 節點字體顏色         | String  |
 | backgroundColor | 節點背景色           | String  |
 | hour            | 節點（任務）工時     | Number  |
