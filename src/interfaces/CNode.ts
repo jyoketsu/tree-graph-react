@@ -13,6 +13,9 @@ export default interface CNode {
   color?: string;
   backgroundColor?: string;
   dotIcon?:string;
+  showCheckbox?: boolean;
+  showStatus?: boolean;
+  disabled?:boolean;
   // 以下为计算属性
   x: number;
   y: number;

@@ -23,8 +23,6 @@ interface Props {
   showMoreButton: boolean;
   showIcon: boolean;
   showAvatar: boolean;
-  showCheckbox: boolean;
-  showStatus: boolean;
   hideBorder?: boolean;
   handleCheck: CheckFunc;
   handleClickNode: Function;
@@ -49,8 +47,6 @@ const TreeNode = ({
   selected,
   showIcon,
   showAvatar,
-  showCheckbox,
-  showStatus,
   hideBorder,
   showMoreButton,
   handleCheck,
@@ -118,15 +114,7 @@ Props) => {
   }
 
   function location(node: CNode, type: string) {
-    return nodeLocation(
-      node,
-      type,
-      BLOCK_HEIGHT,
-      showIcon,
-      showAvatar,
-      showCheckbox,
-      showStatus
-    );
+    return nodeLocation(node, type, BLOCK_HEIGHT, showIcon, showAvatar);
   }
 
   const textLocationRes = location(node, 'text');
@@ -243,7 +231,7 @@ Props) => {
         : null}
 
       {/* 勾选框 */}
-      {showCheckbox ? (
+      {node.showCheckbox ? (
         <use
           key="checkbox"
           href={`#checkbox-${node.checked ? 'checked' : 'uncheck'}`}
@@ -254,12 +242,16 @@ Props) => {
       ) : null}
 
       {/* 任务状态 */}
-      {showStatus
+      {node.showStatus
         ? [
             <use
               key="status"
               href={`#status${
-                node.limitDay && node.limitDay < 0 ? '-overdue' : ''
+                node.limitDay && node.limitDay < 0
+                  ? node.checked
+                    ? '-complete'
+                    : '-overdue'
+                  : ''
               }`}
               x={statusLocationRes?.x}
               y={statusLocationRes?.y}
@@ -328,7 +320,7 @@ Props) => {
             cx={node.x + node.width + BLOCK_HEIGHT / 2 + 5}
             cy={node.y + BLOCK_HEIGHT / 2}
             r={BLOCK_HEIGHT / 2}
-            fill="rgb(220, 224, 226)"
+            fill="#f3f4f5"
             // fillOpacity={hoverMore ? 1 : 0}
           />
           <circle

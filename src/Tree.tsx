@@ -53,13 +53,13 @@ export interface TreeProps {
   avatarWidth?: number;
   checkBoxWidth?: number;
   pathWidth?: number;
+  // 线条圆角半径
+  lineRadius?: number;
   disableShortcut?: boolean;
   showMoreButton?: boolean;
   nodeOptions?: any;
   showIcon?: boolean;
   showAvatar?: boolean;
-  showCheckbox?: boolean;
-  showStatus?: boolean;
   handleClickExpand?: Function;
   handleCheck?: Function;
   handleClickNode?: Function;
@@ -93,13 +93,12 @@ export const Tree = React.forwardRef(
       // avatarWidth,
       // checkBoxWidth,
       pathWidth,
+      lineRadius,
       disableShortcut,
       showMoreButton,
       nodeOptions,
       showIcon,
       showAvatar,
-      showCheckbox,
-      showStatus,
       handleClickExpand,
       handleCheck,
       handleClickNode,
@@ -122,14 +121,13 @@ export const Tree = React.forwardRef(
     const BLOCK_HEIGHT = blockHeight || 30;
     const FONT_SIZE = fontSize || 14;
     const INDENT = indent || 25;
+    const RADIUS = lineRadius || 4;
     // const AVATAR_WIDTH = avatarWidth || 22;
     // const CHECK_BOX_WIDTH = checkBoxWidth || 18;
     const PATH_WIDTH = pathWidth || 1;
     const UNCONTROLLED = uncontrolled === undefined ? true : uncontrolled;
     const SHOW_ICON = showIcon === undefined ? true : showIcon;
     const SHOW_AVATAR = showAvatar === undefined ? false : showAvatar;
-    const SHOW_CHECKBOX = showCheckbox === undefined ? false : showCheckbox;
-    const SHOW_STATUS = showStatus === undefined ? false : showStatus;
 
     const [nodeMap, setNodeMap] = useState(nodes);
     const [secondStartX, setSecondStartX] = useState<number | undefined>(0);
@@ -195,9 +193,7 @@ export const Tree = React.forwardRef(
         INDENT,
         FONT_SIZE,
         SHOW_ICON,
-        SHOW_AVATAR,
-        SHOW_CHECKBOX,
-        SHOW_STATUS,
+        SHOW_AVATAR
       );
 
       if (cal) {
@@ -220,23 +216,31 @@ export const Tree = React.forwardRef(
 
     // 有父节点时的左侧水平线条
     function fatherPath(node: CNode) {
-      const M = `M ${node.x} ${node.y + BLOCK_HEIGHT / 2}`;
-      const H = `H ${node.x - (INDENT - 5)}`;
-      return `${M} ${H}`;
+      // 从左向右画
+      const startX = node.x;
+      const Y = node.y + BLOCK_HEIGHT / 2;
+      const endX = node.x - (INDENT - 5);
+      const lineEndX = endX + RADIUS;
+      const curveEndY = Y - RADIUS;
+      const M = `M ${startX} ${Y}`;
+      const H = `H ${lineEndX}`;
+      const Q = `Q ${endX} ${Y} ${endX} ${curveEndY}`;
+      return `${M} ${H} ${Q}`;
     }
 
-    // 有子节点时的下部线条
+    // 有子节点时的下部纵线
     function childPath(node: CNode) {
       const M = `M ${node.x + 5} ${node.y + BLOCK_HEIGHT}`;
-      const V = `V ${node.last_child_y + BLOCK_HEIGHT / 2}`;
+      const V = `V ${node.last_child_y + BLOCK_HEIGHT / 2 - RADIUS}`;
       return `${M} ${V}`;
     }
 
     // 根节点底部水平线
     function rootHpaht() {
-      const M = `M ${secondStartX} ${ITEM_HEIGHT * 1.5 -
+      const M = `M ${secondStartX ? secondStartX + RADIUS : 0} ${ITEM_HEIGHT *
+        1.5 -
         (ITEM_HEIGHT * 1.5 - BLOCK_HEIGHT) / 2}`;
-      const H = `H ${secondEndX}`;
+      const H = `H ${secondEndX ? secondEndX - RADIUS : 0}`;
       return `${M} ${H}`;
     }
 
@@ -248,10 +252,34 @@ export const Tree = React.forwardRef(
       return `${M} ${V}`;
     }
 
-    // 第二层节点头部纵线
+    // 第二层节点头部纵线（从下往上画）
     function rootBottomVpath(node: CNode) {
-      const M = `M ${node.x + node.width / 2} ${node.y}`;
-      const V = `V ${node.y - (ITEM_HEIGHT * 1.5 - BLOCK_HEIGHT) / 2}`;
+      const startX = node.x + node.width / 2;
+      const startY = node.y;
+      const endY = node.y - (ITEM_HEIGHT * 1.5 - BLOCK_HEIGHT) / 2;
+
+      // 第二层的第一个节点
+      if (node.x + node.width / 2 === secondStartX) {
+        const lineEndY = endY + RADIUS;
+        const curveEndX = startX + RADIUS;
+
+        const M = `M ${startX} ${startY}`;
+        const V = `V ${lineEndY}`;
+        const Q = `Q ${startX} ${endY} ${curveEndX} ${endY}`;
+        return `${M} ${V} ${Q}`;
+      }
+      // 第二层的最后一个节点
+      if (node.x + node.width / 2 === secondEndX) {
+        const lineEndY = endY + RADIUS;
+        const curveEndX = startX - RADIUS;
+
+        const M = `M ${startX} ${startY}`;
+        const V = `V ${lineEndY}`;
+        const Q = `Q ${startX} ${endY} ${curveEndX} ${endY}`;
+        return `${M} ${V} ${Q}`;
+      }
+      const M = `M ${startX} ${startY}`;
+      const V = `V ${endY}`;
       return `${M} ${V}`;
     }
 
@@ -269,6 +297,9 @@ export const Tree = React.forwardRef(
     // 双击节点
     function dbClickNode(node: CNode) {
       clearTimeout(clickTimeId);
+      if (node.disabled) {
+        return;
+      }
       setselectedId(node._key);
       setshowInput(true);
       if (handleDbClickNode) {
@@ -402,6 +433,11 @@ export const Tree = React.forwardRef(
       if (!selectedId) {
         return alert('请先选中节点！');
       }
+
+      const node = nodeMap[selectedId];
+      if (node.disabled) {
+        return;
+      }
       if (selectedId === startId) {
         return alert('根节点不允许删除！');
       }
@@ -521,6 +557,10 @@ export const Tree = React.forwardRef(
     function handleDragStart(e: any) {
       if (selectedId && e.target.classList.contains('selected')) {
         e.stopPropagation();
+        const node = nodeMap[selectedId];
+        if (node.disabled) {
+          return;
+        }
         setDragStarted(true);
         setShowDragNode(true);
         setDragInfo({ targetNodeKey: selectedId, placement: 'in' });
@@ -703,6 +743,16 @@ export const Tree = React.forwardRef(
               <path d="M0 0 H 11 L 22 11 V 22 H 0 Z" fill="rgb(221, 53, 53)" />
               <path d="M 11 0 H 22 V 11 Z" fill="rgb(53, 166, 248)" />
             </g>
+            <g
+              id="status-complete"
+              width="22"
+              height="22"
+              viewBox="0,0,22,22"
+              preserveAspectRatio="xMinYMin meet"
+            >
+              <path d="M0 0 H 11 L 22 11 V 22 H 0 Z" fill="#417505" />
+              <path d="M 11 0 H 22 V 11 Z" fill="rgb(53, 166, 248)" />
+            </g>
           </defs>
           {cnodes.map(node => (
             <g key={node._key} className={`node-group-${node._key}`}>
@@ -804,8 +854,6 @@ export const Tree = React.forwardRef(
                 selected={selectedId}
                 showIcon={SHOW_ICON}
                 showAvatar={SHOW_AVATAR}
-                showStatus={SHOW_STATUS}
-                showCheckbox={SHOW_CHECKBOX}
                 showMoreButton={showMoreButton || false}
                 openOptions={clickOptionsButton}
                 // nodeOptionsOpened={
@@ -845,8 +893,6 @@ export const Tree = React.forwardRef(
               selected={selectedId}
               showIcon={SHOW_ICON}
               showAvatar={SHOW_AVATAR}
-              showStatus={SHOW_STATUS}
-              showCheckbox={SHOW_CHECKBOX}
               movedNodeX={movedNodeX}
               movedNodeY={movedNodeY}
               dragInfo={dragInfo}

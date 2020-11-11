@@ -95,8 +95,6 @@ function getNodeWidth(
   fontSize: number,
   showIcon: boolean,
   showAvatar: boolean,
-  showCheckbox: boolean,
-  showStatus: boolean,
   padding?: number
 ) {
   const str = node.name;
@@ -110,13 +108,7 @@ function getNodeWidth(
   const width = textWidth(fontSize);
 
   const paddingWidth = padding ? padding * 1.5 : 15;
-  const extInfoWidth = getExtInfoWidth(
-    node,
-    showIcon,
-    showAvatar,
-    showCheckbox,
-    showStatus
-  );
+  const extInfoWidth = getExtInfoWidth(node, showIcon, showAvatar);
 
   return (
     width.fullAngleWidth * full +
@@ -129,17 +121,11 @@ function getNodeWidth(
 }
 
 // 获取额外信息宽度
-function getExtInfoWidth(
-  node: Node,
-  showIcon: boolean,
-  showAvatar: boolean,
-  showCheckbox: boolean,
-  showStatus: boolean
-) {
+function getExtInfoWidth(node: Node, showIcon: boolean, showAvatar: boolean) {
   const iconWidth = showIcon && node.icon ? 22 : 0;
   const avatarWidth = showAvatar && node.avatarUri ? 22 : 0;
-  const checkboxWidth = showCheckbox ? 18 : 0;
-  const statusWidth = showStatus ? 22 : 0;
+  const checkboxWidth = node.showCheckbox ? 18 : 0;
+  const statusWidth = node.showStatus ? 22 : 0;
   const temp = [iconWidth, avatarWidth, checkboxWidth, statusWidth];
   let count = 0;
   for (let index = 0; index < temp.length; index++) {
@@ -159,8 +145,6 @@ function nodeLocation(
   BLOCK_HEIGHT: number,
   showIcon: boolean,
   showAvatar: boolean,
-  showCheckbox: boolean,
-  showStatus: boolean,
   paddingLeft?: number
 ) {
   const startX = paddingLeft || 5;
@@ -191,17 +175,11 @@ function nodeLocation(
           startX +
           (showIcon && node.icon ? 22 + 2 : 0) +
           (showAvatar && node.avatarUri ? 22 + 2 : 0) +
-          (showCheckbox ? 18 + 2 : 0),
+          (node.showCheckbox ? 18 + 2 : 0),
         y: node.y + (BLOCK_HEIGHT - 22) / 2,
       };
     case 'text':
-      const extWidth = getExtInfoWidth(
-        node,
-        showIcon,
-        showAvatar,
-        showCheckbox,
-        showStatus
-      );
+      const extWidth = getExtInfoWidth(node, showIcon, showAvatar);
       return {
         x: node.x + startX + extWidth + (extWidth ? 2 : 0),
         y: node.y + BLOCK_HEIGHT / 2 + 1,

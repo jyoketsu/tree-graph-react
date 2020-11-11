@@ -12,8 +12,6 @@ export default function calculate(
   FONT_SIZE: number,
   showIcon: boolean,
   showAvatar: boolean,
-  showCheckbox: boolean,
-  showStatus: boolean,
   startX?: number,
   startY?: number
 ) {
@@ -24,14 +22,7 @@ export default function calculate(
     console.error(`Can't find the root node`);
     return;
   }
-  const rootWidth = getNodeWidth(
-    root,
-    FONT_SIZE,
-    showIcon,
-    showAvatar,
-    showCheckbox,
-    showStatus
-  );
+  const rootWidth = getNodeWidth(root, FONT_SIZE, showIcon, showAvatar);
   root.width = rootWidth;
   // 是否是单列：参数单列或者根节点只有一个子节点为单列
   const isSingle =
@@ -118,14 +109,7 @@ export default function calculate(
   }
 
   function location(nodes: NodeMap, node: Node, x: number, y: number) {
-    const nodeWidth = getNodeWidth(
-      node,
-      FONT_SIZE,
-      showIcon,
-      showAvatar,
-      showCheckbox,
-      showStatus
-    );
+    const nodeWidth = getNodeWidth(node, FONT_SIZE, showIcon, showAvatar);
     node.x = x;
     node.y = y;
     node.width = nodeWidth;

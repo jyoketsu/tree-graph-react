@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useContext } from 'react';
 import NodeMap from './interfaces/NodeMap';
 import Node from './interfaces/Node';
 
@@ -9,7 +9,7 @@ interface IContextProps {
   selectedBackgroundColor: string;
   color: string;
   height: number;
-  setSelectedId: Function;
+  // setSelectedId: Function;
   handleClickNode?: Function;
   handleClickExpand?: Function;
 }
@@ -65,26 +65,26 @@ export const MiniMenu = ({
   const FONT_SIZE = fontSize || 14;
 
   // 當前點擊的節點id
-  const [selectedId, setSelectedId] = useState<string | null>(null);
+  // const [selectedId, setSelectedId] = useState<string | null>(null);
   // 當前點擊的節點id所在的第一列節點id
-  const [firstLevelId, setFirstLevelId] = useState<string | null>(null);
+  // const [firstLevelId, setFirstLevelId] = useState<string | null>(null);
 
-  useEffect(() => {
-    function getFatherId(node: Node): string | null {
-      if (node.father === startId) {
-        return node._key;
-      } else if (nodes[node.father]) {
-        return getFatherId(nodes[node.father]);
-      } else return null;
-    }
+  // useEffect(() => {
+  //   function getFatherId(node: Node): string | null {
+  //     if (node.father === startId) {
+  //       return node._key;
+  //     } else if (nodes[node.father]) {
+  //       return getFatherId(nodes[node.father]);
+  //     } else return null;
+  //   }
 
-    if (selectedId && nodes[selectedId]) {
-      const id = getFatherId(nodes[selectedId]);
-      if (id) {
-        setFirstLevelId(id);
-      }
-    }
-  }, [selectedId]);
+  //   if (selectedId && nodes[selectedId]) {
+  //     const id = getFatherId(nodes[selectedId]);
+  //     if (id) {
+  //       setFirstLevelId(id);
+  //     }
+  //   }
+  // }, [selectedId]);
 
   return (
     <div
@@ -103,7 +103,7 @@ export const MiniMenu = ({
           backgroundColor: BKCOLOR,
           color: COLOR,
           handleClickNode,
-          setSelectedId,
+          // setSelectedId,
           selectedBackgroundColor: SEL_BKCOLOR,
           handleClickExpand,
         }}
@@ -114,7 +114,7 @@ export const MiniMenu = ({
               key={key}
               node={nodes[key]}
               firstLevel={true}
-              selectedId={firstLevelId}
+              // selectedId={firstLevelId}
             />
           ) : null
         )}
@@ -126,9 +126,9 @@ export const MiniMenu = ({
 interface ItemProps {
   node: Node;
   firstLevel?: boolean;
-  selectedId?: string | null;
+  // selectedId?: string | null;
 }
-const MenuItem = ({ node, firstLevel, selectedId }: ItemProps) => {
+const MenuItem = ({ node, firstLevel }: ItemProps) => {
   const configProps = useContext(ThemeContext);
   const [hover, setHover] = useState(false);
 
@@ -141,7 +141,7 @@ const MenuItem = ({ node, firstLevel, selectedId }: ItemProps) => {
   function handleClick(e: React.MouseEvent) {
     e.stopPropagation();
     if (configProps.handleClickNode) {
-      configProps.setSelectedId(node._key);
+      // configProps.setSelectedId(node._key);
       configProps.handleClickNode(node);
     }
   }
@@ -165,10 +165,11 @@ const MenuItem = ({ node, firstLevel, selectedId }: ItemProps) => {
         cursor: 'pointer',
         boxSizing: 'border-box',
         padding: '0 15px',
-        backgroundColor:
-          node._key === selectedId
-            ? configProps.selectedBackgroundColor
-            : 'unset',
+        // backgroundColor:
+        //   node._key === selectedId
+        //     ? configProps.selectedBackgroundColor
+        //     : 'unset',
+        backgroundColor: hover ? configProps.selectedBackgroundColor : 'unset',
       }}
       onMouseEnter={() => setHover(true)}
       onMouseLeave={() => setHover(false)}

@@ -12,8 +12,6 @@ interface Props {
   selected: string | null;
   showIcon: boolean;
   showAvatar: boolean;
-  showCheckbox: boolean;
-  showStatus: boolean;
   movedNodeX: number;
   movedNodeY: number;
   dragInfo: DragInfo | null;
@@ -27,8 +25,6 @@ const DragNode = ({
   alias,
   showIcon,
   showAvatar,
-  showCheckbox,
-  showStatus,
   movedNodeX,
   movedNodeY,
   dragInfo,
@@ -46,15 +42,7 @@ const DragNode = ({
   }, [selectedId, nodeList]);
 
   function location(node: CNode, type: string) {
-    return nodeLocation(
-      node,
-      type,
-      BLOCK_HEIGHT,
-      showIcon,
-      showAvatar,
-      showCheckbox,
-      showStatus
-    );
+    return nodeLocation(node, type, BLOCK_HEIGHT, showIcon, showAvatar);
   }
 
   if (!node) {
@@ -139,7 +127,7 @@ const DragNode = ({
         : null}
 
       {/* 勾选框 */}
-      {showCheckbox ? (
+      {node.showCheckbox ? (
         <use
           key="checkbox"
           href={`#checkbox-${node.checked ? 'checked' : 'uncheck'}`}
@@ -149,7 +137,7 @@ const DragNode = ({
       ) : null}
 
       {/* 任务状态 */}
-      {showStatus
+      {node.showStatus
         ? [
             <use
               key="status"

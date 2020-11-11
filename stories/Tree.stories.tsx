@@ -13,11 +13,10 @@ const nodes = {
     dotIcon: 'https://cdn-icare.qingtime.cn/shareOut1.svg?v=1604893936765',
     avatarUri: 'https://psnine.com/Upload/game/11387.png',
     icon: 'https://cdn-icare.qingtime.cn/rooter.svg',
-
     checked: true,
-
     hour: 0.1,
     limitDay: -23,
+    disabled: true,
   },
   '002': {
     _key: '002',
@@ -25,9 +24,9 @@ const nodes = {
     father: '001',
     sortList: ['006', '007'],
     contract: false,
-
+    showCheckbox: true,
+    showStatus: true,
     checked: true,
-
     hour: 0.1,
     limitDay: -23,
     icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
@@ -37,7 +36,8 @@ const nodes = {
     name: '項目狀態',
     father: '001',
     sortList: ['010', '011'],
-
+    showCheckbox: true,
+    showStatus: true,
     checked: false,
     color: '#fff',
     backgroundColor: '#90B44B',
@@ -118,10 +118,11 @@ const nodes = {
     father: '003',
     sortList: [],
 
-    checked: true,
-
+    checked: false,
+    showCheckbox: true,
+    showStatus: true,
     hour: 0.1,
-    limitDay: 2,
+    limitDay: -2,
   },
   '011': {
     _key: '011',

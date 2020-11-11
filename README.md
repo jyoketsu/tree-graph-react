@@ -257,14 +257,13 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | indent                | 縮進                                                 | Number    | 否       | 25     |
 | avatarWidth           | 頭像寬度                                             | Number    | 否       | 22     |
 | pathWidth             | 線條寬度                                             | Number    | 否       | 1      |
+| lineRadius            | 線條圓角半徑                                         | Number    | 否       | 4      |
 | checkBoxWidth         | 勾選框寬度                                           | Number    | 否       | 18     |
 | disableShortcut       | 是否禁用快捷鍵                                       | Number    | 否       | -      |
 | showMoreButton        | 是否顯示節點更多按鈕                                 | boolean   | 否       | -      |
 | showIcon              | 是否顯示圖標                                         | boolean   | 否       | true   |
 | showAvatar            | 是否顯示頭像                                         | Boolean   |
 | avatarUri             | 頭像地址                                             | String    |
-| showCheckbox          | 是否顯示勾選框                                       | Boolean   |
-| showStatus            | 是否顯示節點狀態                                     | Boolean   |
 | nodeOptions           | 節點選項菜單內容                                     | component | 否       | -      |
 | handleClickNode       | 點擊節點事件,参数：node                              | Function  | 否       | -      |
 | handleDbClickNode     | 雙擊節點事件,参数：node                              | Function  | 否       | -      |
@@ -352,5 +351,7 @@ interface DragInfo {
 | dotIcon         | 圓點圖標圖片地址     | String  |
 | color           | 節點字體顏色         | String  |
 | backgroundColor | 節點背景色           | String  |
+| showCheckbox    | 是否顯示勾選框       | Boolean |
+| showStatus      | 是否顯示節點狀態     | Boolean |
 | hour            | 節點（任務）工時     | Number  |
 | limitDay        | 節點（任務）剩余天數 | Number  |

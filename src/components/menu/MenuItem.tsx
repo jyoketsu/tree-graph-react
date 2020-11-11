@@ -42,16 +42,7 @@ const TreeNode = ({
   }
 
   function location(node: CNode, type: string) {
-    let res = nodeLocation(
-      node,
-      type,
-      BLOCK_HEIGHT,
-      showIcon,
-      false,
-      false,
-      false,
-      LEFT
-    );
+    let res = nodeLocation(node, type, BLOCK_HEIGHT, showIcon, false, LEFT);
     // if (node.sortList && node.sortList.length) {
     //   return res;
     // } else {
