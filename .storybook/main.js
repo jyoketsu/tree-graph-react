@@ -1,7 +1,11 @@
 module.exports = {
   stories: ['../stories/**/*.stories.(ts|tsx)'],
-  addons: ['@storybook/addon-actions', '@storybook/addon-links', '@storybook/addon-docs'],
-  webpackFinal: async (config) => {
+  addons: [
+    '@storybook/addon-actions',
+    '@storybook/addon-links',
+    '@storybook/addon-docs',
+  ],
+  webpackFinal: async config => {
     config.module.rules.push({
       test: /\.(ts|tsx)$/,
       use: [
@@ -9,6 +13,7 @@ module.exports = {
           loader: require.resolve('ts-loader'),
           options: {
             transpileOnly: true,
+            minify: true,
           },
         },
         {

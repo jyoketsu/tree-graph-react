@@ -460,7 +460,7 @@ export const Tree = React.forwardRef(
     }
 
     function saveNodes() {
-      return nodeMap;
+      return { rootKey: startId, data: nodeMap };
     }
 
     function handleKeyDown(event: KeyboardEvent) {

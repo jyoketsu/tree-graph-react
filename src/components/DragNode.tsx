@@ -142,10 +142,14 @@ const DragNode = ({
             <use
               key="status"
               href={`#status${
-                node.limitDay && node.limitDay < 0 ? '-overdue' : ''
+                node.limitDay && node.limitDay < 0
+                  ? node.checked
+                    ? '-complete'
+                    : '-overdue'
+                  : ''
               }`}
-              x={statusLocationRes ? statusLocationRes.x + movedNodeX : 0}
-              y={statusLocationRes ? statusLocationRes.y + movedNodeY : 0}
+              x={statusLocationRes?.x}
+              y={statusLocationRes?.y}
             />,
             <g
               key="status-text"
