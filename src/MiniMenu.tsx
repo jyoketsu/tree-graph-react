@@ -203,7 +203,7 @@ const MenuItem = ({ node, firstLevel }: ItemProps) => {
             color: hover ? '#FFF' : color,
           }}
         >
-          {node.name || '未命名节点'}
+          {node.name || ''}
         </span>
       ) : null}
       {!firstLevel && node.sortList.length ? (

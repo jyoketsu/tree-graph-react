@@ -56,7 +56,7 @@ const NodeInput = ({
             padding: '0 5px',
             outline: 'none',
             position: 'absolute',
-            width: `${selected?.width}px`,
+            width: `${selected && selected.name ? selected.width : 100}px`,
             height: `${BLOCK_HEIGHT || 30}px`,
             fontSize: `${FONT_SIZE || 14}px`,
             top: `${selected?.y}px`,

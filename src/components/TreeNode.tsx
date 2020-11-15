@@ -306,7 +306,7 @@ Props) => {
           userSelect: 'none',
         }}
       >
-        {node.name || '未命名文件'}
+        {node.name || ''}
       </text>
       {/* 选项/更多按钮 */}
       {showMoreButton && hover && !dragStarted ? (

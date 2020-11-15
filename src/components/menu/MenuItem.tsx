@@ -111,7 +111,7 @@ const TreeNode = ({
           userSelect: 'none',
         }}
       >
-        {node.name || '未命名文件'}
+        {node.name || ''}
       </text>
       {showMoreButton && hover ? (
         <g onClick={handleClickMore}>

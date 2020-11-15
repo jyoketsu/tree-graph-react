@@ -103,7 +103,7 @@ function getNodeWidth(
   const alphabet = getAlphabetNum(str);
   const number = getNumberNum(str);
   if (!str.length) {
-    full = 6;
+    full = 1;
   }
   const width = textWidth(fontSize);
 
@@ -193,7 +193,7 @@ function addChildNode(nodeMap: NodeMap, selectedId: string) {
   let nodes = { ...nodeMap };
   const childNode: Node = {
     _key: guid(8, 16),
-    name: '未命名节点',
+    name: '',
     father: selectedId,
     sortList: [],
     checked: false,
@@ -216,7 +216,7 @@ function addNextNode(nodeMap: NodeMap, selectedId: string) {
   let fatherNode = nodes[selectedNode.father];
   const nextNode: Node = {
     _key: guid(8, 16),
-    name: '未命名节点',
+    name: '',
     father: fatherNode._key,
     sortList: [],
     checked: false,
@@ -319,7 +319,7 @@ function changeNodeText(nodeMap: NodeMap, id: string, text: string) {
   let nodes = { ...nodeMap };
   let node = nodes[id];
   if (!text) {
-    text = '未命名节点';
+    text = '';
   }
   node.name = text;
   return nodes;

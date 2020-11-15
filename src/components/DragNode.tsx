@@ -200,7 +200,7 @@ const DragNode = ({
           userSelect: 'none',
         }}
       >
-        {node.name || '未命名文件'}
+        {node.name || ''}
       </text>
     </g>
   ) : null;
