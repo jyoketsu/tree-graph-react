@@ -62,6 +62,8 @@ export interface TreeProps {
   showAvatar?: boolean;
   handleClickExpand?: Function;
   handleCheck?: Function;
+  handleClickAvatar?: Function;
+  handleClickStatus?: Function;
   handleClickNode?: Function;
   handleDbClickNode?: Function;
   handleChangeNodeText?: Function;
@@ -101,6 +103,8 @@ export const Tree = React.forwardRef(
       showAvatar,
       handleClickExpand,
       handleCheck,
+      handleClickAvatar,
+      handleClickStatus,
       handleClickNode,
       handleDbClickNode,
       handleChangeNodeText,
@@ -326,6 +330,20 @@ export const Tree = React.forwardRef(
       }
       if (handleCheck) {
         handleCheck(node);
+      }
+    }
+
+    function clickAvatar(node: CNode, e: MouseEvent) {
+      if (handleClickAvatar) {
+        e.stopPropagation();
+        handleClickAvatar(node);
+      }
+    }
+
+    function clickStatus(node: CNode, e: MouseEvent) {
+      if (handleClickStatus) {
+        e.stopPropagation();
+        handleClickStatus(node);
       }
     }
 
@@ -759,12 +777,14 @@ export const Tree = React.forwardRef(
               {isSingle ? (
                 node.x && node.y ? (
                   <g className="multi-column">
-                    <path
-                      d={fatherPath(node)}
-                      fill="none"
-                      stroke="rgb(192,192,192)"
-                      strokeWidth={PATH_WIDTH}
-                    />
+                    {node._key !== startId ? (
+                      <path
+                        d={fatherPath(node)}
+                        fill="none"
+                        stroke="rgb(192,192,192)"
+                        strokeWidth={PATH_WIDTH}
+                      />
+                    ) : null}
                     {node.sortList && node.sortList.length && !node.contract ? (
                       <path
                         d={childPath(node)}
@@ -863,6 +883,8 @@ export const Tree = React.forwardRef(
                 // }
                 handleClickDot={clickDot}
                 handleCheck={check}
+                handleClickAvatar={clickAvatar}
+                handleClickStatus={clickStatus}
                 handleClickNode={clickNode}
                 handleDbClickNode={dbClickNode}
                 clickMore={clickMore}

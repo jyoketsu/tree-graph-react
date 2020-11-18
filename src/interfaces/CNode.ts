@@ -16,6 +16,7 @@ export default interface CNode {
   showCheckbox?: boolean;
   showStatus?: boolean;
   disabled?:boolean;
+  strikethrough?:boolean;
   // 以下为计算属性
   x: number;
   y: number;

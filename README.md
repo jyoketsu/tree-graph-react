@@ -248,7 +248,6 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | uncontrolled          | 是否為非受控組件                                     | Boolean   | 否       | true   |
 | startId               | 根節點 id                                            | String    | 是       | -      |
 | defaultSelectedId     | 選中的節點 id                                        | String    | 是       | -      |
-| renameSelectedNode    | 是否重命名選中的節點                                 | String    | 是       | -      |
 | ref                   | 通過 ref 調用組件內部方法                            | -         | 否       | -      |
 | singleColumn          | 是否是單列視圖                                       | Boolean   | 否       | false  |
 | itemHeight            | 節點元素高度                                         | Number    | 否       | 50     |
@@ -269,6 +268,8 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | handleDbClickNode     | 雙擊節點事件,参数：node                              | Function  | 否       | -      |
 | handleClickExpand     | 點擊收起/展開事件,参数：node                         | Function  | 否       | -      |
 | handleCheck           | 點擊勾選框事件,参数：node                            | Function  | 否       | -      |
+| handleClickAvatar     | 點擊頭像事件,参数：node                              | Function  | 否       | -      |
+| handleClickStatus     | 點擊狀態事件,参数：node                              | Function  | 否       | -      |
 | handleChangeNodeText  | 更改節點名事件,参数：nodeId, text                    | Function  | 否       | -      |
 | handleAddNext         | 向後添加兄弟節點事件,参数：selectedNode              | Function  | 否       | -      |
 | handleAddChild        | 添加子節點事件,參數：selectedNode                    | Function  | 否       | -      |
@@ -298,7 +299,6 @@ interface DragInfo {
 | selectedBackgroundColor | 選中的菜單背景色                        | string    | 否       | #00CDD3 |
 | color                   | 選中的菜單背景色                        | string    | 否       | #CDD0D2 |
 | defaultSelectedId       | 選中的節點 id                           | String    | 是       | -       |
-| renameSelectedNode      | 是否重命名選中的節點                    | String    | 是       | -       |
 | ref                     | 通過 ref 調用組件內部方法               | -         | 否       | -       |
 | singleColumn            | 是否是單列視圖                          | Boolean   | 否       | false   |
 | uncontrolled            | 是否為非受控組件                        | Boolean   | 否       | true    |
@@ -338,20 +338,21 @@ interface DragInfo {
 
 ## Node Props
 
-| 屬性            | 說明                 | 類型    |
-| --------------- | -------------------- | ------- |
-| \_key           | 節點 id              | String  |
-| name            | 節點文本             | String  |
-| father          | 父節點 id            | String  |
-| sortList        | 子節點 id            | Array   |
-| contract        | 是否收起子節點       | Boolean |
-| checked         | 是否勾選             | Boolean |
-| avatarUri       | 頭像圖片地址         | String  |
-| icon            | 圖標圖片地址         | String  |
-| dotIcon         | 圓點圖標圖片地址     | String  |
-| color           | 節點字體顏色         | String  |
-| backgroundColor | 節點背景色           | String  |
-| showCheckbox    | 是否顯示勾選框       | Boolean |
-| showStatus      | 是否顯示節點狀態     | Boolean |
-| hour            | 節點（任務）工時     | Number  |
-| limitDay        | 節點（任務）剩余天數 | Number  |
+| 屬性            | 說明                        | 類型    |
+| --------------- | --------------------------- | ------- |
+| \_key           | 節點 id                     | String  |
+| name            | 節點文本                    | String  |
+| father          | 父節點 id                   | String  |
+| sortList        | 子節點 id                   | Array   |
+| contract        | 是否收起子節點              | Boolean |
+| checked         | 是否勾選                    | Boolean |
+| avatarUri       | 頭像圖片地址                | String  |
+| icon            | 圖標圖片地址                | String  |
+| dotIcon         | 圓點圖標圖片地址            | String  |
+| color           | 節點字體顏色                | String  |
+| backgroundColor | 節點背景色                  | String  |
+| showCheckbox    | 是否顯示勾選框              | Boolean |
+| showStatus      | 是否顯示節點狀態            | Boolean |
+| strikethrough   | 是否顯示刪除線｜ Boolean ｜ |
+| hour            | 節點（任務）工時            | Number  |
+| limitDay        | 節點（任務）剩余天數        | Number  |

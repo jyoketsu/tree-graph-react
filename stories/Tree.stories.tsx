@@ -130,9 +130,8 @@ const nodes = {
     father: '003',
     sortList: ['012', '013', '014'],
     contract: false,
-
+    strikethrough: true,
     checked: true,
-
     hour: 0.1,
     limitDay: 2,
   },
@@ -410,7 +409,6 @@ MultiCol.args = {
   singleColumn: false,
   // uncontrolled: false,
   // selectedId: '004',
-  // renameSelectedNode: true,
   defaultSelectedId: '003',
   showMoreButton: true,
   showAvatar: true,
@@ -424,6 +422,10 @@ MultiCol.args = {
   handleDrag: (dragInfo: any) => console.log('---handleDrag----', dragInfo),
   handlePaste: (pasteNodeKey: string, pasteType: string, selectedId: string) =>
     console.log('---handlePaste---', pasteNodeKey, pasteType, selectedId),
+  handleClickAvatar: (node: any) =>
+    console.log('---handleClickAvatar---', node),
+  handleClickStatus: (node: any) =>
+    console.log('---handleClickStatus---', node),
 };
 
 export const SingleCol = Template.bind({});
