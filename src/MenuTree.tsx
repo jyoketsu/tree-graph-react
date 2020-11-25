@@ -42,6 +42,7 @@ export interface MenuProps {
   avatarWidth?: number;
   checkBoxWidth?: number;
   disableShortcut?: boolean;
+  disabled?: boolean;
   showMoreButton?: boolean;
   showIcon?: boolean;
   nodeOptions?: any;
@@ -71,6 +72,7 @@ export const MenuTree = React.forwardRef(
       fontSize,
       indent,
       disableShortcut,
+      disabled,
       showMoreButton,
       showIcon,
       handleClickExpand,
@@ -137,11 +139,7 @@ export const MenuTree = React.forwardRef(
         INDENT,
         FONT_SIZE,
         SHOW_ICON,
-        false,
-        false,
-        false,
-        0.1,
-        0.1
+        false
       );
 
       if (cal) {
@@ -170,6 +168,9 @@ export const MenuTree = React.forwardRef(
 
     // 双击节点
     function dbClickNode(node: CNode) {
+      if (disabled) {
+        return;
+      }
       clearTimeout(clickTimeId);
       setselectedId(node._key);
       setshowInput(true);
@@ -284,7 +285,7 @@ export const MenuTree = React.forwardRef(
     }
 
     function handleKeyDown(event: KeyboardEvent) {
-      if (disableShortcut || showInput || showNewInput) {
+      if (disabled || disableShortcut || showInput || showNewInput) {
         return;
       }
       event.preventDefault();

@@ -3,6 +3,7 @@ export default interface CNode {
   name: string;
   father: string;
   sortList: string[];
+  shorted?: string;
   // 是否收起子节点
   contract?: boolean;
   checked?: boolean;

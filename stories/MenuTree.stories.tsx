@@ -203,6 +203,7 @@ Default.args = {
   nodes: nodes,
   startId: '001',
   showMoreButton: true,
+  disabled: true,
   handleClickMoreButton: (node: any) =>
     console.log('---handleClickMoreButton---', node),
 };

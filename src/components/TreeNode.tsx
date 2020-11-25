@@ -306,7 +306,7 @@ Props) => {
           textDecoration: node.strikethrough ? 'line-through' : 'unset',
         }}
       >
-        {node.name || ''}
+        {node.shorted || node.name || ''}
       </text>
       {/* 选项/更多按钮 */}
       {showMoreButton && hover && !dragStarted ? (

@@ -56,6 +56,7 @@ export interface TreeProps {
   // 线条圆角半径
   lineRadius?: number;
   disableShortcut?: boolean;
+  disabled?: boolean;
   showMoreButton?: boolean;
   nodeOptions?: any;
   showIcon?: boolean;
@@ -97,6 +98,7 @@ export const Tree = React.forwardRef(
       pathWidth,
       lineRadius,
       disableShortcut,
+      disabled,
       showMoreButton,
       nodeOptions,
       showIcon,
@@ -289,6 +291,9 @@ export const Tree = React.forwardRef(
 
     // 单击节点
     function clickNode(node: CNode) {
+      if (disabled) {
+        return;
+      }
       clearTimeout(clickTimeId);
       clickTimeId = setTimeout(function() {
         setselectedId(node._key);
@@ -301,7 +306,7 @@ export const Tree = React.forwardRef(
     // 双击节点
     function dbClickNode(node: CNode) {
       clearTimeout(clickTimeId);
-      if (node.disabled) {
+      if (disabled || node.disabled) {
         return;
       }
       setselectedId(node._key);
@@ -323,6 +328,9 @@ export const Tree = React.forwardRef(
     }
     // check节点
     function check(node: CNode, e: MouseEvent) {
+      if (disabled) {
+        return;
+      }
       e.stopPropagation();
       if (UNCONTROLLED) {
         let nodes = checkNode(nodeMap, node._key);
@@ -482,7 +490,7 @@ export const Tree = React.forwardRef(
     }
 
     function handleKeyDown(event: KeyboardEvent) {
-      if (disableShortcut || showInput || showNewInput) {
+      if (disabled || disableShortcut || showInput || showNewInput) {
         return;
       }
       event.preventDefault();
@@ -573,6 +581,9 @@ export const Tree = React.forwardRef(
     }
 
     function handleDragStart(e: any) {
+      if (disabled) {
+        return;
+      }
       if (selectedId && e.target.classList.contains('selected')) {
         e.stopPropagation();
         const node = nodeMap[selectedId];

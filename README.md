@@ -259,6 +259,7 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | lineRadius            | 線條圓角半徑                                         | Number    | 否       | 4      |
 | checkBoxWidth         | 勾選框寬度                                           | Number    | 否       | 18     |
 | disableShortcut       | 是否禁用快捷鍵                                       | Number    | 否       | -      |
+| disabled              | 是否只讀                                             | Number    | 否       | -      |
 | showMoreButton        | 是否顯示節點更多按鈕                                 | boolean   | 否       | -      |
 | showIcon              | 是否顯示圖標                                         | boolean   | 否       | true   |
 | showAvatar            | 是否顯示頭像                                         | Boolean   |
@@ -307,6 +308,7 @@ interface DragInfo {
 | fontSize                | 節點字體大小                            | Number    | 否       | 14      |
 | indent                  | 縮進                                    | Number    | 否       | 25      |
 | disableShortcut         | 是否禁用快捷鍵                          | Number    | 否       | -       |
+| disabled                | 是否只讀                                | Number    | 否       | -       |
 | showMoreButton          | 是否顯示節點選項菜單                    | boolean   | 否       | false   |
 | showIcon                | 是否顯示圖標                            | boolean   | 否       | true    |
 | nodeOptions             | 節點選項菜單內容                        | component | 否       | -       |

@@ -1,4 +1,4 @@
-import { getNodeWidth } from './util';
+import { getNodeWidth, getShortedStr } from './util';
 import Node from '../interfaces/Node';
 import CNode from '../interfaces/CNode';
 import NodeMap from '../interfaces/NodeMap';
@@ -109,6 +109,10 @@ export default function calculate(
   }
 
   function location(nodes: NodeMap, node: Node, x: number, y: number) {
+    const shorted = getShortedStr(node.name);
+    if (shorted) {
+      node.shorted = shorted;
+    }
     const nodeWidth = getNodeWidth(node, FONT_SIZE, showIcon, showAvatar);
     node.x = x;
     node.y = y;

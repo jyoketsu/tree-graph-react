@@ -40,6 +40,33 @@ function guid(len: number, radix: number) {
   return uuid.join('');
 }
 
+function getShortedStr(str: string) {
+  if (str.length <= 28) {
+    return;
+  } else {
+    let shorted = '';
+    let count = 0;
+    for (let index = 0; index < str.length; index++) {
+      if (count < 28) {
+        const char = str[index];
+        // 全角
+        if (char.match(/[^\x00-\xff]/g)) {
+          count++;
+        } else {
+          count += 0.5;
+        }
+        shorted += char;
+      } else {
+        break;
+      }
+    }
+    if (count >= 28) {
+      return `${shorted}...`;
+    }
+    return;
+  }
+}
+
 function textWidth(fontSize: number) {
   const ele = document.createElement('span');
   ele.innerText = '傑';
@@ -97,7 +124,7 @@ function getNodeWidth(
   showAvatar: boolean,
   padding?: number
 ) {
-  const str = node.name;
+  const str = node.shorted || node.name;
   let full = getFullAngleNum(str);
   const punctuation = getHalfAnglePunctuationNum(str);
   const alphabet = getAlphabetNum(str);
@@ -475,6 +502,7 @@ export {
   findNodeById,
   textWidth,
   getNodeWidth,
+  getShortedStr,
   getExtInfoWidth,
   nodeLocation,
   changeNodeText,
