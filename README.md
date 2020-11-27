@@ -322,6 +322,7 @@ interface DragInfo {
 | handleClickMoreButton   | 點擊更多按鈕,參數：clickNode            | Function  | 否       | -       |
 | handleSave              | 保存樹                                  | Function  | 否       | -       |
 | handleDrag              | 拖拽節點                                | Function  | 否       | -       |
+| dragEndFromOutside      | 從外部拖入樹節點                        | Function  | 否       | -       |
 
 ## MiniMenu Props
 
@@ -358,3 +359,4 @@ interface DragInfo {
 | strikethrough   | 是否顯示刪除線｜ Boolean ｜ |
 | hour            | 節點（任務）工時            | Number  |
 | limitDay        | 節點（任務）剩余天數        | Number  |
+| disabled        | 是否禁用｜ Boolean ｜       |

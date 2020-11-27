@@ -35,6 +35,7 @@ interface Props {
   openOptions: Function;
   setDragInfo: setDragInfoFunc;
   dragStarted: boolean;
+  dragEndFromOutside?: Function;
 }
 
 // let timer: NodeJS.Timeout;
@@ -61,9 +62,11 @@ const TreeNode = ({
   dragStarted,
   openOptions,
   handleClickDot,
+  dragEndFromOutside,
 }: // nodeOptionsOpened,
 Props) => {
   const [hover, sethover] = useState(false);
+  const [dragIn, setDragIn] = useState(false);
   // const [hoverMore, setHoverMore] = useState(false);
   const [y, setY] = useState(0);
 
@@ -102,6 +105,26 @@ Props) => {
     clickMore(node);
   }
 
+  function handleDragEnter() {
+    setDragIn(true);
+  }
+
+  function handleDragLeave() {
+    setDragIn(false);
+  }
+
+  function handleDragOver(event: React.MouseEvent) {
+    event.preventDefault();
+  }
+
+  function handleDragEnd(event: React.MouseEvent) {
+    event.preventDefault();
+    setDragIn(false);
+    if (dragEndFromOutside) {
+      dragEndFromOutside(node);
+    }
+  }
+
   function rectClassName(node: CNode) {
     // 选中的节点
     if (selected === node._key) {
@@ -132,7 +155,7 @@ Props) => {
   const backgroundColor = node.backgroundColor ? node.backgroundColor : '#FFF';
 
   let nodeRectStyle = {};
-  if (dragStarted && hover) {
+  if ((dragStarted && hover) || dragIn) {
     nodeRectStyle = {
       fill: '#FFF',
       stroke: '#333333',
@@ -167,6 +190,7 @@ Props) => {
       onDoubleClick={() => handleDbClickNode(node)}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      style={{ position: 'relative' }}
     >
       {/* 外框 */}
       {/* 隱式外框，用戶擴大鼠標感應面積 */}
@@ -305,6 +329,10 @@ Props) => {
           userSelect: 'none',
           textDecoration: node.strikethrough ? 'line-through' : 'unset',
         }}
+        onDragEnter={handleDragEnter}
+        onDragLeave={handleDragLeave}
+        onDragOver={handleDragOver}
+        onDrop={handleDragEnd}
       >
         {node.shorted || node.name || ''}
       </text>
@@ -351,6 +379,13 @@ Props) => {
         dragStarted={dragStarted}
         nodeHover={hover}
       />
+      <div
+        style={{
+          width: `${node.width}px`,
+          height: `${ITEM_HEIGHT}px`,
+          backgroundColor: 'red',
+        }}
+      ></div>
     </g>
   ) : null;
 };

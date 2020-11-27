@@ -76,6 +76,7 @@ export interface TreeProps {
   handleShiftUpDown?: Function;
   handleDrag?: Function;
   handlePaste?: PasteFunc;
+  dragEndFromOutside?: Function;
   ref?: any;
 }
 
@@ -118,6 +119,7 @@ export const Tree = React.forwardRef(
       handleShiftUpDown,
       handleDrag,
       handlePaste,
+      dragEndFromOutside,
     }: TreeProps,
     ref
   ) => {
@@ -901,6 +903,7 @@ export const Tree = React.forwardRef(
                 clickMore={clickMore}
                 setDragInfo={setDragInfo}
                 dragStarted={dragStarted}
+                dragEndFromOutside={dragEndFromOutside}
               />
               <Expand
                 node={node}

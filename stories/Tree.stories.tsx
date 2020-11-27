@@ -171,7 +171,8 @@ const nodes = {
   },
   '015': {
     _key: '015',
-    name: '還原數據還原數據還原數據還原數據還原數據還原數據還原數據還原數據還原數據',
+    name:
+      '還原數據還原數據還原數據還原數據還原數據還原數據還原數據還原數據還原數據',
     father: '009',
     sortList: [],
 
@@ -372,6 +373,7 @@ const Template: Story<TreeProps> = args => {
       <button onClick={() => treeRef.current.addNext()}>添加节点</button>
       <button onClick={() => treeRef.current.addChild()}>添加子节点</button>
       <button onClick={() => treeRef.current.deleteNode()}>删除节点</button>
+      <button draggable>拖拽这个节点到树</button>
       <Tree
         ref={treeRef}
         {...args}
@@ -427,6 +429,8 @@ MultiCol.args = {
     console.log('---handleClickAvatar---', node),
   handleClickStatus: (node: any) =>
     console.log('---handleClickStatus---', node),
+  dragEndFromOutside: (node: any) =>
+    console.log('---dragEndFromOutside---', node),
 };
 
 export const SingleCol = Template.bind({});
