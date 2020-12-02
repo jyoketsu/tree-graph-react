@@ -20,6 +20,8 @@ interface Props {
   FONT_SIZE: number;
   alias: number;
   selected: string | null;
+  showPreviewButton: boolean;
+  showAddButton: boolean;
   showMoreButton: boolean;
   showIcon: boolean;
   showAvatar: boolean;
@@ -29,10 +31,12 @@ interface Props {
   handleClickStatus: Function;
   handleClickNode: Function;
   handleDbClickNode: Function;
+  clickPreview: Function;
+  clickAdd: Function;
   clickMore: Function;
   handleClickDot: Function;
   // nodeOptionsOpened: boolean;
-  openOptions: Function;
+  // openOptions: Function;
   setDragInfo: setDragInfoFunc;
   dragStarted: boolean;
   dragEndFromOutside?: Function;
@@ -51,16 +55,20 @@ const TreeNode = ({
   showIcon,
   showAvatar,
   hideBorder,
+  showPreviewButton,
+  showAddButton,
   showMoreButton,
   handleCheck,
   handleClickAvatar,
   handleClickStatus,
   handleClickNode,
   handleDbClickNode,
+  clickPreview,
+  clickAdd,
   clickMore,
   setDragInfo,
   dragStarted,
-  openOptions,
+  // openOptions,
   handleClickDot,
   dragEndFromOutside,
 }: // nodeOptionsOpened,
@@ -99,6 +107,14 @@ Props) => {
   //   setHoverMore(false);
   //   // clearTimeout(timer);
   // }
+
+  function handleClickPreview() {
+    clickPreview(node);
+  }
+
+  function handleClickAdd() {
+    clickAdd(node);
+  }
 
   function handleClickMore() {
     // clearTimeout(timer);
@@ -184,6 +200,23 @@ Props) => {
     }
   }
 
+  const buttonWidth = BLOCK_HEIGHT * 0.7;
+  const buttonY = node.y + (BLOCK_HEIGHT - buttonWidth) / 2;
+  const previewButtonX = node.x + node.width + 2;
+  const addButtonX =
+    node.x + node.width + 2 + (showPreviewButton ? buttonWidth : 0);
+  const moreButtonX =
+    node.x +
+    node.width +
+    2 +
+    (showPreviewButton ? buttonWidth : 0) +
+    (showAddButton ? buttonWidth : 0);
+  const totalButtonWidth =
+    2 +
+    (showPreviewButton ? buttonWidth : 0) +
+    (showAddButton ? buttonWidth : 0) +
+    (showMoreButton ? buttonWidth : 0);
+
   return node.x && node.y ? (
     <g
       onClick={() => handleClickNode(node)}
@@ -197,7 +230,7 @@ Props) => {
       <rect
         x={node.x}
         y={node.y + BLOCK_HEIGHT / 2 - (ITEM_HEIGHT * 0.9) / 2}
-        width={node.width + BLOCK_HEIGHT}
+        width={node.width + totalButtonWidth}
         height={ITEM_HEIGHT * 0.9}
         fillOpacity={0}
       />
@@ -336,46 +369,50 @@ Props) => {
       >
         {node.shorted || node.name || ''}
       </text>
-      {/* 选项/更多按钮 */}
-      {showMoreButton && hover && !dragStarted ? (
+
+      {hover && !dragStarted ? (
         // || nodeOptionsOpened
-        <g
-          onClick={handleClickMore}
-          // onMouseEnter={handleMouseEnterMore}
-          // onMouseLeave={handleMouseLeaveMore}
-        >
-          <circle
-            cx={node.x + node.width + BLOCK_HEIGHT / 2 + 5}
-            cy={node.y + BLOCK_HEIGHT / 2}
-            r={BLOCK_HEIGHT / 2}
-            fill="#dadbdc"
-            // fillOpacity={hoverMore ? 1 : 0}
-          />
-          <circle
-            cx={node.x + node.width + BLOCK_HEIGHT / 2 + 5 - 6}
-            cy={node.y + BLOCK_HEIGHT / 2}
-            r={2}
-            fill="#757676"
-          />
-          <circle
-            cx={node.x + node.width + BLOCK_HEIGHT / 2 + 5}
-            cy={node.y + BLOCK_HEIGHT / 2}
-            r={2}
-            fill="#757676"
-          />
-          <circle
-            cx={node.x + node.width + BLOCK_HEIGHT / 2 + 5 + 6}
-            cy={node.y + BLOCK_HEIGHT / 2}
-            r={2}
-            fill="#757676"
-          />
+        <g>
+          {/* 預覽按鈕 */}
+          {showPreviewButton ? (
+            <use
+              href="#preview"
+              x={previewButtonX}
+              y={buttonY}
+              width={buttonWidth}
+              height={buttonWidth}
+              onClick={handleClickPreview}
+            />
+          ) : null}
+          {/* 新增按鈕 */}
+          {showAddButton ? (
+            <use
+              href="#add"
+              x={addButtonX}
+              y={buttonY}
+              width={buttonWidth}
+              height={buttonWidth}
+              onClick={handleClickAdd}
+            />
+          ) : null}
+          {/* 选项/更多按钮 */}
+          {showMoreButton ? (
+            <use
+              href="#more"
+              x={moreButtonX}
+              y={buttonY}
+              width={buttonWidth}
+              height={buttonWidth}
+              onClick={handleClickMore}
+            />
+          ) : null}
         </g>
       ) : null}
       <Dot
         node={node}
         BLOCK_HEIGHT={BLOCK_HEIGHT}
         handleClick={handleClickDot}
-        openOptions={openOptions}
+        // openOptions={openOptions}
         dragStarted={dragStarted}
         nodeHover={hover}
       />

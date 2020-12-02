@@ -5,19 +5,19 @@ interface Props {
   node: CNode;
   BLOCK_HEIGHT: number;
   handleClick: Function;
-  openOptions: Function;
+  // openOptions: Function;
   dragStarted: boolean;
   position?: string;
   nodeHover?: boolean;
 }
 
-let timer: NodeJS.Timeout;
+// let timer: NodeJS.Timeout;
 
 const Dot = ({
   node,
   BLOCK_HEIGHT,
   handleClick,
-  openOptions,
+  // openOptions,
   dragStarted,
   position,
   nodeHover,
@@ -39,21 +39,21 @@ const Dot = ({
   function handleMouseEnter() {
     if (!dragStarted) {
       sethover(true);
-      timer = setTimeout(() => {
-        openOptions(node);
-      }, 500);
+      // timer = setTimeout(() => {
+      //   openOptions(node);
+      // }, 500);
     }
   }
 
   function handleMouseLeave() {
     if (!dragStarted) {
       sethover(false);
-      clearTimeout(timer);
+      // clearTimeout(timer);
     }
   }
 
   function handleClickDot() {
-    clearTimeout(timer);
+    // clearTimeout(timer);
     handleClick(node);
   }
 

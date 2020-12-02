@@ -412,6 +412,8 @@ MultiCol.args = {
   // uncontrolled: false,
   // selectedId: '004',
   defaultSelectedId: '003',
+  showPreviewButton: true,
+  showAddButton: true,
   showMoreButton: true,
   showAvatar: true,
   showCheckbox: true,
@@ -420,6 +422,10 @@ MultiCol.args = {
   handleClickDot: (node: any) => console.log('---handleClickDot---', node),
   handleClickMoreButton: (node: any) =>
     console.log('---handleClickMoreButton---', node),
+  handleClickPreviewButton: (node: any) =>
+    console.log('---handleClickPreviewButton---', node),
+  handleClickAddButton: (node: any) =>
+    console.log('---handleClickAddButton---', node),
   handleShiftUpDown: (id: string, sortList: string[], type: 'up' | 'down') =>
     console.log('---handleShiftUpDown---', id, sortList, type),
   handleDrag: (dragInfo: any) => console.log('---handleDrag----', dragInfo),

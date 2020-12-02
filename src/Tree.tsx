@@ -5,7 +5,7 @@ import DragInfo from './interfaces/DragInfo';
 import TreeNode from './components/TreeNode';
 import Expand from './components/Expand';
 import NodeInput from './components/NodeInput';
-import NodeOptions from './components/NodeOptions';
+// import NodeOptions from './components/NodeOptions';
 import DragNode from './components/DragNode';
 import calculate from './services/treeService';
 import {
@@ -57,8 +57,10 @@ export interface TreeProps {
   lineRadius?: number;
   disableShortcut?: boolean;
   disabled?: boolean;
+  showPreviewButton?: boolean;
+  showAddButton?: boolean;
   showMoreButton?: boolean;
-  nodeOptions?: any;
+  // nodeOptions?: any;
   showIcon?: boolean;
   showAvatar?: boolean;
   handleClickExpand?: Function;
@@ -71,6 +73,8 @@ export interface TreeProps {
   handleAddNext?: Function;
   handleAddChild?: Function;
   handleDeleteNode?: Function;
+  handleClickPreviewButton?: Function;
+  handleClickAddButton?: Function;
   handleClickMoreButton?: Function;
   handleClickDot?: Function;
   handleShiftUpDown?: Function;
@@ -100,8 +104,10 @@ export const Tree = React.forwardRef(
       lineRadius,
       disableShortcut,
       disabled,
+      showPreviewButton,
+      showAddButton,
       showMoreButton,
-      nodeOptions,
+      // nodeOptions,
       showIcon,
       showAvatar,
       handleClickExpand,
@@ -114,6 +120,8 @@ export const Tree = React.forwardRef(
       handleAddNext,
       handleAddChild,
       handleDeleteNode,
+      handleClickPreviewButton,
+      handleClickAddButton,
       handleClickMoreButton,
       handleClickDot,
       handleShiftUpDown,
@@ -148,7 +156,7 @@ export const Tree = React.forwardRef(
     const [showInput, setshowInput] = useState(false);
     const [showNewInput, setshowNewInput] = useState(false);
     const [isSingle, setisSingle] = useState(singleColumn);
-    const [showOptionsNode, setShowOptionsNode] = useState<CNode | null>(null);
+    // const [showOptionsNode, setShowOptionsNode] = useState<CNode | null>(null);
 
     // 拖拽節點相關的狀態
     const [dragStarted, setDragStarted] = useState(false);
@@ -180,9 +188,9 @@ export const Tree = React.forwardRef(
           alert('请先选中节点');
         }
       },
-      closeOptions: function() {
-        setShowOptionsNode(null);
-      },
+      // closeOptions: function() {
+      //   setShowOptionsNode(null);
+      // },
     }));
 
     // 参数nodes发生改变，重设nodeMap
@@ -217,7 +225,7 @@ export const Tree = React.forwardRef(
 
     useEffect(() => {
       if (defaultSelectedId) {
-        setShowOptionsNode(null);
+        // setShowOptionsNode(null);
         setselectedId(defaultSelectedId);
       }
     }, [defaultSelectedId]);
@@ -382,7 +390,7 @@ export const Tree = React.forwardRef(
       if (selectedId === startId) {
         return alert('根节点无法添加兄弟节点！');
       }
-      setShowOptionsNode(null);
+      // setShowOptionsNode(null);
       if (UNCONTROLLED) {
         const res = addNextNode(nodeMap, selectedId);
 
@@ -405,7 +413,7 @@ export const Tree = React.forwardRef(
       if (!selectedId) {
         return alert('请先选中节点！');
       }
-      setShowOptionsNode(null);
+      // setShowOptionsNode(null);
       if (UNCONTROLLED) {
         const res = addChildNode(nodeMap, selectedId);
         if (handleAddChild) {
@@ -470,7 +478,7 @@ export const Tree = React.forwardRef(
         return alert('根节点不允许删除！');
       }
 
-      setShowOptionsNode(null);
+      // setShowOptionsNode(null);
       if (UNCONTROLLED) {
         let nodes = deleteNode(nodeMap, selectedId);
 
@@ -565,14 +573,26 @@ export const Tree = React.forwardRef(
       }
     }
 
-    function clickOptionsButton(node: CNode) {
-      clickNode(node);
-      setShowOptionsNode(node);
-    }
+    // function clickOptionsButton(node: CNode) {
+    //   clickNode(node);
+    //   setShowOptionsNode(node);
+    // }
 
     function clickMore(node: CNode) {
       if (handleClickMoreButton) {
         handleClickMoreButton(node);
+      }
+    }
+
+    function clickPreview(node: CNode) {
+      if (handleClickPreviewButton) {
+        handleClickPreviewButton(node);
+      }
+    }
+
+    function clickAdd(node: CNode) {
+      if (handleClickAddButton) {
+        handleClickAddButton(node);
       }
     }
 
@@ -784,6 +804,63 @@ export const Tree = React.forwardRef(
               <path d="M0 0 H 11 L 22 11 V 22 H 0 Z" fill="#417505" />
               <path d="M 11 0 H 22 V 11 Z" fill="rgb(53, 166, 248)" />
             </g>
+            <symbol
+              id="preview"
+              width="200"
+              height="200"
+              viewBox="0,0,1024,1024"
+              preserveAspectRatio="xMinYMin meet"
+            >
+              <path
+                d="M950.221 902.552L679.275 631.606c49.481-60.042 79.2-136.978 79.2-220.856 0-191.919-155.582-347.5-347.5-347.5-191.919 0-347.5 155.581-347.5 347.5 0 191.918 155.581 347.5 347.5 347.5 84.273 0 161.538-30.002 221.702-79.903l270.874 270.874c12.888 12.887 33.782 12.887 46.67 0 12.886-12.888 12.886-33.783 0-46.669zM98.476 410.75c0-172.589 139.911-312.5 312.5-312.5 172.588 0 312.5 139.911 312.5 312.5 0 172.588-139.912 312.5-312.5 312.5-172.59 0-312.5-139.911-312.5-312.5z"
+                fill="#757676"
+              ></path>
+              <rect
+                fillOpacity="0"
+                x="0"
+                y="0"
+                width="1024"
+                height="1024"
+              ></rect>
+            </symbol>
+            <symbol id="add" viewBox="0 0 1024 1024" width="200" height="200">
+              <path
+                d="M543.978319 543.978319l352.427678 0c17.665335 0 31.975249-14.312984 31.975249-31.978319 0-17.665335-14.308891-31.978319-31.975249-31.978319L543.978319 480.021681l0-352.426655c0-17.665335-14.312984-31.975249-31.978319-31.975249-17.665335 0-31.978319 14.308891-31.978319 31.975249l0 352.426655-352.426655 0c-17.665335 0-31.975249 14.310937-31.975249 31.976272 0 8.833179 3.577478 16.829294 9.363252 22.615067 5.785773 5.785773 13.778818 9.365298 22.611997 9.365298l352.426655 0 0 352.426655c0 8.833179 3.578502 16.826224 9.364275 22.611997s13.781888 9.363252 22.615067 9.363252c17.665335 0 31.977295-14.308891 31.977295-31.975249L543.978319 543.978319z"
+                p-id="5594"
+                fill="#757676"
+              ></path>
+              <rect
+                fillOpacity="0"
+                x="0"
+                y="0"
+                width="1024"
+                height="1024"
+              ></rect>
+            </symbol>
+            <symbol id="more" viewBox="0 0 1024 1024" width="200" height="200">
+              <path
+                d="M512 255.262708m-87.020936 0a85.039 85.039 0 1 0 174.041872 0 85.039 85.039 0 1 0-174.041872 0Z"
+                p-id="6381"
+                fill="#757676"
+              ></path>
+              <path
+                d="M512 511.792269m-87.020936 0a85.039 85.039 0 1 0 174.041872 0 85.039 85.039 0 1 0-174.041872 0Z"
+                p-id="6382"
+                fill="#757676"
+              ></path>
+              <path
+                d="M512 765.572206m-87.020936 0a85.039 85.039 0 1 0 174.041872 0 85.039 85.039 0 1 0-174.041872 0Z"
+                p-id="6383"
+                fill="#757676"
+              ></path>
+              <rect
+                fillOpacity="0"
+                x="0"
+                y="0"
+                width="1024"
+                height="1024"
+              ></rect>
+            </symbol>
           </defs>
           {cnodes.map(node => (
             <g key={node._key} className={`node-group-${node._key}`}>
@@ -887,8 +964,10 @@ export const Tree = React.forwardRef(
                 selected={selectedId}
                 showIcon={SHOW_ICON}
                 showAvatar={SHOW_AVATAR}
+                showPreviewButton={showPreviewButton || false}
+                showAddButton={showAddButton || false}
                 showMoreButton={showMoreButton || false}
-                openOptions={clickOptionsButton}
+                // openOptions={clickOptionsButton}
                 // nodeOptionsOpened={
                 //   showOptionsNode && node._key === showOptionsNode._key
                 //     ? true
@@ -900,6 +979,8 @@ export const Tree = React.forwardRef(
                 handleClickStatus={clickStatus}
                 handleClickNode={clickNode}
                 handleDbClickNode={dbClickNode}
+                clickPreview={clickPreview}
+                clickAdd={clickAdd}
                 clickMore={clickMore}
                 setDragInfo={setDragInfo}
                 dragStarted={dragStarted}
@@ -946,7 +1027,7 @@ export const Tree = React.forwardRef(
         ) : null}
 
         {/* 選項菜單 */}
-        {selectedId &&
+        {/* {selectedId &&
         showOptionsNode &&
         nodeOptions &&
         selectedId === showOptionsNode._key ? (
@@ -955,7 +1036,7 @@ export const Tree = React.forwardRef(
             content={nodeOptions}
             handleClose={() => setShowOptionsNode(null)}
           />
-        ) : null}
+        ) : null} */}
       </div>
     );
   }

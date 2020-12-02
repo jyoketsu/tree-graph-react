@@ -45,7 +45,6 @@ export interface MenuProps {
   disabled?: boolean;
   showMoreButton?: boolean;
   showIcon?: boolean;
-  nodeOptions?: any;
   handleClickExpand?: Function;
   handleClickNode?: Function;
   handleDbClickNode?: Function;
