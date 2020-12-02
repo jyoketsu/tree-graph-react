@@ -13,7 +13,8 @@ export default function calculate(
   showIcon: boolean,
   showAvatar: boolean,
   startX?: number,
-  startY?: number
+  startY?: number,
+  columnSpacing?: number
 ) {
   nodes = JSON.parse(JSON.stringify(nodes));
   // 根节点
@@ -54,7 +55,12 @@ export default function calculate(
           if (index + 1 === secondLevel.length) {
             SECOND_END_NODE_ID = element?._key;
           }
-          location(nodes, element, MAX_END + 55, ITEM_HEIGHT * 1.5);
+          location(
+            nodes,
+            element,
+            MAX_END + (columnSpacing ? columnSpacing : 55),
+            ITEM_HEIGHT * 1.5
+          );
         }
       }
     }

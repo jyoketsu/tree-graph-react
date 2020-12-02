@@ -23,6 +23,7 @@ interface Props {
   showPreviewButton: boolean;
   showAddButton: boolean;
   showMoreButton: boolean;
+  moreButtonWidth?: number;
   showIcon: boolean;
   showAvatar: boolean;
   hideBorder?: boolean;
@@ -58,6 +59,7 @@ const TreeNode = ({
   showPreviewButton,
   showAddButton,
   showMoreButton,
+  moreButtonWidth,
   handleCheck,
   handleClickAvatar,
   handleClickStatus,
@@ -200,7 +202,7 @@ Props) => {
     }
   }
 
-  const buttonWidth = BLOCK_HEIGHT * 0.7;
+  const buttonWidth = moreButtonWidth ? moreButtonWidth : BLOCK_HEIGHT * 0.5;
   const buttonY = node.y + (BLOCK_HEIGHT - buttonWidth) / 2;
   const previewButtonX = node.x + node.width + 2;
   const addButtonX =

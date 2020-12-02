@@ -56,11 +56,11 @@ const NodeInput = ({
             padding: '0 5px',
             outline: 'none',
             position: 'absolute',
-            width: `${selected && selected.name ? selected.width : 100}px`,
-            height: `${BLOCK_HEIGHT || 30}px`,
+            width: `${selected && selected.name ? selected.width + 2 : 100}px`,
+            height: `${BLOCK_HEIGHT ? BLOCK_HEIGHT + 2 : 30}px`,
             fontSize: `${FONT_SIZE || 14}px`,
-            top: `${selected?.y}px`,
-            left: `${selected?.x}px`,
+            top: `${selected && selected.y ? selected.y - 1 : 0}px`,
+            left: `${selected && selected.x ? selected.x - 1 : 0}px`,
           }}
           ref={inputRef}
           autoFocus={true}

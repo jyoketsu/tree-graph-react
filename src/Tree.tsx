@@ -49,6 +49,8 @@ export interface TreeProps {
   fontSize?: number;
   // 缩进
   indent?: number;
+  // 列間距
+  columnSpacing?: number;
   // 头像宽度
   avatarWidth?: number;
   checkBoxWidth?: number;
@@ -60,6 +62,7 @@ export interface TreeProps {
   showPreviewButton?: boolean;
   showAddButton?: boolean;
   showMoreButton?: boolean;
+  moreButtonWidth?: number;
   // nodeOptions?: any;
   showIcon?: boolean;
   showAvatar?: boolean;
@@ -98,6 +101,7 @@ export const Tree = React.forwardRef(
       blockHeight,
       fontSize,
       indent,
+      columnSpacing,
       // avatarWidth,
       // checkBoxWidth,
       pathWidth,
@@ -107,6 +111,7 @@ export const Tree = React.forwardRef(
       showPreviewButton,
       showAddButton,
       showMoreButton,
+      moreButtonWidth,
       // nodeOptions,
       showIcon,
       showAvatar,
@@ -209,7 +214,10 @@ export const Tree = React.forwardRef(
         INDENT,
         FONT_SIZE,
         SHOW_ICON,
-        SHOW_AVATAR
+        SHOW_AVATAR,
+        undefined,
+        undefined,
+        columnSpacing
       );
 
       if (cal) {
@@ -699,8 +707,8 @@ export const Tree = React.forwardRef(
       >
         <svg
           className="tree-svg"
-          viewBox={`0 0 ${maxEnd + 35} ${maxY + ITEM_HEIGHT}`}
-          width={maxEnd + 35}
+          viewBox={`0 0 ${maxEnd + 100} ${maxY + ITEM_HEIGHT}`}
+          width={maxEnd + 100}
           height={maxY + ITEM_HEIGHT}
         >
           <defs>
@@ -967,6 +975,7 @@ export const Tree = React.forwardRef(
                 showPreviewButton={showPreviewButton || false}
                 showAddButton={showAddButton || false}
                 showMoreButton={showMoreButton || false}
+                moreButtonWidth={moreButtonWidth}
                 // openOptions={clickOptionsButton}
                 // nodeOptionsOpened={
                 //   showOptionsNode && node._key === showOptionsNode._key
@@ -1023,6 +1032,7 @@ export const Tree = React.forwardRef(
             selectedId={selectedId}
             nodeList={cnodes}
             handleChangeNodeText={changeText}
+            BLOCK_HEIGHT={BLOCK_HEIGHT}
           />
         ) : null}
 

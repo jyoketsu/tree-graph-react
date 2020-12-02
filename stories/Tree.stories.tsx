@@ -415,6 +415,8 @@ MultiCol.args = {
   showPreviewButton: true,
   showAddButton: true,
   showMoreButton: true,
+  moreButtonWidth: 18,
+  columnSpacing: 65,
   showAvatar: true,
   showCheckbox: true,
   showStatus: true,

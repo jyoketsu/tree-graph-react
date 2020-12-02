@@ -254,6 +254,7 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | blockHeight              | 節點塊高度                                           | Number   | 否       | 30     |
 | fontSize                 | 節點字體大小                                         | Number   | 否       | 14     |
 | indent                   | 縮進                                                 | Number   | 否       | 25     |
+| columnSpacing            | 列間距                                               | Number   | 否       | 55     |
 | avatarWidth              | 頭像寬度                                             | Number   | 否       | 22     |
 | pathWidth                | 線條寬度                                             | Number   | 否       | 1      |
 | lineRadius               | 線條圓角半徑                                         | Number   | 否       | 4      |
@@ -263,6 +264,7 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | showPreviewButton        | 是否顯示節點預覽按鈕                                 | boolean  | 否       | -      |
 | showAddButton            | 是否顯示節點新增節點按鈕                             | boolean  | 否       | -      |
 | showMoreButton           | 是否顯示節點更多按鈕                                 | boolean  | 否       | -      |
+| moreButtonWidth          | 節點操作按鈕寬度                                     | boolean  | 否       | -      |
 | showIcon                 | 是否顯示圖標                                         | boolean  | 否       | true   |
 | showAvatar               | 是否顯示頭像                                         | Boolean  |
 | avatarUri                | 頭像地址                                             | String   |
