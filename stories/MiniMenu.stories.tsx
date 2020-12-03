@@ -231,6 +231,8 @@ export const Default = Template.bind({});
 Default.args = {
   nodes: nodes,
   startId: '001',
+  normalFirstLevel: false,
   handleClickNode: (node: any) => console.log('---handleClickNode---', node),
-  handleClickExpand:(node: any) => console.log('---handleClickExpand---', node),
+  handleClickExpand: (node: any) =>
+    console.log('---handleClickExpand---', node),
 };

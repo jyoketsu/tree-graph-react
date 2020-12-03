@@ -340,6 +340,8 @@ interface DragInfo {
 | color                   | 選中的菜單背景色             | string   | 否       | #CDD0D2 |
 | itemHeight              | 節點元素高度                 | Number   | 否       | 48      |
 | fontSize                | 節點字體大小                 | Number   | 否       | 14      |
+| columnSpacing           | 列間距                       | Number   | 否       | 1       |
+| normalFirstLevel        | 首頁是否正常寬度             | boolean  | 否       | false   |
 | handleClickNode         | 點擊節點事件,参数：node      | Function | 否       | -       |
 | handleClickExpand       | 點擊收起/展開事件,参数：node | Function | 否       | -       |
 

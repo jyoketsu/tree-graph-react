@@ -32,6 +32,8 @@ export interface MiniMenuProps {
   itemHeight?: number;
   // 节点字体大小
   fontSize?: number;
+  columnSpacing?: number;
+  normalFirstLevel?: boolean;
   handleClickNode?: Function;
   handleClickExpand?: Function;
 }
@@ -53,6 +55,8 @@ export const MiniMenu = ({
   itemHeight,
   // 节点字体大小
   fontSize,
+  columnSpacing,
+  normalFirstLevel,
   handleClickNode,
   handleClickExpand,
 }: MiniMenuProps) => {
@@ -89,7 +93,7 @@ export const MiniMenu = ({
   return (
     <div
       style={{
-        width: `${WIDTH}px`,
+        width: `${normalFirstLevel ? 180 : WIDTH}px`,
         color: COLOR,
         fontSize: `${FONT_SIZE}px`,
         backgroundColor: BKCOLOR,
@@ -113,7 +117,8 @@ export const MiniMenu = ({
             <MenuItem
               key={key}
               node={nodes[key]}
-              firstLevel={true}
+              firstLevel={normalFirstLevel ? false : true}
+              columnSpacing={columnSpacing}
               // selectedId={firstLevelId}
             />
           ) : null
@@ -126,9 +131,10 @@ export const MiniMenu = ({
 interface ItemProps {
   node: Node;
   firstLevel?: boolean;
+  columnSpacing: number | undefined;
   // selectedId?: string | null;
 }
-const MenuItem = ({ node, firstLevel }: ItemProps) => {
+const MenuItem = ({ node, firstLevel, columnSpacing }: ItemProps) => {
   const configProps = useContext(ThemeContext);
   const [hover, setHover] = useState(false);
 
@@ -231,7 +237,7 @@ const MenuItem = ({ node, firstLevel }: ItemProps) => {
             position: 'absolute',
             top: 0,
             left: `${firstLevel ? width : 180}px`,
-            paddingLeft: '5px',
+            paddingLeft: `${columnSpacing || 1}px`,
           }}
         >
           <div
@@ -242,7 +248,13 @@ const MenuItem = ({ node, firstLevel }: ItemProps) => {
           >
             {node.sortList &&
               node.sortList.map(key =>
-                nodes[key] ? <MenuItem key={key} node={nodes[key]} /> : null
+                nodes[key] ? (
+                  <MenuItem
+                    key={key}
+                    node={nodes[key]}
+                    columnSpacing={columnSpacing}
+                  />
+                ) : null
               )}
           </div>
         </div>

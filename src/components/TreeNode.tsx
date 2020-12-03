@@ -79,6 +79,9 @@ Props) => {
   const [dragIn, setDragIn] = useState(false);
   // const [hoverMore, setHoverMore] = useState(false);
   const [y, setY] = useState(0);
+  const [hoverPreview, setHoverPreview] = useState(false);
+  const [hoverAdd, setHoverAdd] = useState(false);
+  const [hoverMore, setHoverMore] = useState(false);
 
   function handleMouseEnter(e: React.MouseEvent) {
     sethover(true);
@@ -96,6 +99,30 @@ Props) => {
         placement: e.clientY - y > 0 ? 'down' : 'up',
       });
     }
+  }
+
+  function handleMouseEnterPreview() {
+    setHoverPreview(true);
+  }
+
+  function handleMouseLeavePreview() {
+    setHoverPreview(false);
+  }
+
+  function handleMouseEnterAdd() {
+    setHoverAdd(true);
+  }
+
+  function handleMouseLeaveAdd() {
+    setHoverAdd(false);
+  }
+
+  function handleMouseEnterMore() {
+    setHoverMore(true);
+  }
+
+  function handleMouseLeaveMore() {
+    setHoverMore(false);
   }
 
   // function handleMouseEnterMore() {
@@ -379,33 +406,42 @@ Props) => {
           {showPreviewButton ? (
             <use
               href="#preview"
-              x={previewButtonX}
-              y={buttonY}
-              width={buttonWidth}
-              height={buttonWidth}
+              x={hoverPreview ? previewButtonX - 2 : previewButtonX}
+              y={hoverPreview ? buttonY - 2 : buttonY}
+              width={hoverPreview ? buttonWidth + 2 : buttonWidth}
+              height={hoverPreview ? buttonWidth + 2 : buttonWidth}
               onClick={handleClickPreview}
+              fill={hoverPreview ? '#000000' : '#757676'}
+              onMouseEnter={handleMouseEnterPreview}
+              onMouseLeave={handleMouseLeavePreview}
             />
           ) : null}
           {/* 新增按鈕 */}
           {showAddButton ? (
             <use
               href="#add"
-              x={addButtonX}
-              y={buttonY}
-              width={buttonWidth}
-              height={buttonWidth}
+              x={hoverAdd ? addButtonX - 2 : addButtonX}
+              y={hoverAdd ? buttonY - 2 : buttonY}
+              width={hoverAdd ? buttonWidth + 2 : buttonWidth}
+              height={hoverAdd ? buttonWidth + 2 : buttonWidth}
               onClick={handleClickAdd}
+              fill={hoverAdd ? '#000000' : '#757676'}
+              onMouseEnter={handleMouseEnterAdd}
+              onMouseLeave={handleMouseLeaveAdd}
             />
           ) : null}
           {/* 选项/更多按钮 */}
           {showMoreButton ? (
             <use
               href="#more"
-              x={moreButtonX}
-              y={buttonY}
-              width={buttonWidth}
-              height={buttonWidth}
+              x={hoverMore ? moreButtonX - 2 : moreButtonX}
+              y={hoverMore ? buttonY - 2 : buttonY}
+              width={hoverMore ? buttonWidth + 2 : buttonWidth}
+              height={hoverMore ? buttonWidth + 2 : buttonWidth}
               onClick={handleClickMore}
+              fill={hoverMore ? '#000000' : '#757676'}
+              onMouseEnter={handleMouseEnterMore}
+              onMouseLeave={handleMouseLeaveMore}
             />
           ) : null}
         </g>
