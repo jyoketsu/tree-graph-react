@@ -12,6 +12,8 @@ interface IContextProps {
   // setSelectedId: Function;
   handleClickNode?: Function;
   handleClickExpand?: Function;
+  handleMouseEnter?: Function;
+  handleMouseLeave?: Function;
 }
 const ThemeContext = React.createContext({} as IContextProps);
 
@@ -33,9 +35,12 @@ export interface MiniMenuProps {
   // 节点字体大小
   fontSize?: number;
   columnSpacing?: number;
+  borderRadius?: number;
   normalFirstLevel?: boolean;
   handleClickNode?: Function;
   handleClickExpand?: Function;
+  handleMouseEnter?: Function;
+  handleMouseLeave?: Function;
 }
 
 export const MiniMenu = ({
@@ -56,9 +61,12 @@ export const MiniMenu = ({
   // 节点字体大小
   fontSize,
   columnSpacing,
+  borderRadius,
   normalFirstLevel,
   handleClickNode,
   handleClickExpand,
+  handleMouseEnter,
+  handleMouseLeave,
 }: MiniMenuProps) => {
   const WIDTH = width || 48;
   const ITEM_HEIGHT = itemHeight || 48;
@@ -110,6 +118,8 @@ export const MiniMenu = ({
           // setSelectedId,
           selectedBackgroundColor: SEL_BKCOLOR,
           handleClickExpand,
+          handleMouseEnter,
+          handleMouseLeave,
         }}
       >
         {rootNode.sortList.map(key =>
@@ -119,6 +129,7 @@ export const MiniMenu = ({
               node={nodes[key]}
               firstLevel={normalFirstLevel ? false : true}
               columnSpacing={columnSpacing}
+              borderRadius={borderRadius}
               // selectedId={firstLevelId}
             />
           ) : null
@@ -132,9 +143,14 @@ interface ItemProps {
   node: Node;
   firstLevel?: boolean;
   columnSpacing: number | undefined;
-  // selectedId?: string | null;
+  borderRadius?: number;
 }
-const MenuItem = ({ node, firstLevel, columnSpacing }: ItemProps) => {
+const MenuItem = ({
+  node,
+  firstLevel,
+  columnSpacing,
+  borderRadius,
+}: ItemProps) => {
   const configProps = useContext(ThemeContext);
   const [hover, setHover] = useState(false);
 
@@ -159,6 +175,20 @@ const MenuItem = ({ node, firstLevel, columnSpacing }: ItemProps) => {
     }
   }
 
+  function handleMouseEnter() {
+    setHover(true);
+    if (firstLevel && configProps.handleMouseEnter) {
+      configProps.handleMouseEnter();
+    }
+  }
+
+  function handleMouseLeave() {
+    setHover(false);
+    if (firstLevel && configProps.handleMouseLeave) {
+      configProps.handleMouseLeave();
+    }
+  }
+
   return (
     <div
       style={{
@@ -177,8 +207,8 @@ const MenuItem = ({ node, firstLevel, columnSpacing }: ItemProps) => {
         //     : 'unset',
         backgroundColor: hover ? configProps.selectedBackgroundColor : 'unset',
       }}
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       onClick={(e: React.MouseEvent) => handleClick(e)}
     >
       {/* 圖標 */}
@@ -237,13 +267,13 @@ const MenuItem = ({ node, firstLevel, columnSpacing }: ItemProps) => {
             position: 'absolute',
             top: 0,
             left: `${firstLevel ? width : 180}px`,
-            paddingLeft: `${columnSpacing || 1}px`,
+            paddingLeft: `${columnSpacing === undefined ? 1 : columnSpacing}px`,
           }}
         >
           <div
             style={{
               backgroundColor: backgroundColor,
-              borderRadius: '4px',
+              borderRadius: borderRadius === undefined ? '0' : borderRadius,
             }}
           >
             {node.sortList &&
@@ -253,6 +283,7 @@ const MenuItem = ({ node, firstLevel, columnSpacing }: ItemProps) => {
                     key={key}
                     node={nodes[key]}
                     columnSpacing={columnSpacing}
+                    borderRadius={borderRadius}
                   />
                 ) : null
               )}
