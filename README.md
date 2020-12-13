@@ -29,7 +29,7 @@ npm i tree-graph-react
 ## Usage
 
 ```jsx
-import { Tree, MenuTree, MiniMenu } from 'tree-graph-react';
+import { Tree, MenuTree, MiniMenu, Catalog } from 'tree-graph-react';
 
 const nodes = {
   '001': {
@@ -347,6 +347,24 @@ interface DragInfo {
 | handleClickExpand       | 點擊收起/展開事件,参数：node | Function | 否       | -       |
 | handleMouseEnter        | 鼠標移入事件                 | Function | 否       | -       |
 | handleMouseLeave        | 鼠標移開事件                 | Function | 否       | -       |
+
+## Catalog Props
+
+| 屬性            | 說明                    | 類型                                           | 是否必須 | 默認值  |
+| --------------- | ----------------------- | ---------------------------------------------- | -------- | ------- |
+| nodes           | 節點                    | Object                                         | 是       | -       |
+| startId         | 根節點 id               | String                                         | 是       | -       |
+| backgroundColor | 菜單背景色              | string                                         | 否       | -       |
+| color           | 字體顏色                | string                                         | 否       | #595959 |
+| hoverColor      | 字體顏色（hover）       | string                                         | 否       | #8c8c8c |
+| itemHeight      | 節點元素高度            | Number                                         | 否       | 48      |
+| blockHeight     | 節點塊高度              | Number                                         | 否       | 30      |
+| fontSize        | 節點字體大小            | Number                                         | 否       | 14      |
+| titleFontSize   | 標題節點字體大小        | Number                                         | 否       | 24      |
+| handleClickNode | 點擊節點事件,参数：node | Function                                       | 否       | -       |
+| indent          | 縮進                    | Number                                         | 否       | 25      |
+| info            | 目錄描述信息            | ReactElement                                   | 否       | -       |
+| itemInfoMap     | 目錄項目描述信息        | `ItemInfoMap { [_key: string]: ReactElement;}` | 否       | -       |
 
 ## Node Props
 

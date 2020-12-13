@@ -383,10 +383,10 @@ Props) => {
           fill: node.strikethrough
             ? '#999'
             : nodeRectClassName === 'selected'
-            ? '#333333'
+            ? '#000000	'
             : node.color
             ? node.color
-            : '#999',
+            : '#595959',
           fontFamily: "'Microsoft YaHei', sans-serif",
           userSelect: 'none',
           textDecoration: node.strikethrough ? 'line-through' : 'unset',

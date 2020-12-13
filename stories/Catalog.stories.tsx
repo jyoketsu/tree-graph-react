@@ -1,7 +1,24 @@
-import React, { useRef } from 'react';
-import { MenuTree, MenuProps } from '../src';
+import React from 'react';
+import { Catalog, CatalogProps } from '../src';
 import { Meta, Story } from '@storybook/react';
 
+const itemInfoMap = {
+  '001': <div>2020-12-12</div>,
+  '002': <div>2020-12-13</div>,
+  '003': <div>2020-12-14</div>,
+  '004': <div>2020-12-14</div>,
+  '005': <div>2020-12-14</div>,
+  '006': <div>2020-12-14</div>,
+  '007': <div>2020-12-14</div>,
+  '008': <div>2020-12-14</div>,
+  '009': <div>2020-12-14</div>,
+  '010': <div>2020-12-14</div>,
+  '011': <div>2020-12-14</div>,
+  '012': <div>2020-12-14</div>,
+  '013': <div>2020-12-14</div>,
+  '014': <div>2020-12-14</div>,
+  '015': <div>2020-12-14</div>,
+};
 const nodes = {
   '001': {
     _key: '001',
@@ -14,7 +31,7 @@ const nodes = {
     icon: 'https://cdn-icare.qingtime.cn/rooter.svg',
 
     checked: true,
-
+    updateTime: 1607843051983,
     hour: 0.1,
     limitDay: -23,
   },
@@ -29,6 +46,7 @@ const nodes = {
     hour: 0.1,
     limitDay: -23,
     icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
+    updateTime: 1607843051983,
   },
   '003': {
     _key: '003',
@@ -37,7 +55,7 @@ const nodes = {
     sortList: ['010', '011'],
 
     checked: false,
-
+    updateTime: 1607843051983,
     hour: 0.1,
     limitDay: 2,
     icon: 'https://cdn-icare.qingtime.cn/favFolder.svg',
@@ -47,7 +65,7 @@ const nodes = {
     name: '項目會議',
     father: '001',
     sortList: [],
-
+    updateTime: 1607843051983,
     checked: false,
 
     hour: 0.1,
@@ -60,7 +78,7 @@ const nodes = {
     sortList: [],
 
     checked: false,
-
+    updateTime: 1607843051983,
     hour: 0.1,
     limitDay: 2,
   },
@@ -72,7 +90,7 @@ const nodes = {
     sortList: ['008', '009'],
 
     checked: false,
-
+    updateTime: 1607843051983,
     hour: 0.1,
     limitDay: 2,
   },
@@ -83,7 +101,7 @@ const nodes = {
     sortList: [],
 
     checked: false,
-
+    updateTime: 1607843051983,
     hour: 0.1,
     limitDay: 2,
   },
@@ -94,7 +112,7 @@ const nodes = {
     sortList: [],
 
     checked: false,
-
+    updateTime: 1607843051983,
     hour: 0.1,
     limitDay: 2,
   },
@@ -105,7 +123,7 @@ const nodes = {
     sortList: ['015'],
 
     checked: false,
-
+    updateTime: 1607843051983,
     hour: 0.1,
     limitDay: 2,
   },
@@ -116,7 +134,7 @@ const nodes = {
     sortList: [],
 
     checked: true,
-
+    updateTime: 1607843051983,
     hour: 0.1,
     limitDay: 2,
   },
@@ -128,7 +146,7 @@ const nodes = {
     contract: false,
 
     checked: true,
-
+    updateTime: 1607843051983,
     hour: 0.1,
     limitDay: 2,
   },
@@ -139,7 +157,7 @@ const nodes = {
     sortList: [],
 
     checked: true,
-
+    updateTime: 1607843051983,
     hour: 0.1,
     limitDay: 2,
   },
@@ -150,7 +168,7 @@ const nodes = {
     sortList: [],
 
     checked: true,
-
+    updateTime: 1607843051983,
     hour: 0.1,
     limitDay: 2,
   },
@@ -161,7 +179,7 @@ const nodes = {
     sortList: [],
 
     checked: true,
-
+    updateTime: 1607843051983,
     hour: 0.1,
     limitDay: 2,
   },
@@ -173,12 +191,13 @@ const nodes = {
     checked: true,
     hour: 0.1,
     limitDay: 2,
+    updateTime: 1607843051983,
   },
 };
 
 const meta: Meta = {
-  title: 'Tree(Menu)',
-  component: MenuTree,
+  title: 'Catalog',
+  component: Catalog,
   parameters: {
     controls: { expanded: true },
   },
@@ -186,11 +205,10 @@ const meta: Meta = {
 
 export default meta;
 
-const Template: Story<MenuProps> = args => {
-  const treeRef = useRef(null);
+const Template: Story<CatalogProps> = args => {
   return (
     <div>
-      <MenuTree {...args} />
+      <Catalog {...args} />
     </div>
   );
 };
@@ -199,8 +217,7 @@ export const Default = Template.bind({});
 Default.args = {
   nodes: nodes,
   startId: '001',
-  showMoreButton: true,
-  disabled: true,
-  handleClickMoreButton: (node: any) =>
-    console.log('---handleClickMoreButton---', node),
+  // info: <div>电子书信息</div>,
+  itemInfoMap: itemInfoMap,
+  handleClickNode: (node: any) => console.log('---handleClickNode---', node),
 };

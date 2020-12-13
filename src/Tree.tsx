@@ -969,7 +969,9 @@ export const Tree = React.forwardRef(
                 showIcon={SHOW_ICON}
                 showAvatar={SHOW_AVATAR}
                 showPreviewButton={showPreviewButton || false}
-                showAddButton={showAddButton || false}
+                showAddButton={
+                  disabled || node.disabled ? false : showAddButton || false
+                }
                 showMoreButton={showMoreButton || false}
                 moreButtonWidth={moreButtonWidth}
                 // openOptions={clickOptionsButton}

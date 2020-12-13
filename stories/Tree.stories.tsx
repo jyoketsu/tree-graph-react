@@ -29,6 +29,7 @@ const nodes = {
     checked: true,
     hour: 0.1,
     limitDay: -23,
+    disabled: true,
     icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
   },
   '003': {
@@ -374,32 +375,7 @@ const Template: Story<TreeProps> = args => {
       <button onClick={() => treeRef.current.addChild()}>添加子节点</button>
       <button onClick={() => treeRef.current.deleteNode()}>删除节点</button>
       <button draggable>拖拽这个节点到树</button>
-      <Tree
-        ref={treeRef}
-        {...args}
-        nodeOptions={
-          <ClickOutside onClickOutside={() => treeRef.current.closeOptions()}>
-            <div
-              style={{
-                display: 'flex',
-                flexDirection: 'column',
-                background: '#FFF',
-              }}
-            >
-              <button onClick={() => treeRef.current.rename()}>重命名</button>
-              <button onClick={() => treeRef.current.addNext()}>
-                添加节点
-              </button>
-              <button onClick={() => treeRef.current.addChild()}>
-                添加子节点
-              </button>
-              <button onClick={() => treeRef.current.deleteNode()}>
-                删除节点
-              </button>
-            </div>
-          </ClickOutside>
-        }
-      />
+      <Tree ref={treeRef} {...args} />
     </div>
   );
 };

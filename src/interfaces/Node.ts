@@ -18,6 +18,7 @@ export default interface Node {
   showStatus?: boolean;
   disabled?: boolean;
   strikethrough?: boolean;
+  updateTime?: number;
   // 以下为计算属性
   x?: number;
   y?: number;
