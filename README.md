@@ -326,7 +326,9 @@ interface DragInfo {
 | handleClickMoreButton   | 點擊更多按鈕,參數：clickNode            | Function | 否       | -       |
 | handleSave              | 保存樹                                  | Function | 否       | -       |
 | handleDrag              | 拖拽節點                                | Function | 否       | -       |
-| dragEndFromOutside      | 從外部拖入樹節點                        | Function | 否       | -       |
+| dragEndFromOutside      | 從外部拖入樹節點,參數：node             | Function | 否       | -       |
+| handleMouseEnterAvatar  | 鼠標移入頭像 ,參數：node                | Function | 否       | -       |
+| handleMouseLeaveAvatar  | 鼠標移出頭像,參數：node                 | Function | 否       | -       |
 
 ## MiniMenu Props
 

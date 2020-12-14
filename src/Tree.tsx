@@ -84,6 +84,8 @@ export interface TreeProps {
   handleDrag?: Function;
   handlePaste?: PasteFunc;
   dragEndFromOutside?: Function;
+  handleMouseEnterAvatar?: Function;
+  handleMouseLeaveAvatar?: Function;
   ref?: any;
 }
 
@@ -133,6 +135,8 @@ export const Tree = React.forwardRef(
       handleDrag,
       handlePaste,
       dragEndFromOutside,
+      handleMouseEnterAvatar,
+      handleMouseLeaveAvatar,
     }: TreeProps,
     ref
   ) => {
@@ -586,9 +590,9 @@ export const Tree = React.forwardRef(
     //   setShowOptionsNode(node);
     // }
 
-    function clickMore(node: CNode) {
+    function clickMore(node: CNode, clientX: number, clientY: number) {
       if (handleClickMoreButton) {
-        handleClickMoreButton(node);
+        handleClickMoreButton(node, clientX, clientY);
       }
     }
 
@@ -598,9 +602,9 @@ export const Tree = React.forwardRef(
       }
     }
 
-    function clickAdd(node: CNode) {
+    function clickAdd(node: CNode, clientX: number, clientY: number) {
       if (handleClickAddButton) {
-        handleClickAddButton(node);
+        handleClickAddButton(node, clientX, clientY);
       }
     }
 
@@ -992,6 +996,12 @@ export const Tree = React.forwardRef(
                 setDragInfo={setDragInfo}
                 dragStarted={dragStarted}
                 dragEndFromOutside={dragEndFromOutside}
+                mouseEnterAvatar={(node: CNode) => {
+                  if (handleMouseEnterAvatar) handleMouseEnterAvatar(node);
+                }}
+                mouseLeaveAvatar={(node: CNode) => {
+                  if (handleMouseLeaveAvatar) handleMouseLeaveAvatar(node);
+                }}
               />
               <Expand
                 node={node}

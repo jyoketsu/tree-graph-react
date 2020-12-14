@@ -398,12 +398,12 @@ MultiCol.args = {
   showStatus: true,
   // disabled: true,
   handleClickDot: (node: any) => console.log('---handleClickDot---', node),
-  handleClickMoreButton: (node: any) =>
-    console.log('---handleClickMoreButton---', node),
+  handleClickMoreButton: (node: any, clientX: number, clientY: number) =>
+    console.log('---handleClickMoreButton---', node, clientX, clientY),
   handleClickPreviewButton: (node: any) =>
     console.log('---handleClickPreviewButton---', node),
-  handleClickAddButton: (node: any) =>
-    console.log('---handleClickAddButton---', node),
+  handleClickAddButton: (node: any, clientX: number, clientY: number) =>
+    console.log('---handleClickAddButton---', node, clientX, clientY),
   handleShiftUpDown: (id: string, sortList: string[], type: 'up' | 'down') =>
     console.log('---handleShiftUpDown---', id, sortList, type),
   handleDrag: (dragInfo: any) => console.log('---handleDrag----', dragInfo),
@@ -415,6 +415,10 @@ MultiCol.args = {
     console.log('---handleClickStatus---', node),
   dragEndFromOutside: (node: any) =>
     console.log('---dragEndFromOutside---', node),
+  handleMouseEnterAvatar: (node: any) =>
+    console.log('---handleMouseEnterAvatar---', node),
+  handleMouseLeaveAvatar: (node: any) =>
+    console.log('---handleMouseLeaveAvatar---', node),
 };
 
 export const SingleCol = Template.bind({});

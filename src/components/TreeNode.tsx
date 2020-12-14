@@ -36,6 +36,8 @@ interface Props {
   clickAdd: Function;
   clickMore: Function;
   handleClickDot: Function;
+  mouseEnterAvatar?: Function;
+  mouseLeaveAvatar?: Function;
   // nodeOptionsOpened: boolean;
   // openOptions: Function;
   setDragInfo: setDragInfoFunc;
@@ -73,6 +75,8 @@ const TreeNode = ({
   // openOptions,
   handleClickDot,
   dragEndFromOutside,
+  mouseEnterAvatar,
+  mouseLeaveAvatar,
 }: // nodeOptionsOpened,
 Props) => {
   const [hover, sethover] = useState(false);
@@ -141,13 +145,13 @@ Props) => {
     clickPreview(node);
   }
 
-  function handleClickAdd() {
-    clickAdd(node);
+  function handleClickAdd(event: React.MouseEvent) {
+    clickAdd(node, event.clientX, event.clientY);
   }
 
-  function handleClickMore() {
+  function handleClickMore(event: React.MouseEvent) {
     // clearTimeout(timer);
-    clickMore(node);
+    clickMore(node, event.clientX, event.clientY);
   }
 
   function handleDragEnter() {
@@ -183,6 +187,18 @@ Props) => {
     ) {
       return 'border-rect';
     } else return '';
+  }
+
+  function handleMouseEnterAvatar() {
+    if (mouseEnterAvatar) {
+      mouseEnterAvatar(node);
+    }
+  }
+
+  function handleMouseLeaveAvatar() {
+    if (mouseLeaveAvatar) {
+      mouseLeaveAvatar(node);
+    }
   }
 
   function location(node: CNode, type: string) {
@@ -299,6 +315,8 @@ Props) => {
       {showAvatar && node.avatarUri ? (
         <g
           onClick={(event: React.MouseEvent) => handleClickAvatar(node, event)}
+          onMouseEnter={handleMouseEnterAvatar}
+          onMouseLeave={handleMouseLeaveAvatar}
         >
           <clipPath id={`${alias}-avatar-clip-${node._key}`}>
             <circle
