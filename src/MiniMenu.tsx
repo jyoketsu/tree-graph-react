@@ -217,7 +217,7 @@ const MenuItem = ({
           style={{
             width: '22px',
             height: '22px',
-            backgroundImage: `url(${node.icon})`,
+            backgroundImage: `url("${node.icon}")`,
             backgroundPosition: 'center',
             backgroundSize: 'contain',
             backgroundRepeat: 'no-repeat',

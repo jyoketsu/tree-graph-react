@@ -11,7 +11,11 @@ import {
   addNextNode,
   addChildNode,
   deleteNode,
+  changeSortList,
+  pasteNode,
 } from './services/util';
+
+const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 
 export interface MenuProps {
   // 节点
@@ -53,6 +57,8 @@ export interface MenuProps {
   handleAddChild?: Function;
   handleDeleteNode?: Function;
   handleClickMoreButton?: Function;
+  handleShiftUpDown?: Function;
+  handlePaste?: Function;
   ref?: any;
 }
 export const MenuTree = React.forwardRef(
@@ -82,6 +88,8 @@ export const MenuTree = React.forwardRef(
       handleAddChild,
       handleDeleteNode,
       handleClickMoreButton,
+      handleShiftUpDown,
+      handlePaste,
     }: MenuProps,
     ref
   ) => {
@@ -104,6 +112,11 @@ export const MenuTree = React.forwardRef(
     const [selectedId, setselectedId] = useState<string | null>(null);
     const [showInput, setshowInput] = useState(false);
     const [showNewInput, setshowNewInput] = useState(false);
+
+    // 粘貼的節點key
+    const [pasteNodeKey, setPasteNodeKey] = useState<string | null>(null);
+    // 粘貼方式
+    const [pasteType, setPasteType] = useState<'copy' | 'cut' | null>(null);
 
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -279,6 +292,41 @@ export const MenuTree = React.forwardRef(
       }
     }
 
+    // 節點上移
+    function shiftUp() {
+      if (!selectedId) {
+        return alert('请先选中节点！');
+      }
+      const res = changeSortList(nodeMap, selectedId, 'up');
+
+      if (res) {
+        if (UNCONTROLLED) {
+          setNodeMap(res.nodes);
+        } else {
+          if (handleShiftUpDown) {
+            handleShiftUpDown(selectedId, res.brotherKeys, 'up');
+          }
+        }
+      }
+    }
+
+    // 節點下移
+    function shiftDown() {
+      if (!selectedId) {
+        return alert('请先选中节点！');
+      }
+      const res = changeSortList(nodeMap, selectedId, 'down');
+      if (res) {
+        if (UNCONTROLLED) {
+          setNodeMap(res.nodes);
+        } else {
+          if (handleShiftUpDown) {
+            handleShiftUpDown(selectedId, res.brotherKeys, 'down');
+          }
+        }
+      }
+    }
+
     function saveNodes() {
       return nodeMap;
     }
@@ -288,6 +336,7 @@ export const MenuTree = React.forwardRef(
         return;
       }
       event.preventDefault();
+      const commandKey = isMac ? event.metaKey : event.ctrlKey;
       switch (event.key) {
         case 'Enter':
           addNext();
@@ -298,6 +347,56 @@ export const MenuTree = React.forwardRef(
         case 'Delete':
         case 'Backspace':
           deletenode();
+          break;
+        case 'ArrowUp':
+          if (event.shiftKey) {
+            shiftUp();
+          }
+          break;
+        case 'ArrowDown':
+          if (event.shiftKey) {
+            shiftDown();
+          }
+          break;
+        // 複製
+        case 'c':
+          if (commandKey && selectedId) {
+            setPasteNodeKey(selectedId);
+            setPasteType('copy');
+          }
+          break;
+        // 剪切
+        case 'x':
+          if (commandKey && selectedId) {
+            // 根節點不允許剪切
+            if (selectedId === startId) {
+              setPasteNodeKey(null);
+              setPasteType(null);
+              return;
+            }
+            setPasteNodeKey(selectedId);
+            setPasteType('cut');
+          }
+          break;
+        // 粘貼
+        case 'v':
+          if (commandKey && pasteType && pasteNodeKey && selectedId) {
+            if (UNCONTROLLED) {
+              const res = pasteNode(
+                nodeMap,
+                pasteNodeKey,
+                pasteType,
+                selectedId
+              );
+              if (res) {
+                setNodeMap(res);
+              }
+            } else if (handlePaste) {
+              handlePaste(pasteNodeKey, pasteType, selectedId);
+            }
+            setPasteNodeKey(null);
+            setPasteType(null);
+          }
           break;
         default:
           break;
@@ -410,7 +509,7 @@ export const MenuTree = React.forwardRef(
                 color={color || '#CDD0D2'}
                 selected={selectedId}
                 showIcon={SHOW_ICON}
-                showMoreButton={showMoreButton || false}
+                showMoreButton={showMoreButton && !disabled ? true : false}
                 handleClickNode={clickNode}
                 handleDbClickNode={dbClickNode}
                 clickMore={handleClickMore}

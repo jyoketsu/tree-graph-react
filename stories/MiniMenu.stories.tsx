@@ -45,7 +45,8 @@ const nodes = {
     sortList: [],
 
     checked: false,
-
+    icon:
+      'https://cdn-icare.qingtime.cn/编组 27.png0.1111110010000101001011000001011011011010110100111111607668436820?v=1607668438818',
     hour: 0.1,
     limitDay: 2,
   },
