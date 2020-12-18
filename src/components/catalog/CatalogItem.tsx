@@ -39,6 +39,11 @@ const CatalogItem = ({
   const [hover, sethover] = useState(false);
   const width = 12;
 
+  function handleClick(e: React.MouseEvent) {
+    e.stopPropagation();
+    handleClickExpand();
+  }
+
   return node.x && node.y ? (
     <div
       onClick={() => handleClickNode(node)}
@@ -65,7 +70,7 @@ const CatalogItem = ({
         }}
       >
         {node.sortList && node.sortList.length ? (
-          <div onClick={() => handleClickExpand()}>
+          <div onClick={handleClick}>
             <svg width={width} height={width} viewBox={`0,0,${width},${width}`}>
               {node.contract ? (
                 <path

@@ -9,7 +9,7 @@ const nodes = {
     father: '',
     sortList: ['002', '003', '004', '005'],
     contract: false,
-
+    disabled: true,
     avatarUri: 'https://psnine.com/Upload/game/11387.png',
     icon: 'https://cdn-icare.qingtime.cn/rooter.svg',
 
@@ -189,7 +189,7 @@ export default meta;
 const Template: Story<MenuProps> = args => {
   const treeRef = useRef(null);
   return (
-    <div>
+    <div style={{ width: '350px' }}>
       <MenuTree {...args} />
     </div>
   );

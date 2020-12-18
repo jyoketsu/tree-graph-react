@@ -300,10 +300,10 @@ interface DragInfo {
 | ----------------------- | --------------------------------------- | -------- | -------- | ------- |
 | nodes                   | 節點                                    | Object   | 是       | -       |
 | startId                 | 根節點 id                               | String   | 是       | -       |
-| width                   | 菜單寬度                                | string   | 否       | 320     |
 | backgroundColor         | 菜單背景色                              | string   | 否       | #333333 |
 | selectedBackgroundColor | 選中的菜單背景色                        | string   | 否       | #00CDD3 |
-| color                   | 選中的菜單背景色                        | string   | 否       | #CDD0D2 |
+| color                   | 文字顏色                                | string   | 否       | #CDD0D2 |
+| hoverColor              | hover 文字顏色                          | string   | 否       | #FFFFFF |
 | defaultSelectedId       | 選中的節點 id                           | String   | 是       | -       |
 | ref                     | 通過 ref 調用組件內部方法               | -        | 否       | -       |
 | singleColumn            | 是否是單列視圖                          | Boolean  | 否       | false   |
