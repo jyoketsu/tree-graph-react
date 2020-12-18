@@ -174,7 +174,7 @@ export const MenuTree = React.forwardRef(
 
     // 双击节点
     function dbClickNode(node: CNode) {
-      if (disabled) {
+      if (disabled || node.disabled) {
         return;
       }
       clearTimeout(clickTimeId);

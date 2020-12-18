@@ -161,6 +161,9 @@ const TreeNode = ({
           style={{
             fontSize: `${FONT_SIZE}px`,
             fontFamily: "'Microsoft YaHei', sans-serif",
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
             color:
               nodeRectClassName === 'selected'
                 ? '#FFF'
