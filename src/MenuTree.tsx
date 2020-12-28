@@ -11,7 +11,9 @@ import {
   deleteNode,
   changeSortList,
   pasteNode,
+  dragSort,
 } from './services/util';
+import DragInfo from './interfaces/DragInfo';
 
 const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 
@@ -27,6 +29,7 @@ export interface MenuProps {
   // 字体颜色
   color?: string;
   hoverColor?: string;
+  cutColor?: string;
   // 选中节点id
   defaultSelectedId?: string;
   //  非受控模式
@@ -56,6 +59,7 @@ export interface MenuProps {
   handleClickMoreButton?: Function;
   handleShiftUpDown?: Function;
   handlePaste?: Function;
+  handleDrag?: Function;
   ref?: any;
 }
 export const MenuTree = React.forwardRef(
@@ -67,6 +71,7 @@ export const MenuTree = React.forwardRef(
       selectedBackgroundColor,
       color,
       hoverColor,
+      cutColor,
       defaultSelectedId,
       uncontrolled,
       itemHeight,
@@ -87,6 +92,7 @@ export const MenuTree = React.forwardRef(
       handleClickMoreButton,
       handleShiftUpDown,
       handlePaste,
+      handleDrag,
     }: MenuProps,
     ref
   ) => {
@@ -403,6 +409,27 @@ export const MenuTree = React.forwardRef(
       }
     }
 
+    function handleDrop() {
+      const dragNodeId = sessionStorage.getItem('dragNodeId');
+      const dropNodeId = sessionStorage.getItem('dropNodeId');
+      if (!dragNodeId || !dropNodeId) {
+        return;
+      }
+      const dragInfo: DragInfo = {
+        targetNodeKey: dropNodeId,
+        placement: 'down',
+      };
+
+      if (UNCONTROLLED) {
+        const res = dragSort(nodeMap, dragNodeId, dragInfo);
+        if (res) {
+          setNodeMap(res);
+        }
+      } else if (handleDrag) {
+        handleDrag(dragNodeId, dragInfo);
+      }
+    }
+
     return (
       <div
         className="menu-wrapper"
@@ -428,6 +455,9 @@ export const MenuTree = React.forwardRef(
             hoverColor={hoverColor || '#FFF'}
             selected={selectedId}
             showIcon={SHOW_ICON}
+            disabled={disabled || false}
+            cutColor={cutColor || 'rgba(255,255,255,0.5)'}
+            pasteNodeKey={pasteType === 'cut' ? pasteNodeKey : null}
             showMoreButton={showMoreButton && !disabled ? true : false}
             handleClickNode={clickNode}
             handleDbClickNode={dbClickNode}
@@ -435,6 +465,7 @@ export const MenuTree = React.forwardRef(
             handleClickExpand={handleExpand}
             showInput={(showInput || showNewInput) && selectedId === node._key}
             handleChangeNodeText={changeText}
+            handleDrop={handleDrop}
           />
         ))}
       </div>

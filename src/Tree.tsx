@@ -970,6 +970,7 @@ export const Tree = React.forwardRef(
                 startId={startId}
                 alias={new Date().getTime()}
                 selected={selectedId}
+                pasteNodeKey={pasteType === 'cut' ? pasteNodeKey : null}
                 showIcon={SHOW_ICON}
                 showAvatar={SHOW_AVATAR}
                 showPreviewButton={showPreviewButton || false}

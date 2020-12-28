@@ -92,6 +92,17 @@ function textWidth(fontSize: number) {
   };
 }
 
+function textWidthAll(fontSize: number, text: string) {
+  const ele = document.createElement('span');
+  ele.innerText = text;
+  ele.style.fontSize = `${fontSize}px`;
+  ele.style.fontFamily = '"Microsoft YaHei", sans-serif';
+  document.body.appendChild(ele);
+  const width = ele.offsetWidth;
+  document.body.removeChild(ele);
+  return width;
+}
+
 // 获取全角字符数
 function getFullAngleNum(str: string) {
   const res = str.match(/[^\x00-\xff]/g);
@@ -125,25 +136,25 @@ function getNodeWidth(
   padding?: number
 ) {
   const str = node.shorted || node.name;
-  let full = getFullAngleNum(str);
-  const punctuation = getHalfAnglePunctuationNum(str);
-  const alphabet = getAlphabetNum(str);
-  const number = getNumberNum(str);
-  if (!str.length) {
-    full = 1;
-  }
-  const width = textWidth(fontSize);
+  // let full = getFullAngleNum(str);
+  // const punctuation = getHalfAnglePunctuationNum(str);
+  // const alphabet = getAlphabetNum(str);
+  // const number = getNumberNum(str);
+  // if (!str.length) {
+  //   full = 1;
+  // }
+  // const width = textWidth(fontSize);
+  const width = textWidthAll(fontSize, str);
 
   const paddingWidth = padding ? padding * 1.5 : 15;
   const extInfoWidth = getExtInfoWidth(node, showIcon, showAvatar);
 
   return (
-    width.fullAngleWidth * full +
-    width.halfAnglePunctuationWidth * punctuation +
-    width.alphabetWidth * alphabet +
-    width.numberWidth * number +
-    paddingWidth +
-    extInfoWidth
+    // width.fullAngleWidth * full +
+    // width.halfAnglePunctuationWidth * punctuation +
+    // width.alphabetWidth * alphabet +
+    // width.numberWidth * number +
+    width + paddingWidth + extInfoWidth
   );
 }
 
@@ -516,4 +527,8 @@ export {
   dragSort,
   changeSortList,
   pasteNode,
+  getFullAngleNum,
+  getHalfAnglePunctuationNum,
+  getAlphabetNum,
+  getNumberNum,
 };

@@ -8,17 +8,21 @@ interface Props {
   selectedBackgroundColor: string;
   color: string;
   hoverColor: string;
+  cutColor: string;
   BLOCK_HEIGHT: number;
   FONT_SIZE: number;
   selected: string | null;
   showMoreButton: boolean;
   showIcon: boolean;
+  disabled: boolean;
   handleClickNode: Function;
   handleDbClickNode: Function;
   handleClickExpand: Function;
   clickMore: Function;
   showInput: boolean;
   handleChangeNodeText: Function;
+  handleDrop: Function;
+  pasteNodeKey: string | null;
 }
 const TreeNode = ({
   node,
@@ -26,10 +30,12 @@ const TreeNode = ({
   selectedBackgroundColor,
   color,
   hoverColor,
+  cutColor,
   BLOCK_HEIGHT,
   FONT_SIZE,
   selected,
   showIcon,
+  disabled,
   showMoreButton,
   handleClickNode,
   handleDbClickNode,
@@ -37,11 +43,15 @@ const TreeNode = ({
   clickMore,
   showInput,
   handleChangeNodeText,
+  handleDrop,
+  pasteNodeKey,
 }: Props) => {
   const width = 12;
 
   const [hover, sethover] = useState(false);
   const [value, setValue] = useState(node.name);
+  const [dragStarted, setDragStarted] = useState(false);
+  const [isDragOver, setIsDragOver] = useState(false);
 
   function rectClassName(node: CNode) {
     // 选中的节点
@@ -71,6 +81,37 @@ const TreeNode = ({
     }
   };
 
+  function handleDragStart(e: React.DragEvent) {
+    e.dataTransfer.dropEffect = 'move';
+    setDragStarted(true);
+    sessionStorage.setItem('dragNodeId', node._key);
+    // if (!editable) {
+    //   dispatch(setCopyInfo(null, node._key, node.name, nodeKey));
+    // }
+  }
+
+  function handleDropNode() {
+    setIsDragOver(false);
+    sessionStorage.setItem('dropNodeId', node._key);
+    handleDrop();
+  }
+
+  function handleDragOver(e: React.MouseEvent) {
+    if (!node.disabled) {
+      e.preventDefault();
+    }
+    if (!isDragOver) {
+      setIsDragOver(true);
+    }
+  }
+
+  function handleDragLeave() {
+    setIsDragOver(false);
+  }
+  function handleDragEnd() {
+    setDragStarted(false);
+  }
+
   const nodeRectClassName = rectClassName(node);
 
   return node.x && node.y ? (
@@ -93,7 +134,16 @@ const TreeNode = ({
         boxSizing: 'border-box',
         backgroundColor:
           nodeRectClassName === 'selected' ? selectedBackgroundColor : 'unset',
+        borderBottom: isDragOver
+          ? `2px solid ${selectedBackgroundColor}`
+          : 'unset',
       }}
+      draggable={disabled || node.disabled ? false : true}
+      onDragStart={handleDragStart}
+      onDragOver={handleDragOver}
+      onDragLeave={handleDragLeave}
+      onDrop={handleDropNode}
+      onDragEnd={handleDragEnd}
     >
       <div
         style={{
@@ -165,7 +215,9 @@ const TreeNode = ({
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',
             color:
-              nodeRectClassName === 'selected'
+              pasteNodeKey === node._key
+                ? cutColor
+                : nodeRectClassName === 'selected'
                 ? '#FFF'
                 : hover
                 ? hoverColor
@@ -177,7 +229,7 @@ const TreeNode = ({
       )}
 
       <div style={{ flex: 1 }}></div>
-      {showMoreButton && hover ? (
+      {showMoreButton && hover && !dragStarted ? (
         <div onClick={handleClickMore}>
           <svg
             viewBox="0 0 1024 1024"

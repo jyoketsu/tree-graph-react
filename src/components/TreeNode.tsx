@@ -43,6 +43,7 @@ interface Props {
   setDragInfo: setDragInfoFunc;
   dragStarted: boolean;
   dragEndFromOutside?: Function;
+  pasteNodeKey: string | null;
 }
 
 // let timer: NodeJS.Timeout;
@@ -77,6 +78,7 @@ const TreeNode = ({
   dragEndFromOutside,
   mouseEnterAvatar,
   mouseLeaveAvatar,
+  pasteNodeKey,
 }: // nodeOptionsOpened,
 Props) => {
   const [hover, sethover] = useState(false);
@@ -235,6 +237,8 @@ Props) => {
           fill: backgroundColor,
           stroke: '#333333',
           strokeWidth: node.father === startId ? 2 : 1,
+          fillOpacity: pasteNodeKey && pasteNodeKey === node._key ? 0.4 : 1,
+          strokeOpacity: pasteNodeKey && pasteNodeKey === node._key ? 0.4 : 1,
         };
         break;
       default:
@@ -405,6 +409,7 @@ Props) => {
             : node.color
             ? node.color
             : '#595959',
+          fillOpacity: pasteNodeKey && pasteNodeKey === node._key ? 0.4 : 1,
           fontFamily: "'Microsoft YaHei', sans-serif",
           userSelect: 'none',
           textDecoration: node.strikethrough ? 'line-through' : 'unset',

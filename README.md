@@ -296,39 +296,40 @@ interface DragInfo {
 
 ## Menu Props
 
-| 屬性                    | 說明                                    | 類型     | 是否必須 | 默認值  |
-| ----------------------- | --------------------------------------- | -------- | -------- | ------- |
-| nodes                   | 節點                                    | Object   | 是       | -       |
-| startId                 | 根節點 id                               | String   | 是       | -       |
-| backgroundColor         | 菜單背景色                              | string   | 否       | #333333 |
-| selectedBackgroundColor | 選中的菜單背景色                        | string   | 否       | #00CDD3 |
-| color                   | 文字顏色                                | string   | 否       | #CDD0D2 |
-| hoverColor              | hover 文字顏色                          | string   | 否       | #FFFFFF |
-| defaultSelectedId       | 選中的節點 id                           | String   | 是       | -       |
-| ref                     | 通過 ref 調用組件內部方法               | -        | 否       | -       |
-| singleColumn            | 是否是單列視圖                          | Boolean  | 否       | false   |
-| uncontrolled            | 是否為非受控組件                        | Boolean  | 否       | true    |
-| itemHeight              | 節點元素高度                            | Number   | 否       | 50      |
-| blockHeight             | 節點塊高度                              | Number   | 否       | 30      |
-| fontSize                | 節點字體大小                            | Number   | 否       | 14      |
-| indent                  | 縮進                                    | Number   | 否       | 25      |
-| disableShortcut         | 是否禁用快捷鍵                          | Number   | 否       | -       |
-| disabled                | 是否只讀                                | Number   | 否       | -       |
-| showMoreButton          | 是否顯示節點選項菜單                    | boolean  | 否       | false   |
-| showIcon                | 是否顯示圖標                            | boolean  | 否       | true    |
-| handleClickNode         | 點擊節點事件,参数：node                 | Function | 否       | -       |
-| handleDbClickNode       | 雙擊節點事件,参数：node                 | Function | 否       | -       |
-| handleClickExpand       | 點擊收起/展開事件,参数：node            | Function | 否       | -       |
-| handleChangeNodeText    | 更改節點名事件,参数：nodeId, text       | Function | 否       | -       |
-| handleAddNext           | 向後添加兄弟節點事件,参数：selectedNode | Function | 否       | -       |
-| handleAddChild          | 添加子節點事件,参数：selectedNode       | Function | 否       | -       |
-| handleDeleteNode        | 刪除節點事件,参数：selectedNode         | Function | 否       | -       |
-| handleClickMoreButton   | 點擊更多按鈕,參數：clickNode            | Function | 否       | -       |
-| handleSave              | 保存樹                                  | Function | 否       | -       |
-| handleDrag              | 拖拽節點                                | Function | 否       | -       |
-| dragEndFromOutside      | 從外部拖入樹節點,參數：node             | Function | 否       | -       |
-| handleMouseEnterAvatar  | 鼠標移入頭像 ,參數：node                | Function | 否       | -       |
-| handleMouseLeaveAvatar  | 鼠標移出頭像,參數：node                 | Function | 否       | -       |
+| 屬性                    | 說明                                    | 類型     | 是否必須 | 默認值                |
+| ----------------------- | --------------------------------------- | -------- | -------- | --------------------- |
+| nodes                   | 節點                                    | Object   | 是       | -                     |
+| startId                 | 根節點 id                               | String   | 是       | -                     |
+| backgroundColor         | 菜單背景色                              | string   | 否       | #333333               |
+| selectedBackgroundColor | 選中的菜單背景色                        | string   | 否       | #00CDD3               |
+| color                   | 文字顏色                                | string   | 否       | #CDD0D2               |
+| hoverColor              | hover 文字顏色                          | string   | 否       | #FFFFFF               |
+| cutColor                | 剪切後文字顏色                          | string   | 否       | rgba(255,255,255,0.5) |
+| defaultSelectedId       | 選中的節點 id                           | String   | 是       | -                     |
+| ref                     | 通過 ref 調用組件內部方法               | -        | 否       | -                     |
+| singleColumn            | 是否是單列視圖                          | Boolean  | 否       | false                 |
+| uncontrolled            | 是否為非受控組件                        | Boolean  | 否       | true                  |
+| itemHeight              | 節點元素高度                            | Number   | 否       | 50                    |
+| blockHeight             | 節點塊高度                              | Number   | 否       | 30                    |
+| fontSize                | 節點字體大小                            | Number   | 否       | 14                    |
+| indent                  | 縮進                                    | Number   | 否       | 25                    |
+| disableShortcut         | 是否禁用快捷鍵                          | Number   | 否       | -                     |
+| disabled                | 是否只讀                                | Number   | 否       | -                     |
+| showMoreButton          | 是否顯示節點選項菜單                    | boolean  | 否       | false                 |
+| showIcon                | 是否顯示圖標                            | boolean  | 否       | true                  |
+| handleClickNode         | 點擊節點事件,参数：node                 | Function | 否       | -                     |
+| handleDbClickNode       | 雙擊節點事件,参数：node                 | Function | 否       | -                     |
+| handleClickExpand       | 點擊收起/展開事件,参数：node            | Function | 否       | -                     |
+| handleChangeNodeText    | 更改節點名事件,参数：nodeId, text       | Function | 否       | -                     |
+| handleAddNext           | 向後添加兄弟節點事件,参数：selectedNode | Function | 否       | -                     |
+| handleAddChild          | 添加子節點事件,参数：selectedNode       | Function | 否       | -                     |
+| handleDeleteNode        | 刪除節點事件,参数：selectedNode         | Function | 否       | -                     |
+| handleClickMoreButton   | 點擊更多按鈕,參數：clickNode            | Function | 否       | -                     |
+| handleSave              | 保存樹                                  | Function | 否       | -                     |
+| handleDrag              | 拖拽節點,參數：dragNodeId,dragInfo      | Function | 否       | -                     |
+| dragEndFromOutside      | 從外部拖入樹節點,參數：node             | Function | 否       | -                     |
+| handleMouseEnterAvatar  | 鼠標移入頭像 ,參數：node                | Function | 否       | -                     |
+| handleMouseLeaveAvatar  | 鼠標移出頭像,參數：node                 | Function | 否       | -                     |
 
 ## MiniMenu Props
 
