@@ -138,7 +138,7 @@ const TreeNode = ({
           ? `2px solid ${selectedBackgroundColor}`
           : 'unset',
       }}
-      draggable={disabled || node.disabled ? false : true}
+      draggable={showInput || disabled || node.disabled ? false : true}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
@@ -184,6 +184,7 @@ const TreeNode = ({
             backgroundSize: 'contain',
             backgroundRepeat: 'no-repeat',
             marginRight: '4px',
+            flexShrink: 0,
           }}
         ></div>
       ) : null}
@@ -202,6 +203,7 @@ const TreeNode = ({
             }}
             onChange={e => setValue(e.target.value)}
             onKeyDown={(e: any) => handleCommit(e)}
+            onBlur={() => handleChangeNodeText(selected, value)}
             onMouseDown={(e: React.MouseEvent) => e.stopPropagation()}
             onContextMenu={(e: React.MouseEvent) => e.stopPropagation()}
           />

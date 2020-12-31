@@ -197,6 +197,9 @@ export const Tree = React.forwardRef(
           alert('请先选中节点');
         }
       },
+      getSelectedId: function() {
+        return selectedId;
+      },
       // closeOptions: function() {
       //   setShowOptionsNode(null);
       // },

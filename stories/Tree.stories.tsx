@@ -375,6 +375,9 @@ const Template: Story<TreeProps> = args => {
       <button onClick={() => treeRef.current.addChild()}>添加子节点</button>
       <button onClick={() => treeRef.current.deleteNode()}>删除节点</button>
       <button draggable>拖拽这个节点到树</button>
+      {/* <button onClick={() => alert(treeRef.current.getSelectedId())}>
+        获取选中节点
+      </button> */}
       <Tree ref={treeRef} {...args} />
     </div>
   );

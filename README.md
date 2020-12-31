@@ -230,13 +230,14 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 
 ## Functions
 
-| 方法名       | 說明         |
-| ------------ | ------------ |
-| addNext      | 添加節點     |
-| addChild     | 添加子節點   |
-| deleteNode   | 刪除節點     |
-| rename       | 重命名       |
-| closeOptions | 關閉選項面板 |
+| 方法名        | 說明              |
+| ------------- | ----------------- |
+| addNext       | 添加節點          |
+| addChild      | 添加子節點        |
+| deleteNode    | 刪除節點          |
+| rename        | 重命名            |
+| closeOptions  | 關閉選項面板      |
+| getSelectedId | 獲取選中節點的 id |
 
 <br/>
 
