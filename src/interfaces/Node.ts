@@ -24,4 +24,8 @@ export default interface Node {
   y?: number;
   last_child_y?: number;
   width?: number;
+  toLeft?: boolean;
+  dots?: any[];
+  rightDots?: any[];
+  leftDots?: any[];
 }

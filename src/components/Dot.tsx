@@ -7,7 +7,7 @@ interface Props {
   handleClick: Function;
   // openOptions: Function;
   dragStarted: boolean;
-  position?: string;
+  position?: 'left' | 'right';
   nodeHover?: boolean;
 }
 
@@ -72,7 +72,6 @@ const Dot = ({
           r={9}
           fill="#c7cbd0"
           cursor="pointer"
-          // fillOpacity={hover ? 1 : 0}
           fillOpacity={nodeHover ? 1 : 0}
         />
       ) : null}
@@ -83,6 +82,7 @@ const Dot = ({
           cy={node.y + BLOCK_HEIGHT / 2}
           r={4}
           fill="#666"
+          fillOpacity={1}
           cursor={hover ? 'pointer' : 'auto'}
         />
       ) : null}

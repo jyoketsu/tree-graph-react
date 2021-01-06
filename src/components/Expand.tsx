@@ -4,7 +4,7 @@ import CNode from '../interfaces/CNode';
 interface Props {
   node: CNode;
   BLOCK_HEIGHT: number;
-  position?: string;
+  position?: 'right' | 'left' | 'leftBottom' | 'bottomCenter';
   handleClickExpand: Function;
 }
 

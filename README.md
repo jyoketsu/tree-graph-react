@@ -278,7 +278,7 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | handleChangeNodeText     | 更改節點名事件,参数：nodeId, text                    | Function | 否       | -      |
 | handleAddNext            | 向後添加兄弟節點事件,参数：selectedNode              | Function | 否       | -      |
 | handleAddChild           | 添加子節點事件,參數：selectedNode                    | Function | 否       | -      |
-| handleDeleteNode         | 刪除節點事件,參數：selectedNode                      | Function | 否       | -      |
+| handleDeleteNode         | 刪除節點事件,參數：selectedId                      | Function | 否       | -      |
 | handleClickPreviewButton | 點擊更多按鈕,參數：clickNode                         | Function | 否       | -      |
 | handleClickAddButton     | 點擊更多按鈕,參數：clickNode                         | Function | 否       | -      |
 | handleClickMoreButton    | 點擊更多按鈕,參數：clickNode                         | Function | 否       | -      |
@@ -324,7 +324,7 @@ interface DragInfo {
 | handleChangeNodeText    | 更改節點名事件,参数：nodeId, text       | Function | 否       | -                     |
 | handleAddNext           | 向後添加兄弟節點事件,参数：selectedNode | Function | 否       | -                     |
 | handleAddChild          | 添加子節點事件,参数：selectedNode       | Function | 否       | -                     |
-| handleDeleteNode        | 刪除節點事件,参数：selectedNode         | Function | 否       | -                     |
+| handleDeleteNode        | 刪除節點事件,参数：selectedId         | Function | 否       | -                     |
 | handleClickMoreButton   | 點擊更多按鈕,參數：clickNode            | Function | 否       | -                     |
 | handleSave              | 保存樹                                  | Function | 否       | -                     |
 | handleDrag              | 拖拽節點,參數：dragNodeId,dragInfo      | Function | 否       | -                     |

@@ -23,4 +23,8 @@ export default interface CNode {
   y: number;
   width: number;
   last_child_y: number;
+  toLeft?: boolean;
+  dots?: any[];
+  rightDots?: any[];
+  leftDots?: any[];
 }

@@ -44,6 +44,7 @@ interface Props {
   dragStarted: boolean;
   dragEndFromOutside?: Function;
   pasteNodeKey: string | null;
+  bottomOptions?: boolean;
 }
 
 // let timer: NodeJS.Timeout;
@@ -79,6 +80,7 @@ const TreeNode = ({
   mouseEnterAvatar,
   mouseLeaveAvatar,
   pasteNodeKey,
+  bottomOptions,
 }: // nodeOptionsOpened,
 Props) => {
   const [hover, sethover] = useState(false);
@@ -250,16 +252,33 @@ Props) => {
   }
 
   const buttonWidth = moreButtonWidth ? moreButtonWidth : BLOCK_HEIGHT * 0.5;
-  const buttonY = node.y + (BLOCK_HEIGHT - buttonWidth) / 2;
-  const previewButtonX = node.x + node.width + 2;
+
+  const buttonY = bottomOptions
+    ? node.y + BLOCK_HEIGHT
+    : node.y + (BLOCK_HEIGHT - buttonWidth) / 2;
+
+  const optionsButtonWidth =
+    (showAddButton ? buttonWidth : 0) +
+    (showPreviewButton ? buttonWidth : 0) +
+    (showMoreButton ? buttonWidth : 0);
+
+  const previewButtonX =
+    node.x + node.width + 2 - (bottomOptions ? optionsButtonWidth : 0);
+
   const addButtonX =
-    node.x + node.width + 2 + (showPreviewButton ? buttonWidth : 0);
+    node.x +
+    node.width +
+    2 +
+    (showPreviewButton ? buttonWidth : 0) -
+    (bottomOptions ? optionsButtonWidth : 0);
   const moreButtonX =
     node.x +
     node.width +
     2 +
     (showPreviewButton ? buttonWidth : 0) +
-    (showAddButton ? buttonWidth : 0);
+    (showAddButton ? buttonWidth : 0) -
+    (bottomOptions ? optionsButtonWidth : 0);
+
   const totalButtonWidth =
     2 +
     (showPreviewButton ? buttonWidth : 0) +
@@ -473,17 +492,17 @@ Props) => {
         node={node}
         BLOCK_HEIGHT={BLOCK_HEIGHT}
         handleClick={handleClickDot}
-        // openOptions={openOptions}
         dragStarted={dragStarted}
         nodeHover={hover}
+        position={node.toLeft ? 'right' : 'left'}
       />
-      <div
+      {/* <div
         style={{
           width: `${node.width}px`,
           height: `${ITEM_HEIGHT}px`,
           backgroundColor: 'red',
         }}
-      ></div>
+      ></div> */}
     </g>
   ) : null;
 };
