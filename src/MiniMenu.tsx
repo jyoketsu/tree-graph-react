@@ -1,6 +1,7 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import NodeMap from './interfaces/NodeMap';
 import Node from './interfaces/Node';
+import { guid } from './services/util';
 
 interface IContextProps {
   nodes: NodeMap;
@@ -14,6 +15,7 @@ interface IContextProps {
   handleClickExpand?: Function;
   handleMouseEnter?: Function;
   handleMouseLeave?: Function;
+  handleCrossCompDrag?: Function;
 }
 const ThemeContext = React.createContext({} as IContextProps);
 
@@ -41,6 +43,7 @@ export interface MiniMenuProps {
   handleClickExpand?: Function;
   handleMouseEnter?: Function;
   handleMouseLeave?: Function;
+  handleCrossCompDrag?: Function;
 }
 
 export const MiniMenu = ({
@@ -67,6 +70,7 @@ export const MiniMenu = ({
   handleClickExpand,
   handleMouseEnter,
   handleMouseLeave,
+  handleCrossCompDrag,
 }: MiniMenuProps) => {
   const WIDTH = width || 48;
   const ITEM_HEIGHT = itemHeight || 48;
@@ -75,6 +79,12 @@ export const MiniMenu = ({
   const SEL_BKCOLOR = selectedBackgroundColor || 'rgb(0, 205, 211)';
   const COLOR = color || 'rgb(205, 208, 210)';
   const FONT_SIZE = fontSize || 14;
+
+  const [compId, setCompId] = useState('');
+
+  useEffect(() => {
+    setCompId(guid(8, 16));
+  }, []);
 
   // 當前點擊的節點id
   // const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -120,6 +130,7 @@ export const MiniMenu = ({
           handleClickExpand,
           handleMouseEnter,
           handleMouseLeave,
+          handleCrossCompDrag,
         }}
       >
         {rootNode.sortList.map(key =>
@@ -130,6 +141,7 @@ export const MiniMenu = ({
               firstLevel={normalFirstLevel ? false : true}
               columnSpacing={columnSpacing}
               borderRadius={borderRadius}
+              compId={compId}
               // selectedId={firstLevelId}
             />
           ) : null
@@ -144,12 +156,14 @@ interface ItemProps {
   firstLevel?: boolean;
   columnSpacing: number | undefined;
   borderRadius?: number;
+  compId: string;
 }
 const MenuItem = ({
   node,
   firstLevel,
   columnSpacing,
   borderRadius,
+  compId,
 }: ItemProps) => {
   const configProps = useContext(ThemeContext);
   const [hover, setHover] = useState(false);
@@ -189,6 +203,18 @@ const MenuItem = ({
     }
   }
 
+  function handleMouseUp() {
+    const crossCompDragId = sessionStorage.getItem('cross-comp-drag');
+    const crossDragCompId = sessionStorage.getItem('cross-drag-compId');
+    if (
+      crossCompDragId &&
+      configProps.handleCrossCompDrag &&
+      crossDragCompId !== compId
+    ) {
+      configProps.handleCrossCompDrag(crossCompDragId, node._key);
+    }
+  }
+
   return (
     <div
       style={{
@@ -210,6 +236,7 @@ const MenuItem = ({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onClick={(e: React.MouseEvent) => handleClick(e)}
+      onMouseUp={handleMouseUp}
     >
       {/* 圖標 */}
       {node.icon ? (
@@ -284,6 +311,7 @@ const MenuItem = ({
                     node={nodes[key]}
                     columnSpacing={columnSpacing}
                     borderRadius={borderRadius}
+                    compId={compId}
                   />
                 ) : null
               )}

@@ -44,6 +44,15 @@ const NodeInput = ({
     }
   }, [selectedId, nodeList]);
 
+  let left = 0;
+  if (selected) {
+    if (selected.toLeft && !selected.name) {
+      left = selected.x - 85;
+    } else {
+      left = selected.x - 1;
+    }
+  }
+
   return (
     <ClickOutside onClickOutside={handleClickoutside}>
       {selected ? (
@@ -60,7 +69,7 @@ const NodeInput = ({
             height: `${BLOCK_HEIGHT ? BLOCK_HEIGHT + 2 : 30}px`,
             fontSize: `${FONT_SIZE || 14}px`,
             top: `${selected && selected.y ? selected.y - 1 : 0}px`,
-            left: `${selected && selected.x ? selected.x - 1 : 0}px`,
+            left: `${left}px`,
           }}
           ref={inputRef}
           autoFocus={true}

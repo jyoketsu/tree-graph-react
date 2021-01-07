@@ -12,6 +12,7 @@ import {
   changeSortList,
   pasteNode,
   dragSort,
+  guid,
 } from './services/util';
 import DragInfo from './interfaces/DragInfo';
 
@@ -119,6 +120,8 @@ export const MenuTree = React.forwardRef(
     // 粘貼方式
     const [pasteType, setPasteType] = useState<'copy' | 'cut' | null>(null);
 
+    const [compId, setCompId] = useState('');
+
     const containerRef = useRef<HTMLDivElement>(null);
 
     // 暴露方法
@@ -135,6 +138,10 @@ export const MenuTree = React.forwardRef(
         }
       },
     }));
+
+    useEffect(() => {
+      setCompId(guid(8, 16));
+    }, []);
 
     // 参数nodes发生改变，重设nodeMap
     useEffect(() => {
@@ -466,6 +473,7 @@ export const MenuTree = React.forwardRef(
             showInput={(showInput || showNewInput) && selectedId === node._key}
             handleChangeNodeText={changeText}
             handleDrop={handleDrop}
+            compId={compId}
           />
         ))}
       </div>

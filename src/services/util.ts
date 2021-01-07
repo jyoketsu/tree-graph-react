@@ -531,4 +531,5 @@ export {
   getHalfAnglePunctuationNum,
   getAlphabetNum,
   getNumberNum,
+  guid
 };

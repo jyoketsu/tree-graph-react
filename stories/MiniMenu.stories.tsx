@@ -236,6 +236,6 @@ Default.args = {
   handleClickNode: (node: any) => console.log('---handleClickNode---', node),
   handleClickExpand: (node: any) =>
     console.log('---handleClickExpand---', node),
-  handleMouseEnter: () => console.log('---handleMouseEnter---'),
-  handleMouseLeave: () => console.log('---handleMouseLeave---'),
+  // handleMouseEnter: () => console.log('---handleMouseEnter---'),
+  // handleMouseLeave: () => console.log('---handleMouseLeave---'),
 };

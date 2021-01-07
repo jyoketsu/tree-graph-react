@@ -92,10 +92,14 @@ Props) => {
   const [hoverMore, setHoverMore] = useState(false);
 
   function handleMouseEnter(e: React.MouseEvent) {
+    const crossCompDragId = sessionStorage.getItem('cross-comp-drag');
     sethover(true);
     setY(e.clientY);
     if (dragStarted) {
       setDragInfo({ targetNodeKey: node._key, placement: 'in' });
+    }
+    if (crossCompDragId) {
+      sessionStorage.setItem('cross-comp-drop', node._key);
     }
   }
 

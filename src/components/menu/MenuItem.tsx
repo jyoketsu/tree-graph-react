@@ -23,6 +23,7 @@ interface Props {
   handleChangeNodeText: Function;
   handleDrop: Function;
   pasteNodeKey: string | null;
+  compId: string;
 }
 const TreeNode = ({
   node,
@@ -45,6 +46,7 @@ const TreeNode = ({
   handleChangeNodeText,
   handleDrop,
   pasteNodeKey,
+  compId,
 }: Props) => {
   const width = 12;
 
@@ -85,6 +87,8 @@ const TreeNode = ({
     e.dataTransfer.dropEffect = 'move';
     setDragStarted(true);
     sessionStorage.setItem('dragNodeId', node._key);
+    sessionStorage.setItem('cross-comp-drag', node._key);
+    sessionStorage.setItem('cross-drag-compId', compId);
     // if (!editable) {
     //   dispatch(setCopyInfo(null, node._key, node.name, nodeKey));
     // }
@@ -94,6 +98,8 @@ const TreeNode = ({
     setIsDragOver(false);
     sessionStorage.setItem('dropNodeId', node._key);
     handleDrop();
+    sessionStorage.removeItem('cross-comp-drag');
+    sessionStorage.removeItem('cross-drag-compId');
   }
 
   function handleDragOver(e: React.MouseEvent) {

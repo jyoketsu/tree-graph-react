@@ -18,6 +18,7 @@ import {
   changeSortList,
   dragSort,
   pasteNode,
+  guid,
 } from './services/util';
 
 const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
@@ -86,6 +87,7 @@ export interface TreeProps {
   dragEndFromOutside?: Function;
   handleMouseEnterAvatar?: Function;
   handleMouseLeaveAvatar?: Function;
+  handleCrossCompDrag?: Function;
   ref?: any;
 }
 
@@ -137,6 +139,7 @@ export const Tree = React.forwardRef(
       dragEndFromOutside,
       handleMouseEnterAvatar,
       handleMouseLeaveAvatar,
+      handleCrossCompDrag,
     }: TreeProps,
     ref
   ) => {
@@ -182,6 +185,7 @@ export const Tree = React.forwardRef(
     // 粘貼方式
     const [pasteType, setPasteType] = useState<'copy' | 'cut' | null>(null);
 
+    const [compId, setCompId] = useState('');
     const containerRef = useRef<HTMLDivElement>(null);
 
     // 暴露方法
@@ -204,6 +208,10 @@ export const Tree = React.forwardRef(
       //   setShowOptionsNode(null);
       // },
     }));
+
+    useEffect(() => {
+      setCompId(guid(8, 16));
+    }, []);
 
     // 参数nodes发生改变，重设nodeMap
     useEffect(() => {
@@ -623,6 +631,8 @@ export const Tree = React.forwardRef(
       }
       if (selectedId && e.target.classList.contains('selected')) {
         e.stopPropagation();
+        sessionStorage.setItem('cross-comp-drag', selectedId);
+        sessionStorage.setItem('cross-drag-compId', compId);
         const node = nodeMap[selectedId];
         if (node.disabled) {
           return;
@@ -692,8 +702,28 @@ export const Tree = React.forwardRef(
           } else if (handleDrag) {
             handleDrag(dragInfo);
           }
+
+          const crossCompDragId = sessionStorage.getItem('cross-comp-drag');
+          const crossCompDropId = sessionStorage.getItem('cross-comp-drop');
+          const crossDragCompId = sessionStorage.getItem('cross-drag-compId');
+          if (
+            crossCompDragId &&
+            handleCrossCompDrag &&
+            crossDragCompId !== compId
+          ) {
+            handleCrossCompDrag(crossCompDragId, crossCompDropId);
+          }
         }
+        sessionStorage.removeItem('cross-comp-drag');
+        sessionStorage.removeItem('cross-comp-drop');
+        sessionStorage.removeItem('cross-drag-compId');
       }
+    }
+
+    function handleDragLeave() {
+      setDragStarted(false);
+      setDragInfo(null);
+      setShowDragNode(false);
     }
 
     return (
@@ -710,7 +740,7 @@ export const Tree = React.forwardRef(
         onMouseDown={handleDragStart}
         onMouseMove={handleMoveNode}
         onMouseUp={handleDragEnd}
-        onMouseLeave={handleDragEnd}
+        onMouseLeave={handleDragLeave}
       >
         <svg
           className="tree-svg"
