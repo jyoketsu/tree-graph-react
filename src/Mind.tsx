@@ -847,8 +847,11 @@ export const Mind = React.forwardRef(
               ></rect>
             </symbol>
           </defs>
-          {cnodes.map(node => (
-            <g key={node._key} className={`node-group-${node._key}`}>
+          {cnodes.map((node, index) => (
+            <g
+              key={`${index}_${node._key}`}
+              className={`node-group-${node._key}`}
+            >
               <g>
                 {node.dots && node.x && node.y
                   ? node.dots.map((dotY, index) => (

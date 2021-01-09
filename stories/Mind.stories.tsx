@@ -9,6 +9,7 @@ const nodes = {
     name: '項目管理',
     father: '',
     sortList: ['002', '003', '004', '005'],
+    // sortList: ['002'],
     contract: false,
     dotIcon: 'https://cdn-icare.qingtime.cn/shareOut1.svg?v=1604893936765',
     avatarUri: 'https://psnine.com/Upload/game/11387.png',

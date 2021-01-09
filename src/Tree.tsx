@@ -903,8 +903,11 @@ export const Tree = React.forwardRef(
               ></rect>
             </symbol>
           </defs>
-          {cnodes.map(node => (
-            <g key={node._key} className={`node-group-${node._key}`}>
+          {cnodes.map((node, index) => (
+            <g
+              key={`${index}_${node._key}`}
+              className={`node-group-${node._key}`}
+            >
               {isSingle ? (
                 node.x && node.y ? (
                   <g className="multi-column">

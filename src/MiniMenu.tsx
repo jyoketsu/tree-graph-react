@@ -133,10 +133,10 @@ export const MiniMenu = ({
           handleCrossCompDrag,
         }}
       >
-        {rootNode.sortList.map(key =>
+        {rootNode.sortList.map((key, index) =>
           nodes[key] ? (
             <MenuItem
-              key={key}
+              key={`${index}_${key}`}
               node={nodes[key]}
               firstLevel={normalFirstLevel ? false : true}
               columnSpacing={columnSpacing}
@@ -304,10 +304,10 @@ const MenuItem = ({
             }}
           >
             {node.sortList &&
-              node.sortList.map(key =>
+              node.sortList.map((key, index) =>
                 nodes[key] ? (
                   <MenuItem
-                    key={key}
+                    key={`${index}_${key}`}
                     node={nodes[key]}
                     columnSpacing={columnSpacing}
                     borderRadius={borderRadius}

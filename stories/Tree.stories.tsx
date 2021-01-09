@@ -10,7 +10,6 @@ const nodes = {
     father: '',
     sortList: ['002', '003', '004', '005'],
     contract: false,
-    dotIcon: 'https://cdn-icare.qingtime.cn/shareOut1.svg?v=1604893936765',
     avatarUri: 'https://psnine.com/Upload/game/11387.png',
     icon: 'https://cdn-icare.qingtime.cn/rooter.svg',
     checked: true,
@@ -31,6 +30,7 @@ const nodes = {
     limitDay: -23,
     disabled: true,
     icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
+    dotIcon: 'https://cdn-icare.qingtime.cn/shareOut1.svg?v=1604893936765',
   },
   '003': {
     _key: '003',

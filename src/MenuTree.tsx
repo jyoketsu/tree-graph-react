@@ -450,9 +450,9 @@ export const MenuTree = React.forwardRef(
         ref={containerRef}
         onKeyDown={(e: any) => handleKeyDown(e)}
       >
-        {cnodes.map(node => (
+        {cnodes.map((node, index) => (
           <MenuItem
-            key={node._key}
+            key={`${index}_${node._key}`}
             indent={INDENT}
             node={node}
             BLOCK_HEIGHT={BLOCK_HEIGHT}

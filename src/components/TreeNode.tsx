@@ -492,14 +492,17 @@ Props) => {
           ) : null}
         </g>
       ) : null}
-      <Dot
-        node={node}
-        BLOCK_HEIGHT={BLOCK_HEIGHT}
-        handleClick={handleClickDot}
-        dragStarted={dragStarted}
-        nodeHover={hover}
-        position={node.toLeft ? 'right' : 'left'}
-      />
+      {node._key !== startId ? (
+        <Dot
+          node={node}
+          BLOCK_HEIGHT={BLOCK_HEIGHT}
+          handleClick={handleClickDot}
+          dragStarted={dragStarted}
+          nodeHover={hover}
+          position={node.toLeft ? 'right' : 'left'}
+        />
+      ) : null}
+
       {/* <div
         style={{
           width: `${node.width}px`,

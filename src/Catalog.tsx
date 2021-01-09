@@ -114,10 +114,10 @@ export const Catalog = ({
         {nodeMap[startId].name}
       </div>
       {info ? <div style={{ width: '100%' }}>{info}</div> : null}
-      {cnodes.map(node =>
+      {cnodes.map((node, index) =>
         node._key !== startId ? (
           <CatalogItem
-            key={node._key}
+            key={`${index}_${node._key}`}
             node={node}
             indent={INDENT}
             BLOCK_HEIGHT={BLOCK_HEIGHT}

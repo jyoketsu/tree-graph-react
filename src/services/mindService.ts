@@ -11,7 +11,7 @@ export default function calculate(
   INDENT: number,
   FONT_SIZE: number,
   showIcon: boolean,
-  showAvatar: boolean,
+  showAvatar: boolean
 ) {
   nodes = JSON.parse(JSON.stringify(nodes));
   // 根节点
@@ -23,8 +23,8 @@ export default function calculate(
   let MAX_Y = ITEM_HEIGHT;
   let MAX_END = rootWidth * 1.5;
 
-  let MIN_X = 0;
-  let MIN_END = 0;
+  let MIN_X = 10;
+  let MIN_END = 10;
 
   let nodeList: CNode[] = [];
 
