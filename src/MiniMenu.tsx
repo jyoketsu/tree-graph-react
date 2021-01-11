@@ -212,6 +212,9 @@ const MenuItem = ({
       crossDragCompId !== compId
     ) {
       configProps.handleCrossCompDrag(crossCompDragId, node._key);
+      sessionStorage.removeItem('cross-comp-drag');
+      sessionStorage.removeItem('cross-comp-drop');
+      sessionStorage.removeItem('cross-drag-compId');
     }
   }
 

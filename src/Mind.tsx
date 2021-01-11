@@ -142,7 +142,7 @@ export const Mind = React.forwardRef(
     const INDENT = indent || 25;
     // const AVATAR_WIDTH = avatarWidth || 22;
     // const CHECK_BOX_WIDTH = checkBoxWidth || 18;
-    const PATH_WIDTH = pathWidth || 1;
+    const PATH_WIDTH = pathWidth || 2;
     const UNCONTROLLED = uncontrolled === undefined ? true : uncontrolled;
     const SHOW_ICON = showIcon === undefined ? true : showIcon;
     const SHOW_AVATAR = showAvatar === undefined ? false : showAvatar;
@@ -158,7 +158,7 @@ export const Mind = React.forwardRef(
 
     // 拖拽節點相關的狀態
     const [dragStarted, setDragStarted] = useState(false);
-    const [showDragNode, setShowDragNode] = useState(false);
+    const [dragNodeId, setDragNodeId] = useState<string | null>(null);
     const [clickX, setClickX] = useState(0);
     const [clickY, setClickY] = useState(0);
     const [movedNodeX, setMovedNodeX] = useState(0);
@@ -531,26 +531,25 @@ export const Mind = React.forwardRef(
       }
     }
 
-    function handleDragStart(e: any) {
-      if (disabled) {
+    function handleDragStart(
+      node: CNode,
+      dragStartX: number,
+      dragStartY: number
+    ) {
+      if (disabled || node.disabled) {
         return;
       }
-      if (selectedId && e.target.classList.contains('selected')) {
-        e.stopPropagation();
-        sessionStorage.setItem('cross-comp-drag', selectedId);
-        sessionStorage.setItem('cross-drag-compId', compId);
-        const node = nodeMap[selectedId];
-        if (node.disabled) {
-          return;
-        }
-        setDragStarted(true);
-        setShowDragNode(true);
-        setDragInfo({ targetNodeKey: selectedId, placement: 'in' });
-        setClickX(e.clientX);
-        setClickY(e.clientY);
-        setMovedNodeX(0);
-        setMovedNodeY(0);
-      }
+
+      sessionStorage.setItem('cross-comp-drag', node._key);
+      sessionStorage.setItem('cross-drag-compId', compId);
+
+      setDragStarted(true);
+      setDragNodeId(node._key);
+      setDragInfo({ targetNodeKey: node._key, placement: 'in' });
+      setClickX(dragStartX);
+      setClickY(dragStartY);
+      setMovedNodeX(0);
+      setMovedNodeY(0);
     }
 
     function handleMoveNode(e: React.MouseEvent) {
@@ -570,10 +569,10 @@ export const Mind = React.forwardRef(
     }
 
     function handleDragEnd(e: React.MouseEvent) {
-      if (dragStarted && dragInfo && selectedId) {
+      if (dragStarted && dragInfo && dragNodeId) {
         e.stopPropagation();
         setDragStarted(false);
-        const selectedNode = nodeMap[selectedId];
+        const selectedNode = nodeMap[dragNodeId];
         // 判斷拖拽是否無效
         if (
           // 拖拽對象為自己：無效
@@ -595,13 +594,13 @@ export const Mind = React.forwardRef(
           }, Math.floor(animeTime / fps));
 
           setTimeout(() => {
-            setShowDragNode(false);
+            setDragNodeId(null);
             clearInterval(interval);
           }, animeTime);
         } else if (selectedNode) {
-          setShowDragNode(false);
+          setDragNodeId(null);
           if (UNCONTROLLED) {
-            const res = dragSort(nodeMap, selectedId, dragInfo);
+            const res = dragSort(nodeMap, dragNodeId, dragInfo);
             if (res) {
               setNodeMap(res);
             }
@@ -629,7 +628,7 @@ export const Mind = React.forwardRef(
     function handleDragLeave() {
       setDragStarted(false);
       setDragInfo(null);
-      setShowDragNode(false);
+      setDragNodeId(null);
     }
 
     function path(node: CNode, dotY: any) {
@@ -681,7 +680,6 @@ export const Mind = React.forwardRef(
         tabIndex={-1}
         ref={containerRef}
         onKeyDown={(e: any) => handleKeyDown(e)}
-        onMouseDown={handleDragStart}
         onMouseMove={handleMoveNode}
         onMouseUp={handleDragEnd}
         onMouseLeave={handleDragLeave}
@@ -884,7 +882,7 @@ export const Mind = React.forwardRef(
                           key={`rightDots-${index}`}
                           d={rootPath(node, dotY, false)}
                           stroke="rgb(192,192,192)"
-                          strokeWidth="PATH_WIDTH"
+                          strokeWidth={PATH_WIDTH}
                           fill="transparent"
                         />
                       ))
@@ -919,6 +917,7 @@ export const Mind = React.forwardRef(
                 clickAdd={clickAdd}
                 clickMore={clickMore}
                 setDragInfo={setDragInfo}
+                handleDragStart={handleDragStart}
                 dragStarted={dragStarted}
                 dragEndFromOutside={dragEndFromOutside}
                 mouseEnterAvatar={(node: CNode) => {
@@ -938,15 +937,14 @@ export const Mind = React.forwardRef(
             </g>
           ))}
           {/* 拖拽用節點 */}
-          {showDragNode &&
+          {dragNodeId &&
           (Math.abs(movedNodeX) > 5 || Math.abs(movedNodeY) > 5) ? (
             <DragNode
-              selectedId={selectedId}
+              dragNodeId={dragNodeId}
               nodeList={cnodes}
               BLOCK_HEIGHT={BLOCK_HEIGHT}
               FONT_SIZE={FONT_SIZE}
               alias={new Date().getTime()}
-              selected={selectedId}
               showIcon={SHOW_ICON}
               showAvatar={SHOW_AVATAR}
               movedNodeX={movedNodeX}

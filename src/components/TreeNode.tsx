@@ -40,6 +40,7 @@ interface Props {
   mouseLeaveAvatar?: Function;
   // nodeOptionsOpened: boolean;
   // openOptions: Function;
+  handleDragStart: Function;
   setDragInfo: setDragInfoFunc;
   dragStarted: boolean;
   dragEndFromOutside?: Function;
@@ -73,6 +74,7 @@ const TreeNode = ({
   clickAdd,
   clickMore,
   setDragInfo,
+  handleDragStart,
   dragStarted,
   // openOptions,
   handleClickDot,
@@ -85,6 +87,9 @@ const TreeNode = ({
 Props) => {
   const [hover, sethover] = useState(false);
   const [dragIn, setDragIn] = useState(false);
+  const [mouseDown, setMouseDown] = useState(false);
+  const [clickX, setclickX] = useState(0);
+  const [clickY, setclickY] = useState(0);
   // const [hoverMore, setHoverMore] = useState(false);
   const [y, setY] = useState(0);
   const [hoverPreview, setHoverPreview] = useState(false);
@@ -110,6 +115,10 @@ Props) => {
         targetNodeKey: node._key,
         placement: e.clientY - y > 0 ? 'down' : 'up',
       });
+    }
+    if (mouseDown) {
+      handleDragStart(node, clickX, clickY);
+      setMouseDown(false);
     }
   }
 
@@ -293,6 +302,18 @@ Props) => {
     <g
       onClick={() => handleClickNode(node)}
       onDoubleClick={() => handleDbClickNode(node)}
+      // onMouseDown={(e: React.MouseEvent) => handleDragStart(node, e)}
+      onMouseDown={(e: React.MouseEvent) => {
+        setMouseDown(true);
+        setclickX(e.clientX);
+        setclickY(e.clientY);
+      }}
+      onMouseUp={() => setMouseDown(false)}
+      onMouseMove={(e: React.MouseEvent) => {
+        if (mouseDown) {
+          e.stopPropagation();
+        }
+      }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       style={{ position: 'relative' }}
@@ -344,6 +365,7 @@ Props) => {
           onClick={(event: React.MouseEvent) => handleClickAvatar(node, event)}
           onMouseEnter={handleMouseEnterAvatar}
           onMouseLeave={handleMouseLeaveAvatar}
+          viewBox="0,0,22,22"
         >
           <clipPath id={`${alias}-avatar-clip-${node._key}`}>
             <circle
@@ -359,6 +381,7 @@ Props) => {
             height="22"
             xlinkHref={node.avatarUri}
             clipPath={`url(#${alias}-avatar-clip-${node._key})`}
+            preserveAspectRatio="xMidYMid slice"
           />
         </g>
       ) : null}

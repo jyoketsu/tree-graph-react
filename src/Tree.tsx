@@ -172,7 +172,7 @@ export const Tree = React.forwardRef(
 
     // 拖拽節點相關的狀態
     const [dragStarted, setDragStarted] = useState(false);
-    const [showDragNode, setShowDragNode] = useState(false);
+    const [dragNodeId, setDragNodeId] = useState<string | null>(null);
     const [clickX, setClickX] = useState(0);
     const [clickY, setClickY] = useState(0);
     const [movedNodeX, setMovedNodeX] = useState(0);
@@ -625,26 +625,46 @@ export const Tree = React.forwardRef(
       }
     }
 
-    function handleDragStart(e: any) {
-      if (disabled) {
+    // function handleDragStart(e: any) {
+    //   if (disabled) {
+    //     return;
+    //   }
+    //   if (selectedId && e.target.classList.contains('selected')) {
+    //     e.stopPropagation();
+    //     sessionStorage.setItem('cross-comp-drag', selectedId);
+    //     sessionStorage.setItem('cross-drag-compId', compId);
+    //     const node = nodeMap[selectedId];
+    //     if (node.disabled) {
+    //       return;
+    //     }
+    //     setDragStarted(true);
+    //     setDragNodeId(true);
+    //     setDragInfo({ targetNodeKey: selectedId, placement: 'in' });
+    //     setClickX(e.clientX);
+    //     setClickY(e.clientY);
+    //     setMovedNodeX(0);
+    //     setMovedNodeY(0);
+    //   }
+    // }
+    function handleDragStart(
+      node: CNode,
+      dragStartX: number,
+      dragStartY: number
+    ) {
+      if (disabled || node.disabled) {
         return;
       }
-      if (selectedId && e.target.classList.contains('selected')) {
-        e.stopPropagation();
-        sessionStorage.setItem('cross-comp-drag', selectedId);
-        sessionStorage.setItem('cross-drag-compId', compId);
-        const node = nodeMap[selectedId];
-        if (node.disabled) {
-          return;
-        }
-        setDragStarted(true);
-        setShowDragNode(true);
-        setDragInfo({ targetNodeKey: selectedId, placement: 'in' });
-        setClickX(e.clientX);
-        setClickY(e.clientY);
-        setMovedNodeX(0);
-        setMovedNodeY(0);
-      }
+
+      sessionStorage.setItem('cross-comp-drag', node._key);
+      sessionStorage.setItem('cross-drag-compId', compId);
+
+      setDragStarted(true);
+      setDragNodeId(node._key);
+      setDragInfo({ targetNodeKey: node._key, placement: 'in' });
+      setClickX(dragStartX);
+      setClickY(dragStartY);
+      setMovedNodeX(0);
+      setMovedNodeY(0);
     }
 
     function handleMoveNode(e: React.MouseEvent) {
@@ -664,10 +684,10 @@ export const Tree = React.forwardRef(
     }
 
     function handleDragEnd(e: React.MouseEvent) {
-      if (dragStarted && dragInfo && selectedId) {
+      if (dragStarted && dragInfo && dragNodeId) {
         e.stopPropagation();
         setDragStarted(false);
-        const selectedNode = nodeMap[selectedId];
+        const selectedNode = nodeMap[dragNodeId];
         // 判斷拖拽是否無效
         if (
           // 拖拽對象為自己：無效
@@ -689,13 +709,13 @@ export const Tree = React.forwardRef(
           }, Math.floor(animeTime / fps));
 
           setTimeout(() => {
-            setShowDragNode(false);
+            setDragNodeId(null);
             clearInterval(interval);
           }, animeTime);
         } else if (selectedNode) {
-          setShowDragNode(false);
+          setDragNodeId(null);
           if (UNCONTROLLED) {
-            const res = dragSort(nodeMap, selectedId, dragInfo);
+            const res = dragSort(nodeMap, dragNodeId, dragInfo);
             if (res) {
               setNodeMap(res);
             }
@@ -723,7 +743,7 @@ export const Tree = React.forwardRef(
     function handleDragLeave() {
       setDragStarted(false);
       setDragInfo(null);
-      setShowDragNode(false);
+      setDragNodeId(null);
     }
 
     return (
@@ -737,7 +757,6 @@ export const Tree = React.forwardRef(
         tabIndex={-1}
         ref={containerRef}
         onKeyDown={(e: any) => handleKeyDown(e)}
-        onMouseDown={handleDragStart}
         onMouseMove={handleMoveNode}
         onMouseUp={handleDragEnd}
         onMouseLeave={handleDragLeave}
@@ -1032,6 +1051,7 @@ export const Tree = React.forwardRef(
                 clickMore={clickMore}
                 setDragInfo={setDragInfo}
                 dragStarted={dragStarted}
+                handleDragStart={handleDragStart}
                 dragEndFromOutside={dragEndFromOutside}
                 mouseEnterAvatar={(node: CNode) => {
                   if (handleMouseEnterAvatar) handleMouseEnterAvatar(node);
@@ -1053,15 +1073,14 @@ export const Tree = React.forwardRef(
             </g>
           ))}
           {/* 拖拽用節點 */}
-          {showDragNode &&
+          {dragNodeId &&
           (Math.abs(movedNodeX) > 5 || Math.abs(movedNodeY) > 5) ? (
             <DragNode
-              selectedId={selectedId}
+              dragNodeId={dragNodeId}
               nodeList={cnodes}
               BLOCK_HEIGHT={BLOCK_HEIGHT}
               FONT_SIZE={FONT_SIZE}
               alias={new Date().getTime()}
-              selected={selectedId}
               showIcon={SHOW_ICON}
               showAvatar={SHOW_AVATAR}
               movedNodeX={movedNodeX}
