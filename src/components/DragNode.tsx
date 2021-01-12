@@ -4,7 +4,6 @@ import DragInfo from '../interfaces/DragInfo';
 import { nodeLocation } from '../services/util';
 
 interface Props {
-  dragNodeId: string | null;
   nodeList: CNode[];
   BLOCK_HEIGHT: number;
   FONT_SIZE: number;
@@ -17,7 +16,6 @@ interface Props {
 }
 
 const DragNode = ({
-  dragNodeId,
   nodeList,
   BLOCK_HEIGHT,
   FONT_SIZE,
@@ -33,12 +31,12 @@ const DragNode = ({
   useEffect(() => {
     for (let index = 0; index < nodeList.length; index++) {
       const node = nodeList[index];
-      if (node._key === dragNodeId) {
+      if (node._key === dragInfo?.dragNodeId) {
         setNode(node);
         break;
       }
     }
-  }, [dragNodeId, nodeList]);
+  }, [dragInfo, nodeList]);
 
   function location(node: CNode, type: string) {
     return nodeLocation(node, type, BLOCK_HEIGHT, showIcon, showAvatar);

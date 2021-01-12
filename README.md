@@ -290,7 +290,8 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 
 ```javascript
 interface DragInfo {
-  targetNodeKey: string;
+  dragNodeId: string;
+  dropNodeId: string;
   placement: 'up' | 'down' | 'in';
 }
 ```

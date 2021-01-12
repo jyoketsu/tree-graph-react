@@ -41,7 +41,7 @@ interface Props {
   // nodeOptionsOpened: boolean;
   // openOptions: Function;
   handleDragStart: Function;
-  setDragInfo: setDragInfoFunc;
+  updateDragInfo: setDragInfoFunc;
   dragStarted: boolean;
   dragEndFromOutside?: Function;
   pasteNodeKey: string | null;
@@ -73,7 +73,7 @@ const TreeNode = ({
   clickPreview,
   clickAdd,
   clickMore,
-  setDragInfo,
+  updateDragInfo,
   handleDragStart,
   dragStarted,
   // openOptions,
@@ -101,7 +101,10 @@ Props) => {
     sethover(true);
     setY(e.clientY);
     if (dragStarted) {
-      setDragInfo({ targetNodeKey: node._key, placement: 'in' });
+      updateDragInfo({
+        dropNodeId: node._key,
+        placement: 'in',
+      });
     }
     if (crossCompDragId) {
       sessionStorage.setItem('cross-comp-drop', node._key);
@@ -111,8 +114,8 @@ Props) => {
   function handleMouseLeave(e: React.MouseEvent) {
     sethover(false);
     if (dragStarted) {
-      setDragInfo({
-        targetNodeKey: node._key,
+      updateDragInfo({
+        dropNodeId: node._key,
         placement: e.clientY - y > 0 ? 'down' : 'up',
       });
     }
@@ -304,6 +307,7 @@ Props) => {
       onDoubleClick={() => handleDbClickNode(node)}
       // onMouseDown={(e: React.MouseEvent) => handleDragStart(node, e)}
       onMouseDown={(e: React.MouseEvent) => {
+        e.stopPropagation();
         setMouseDown(true);
         setclickX(e.clientX);
         setclickY(e.clientY);

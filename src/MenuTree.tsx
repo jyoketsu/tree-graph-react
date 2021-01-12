@@ -423,12 +423,18 @@ export const MenuTree = React.forwardRef(
         return;
       }
       const dragInfo: DragInfo = {
-        targetNodeKey: dropNodeId,
+        dragNodeId: dragNodeId,
+        dropNodeId: dropNodeId,
         placement: 'down',
       };
 
       if (UNCONTROLLED) {
-        const res = dragSort(nodeMap, dragNodeId, dragInfo);
+        const res = dragSort(
+          nodeMap,
+          dragNodeId,
+          dropNodeId,
+          dragInfo.placement
+        );
         if (res) {
           setNodeMap(res);
         }

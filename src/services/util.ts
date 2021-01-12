@@ -1,7 +1,6 @@
 import Node from '../interfaces/Node';
 import CNode from '../interfaces/CNode';
 import NodeMap from '../interfaces/NodeMap';
-import DragInfo from '../interfaces/DragInfo';
 
 function findNodeById(nodes: CNode[], id: string) {
   return nodes.find((node: CNode) => node._key === id);
@@ -434,14 +433,19 @@ function pasteNode(
   }
 }
 
-function dragSort(map: NodeMap, selectedId: string, dragInfo: DragInfo) {
+function dragSort(
+  map: NodeMap,
+  dragId: string,
+  dropId: string,
+  placement: 'in' | 'up' | 'down'
+) {
   let nodeMap = { ...map };
-  let selectedNode = nodeMap[selectedId];
-  let targetNode = nodeMap[dragInfo.targetNodeKey];
+  let selectedNode = nodeMap[dragId];
+  let targetNode = nodeMap[dropId];
   if (!selectedNode || !targetNode) {
     return null;
   }
-  switch (dragInfo.placement) {
+  switch (placement) {
     case 'in':
       // 從選中節點的父節點的children中刪除當前id
       let selectedNodeFather = nodeMap[selectedNode.father];
@@ -450,13 +454,13 @@ function dragSort(map: NodeMap, selectedId: string, dragInfo: DragInfo) {
       }
       let sortList = selectedNodeFather.sortList;
       sortList.splice(sortList.indexOf(selectedNode._key), 1);
-      selectedNode.father = dragInfo.targetNodeKey;
+      selectedNode.father = dropId;
       // 將當前id添加到目標節點children中
       targetNode.sortList.push(selectedNode._key);
       break;
     case 'up':
     case 'down':
-      addSibling(dragInfo.placement);
+      addSibling(placement);
       break;
     default:
       break;
@@ -478,10 +482,10 @@ function dragSort(map: NodeMap, selectedId: string, dragInfo: DragInfo) {
       // 將當前id添加到目標節點的父節點children中
       sortList.splice(
         type === 'down'
-          ? sortList.indexOf(dragInfo.targetNodeKey) + 1
-          : sortList.indexOf(dragInfo.targetNodeKey),
+          ? sortList.indexOf(dropId) + 1
+          : sortList.indexOf(dropId),
         0,
-        selectedId
+        dragId
       );
     } else {
       // 從選中節點的父節點的children中刪除當前id
@@ -500,10 +504,10 @@ function dragSort(map: NodeMap, selectedId: string, dragInfo: DragInfo) {
       let children2 = targetFather.sortList;
       children2.splice(
         type === 'down'
-          ? children2.indexOf(dragInfo.targetNodeKey) + 1
-          : children2.indexOf(dragInfo.targetNodeKey),
+          ? children2.indexOf(dropId) + 1
+          : children2.indexOf(dropId),
         0,
-        selectedId
+        dragId
       );
     }
   }
@@ -531,5 +535,5 @@ export {
   getHalfAnglePunctuationNum,
   getAlphabetNum,
   getNumberNum,
-  guid
+  guid,
 };
