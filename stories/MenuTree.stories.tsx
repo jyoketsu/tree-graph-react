@@ -16,7 +16,7 @@ const nodes = {
     checked: true,
 
     hour: 0.1,
-    limitDay: -23,
+    limitDay: new Date(new Date().setHours(0, 0, 0, 0)).getTime(),
   },
   '002': {
     _key: '002',
@@ -27,7 +27,7 @@ const nodes = {
     checked: true,
     disabled: true,
     hour: 0.1,
-    limitDay: -23,
+    limitDay: new Date(new Date().setHours(0, 0, 0, 0)).getTime(),
     icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
   },
   '003': {
@@ -39,7 +39,7 @@ const nodes = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
     icon: 'https://cdn-icare.qingtime.cn/favFolder.svg',
   },
   '004': {
@@ -51,7 +51,7 @@ const nodes = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '005': {
     _key: '005',
@@ -62,7 +62,7 @@ const nodes = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '006': {
     _key: '006',
@@ -74,7 +74,7 @@ const nodes = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '007': {
     _key: '007',
@@ -85,7 +85,7 @@ const nodes = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '008': {
     _key: '008',
@@ -96,7 +96,7 @@ const nodes = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '009': {
     _key: '009',
@@ -107,7 +107,7 @@ const nodes = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '010': {
     _key: '010',
@@ -118,7 +118,7 @@ const nodes = {
     checked: true,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '011': {
     _key: '011',
@@ -130,7 +130,7 @@ const nodes = {
     checked: true,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '012': {
     _key: '012',
@@ -141,7 +141,7 @@ const nodes = {
     checked: true,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '013': {
     _key: '013',
@@ -152,7 +152,7 @@ const nodes = {
     checked: true,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '014': {
     _key: '014',
@@ -163,7 +163,7 @@ const nodes = {
     checked: true,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '015': {
     _key: '015',
@@ -172,7 +172,7 @@ const nodes = {
     sortList: [],
     checked: true,
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
 };
 

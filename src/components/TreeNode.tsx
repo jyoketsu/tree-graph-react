@@ -12,6 +12,9 @@ interface setDragInfoFunc {
   (dragInfo: DragInfo): void;
 }
 
+// 今天零点的时间戳
+const now = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
+
 interface Props {
   node: CNode;
   startId: string;
@@ -95,6 +98,12 @@ Props) => {
   const [hoverPreview, setHoverPreview] = useState(false);
   const [hoverAdd, setHoverAdd] = useState(false);
   const [hoverMore, setHoverMore] = useState(false);
+
+  let limitDayNum = node.limitDay
+    ? node.limitDay - now >= 0
+      ? Math.floor((node.limitDay - now) / 86400000) + 1
+      : Math.floor((node.limitDay - now) / 86400000)
+    : 0;
 
   function handleMouseEnter(e: React.MouseEvent) {
     const crossCompDragId = sessionStorage.getItem('cross-comp-drag');
@@ -408,7 +417,7 @@ Props) => {
         >
           <use
             href={`#status${
-              node.limitDay && node.limitDay < 0
+              limitDayNum && limitDayNum < 0
                 ? node.checked
                   ? '-complete'
                   : '-overdue'
@@ -426,9 +435,9 @@ Props) => {
               style={{ userSelect: 'none' }}
             >
               {node.limitDay !== undefined
-                ? Math.abs(node.limitDay) > 99
+                ? Math.abs(limitDayNum) > 99
                   ? '99+'
-                  : Math.abs(node.limitDay)
+                  : Math.abs(limitDayNum)
                 : '-'}
             </text>
             <text

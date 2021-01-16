@@ -45,7 +45,7 @@ const nodes = {
     checked: true,
 
     hour: 0.1,
-    limitDay: -23,
+    limitDay: 1610726400000,
   },
   '002': {
     _key: '002',
@@ -57,7 +57,7 @@ const nodes = {
     checked: true,
 
     hour: 0.1,
-    limitDay: -23,
+    limitDay: 1610726400000,
     icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
   },
   '003': {
@@ -69,7 +69,7 @@ const nodes = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
     icon: 'https://cdn-icare.qingtime.cn/favFolder.svg',
   },
   '004': {
@@ -81,7 +81,7 @@ const nodes = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '005': {
     _key: '005',
@@ -92,7 +92,7 @@ const nodes = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '006': {
     _key: '006',
@@ -104,7 +104,7 @@ const nodes = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '007': {
     _key: '007',
@@ -115,7 +115,7 @@ const nodes = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '008': {
     _key: '008',
@@ -126,7 +126,7 @@ const nodes = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '009': {
     _key: '009',
@@ -137,7 +137,7 @@ const nodes = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '010': {
     _key: '010',
@@ -148,7 +148,7 @@ const nodes = {
     checked: true,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '011': {
     _key: '011',
@@ -160,7 +160,7 @@ const nodes = {
     checked: true,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '012': {
     _key: '012',
@@ -171,7 +171,7 @@ const nodes = {
     checked: true,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '013': {
     _key: '013',
@@ -182,7 +182,7 @@ const nodes = {
     checked: true,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '014': {
     _key: '014',
@@ -193,7 +193,7 @@ const nodes = {
     checked: true,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '015': {
     _key: '015',
@@ -204,7 +204,7 @@ const nodes = {
     checked: true,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
 };
 
@@ -419,22 +419,22 @@ interface DragInfo {
 
 ## Node Props
 
-| 屬性            | 說明                        | 類型    |
-| --------------- | --------------------------- | ------- |
-| \_key           | 節點 id                     | String  |
-| name            | 節點文本                    | String  |
-| father          | 父節點 id                   | String  |
-| sortList        | 子節點 id                   | Array   |
-| contract        | 是否收起子節點              | Boolean |
-| checked         | 是否勾選                    | Boolean |
-| avatarUri       | 頭像圖片地址                | String  |
-| icon            | 圖標圖片地址                | String  |
-| dotIcon         | 圓點圖標圖片地址            | String  |
-| color           | 節點字體顏色                | String  |
-| backgroundColor | 節點背景色                  | String  |
-| showCheckbox    | 是否顯示勾選框              | Boolean |
-| showStatus      | 是否顯示節點狀態            | Boolean |
+| 屬性            | 說明                        | 類型      |
+| --------------- | --------------------------- | --------- |
+| \_key           | 節點 id                     | String    |
+| name            | 節點文本                    | String    |
+| father          | 父節點 id                   | String    |
+| sortList        | 子節點 id                   | Array     |
+| contract        | 是否收起子節點              | Boolean   |
+| checked         | 是否勾選                    | Boolean   |
+| avatarUri       | 頭像圖片地址                | String    |
+| icon            | 圖標圖片地址                | String    |
+| dotIcon         | 圓點圖標圖片地址            | String    |
+| color           | 節點字體顏色                | String    |
+| backgroundColor | 節點背景色                  | String    |
+| showCheckbox    | 是否顯示勾選框              | Boolean   |
+| showStatus      | 是否顯示節點狀態            | Boolean   |
 | strikethrough   | 是否顯示刪除線｜ Boolean ｜ |
-| hour            | 節點（任務）工時            | Number  |
-| limitDay        | 節點（任務）剩余天數        | Number  |
+| hour            | 節點（任務）工時            | Number    |
+| limitDay        | 節點（任務）剩余天數        | timestamp |
 | disabled        | 是否禁用｜ Boolean ｜       |

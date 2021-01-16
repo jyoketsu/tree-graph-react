@@ -16,7 +16,7 @@ const App = () => {
       checked: true,
       showStatus: true,
       hour: 0.1,
-      limitDay: -23,
+      limitDay: 1610726400000,
     },
     '002': {
       _key: '002',
@@ -29,7 +29,7 @@ const App = () => {
       checked: true,
       showStatus: true,
       hour: 0.1,
-      limitDay: -23,
+      limitDay: 1610726400000,
     },
     '003': {
       _key: '003',
@@ -41,7 +41,7 @@ const App = () => {
       checked: false,
       showStatus: true,
       hour: 0.1,
-      limitDay: 2,
+      limitDay: 1610726400000,
     },
     '004': {
       _key: '004',
@@ -53,7 +53,7 @@ const App = () => {
       checked: false,
       showStatus: true,
       hour: 0.1,
-      limitDay: 2,
+      limitDay: 1610726400000,
     },
     '005': {
       _key: '005',
@@ -65,7 +65,7 @@ const App = () => {
       checked: false,
       showStatus: true,
       hour: 0.1,
-      limitDay: 2,
+      limitDay: 1610726400000,
     },
     '006': {
       _key: '006',
@@ -78,7 +78,7 @@ const App = () => {
       checked: false,
       showStatus: true,
       hour: 0.1,
-      limitDay: 2,
+      limitDay: 1610726400000,
     },
     '007': {
       _key: '007',
@@ -90,7 +90,7 @@ const App = () => {
       checked: false,
       showStatus: true,
       hour: 0.1,
-      limitDay: 2,
+      limitDay: 1610726400000,
     },
     '008': {
       _key: '008',
@@ -102,7 +102,7 @@ const App = () => {
       checked: false,
       showStatus: true,
       hour: 0.1,
-      limitDay: 2,
+      limitDay: 1610726400000,
     },
     '009': {
       _key: '009',
@@ -114,7 +114,7 @@ const App = () => {
       checked: false,
       showStatus: true,
       hour: 0.1,
-      limitDay: 2,
+      limitDay: 1610726400000,
     },
     '010': {
       _key: '010',
@@ -126,7 +126,7 @@ const App = () => {
       checked: true,
       showStatus: true,
       hour: 0.1,
-      limitDay: 2,
+      limitDay: 1610726400000,
     },
     '011': {
       _key: '011',
@@ -139,7 +139,7 @@ const App = () => {
       checked: true,
       showStatus: true,
       hour: 0.1,
-      limitDay: 2,
+      limitDay: 1610726400000,
     },
     '012': {
       _key: '012',
@@ -151,7 +151,7 @@ const App = () => {
       checked: true,
       showStatus: true,
       hour: 0.1,
-      limitDay: 2,
+      limitDay: 1610726400000,
     },
     '013': {
       _key: '013',
@@ -163,7 +163,7 @@ const App = () => {
       checked: true,
       showStatus: true,
       hour: 0.1,
-      limitDay: 2,
+      limitDay: 1610726400000,
     },
     '014': {
       _key: '014',
@@ -175,7 +175,7 @@ const App = () => {
       checked: true,
       showStatus: true,
       hour: 0.1,
-      limitDay: 2,
+      limitDay: 1610726400000,
     },
     '015': {
       _key: '015',
@@ -187,7 +187,7 @@ const App = () => {
       checked: true,
       showStatus: true,
       hour: 0.1,
-      limitDay: 2,
+      limitDay: 1610726400000,
     },
   };
   return (

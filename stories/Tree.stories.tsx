@@ -15,7 +15,9 @@ const nodes = {
     icon: 'https://cdn-icare.qingtime.cn/rooter.svg',
     checked: true,
     hour: 0.1,
-    limitDay: -23,
+    showCheckbox: true,
+    showStatus: true,
+    limitDay: new Date(new Date()).getTime(),
     disabled: true,
   },
   '002': {
@@ -28,7 +30,7 @@ const nodes = {
     showStatus: true,
     checked: true,
     hour: 0.1,
-    limitDay: -23,
+    limitDay: 1610812800111,
     disabled: true,
     icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
     dotIcon: 'https://cdn-icare.qingtime.cn/shareOut1.svg?v=1604893936765',
@@ -44,7 +46,7 @@ const nodes = {
     color: '#fff',
     backgroundColor: '#90B44B',
     hour: 0.1,
-    limitDay: 222,
+    limitDay: 1610899200000,
     icon: 'https://cdn-icare.qingtime.cn/favFolder.svg',
   },
   '004': {
@@ -56,7 +58,7 @@ const nodes = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '005': {
     _key: '005',
@@ -67,7 +69,7 @@ const nodes = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '006': {
     _key: '006',
@@ -79,7 +81,7 @@ const nodes = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '007': {
     _key: '007',
@@ -90,7 +92,7 @@ const nodes = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '008': {
     _key: '008',
@@ -101,7 +103,7 @@ const nodes = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '009': {
     _key: '009',
@@ -112,7 +114,7 @@ const nodes = {
     checked: false,
 
     hour: 11,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '010': {
     _key: '010',
@@ -124,7 +126,7 @@ const nodes = {
     showCheckbox: true,
     showStatus: true,
     hour: 0.1,
-    limitDay: -2,
+    limitDay: 1610640000333,
   },
   '011': {
     _key: '011',
@@ -135,7 +137,7 @@ const nodes = {
     strikethrough: true,
     checked: true,
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '012': {
     _key: '012',
@@ -146,7 +148,7 @@ const nodes = {
     checked: true,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '013': {
     _key: '013',
@@ -158,7 +160,7 @@ const nodes = {
     checked: true,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '014': {
     _key: '014',
@@ -169,7 +171,7 @@ const nodes = {
     checked: true,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '015': {
     _key: '015',
@@ -181,7 +183,7 @@ const nodes = {
     checked: true,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
 };
 
@@ -198,7 +200,7 @@ const nodes2 = {
     checked: true,
 
     hour: 0.1,
-    limitDay: -23,
+    limitDay: new Date(new Date().setHours(0, 0, 0, 0)).getTime(),
   },
   '002': {
     _key: '002',
@@ -210,7 +212,7 @@ const nodes2 = {
     checked: true,
 
     hour: 0.1,
-    limitDay: -23,
+    limitDay: new Date(new Date().setHours(0, 0, 0, 0)).getTime(),
   },
   '003': {
     _key: '003',
@@ -221,7 +223,7 @@ const nodes2 = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '004': {
     _key: '004',
@@ -232,7 +234,7 @@ const nodes2 = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '005': {
     _key: '005',
@@ -243,7 +245,7 @@ const nodes2 = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '006': {
     _key: '006',
@@ -255,7 +257,7 @@ const nodes2 = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '007': {
     _key: '007',
@@ -266,7 +268,7 @@ const nodes2 = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '008': {
     _key: '008',
@@ -277,7 +279,7 @@ const nodes2 = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '009': {
     _key: '009',
@@ -288,7 +290,7 @@ const nodes2 = {
     checked: false,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '010': {
     _key: '010',
@@ -299,7 +301,7 @@ const nodes2 = {
     checked: true,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '011': {
     _key: '011',
@@ -311,7 +313,7 @@ const nodes2 = {
     checked: true,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '012': {
     _key: '012',
@@ -322,7 +324,7 @@ const nodes2 = {
     checked: true,
 
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '013': {
     _key: '013',
@@ -331,7 +333,7 @@ const nodes2 = {
     sortList: [],
     checked: true,
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '014': {
     _key: '014',
@@ -340,7 +342,7 @@ const nodes2 = {
     sortList: [],
     checked: true,
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
   '015': {
     _key: '015',
@@ -349,7 +351,7 @@ const nodes2 = {
     sortList: [],
     checked: true,
     hour: 0.1,
-    limitDay: 2,
+    limitDay: 1610726400000,
   },
 };
 
