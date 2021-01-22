@@ -175,6 +175,7 @@ Props) => {
   }
 
   function handleClickAdd(event: React.MouseEvent) {
+    event.stopPropagation();
     clickAdd(node, event.clientX, event.clientY);
   }
 
