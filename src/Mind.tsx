@@ -950,12 +950,14 @@ export const Mind = React.forwardRef(
                 }}
                 bottomOptions={true}
               />
-              <Expand
-                node={node}
-                BLOCK_HEIGHT={BLOCK_HEIGHT}
-                handleClickExpand={() => handleExpand(node)}
-                position={node.toLeft ? 'left' : 'right'}
-              />
+              {selectedId === node._key || node.contract ? (
+                <Expand
+                  node={node}
+                  BLOCK_HEIGHT={BLOCK_HEIGHT}
+                  handleClickExpand={() => handleExpand(node)}
+                  position={node.toLeft ? 'left' : 'right'}
+                />
+              ) : null}
             </g>
           ))}
           {/* 拖拽用節點 */}
@@ -982,6 +984,8 @@ export const Mind = React.forwardRef(
             nodeList={cnodes}
             handleChangeNodeText={changeText}
             BLOCK_HEIGHT={BLOCK_HEIGHT}
+            showIcon={SHOW_ICON}
+            showAvatar={SHOW_AVATAR}
           />
         ) : null}
       </div>

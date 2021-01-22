@@ -8,7 +8,7 @@ interface Props {
   // openOptions: Function;
   dragStarted: boolean;
   position?: 'left' | 'right';
-  nodeHover?: boolean;
+  // nodeHover?: boolean;
 }
 
 // let timer: NodeJS.Timeout;
@@ -20,7 +20,7 @@ const Dot = ({
   // openOptions,
   dragStarted,
   position,
-  nodeHover,
+  // nodeHover,
 }: Props) => {
   const [hover, sethover] = useState(false);
   const pos = position ? position : 'left';
@@ -72,7 +72,7 @@ const Dot = ({
           r={9}
           fill="#c7cbd0"
           cursor="pointer"
-          fillOpacity={nodeHover ? 1 : 0}
+          fillOpacity={hover ? 1 : 0}
         />
       ) : null}
       {!node.dotIcon ? (
@@ -90,10 +90,10 @@ const Dot = ({
       {node.dotIcon ? (
         <image
           key="avatar-image"
-          x={getX() - (nodeHover ? 9 : 5)}
-          y={node.y + BLOCK_HEIGHT / 2 - (nodeHover ? 9 : 5)}
-          width={nodeHover ? 18 : 10}
-          height={nodeHover ? 18 : 10}
+          x={getX() - (hover ? 9 : 5)}
+          y={node.y + BLOCK_HEIGHT / 2 - (hover ? 9 : 5)}
+          width={hover ? 18 : 10}
+          height={hover ? 18 : 10}
           xlinkHref={node.dotIcon}
         />
       ) : null}

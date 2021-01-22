@@ -336,7 +336,7 @@ Props) => {
       <rect
         x={node.x}
         y={node.y + BLOCK_HEIGHT / 2 - (ITEM_HEIGHT * 0.9) / 2}
-        width={node.width + totalButtonWidth}
+        width={node.name ? node.width + totalButtonWidth : 100}
         height={ITEM_HEIGHT * 0.9}
         fillOpacity={0}
       />
@@ -463,8 +463,8 @@ Props) => {
         style={{
           fill: node.strikethrough
             ? '#999'
-            : nodeRectClassName === 'selected'
-            ? '#000000	'
+            : nodeRectClassName === 'selected' && !node.color
+            ? '#000000'
             : node.color
             ? node.color
             : '#595959',
@@ -534,7 +534,7 @@ Props) => {
           BLOCK_HEIGHT={BLOCK_HEIGHT}
           handleClick={handleClickDot}
           dragStarted={dragStarted}
-          nodeHover={hover}
+          // nodeHover={hover}
           position={node.toLeft ? 'right' : 'left'}
         />
       ) : null}

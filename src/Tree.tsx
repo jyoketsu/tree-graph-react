@@ -1082,16 +1082,18 @@ export const Tree = React.forwardRef(
                   if (handleMouseLeaveAvatar) handleMouseLeaveAvatar(node);
                 }}
               />
-              <Expand
-                node={node}
-                BLOCK_HEIGHT={BLOCK_HEIGHT}
-                handleClickExpand={() => handleExpand(node)}
-                position={
-                  node._key === startId && !singleColumn
-                    ? 'bottomCenter'
-                    : 'leftBottom'
-                }
-              />
+              {selectedId === node._key || node.contract ? (
+                <Expand
+                  node={node}
+                  BLOCK_HEIGHT={BLOCK_HEIGHT}
+                  handleClickExpand={() => handleExpand(node)}
+                  position={
+                    node._key === startId && !singleColumn
+                      ? 'bottomCenter'
+                      : 'leftBottom'
+                  }
+                />
+              ) : null}
             </g>
           ))}
           {/* 拖拽用節點 */}
@@ -1118,6 +1120,8 @@ export const Tree = React.forwardRef(
             nodeList={cnodes}
             handleChangeNodeText={changeText}
             BLOCK_HEIGHT={BLOCK_HEIGHT}
+            showIcon={SHOW_ICON}
+            showAvatar={SHOW_AVATAR}
           />
         ) : null}
 

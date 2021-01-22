@@ -153,7 +153,7 @@ function getNodeWidth(
     // width.halfAnglePunctuationWidth * punctuation +
     // width.alphabetWidth * alphabet +
     // width.numberWidth * number +
-    width + paddingWidth + extInfoWidth
+    (width || 100) + paddingWidth + extInfoWidth
   );
 }
 
@@ -516,6 +516,7 @@ function dragSort(
 export {
   findNodeById,
   textWidth,
+  textWidthAll,
   getNodeWidth,
   getShortedStr,
   getExtInfoWidth,
