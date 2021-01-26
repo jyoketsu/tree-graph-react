@@ -67,6 +67,7 @@ export interface TreeProps {
   // nodeOptions?: any;
   showIcon?: boolean;
   showAvatar?: boolean;
+  hideHour?: boolean;
   handleClickExpand?: Function;
   handleCheck?: Function;
   handleClickAvatar?: Function;
@@ -119,6 +120,7 @@ export const Tree = React.forwardRef(
       // nodeOptions,
       showIcon,
       showAvatar,
+      hideHour,
       handleClickExpand,
       handleCheck,
       handleClickAvatar,
@@ -867,8 +869,8 @@ export const Tree = React.forwardRef(
               viewBox="0,0,22,22"
               preserveAspectRatio="xMinYMin meet"
             >
-              <path d="M0 0 H 11 L 22 11 V 22 H 0 Z" fill="rgb(85, 85, 85)" />
-              <path d="M 11 0 H 22 V 11 Z" fill="rgb(53, 166, 248)" />
+              <path d="M0 0 L 22 22 H 0 Z" fill="rgb(85, 85, 85)" />
+              <path d="M 0 0 H 22 V 22 Z" fill="rgb(53, 166, 248)" />
             </g>
             <g
               id="status-overdue"
@@ -877,8 +879,8 @@ export const Tree = React.forwardRef(
               viewBox="0,0,22,22"
               preserveAspectRatio="xMinYMin meet"
             >
-              <path d="M0 0 H 11 L 22 11 V 22 H 0 Z" fill="rgb(221, 53, 53)" />
-              <path d="M 11 0 H 22 V 11 Z" fill="rgb(53, 166, 248)" />
+              <path d="M0 0 L 22 22 H 0 Z" fill="rgb(221, 53, 53)" />
+              <path d="M 0 0 H 22 V 22 Z" fill="rgb(53, 166, 248)" />
             </g>
             <g
               id="status-complete"
@@ -887,9 +889,50 @@ export const Tree = React.forwardRef(
               viewBox="0,0,22,22"
               preserveAspectRatio="xMinYMin meet"
             >
-              <path d="M0 0 H 11 L 22 11 V 22 H 0 Z" fill="#417505" />
-              <path d="M 11 0 H 22 V 11 Z" fill="rgb(53, 166, 248)" />
+              <path d="M0 0 L 22 22 H 0 Z" fill="#417505" />
+              <path d="M 0 0 H 22 V 22 Z" fill="rgb(53, 166, 248)" />
             </g>
+
+            <g
+              id="status-onlyday"
+              width="22"
+              height="22"
+              viewBox="0,0,22,22"
+              preserveAspectRatio="xMinYMin meet"
+            >
+              <rect
+                x="0"
+                y="0"
+                width="22"
+                height="22"
+                fill="rgb(85, 85, 85)"
+              ></rect>
+            </g>
+            <g
+              id="status-onlyday-overdue"
+              width="22"
+              height="22"
+              viewBox="0,0,22,22"
+              preserveAspectRatio="xMinYMin meet"
+            >
+              <rect
+                x="0"
+                y="0"
+                width="22"
+                height="22"
+                fill="rgb(221, 53, 53)"
+              ></rect>
+            </g>
+            <g
+              id="status-onlyday-complete"
+              width="22"
+              height="22"
+              viewBox="0,0,22,22"
+              preserveAspectRatio="xMinYMin meet"
+            >
+              <rect x="0" y="0" width="22" height="22" fill="#417505"></rect>
+            </g>
+
             <symbol
               id="preview"
               width="200"
@@ -1081,6 +1124,7 @@ export const Tree = React.forwardRef(
                 mouseLeaveAvatar={(node: CNode) => {
                   if (handleMouseLeaveAvatar) handleMouseLeaveAvatar(node);
                 }}
+                hideHour={hideHour}
               />
               {selectedId === node._key || node.contract ? (
                 <Expand

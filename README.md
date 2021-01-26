@@ -287,6 +287,7 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | handleSave               | 保存樹                                               | Function | 否       | -      |
 | handleDrag               | 拖拽節點,參數：dragInfo                              | Function | 否       | -      |
 | handlePaste              | 複製節點：參數：pasteNodeKey,pasteType,targetNodeKey | Function | 否       | -      |
+| hideHour                 | 隱藏任務小時數                                       | boolean | 否       | -      |
 
 ```javascript
 interface DragInfo {
@@ -416,6 +417,7 @@ interface DragInfo {
 | handleSave               | 保存樹                                               | Function | 否       | -      |
 | handleDrag               | 拖拽節點,參數：dragInfo                              | Function | 否       | -      |
 | handlePaste              | 複製節點：參數：pasteNodeKey,pasteType,targetNodeKey | Function | 否       | -      |
+| hideHour                 | 隱藏任務小時數                                       | boolean | 否       | -      |
 
 ## Node Props
 

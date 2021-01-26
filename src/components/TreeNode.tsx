@@ -49,6 +49,7 @@ interface Props {
   dragEndFromOutside?: Function;
   pasteNodeKey: string | null;
   bottomOptions?: boolean;
+  hideHour?: boolean;
 }
 
 // let timer: NodeJS.Timeout;
@@ -86,6 +87,7 @@ const TreeNode = ({
   mouseLeaveAvatar,
   pasteNodeKey,
   bottomOptions,
+  hideHour,
 }: // nodeOptionsOpened,
 Props) => {
   const [hover, sethover] = useState(false);
@@ -416,21 +418,47 @@ Props) => {
         <g
           onClick={(event: React.MouseEvent) => handleClickStatus(node, event)}
         >
-          <use
-            href={`#status${
-              limitDayNum && limitDayNum < 0
-                ? node.checked
-                  ? '-complete'
-                  : '-overdue'
-                : ''
-            }`}
-            x={statusLocationRes?.x}
-            y={statusLocationRes?.y}
-          />
+          {!hideHour ? (
+            <use
+              href={`#status${
+                limitDayNum && limitDayNum < 0
+                  ? node.checked
+                    ? '-complete'
+                    : '-overdue'
+                  : ''
+              }`}
+              x={statusLocationRes?.x}
+              y={statusLocationRes?.y}
+            />
+          ) : (
+            <use
+              href={`#status-onlyday${
+                limitDayNum && limitDayNum < 0
+                  ? node.checked
+                    ? '-complete'
+                    : '-overdue'
+                  : ''
+              }`}
+              x={statusLocationRes?.x}
+              y={statusLocationRes?.y}
+            />
+          )}
           <g fill="#fff" textAnchor="middle" dominantBaseline="middle">
             <text
-              x={statusLocationRes ? statusLocationRes.x + 11 : 0}
-              y={statusLocationRes ? statusLocationRes.y + 13 : 0}
+              x={
+                statusLocationRes
+                  ? !hideHour
+                    ? statusLocationRes.x + 6
+                    : statusLocationRes.x + 11
+                  : 0
+              }
+              y={
+                statusLocationRes
+                  ? !hideHour
+                    ? statusLocationRes.y + 15
+                    : statusLocationRes.y + 11
+                  : 0
+              }
               fontSize="10"
               fontWeight="800"
               style={{ userSelect: 'none' }}
@@ -441,15 +469,17 @@ Props) => {
                   : Math.abs(limitDayNum)
                 : '-'}
             </text>
-            <text
-              x={statusLocationRes ? statusLocationRes.x + 18 : 0}
-              y={statusLocationRes ? statusLocationRes.y + 5 : 0}
-              fontSize="6"
-              fontWeight="800"
-              style={{ userSelect: 'none' }}
-            >
-              {node.hour ? (node.hour > 9 ? '9+' : node.hour) : '-'}
-            </text>
+            {!hideHour ? (
+              <text
+                x={statusLocationRes ? statusLocationRes.x + 15 : 0}
+                y={statusLocationRes ? statusLocationRes.y + 6 : 0}
+                fontSize="8"
+                fontWeight="800"
+                style={{ userSelect: 'none' }}
+              >
+                {node.hour ? (node.hour > 9 ? '9+' : node.hour) : '-'}
+              </text>
+            ) : null}
           </g>
         </g>
       ) : null}
