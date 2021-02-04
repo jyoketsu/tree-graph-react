@@ -29,6 +29,8 @@ export interface MenuProps {
   selectedBackgroundColor?: string;
   // 字体颜色
   color?: string;
+  // 选中的字体颜色
+  selectedColor?: string;
   hoverColor?: string;
   cutColor?: string;
   // 选中节点id
@@ -71,6 +73,7 @@ export const MenuTree = React.forwardRef(
       backgroundColor,
       selectedBackgroundColor,
       color,
+      selectedColor,
       hoverColor,
       cutColor,
       defaultSelectedId,
@@ -465,6 +468,7 @@ export const MenuTree = React.forwardRef(
             FONT_SIZE={FONT_SIZE}
             selectedBackgroundColor={selectedBackgroundColor || '#00CDD3'}
             color={color || '#CDD0D2'}
+            selectedColor={selectedColor || '#FFF'}
             hoverColor={hoverColor || '#FFF'}
             selected={selectedId}
             showIcon={SHOW_ICON}

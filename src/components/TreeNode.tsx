@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import CNode from '../interfaces/CNode';
 import Dot from '../components/Dot';
+import Expand from '../components/Expand';
 import DragInfo from '../interfaces/DragInfo';
 import { nodeLocation } from '../services/util';
 
@@ -29,6 +30,7 @@ interface Props {
   moreButtonWidth?: number;
   showIcon: boolean;
   showAvatar: boolean;
+  singleColumn?: boolean;
   hideBorder?: boolean;
   handleCheck: CheckFunc;
   handleClickAvatar: Function;
@@ -39,6 +41,7 @@ interface Props {
   clickAdd: Function;
   clickMore: Function;
   handleClickDot: Function;
+  handleExpand: Function;
   mouseEnterAvatar?: Function;
   mouseLeaveAvatar?: Function;
   // nodeOptionsOpened: boolean;
@@ -64,6 +67,7 @@ const TreeNode = ({
   selected,
   showIcon,
   showAvatar,
+  singleColumn,
   hideBorder,
   showPreviewButton,
   showAddButton,
@@ -82,6 +86,7 @@ const TreeNode = ({
   dragStarted,
   // openOptions,
   handleClickDot,
+  handleExpand,
   dragEndFromOutside,
   mouseEnterAvatar,
   mouseLeaveAvatar,
@@ -338,9 +343,9 @@ Props) => {
       {/* 隱式外框，用戶擴大鼠標感應面積 */}
       <rect
         x={node.x}
-        y={node.y + BLOCK_HEIGHT / 2 - (ITEM_HEIGHT * 0.9) / 2}
+        y={node.y}
         width={node.name ? node.width + totalButtonWidth : 100}
-        height={ITEM_HEIGHT * 0.9}
+        height={ITEM_HEIGHT}
         fillOpacity={0}
       />
       {/* 顯式外框 */}
@@ -567,6 +572,19 @@ Props) => {
           dragStarted={dragStarted}
           // nodeHover={hover}
           position={node.toLeft ? 'right' : 'left'}
+        />
+      ) : null}
+
+      {hover || selected === node._key || node.contract ? (
+        <Expand
+          node={node}
+          BLOCK_HEIGHT={BLOCK_HEIGHT}
+          handleClickExpand={() => handleExpand(node)}
+          position={
+            node._key === startId && !singleColumn
+              ? 'bottomCenter'
+              : 'leftBottom'
+          }
         />
       ) : null}
 

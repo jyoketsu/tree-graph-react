@@ -97,7 +97,7 @@ const CatalogItem = ({
           textOverflow: 'ellipsis',
         }}
       >
-        {node.name || ''}
+        {node ? node.name || '' : ''}
       </span>
       <div
         style={{

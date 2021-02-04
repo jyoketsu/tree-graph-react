@@ -3,7 +3,6 @@ import NodeMap from './interfaces/NodeMap';
 import CNode from './interfaces/CNode';
 import DragInfo from './interfaces/DragInfo';
 import TreeNode from './components/TreeNode';
-import Expand from './components/Expand';
 import NodeInput from './components/NodeInput';
 // import NodeOptions from './components/NodeOptions';
 import DragNode from './components/DragNode';
@@ -1090,6 +1089,7 @@ export const Tree = React.forwardRef(
                 startId={startId}
                 alias={new Date().getTime()}
                 selected={selectedId}
+                singleColumn={singleColumn}
                 pasteNodeKey={pasteType === 'cut' ? pasteNodeKey : null}
                 showIcon={SHOW_ICON}
                 showAvatar={SHOW_AVATAR}
@@ -1106,6 +1106,7 @@ export const Tree = React.forwardRef(
                 //     : false
                 // }
                 handleClickDot={clickDot}
+                handleExpand={handleExpand}
                 handleCheck={check}
                 handleClickAvatar={clickAvatar}
                 handleClickStatus={clickStatus}
@@ -1126,18 +1127,6 @@ export const Tree = React.forwardRef(
                 }}
                 hideHour={hideHour}
               />
-              {selectedId === node._key || node.contract ? (
-                <Expand
-                  node={node}
-                  BLOCK_HEIGHT={BLOCK_HEIGHT}
-                  handleClickExpand={() => handleExpand(node)}
-                  position={
-                    node._key === startId && !singleColumn
-                      ? 'bottomCenter'
-                      : 'leftBottom'
-                  }
-                />
-              ) : null}
             </g>
           ))}
           {/* 拖拽用節點 */}
