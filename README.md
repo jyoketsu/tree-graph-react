@@ -287,7 +287,7 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | handleSave               | 保存樹                                               | Function | 否       | -      |
 | handleDrag               | 拖拽節點,參數：dragInfo                              | Function | 否       | -      |
 | handlePaste              | 複製節點：參數：pasteNodeKey,pasteType,targetNodeKey | Function | 否       | -      |
-| hideHour                 | 隱藏任務小時數                                       | boolean | 否       | -      |
+| hideHour                 | 隱藏任務小時數                                       | boolean  | 否       | -      |
 
 ```javascript
 interface DragInfo {
@@ -306,6 +306,7 @@ interface DragInfo {
 | backgroundColor         | 菜單背景色                              | string   | 否       | #333333               |
 | selectedBackgroundColor | 選中的菜單背景色                        | string   | 否       | #00CDD3               |
 | color                   | 文字顏色                                | string   | 否       | #CDD0D2               |
+| selectedColor           | 選中文字顏色                            | string   | 否       | #FFF                  |
 | hoverColor              | hover 文字顏色                          | string   | 否       | #FFFFFF               |
 | cutColor                | 剪切後文字顏色                          | string   | 否       | rgba(255,255,255,0.5) |
 | defaultSelectedId       | 選中的節點 id                           | String   | 是       | -                     |
@@ -417,7 +418,7 @@ interface DragInfo {
 | handleSave               | 保存樹                                               | Function | 否       | -      |
 | handleDrag               | 拖拽節點,參數：dragInfo                              | Function | 否       | -      |
 | handlePaste              | 複製節點：參數：pasteNodeKey,pasteType,targetNodeKey | Function | 否       | -      |
-| hideHour                 | 隱藏任務小時數                                       | boolean | 否       | -      |
+| hideHour                 | 隱藏任務小時數                                       | boolean  | 否       | -      |
 
 ## Node Props
 
