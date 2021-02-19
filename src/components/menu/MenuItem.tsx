@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import CNode from '../../interfaces/CNode';
 import { ClickOutside } from '@jyoketsu/click-outside-react';
+import { textWidthAll } from '../../services/util';
 
 interface Props {
   node: CNode;
@@ -119,8 +120,42 @@ const TreeNode = ({
   function handleDragEnd() {
     setDragStarted(false);
   }
+  function handleClickLink(type: string, url: string) {
+    if (type === 'link') {
+      if (url.includes('http')) {
+        window.open(url, '_blank');
+      } else {
+        window.open(`http://${url}`, '_blank');
+      }
+    }
+  }
 
   const nodeRectClassName = rectClassName(node);
+
+  const urlReg = /(http:\/\/+\w+\.+[\w\/|]{1,})|(https:\/\/+\w+\.+[\w\/|]{1,})|(\w+\.+[\w\/|]{1,})/g;
+  let nameLinkArr = [];
+  if (urlReg.test(node.name)) {
+    const arr1 = node.name
+      .split(urlReg)
+      .filter(str => str !== '' && str !== undefined);
+
+    let marginLeft = 0;
+    if (arr1 && arr1.length) {
+      for (let index = 0; index < arr1.length; index++) {
+        let name = arr1[index];
+        if (index !== 0) {
+          marginLeft += textWidthAll(FONT_SIZE, arr1[index - 1]);
+        }
+        let type = urlReg.test(name) ? 'link' : 'text';
+
+        nameLinkArr.push({
+          text: name,
+          type,
+          marginLeft,
+        });
+      }
+    }
+  }
 
   return node.x && node.y ? (
     <div
@@ -215,6 +250,37 @@ const TreeNode = ({
             onContextMenu={(e: React.MouseEvent) => e.stopPropagation()}
           />
         </ClickOutside>
+      ) : nameLinkArr.length ? (
+        <span
+          style={{
+            fontSize: `${FONT_SIZE}px`,
+            fontFamily: "'Microsoft YaHei', sans-serif",
+            overflow: 'hidden',
+            whiteSpace: 'nowrap',
+            textOverflow: 'ellipsis',
+            display: 'flex',
+          }}
+        >
+          {nameLinkArr.map((name, index) => (
+            <span
+              key={index}
+              style={{
+                color:
+                  pasteNodeKey === node._key
+                    ? cutColor
+                    : nodeRectClassName === 'selected'
+                    ? selectedColor
+                    : hover
+                    ? hoverColor
+                    : color,
+                textDecoration: name.type === 'link' ? 'underline' : 'unset',
+              }}
+              onClick={() => handleClickLink(name.type, name.text)}
+            >
+              {name.text || ''}
+            </span>
+          ))}
+        </span>
       ) : (
         <span
           style={{

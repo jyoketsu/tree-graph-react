@@ -22,7 +22,7 @@ const nodes = {
   },
   '002': {
     _key: '002',
-    name: '計劃進度',
+    name: '链接地址是http://jyoketsu.com和psnine.com/gene还有playstation.com',
     father: '001',
     sortList: ['006', '007'],
     contract: false,
@@ -31,7 +31,7 @@ const nodes = {
     checked: true,
     hour: 0.1,
     limitDay: 1610812800111,
-    disabled: true,
+    // disabled: true,
     icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
     dotIcon: 'https://cdn-icare.qingtime.cn/shareOut1.svg?v=1604893936765',
   },

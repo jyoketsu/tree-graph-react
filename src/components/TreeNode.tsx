@@ -3,7 +3,7 @@ import CNode from '../interfaces/CNode';
 import Dot from '../components/Dot';
 import Expand from '../components/Expand';
 import DragInfo from '../interfaces/DragInfo';
-import { nodeLocation } from '../services/util';
+import { nodeLocation, textWidthAll } from '../services/util';
 
 interface CheckFunc {
   (node: CNode, event: MouseEvent): void;
@@ -242,6 +242,16 @@ Props) => {
     return nodeLocation(node, type, BLOCK_HEIGHT, showIcon, showAvatar);
   }
 
+  function handleClickLink(type: string, url: string) {
+    if (type === 'link') {
+      if (url.includes('http')) {
+        window.open(url, '_blank');
+      } else {
+        window.open(`http://${url}`, '_blank');
+      }
+    }
+  }
+
   const textLocationRes = location(node, 'text');
   const circleLocationRes = location(node, 'avatar');
   const checkLocationRes = location(node, 'checkbox');
@@ -251,6 +261,63 @@ Props) => {
   const nodeRectClassName = rectClassName(node);
 
   const backgroundColor = node.backgroundColor ? node.backgroundColor : '#FFF';
+
+  // const urlReg = /\w+\.+[\w\/|]{1,}/g;
+  const urlReg = /(http:\/\/+\w+\.+[\w\/|]{1,})|(https:\/\/+\w+\.+[\w\/|]{1,})|(\w+\.+[\w\/|]{1,})/g;
+  let nameLinkArr = [];
+  if (urlReg.test(node.name)) {
+    const arr1 = node.name
+      .split(urlReg)
+      .filter(str => str !== '' && str !== undefined);
+
+    let marginLeft = 0;
+    let count = 0;
+    if (arr1 && arr1.length) {
+      for (let index = 0; index < arr1.length; index++) {
+        let name = arr1[index];
+        if (index !== 0) {
+          marginLeft += textWidthAll(FONT_SIZE, arr1[index - 1]);
+        }
+        let type = urlReg.test(name) ? 'link' : 'text';
+
+        let shortedName = '';
+        if (node.shorted) {
+          for (let index = 0; index < name.length; index++) {
+            if (count < 28) {
+              const char = name[index];
+              // 全角
+              if (char.match(/[^\x00-\xff]/g)) {
+                count++;
+              } else {
+                count += 0.5;
+              }
+              shortedName += char;
+            } else {
+              break;
+            }
+          }
+          if (count >= 28) {
+            shortedName = `${shortedName}...`;
+          }
+        }
+        if (count >= 28) {
+          nameLinkArr.push({
+            text: name,
+            shortedName,
+            type,
+            marginLeft,
+          });
+          break;
+        } else {
+          nameLinkArr.push({
+            text: name,
+            type,
+            marginLeft,
+          });
+        }
+      }
+    }
+  }
 
   let nodeRectStyle = {};
   if ((dragStarted && hover) || dragIn) {
@@ -490,32 +557,69 @@ Props) => {
       ) : null}
 
       {/* 文字 */}
-      <text
-        className={`node-text ${selected === node._key ? 'selected' : ''}`}
-        x={textLocationRes?.x}
-        y={textLocationRes?.y}
-        dominantBaseline="middle"
-        fontSize={FONT_SIZE}
-        style={{
-          fill: node.strikethrough
-            ? '#999'
-            : nodeRectClassName === 'selected' && !node.color
-            ? '#000000'
-            : node.color
-            ? node.color
-            : '#595959',
-          fillOpacity: pasteNodeKey && pasteNodeKey === node._key ? 0.4 : 1,
-          fontFamily: "'Microsoft YaHei', sans-serif",
-          userSelect: 'none',
-          textDecoration: node.strikethrough ? 'line-through' : 'unset',
-        }}
-        onDragEnter={handleDragEnter}
-        onDragLeave={handleDragLeave}
-        onDragOver={handleDragOver}
-        onDrop={handleDragEnd}
-      >
-        {node.shorted || node.name || ''}
-      </text>
+      {nameLinkArr.length ? (
+        nameLinkArr.map((name, index) => (
+          <text
+            key={index}
+            className={`node-text ${selected === node._key ? 'selected' : ''}`}
+            x={textLocationRes ? textLocationRes.x + name.marginLeft : 0}
+            y={textLocationRes?.y}
+            dominantBaseline="middle"
+            fontSize={FONT_SIZE}
+            style={{
+              fill:
+                name.type === 'link'
+                  ? '#35a6f8'
+                  : node.strikethrough
+                  ? '#999'
+                  : nodeRectClassName === 'selected' && !node.color
+                  ? '#000000'
+                  : node.color
+                  ? node.color
+                  : '#595959',
+              fillOpacity: pasteNodeKey && pasteNodeKey === node._key ? 0.4 : 1,
+              fontFamily: "'Microsoft YaHei', sans-serif",
+              userSelect: 'none',
+              textDecoration: node.strikethrough ? 'line-through' : 'unset',
+              cursor: name.type === 'link' ? 'pointer' : 'auto',
+            }}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDragOver={handleDragOver}
+            onDrop={handleDragEnd}
+            onClick={() => handleClickLink(name.type, name.text)}
+          >
+            {name.shortedName || name.text}
+          </text>
+        ))
+      ) : (
+        <text
+          className={`node-text ${selected === node._key ? 'selected' : ''}`}
+          x={textLocationRes?.x}
+          y={textLocationRes?.y}
+          dominantBaseline="middle"
+          fontSize={FONT_SIZE}
+          style={{
+            fill: node.strikethrough
+              ? '#999'
+              : nodeRectClassName === 'selected' && !node.color
+              ? '#000000'
+              : node.color
+              ? node.color
+              : '#595959',
+            fillOpacity: pasteNodeKey && pasteNodeKey === node._key ? 0.4 : 1,
+            fontFamily: "'Microsoft YaHei', sans-serif",
+            userSelect: 'none',
+            textDecoration: node.strikethrough ? 'line-through' : 'unset',
+          }}
+          onDragEnter={handleDragEnter}
+          onDragLeave={handleDragLeave}
+          onDragOver={handleDragOver}
+          onDrop={handleDragEnd}
+        >
+          {node.shorted || node.name || ''}
+        </text>
+      )}
 
       {hover && !dragStarted ? (
         // || nodeOptionsOpened

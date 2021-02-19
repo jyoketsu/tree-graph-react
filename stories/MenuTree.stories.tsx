@@ -20,7 +20,7 @@ const nodes = {
   },
   '002': {
     _key: '002',
-    name: '計劃進度',
+    name: '链接地址是http://jyoketsu.com和psnine.com/gene还有playstation.com',
     father: '001',
     sortList: ['006', '007'],
     contract: false,
