@@ -1,4 +1,4 @@
-import { getNodeWidth, getShortedStr } from './util';
+import { getNodeWidth, getShortedStr, getAncestor } from './util';
 import Node from '../interfaces/Node';
 import CNode from '../interfaces/CNode';
 import NodeMap from '../interfaces/NodeMap';
@@ -14,7 +14,9 @@ export default function calculate(
   showAvatar: boolean,
   startX?: number,
   startY?: number,
-  columnSpacing?: number
+  columnSpacing?: number,
+  collapseMode?: boolean,
+  expandedNodeKey?: string | null
 ) {
   nodes = JSON.parse(JSON.stringify(nodes));
   // 根节点
@@ -39,6 +41,11 @@ export default function calculate(
   let SECOND_END_NODE_ID: string | undefined;
 
   let nodeList: CNode[] = [];
+
+  let ancestorList: string[] = [];
+  if (collapseMode && expandedNodeKey && nodes[expandedNodeKey]) {
+    ancestorList = getAncestor(nodes[expandedNodeKey], nodes, true);
+  }
 
   // 多列视图
   if (!isSingle) {
@@ -141,7 +148,20 @@ export default function calculate(
       second_end_x = node.x + nodeWidth / 2;
     }
 
-    if (!node.contract) {
+    let collapsed;
+    if (collapseMode) {
+      if (node._key === startId) {
+        collapsed = node.contract;
+      } else if (expandedNodeKey && ancestorList.includes(node._key)) {
+        collapsed = node.contract;
+      } else {
+        collapsed = true;
+      }
+    } else {
+      collapsed = node.contract;
+    }
+
+    if (!collapsed) {
       // 遍历子节点
       for (let index = 0; index < childrenIds.length; index++) {
         const element = nodes[childrenIds[index]];

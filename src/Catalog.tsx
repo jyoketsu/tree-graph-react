@@ -33,6 +33,7 @@ export interface CatalogProps {
   handleClickNode?: Function;
   info?: ReactElement;
   itemInfoMap?: ItemInfoMap;
+  hideTitle?: boolean;
 }
 export const Catalog = ({
   nodes,
@@ -48,6 +49,7 @@ export const Catalog = ({
   handleClickNode,
   info,
   itemInfoMap,
+  hideTitle,
 }: CatalogProps) => {
   const ITEM_HEIGHT = itemHeight || 32;
   const BLOCK_HEIGHT = blockHeight || 30;
@@ -103,16 +105,18 @@ export const Catalog = ({
         backgroundColor: backgroundColor || 'unset',
       }}
     >
-      <div
-        style={{
-          fontSize: `${titleFontSize || 24}px`,
-          width: '100%',
-          textAlign: 'center',
-          margin: '25px 0',
-        }}
-      >
-        {nodeMap[startId].name}
-      </div>
+      {!hideTitle ? (
+        <div
+          style={{
+            fontSize: `${titleFontSize || 24}px`,
+            width: '100%',
+            textAlign: 'center',
+            margin: '25px 0',
+          }}
+        >
+          {nodeMap[startId].name}
+        </div>
+      ) : null}
       {info ? <div style={{ width: '100%' }}>{info}</div> : null}
       {cnodes.map((node, index) =>
         node._key !== startId ? (

@@ -13,6 +13,7 @@ import {
   pasteNode,
   dragSort,
   guid,
+  getAncestor,
 } from './services/util';
 import DragInfo from './interfaces/DragInfo';
 
@@ -54,6 +55,7 @@ export interface MenuProps {
   showIcon?: boolean;
   handleClickExpand?: Function;
   handleClickNode?: Function;
+  handleClickIcon?: Function;
   handleDbClickNode?: Function;
   handleChangeNodeText?: Function;
   handleAddNext?: Function;
@@ -64,6 +66,7 @@ export interface MenuProps {
   handlePaste?: Function;
   handleDrag?: Function;
   ref?: any;
+  collapseMode?: boolean;
 }
 export const MenuTree = React.forwardRef(
   (
@@ -89,6 +92,7 @@ export const MenuTree = React.forwardRef(
       handleClickExpand,
       handleClickNode,
       handleDbClickNode,
+      handleClickIcon,
       handleChangeNodeText,
       handleAddNext,
       handleAddChild,
@@ -97,6 +101,7 @@ export const MenuTree = React.forwardRef(
       handleShiftUpDown,
       handlePaste,
       handleDrag,
+      collapseMode,
     }: MenuProps,
     ref
   ) => {
@@ -126,6 +131,9 @@ export const MenuTree = React.forwardRef(
     const [compId, setCompId] = useState('');
 
     const containerRef = useRef<HTMLDivElement>(null);
+
+    const [expandedNodeKey, setExpandedNodeKey] = useState<string | null>(null);
+    const [ancestorList, setAncestorList] = useState<string[]>([]);
 
     // 暴露方法
     useImperativeHandle(ref, () => ({
@@ -162,14 +170,26 @@ export const MenuTree = React.forwardRef(
         INDENT,
         FONT_SIZE,
         SHOW_ICON,
-        false
+        false,
+        undefined,
+        undefined,
+        undefined,
+        collapseMode,
+        expandedNodeKey
       );
 
       if (cal) {
         cal.nodes.sort((a, b) => a.y - b.y);
         setcnodes(cal.nodes);
       }
-    }, [nodeMap, startId]);
+    }, [nodeMap, startId, expandedNodeKey]);
+
+    useEffect(() => {
+      if (collapseMode && expandedNodeKey && nodeMap[expandedNodeKey]) {
+        const ancestorList = getAncestor(nodes[expandedNodeKey], nodes, true);
+        setAncestorList(ancestorList);
+      }
+    }, [nodeMap, expandedNodeKey]);
 
     useEffect(() => {
       if (defaultSelectedId) {
@@ -203,12 +223,25 @@ export const MenuTree = React.forwardRef(
 
     // 展开/收起节点
     function handleExpand(node: CNode) {
-      if (UNCONTROLLED) {
-        let nodes = dot(nodeMap, node._key);
-        setNodeMap(nodes);
+      if (collapseMode) {
+        setExpandedNodeKey(node._key);
+        if (handleClickExpand && node.contract) {
+          handleClickExpand(node);
+        }
+      } else {
+        if (UNCONTROLLED) {
+          let nodes = dot(nodeMap, node._key);
+          setNodeMap(nodes);
+        }
+        if (handleClickExpand) {
+          handleClickExpand(node);
+        }
       }
-      if (handleClickExpand) {
-        handleClickExpand(node);
+    }
+
+    function clickIcon(node: CNode) {
+      if (handleClickIcon) {
+        handleClickIcon(node);
       }
     }
 
@@ -462,6 +495,7 @@ export const MenuTree = React.forwardRef(
         {cnodes.map((node, index) => (
           <MenuItem
             key={`${index}_${node._key}`}
+            startId={startId}
             indent={INDENT}
             node={node}
             BLOCK_HEIGHT={BLOCK_HEIGHT}
@@ -482,8 +516,17 @@ export const MenuTree = React.forwardRef(
             handleClickExpand={handleExpand}
             showInput={(showInput || showNewInput) && selectedId === node._key}
             handleChangeNodeText={changeText}
+            handleClickIcon={clickIcon}
             handleDrop={handleDrop}
             compId={compId}
+            collapseMode={collapseMode}
+            collapseModeCollapsed={
+              collapseMode
+                ? expandedNodeKey
+                  ? !ancestorList.includes(node._key)
+                  : true
+                : undefined
+            }
           />
         ))}
       </div>

@@ -20,7 +20,7 @@ const nodes = {
   },
   '002': {
     _key: '002',
-    name: '链接地址是http://jyoketsu.com和psnine.com/gene还有playstation.com',
+    name: '链接地址是http://jyoketsu.com和http://psnine.com/psnid/jyoketsu3还有playstation.com',
     father: '001',
     sortList: ['006', '007'],
     contract: false,
@@ -200,7 +200,8 @@ Default.args = {
   nodes: nodes,
   startId: '001',
   showMoreButton: true,
-  // disabled: true,
+  // collapseMode: true,
   handleClickMoreButton: (node: any) =>
     console.log('---handleClickMoreButton---', node),
+  handleClickIcon: (node: any) => console.log('---handleClickIcon---', node),
 };

@@ -5,6 +5,7 @@ import { textWidthAll } from '../../services/util';
 
 interface Props {
   node: CNode;
+  startId: string;
   indent: number;
   selectedBackgroundColor: string;
   selectedColor: string;
@@ -20,12 +21,15 @@ interface Props {
   handleClickNode: Function;
   handleDbClickNode: Function;
   handleClickExpand: Function;
+  handleClickIcon: Function;
   clickMore: Function;
   showInput: boolean;
   handleChangeNodeText: Function;
   handleDrop: Function;
   pasteNodeKey: string | null;
   compId: string;
+  collapseMode?: boolean;
+  collapseModeCollapsed?: boolean;
 }
 const TreeNode = ({
   node,
@@ -44,12 +48,15 @@ const TreeNode = ({
   handleClickNode,
   handleDbClickNode,
   handleClickExpand,
+  handleClickIcon,
   clickMore,
   showInput,
   handleChangeNodeText,
   handleDrop,
   pasteNodeKey,
   compId,
+  collapseMode,
+  collapseModeCollapsed,
 }: Props) => {
   const width = 12;
 
@@ -157,6 +164,13 @@ const TreeNode = ({
     }
   }
 
+  let collapsed;
+  if (collapseMode) {
+    collapsed = collapseModeCollapsed;
+  } else {
+    collapsed = node.contract;
+  }
+
   return node.x && node.y ? (
     <div
       onClick={() => handleClickNode(node)}
@@ -197,7 +211,7 @@ const TreeNode = ({
         {node.sortList && node.sortList.length ? (
           <div onClick={handleClick}>
             <svg width={width} height={width} viewBox={`0,0,${width},${width}`}>
-              {node.contract ? (
+              {collapsed ? (
                 <path
                   d={`M ${width / 4} ${0} L ${width / 4 + width / 2} ${width /
                     2} L ${width / 4} ${width} Z`}
@@ -228,6 +242,7 @@ const TreeNode = ({
             marginRight: '4px',
             flexShrink: 0,
           }}
+          onClick={() => handleClickIcon(node)}
         ></div>
       ) : null}
 

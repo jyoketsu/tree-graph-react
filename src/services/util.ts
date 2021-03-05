@@ -226,6 +226,24 @@ function nodeLocation(
   }
 }
 
+export const getAncestor = (
+  node: Node,
+  nodeMap: NodeMap,
+  includeSelf?: boolean
+) => {
+  const getFather = (node: Node) => {
+    const father = nodeMap[node.father];
+    if (father) {
+      ancestorList.unshift(father._key);
+      getFather(father);
+    }
+  };
+
+  let ancestorList: string[] = includeSelf ? [node._key] : [];
+  getFather(node);
+  return ancestorList;
+};
+
 function addChildNode(nodeMap: NodeMap, selectedId: string) {
   let nodes = { ...nodeMap };
   const childNode: Node = {

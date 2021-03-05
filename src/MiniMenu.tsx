@@ -133,19 +133,20 @@ export const MiniMenu = ({
           handleCrossCompDrag,
         }}
       >
-        {rootNode.sortList.map((key, index) =>
-          nodes[key] ? (
-            <MenuItem
-              key={`${index}_${key}`}
-              node={nodes[key]}
-              firstLevel={normalFirstLevel ? false : true}
-              columnSpacing={columnSpacing}
-              borderRadius={borderRadius}
-              compId={compId}
-              // selectedId={firstLevelId}
-            />
-          ) : null
-        )}
+        {rootNode &&
+          rootNode.sortList.map((key, index) =>
+            nodes[key] ? (
+              <MenuItem
+                key={`${index}_${key}`}
+                node={nodes[key]}
+                firstLevel={normalFirstLevel ? false : true}
+                columnSpacing={columnSpacing}
+                borderRadius={borderRadius}
+                compId={compId}
+                // selectedId={firstLevelId}
+              />
+            ) : null
+          )}
       </ThemeContext.Provider>
     </div>
   );
@@ -272,7 +273,7 @@ const MenuItem = ({
           {node.name || ''}
         </span>
       ) : null}
-      {!firstLevel && node.sortList.length ? (
+      {!firstLevel && node && node.sortList.length ? (
         <div
           style={{ position: 'absolute', right: '3px' }}
           onClick={(e: React.MouseEvent) => clickExpand(e)}
@@ -306,7 +307,8 @@ const MenuItem = ({
               borderRadius: borderRadius === undefined ? '0' : borderRadius,
             }}
           >
-            {node.sortList &&
+            {node &&
+              node.sortList &&
               node.sortList.map((key, index) =>
                 nodes[key] ? (
                   <MenuItem
