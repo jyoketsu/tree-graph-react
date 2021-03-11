@@ -3,7 +3,6 @@ import NodeMap from './interfaces/NodeMap';
 import CNode from './interfaces/CNode';
 import DragInfo from './interfaces/DragInfo';
 import TreeNode from './components/TreeNode';
-import Expand from './components/Expand';
 import NodeInput from './components/NodeInput';
 // import NodeOptions from './components/NodeOptions';
 import DragNode from './components/DragNode';
@@ -22,6 +21,11 @@ import {
 } from './services/util';
 
 const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
+
+// 根节点放大倍率
+const rootZoomRatio = 1.5;
+// 第二层节点放大倍率
+const secondZoomRatio = 1.2;
 
 interface PasteFunc {
   (
@@ -54,6 +58,7 @@ export interface MindProps {
   avatarWidth?: number;
   checkBoxWidth?: number;
   pathWidth?: number;
+  pathColor?: string;
   disableShortcut?: boolean;
   disabled?: boolean;
   showPreviewButton?: boolean;
@@ -103,6 +108,7 @@ export const Mind = React.forwardRef(
       fontSize,
       indent,
       pathWidth,
+      pathColor,
       disableShortcut,
       disabled,
       showPreviewButton,
@@ -145,6 +151,7 @@ export const Mind = React.forwardRef(
     // const AVATAR_WIDTH = avatarWidth || 22;
     // const CHECK_BOX_WIDTH = checkBoxWidth || 18;
     const PATH_WIDTH = pathWidth || 2;
+    const PATH_COLOR = pathColor || 'rgb(192,192,192)';
     const UNCONTROLLED = uncontrolled === undefined ? true : uncontrolled;
     const SHOW_ICON = showIcon === undefined ? true : showIcon;
     const SHOW_AVATAR = showAvatar === undefined ? false : showAvatar;
@@ -214,7 +221,9 @@ export const Mind = React.forwardRef(
         INDENT,
         FONT_SIZE,
         SHOW_ICON,
-        SHOW_AVATAR
+        SHOW_AVATAR,
+        rootZoomRatio,
+        secondZoomRatio
       );
 
       if (cal) {
@@ -919,7 +928,7 @@ export const Mind = React.forwardRef(
                       <path
                         key={index}
                         d={path(node, dotY)}
-                        stroke="rgb(192,192,192)"
+                        stroke={PATH_COLOR}
                         strokeWidth={PATH_WIDTH}
                         fill="transparent"
                       />
@@ -933,7 +942,7 @@ export const Mind = React.forwardRef(
                         <path
                           key={`leftDots-${index}`}
                           d={rootPath(node, dotY, true)}
-                          stroke="rgb(192,192,192)"
+                          stroke={PATH_COLOR}
                           strokeWidth={PATH_WIDTH}
                           fill="transparent"
                         />
@@ -944,7 +953,7 @@ export const Mind = React.forwardRef(
                         <path
                           key={`rightDots-${index}`}
                           d={rootPath(node, dotY, false)}
-                          stroke="rgb(192,192,192)"
+                          stroke={PATH_COLOR}
                           strokeWidth={PATH_WIDTH}
                           fill="transparent"
                         />
@@ -955,10 +964,28 @@ export const Mind = React.forwardRef(
 
               <TreeNode
                 node={node}
-                ITEM_HEIGHT={ITEM_HEIGHT}
-                BLOCK_HEIGHT={BLOCK_HEIGHT}
-                FONT_SIZE={FONT_SIZE}
                 startId={startId}
+                ITEM_HEIGHT={
+                  node._key === startId
+                    ? ITEM_HEIGHT * rootZoomRatio
+                    : node.father === startId
+                    ? ITEM_HEIGHT * secondZoomRatio
+                    : ITEM_HEIGHT
+                }
+                BLOCK_HEIGHT={
+                  node._key === startId
+                    ? BLOCK_HEIGHT * rootZoomRatio
+                    : node.father === startId
+                    ? BLOCK_HEIGHT * secondZoomRatio
+                    : BLOCK_HEIGHT
+                }
+                FONT_SIZE={
+                  node._key === startId
+                    ? FONT_SIZE * rootZoomRatio
+                    : node.father === startId
+                    ? FONT_SIZE * secondZoomRatio
+                    : FONT_SIZE
+                }
                 alias={new Date().getTime()}
                 selected={selectedId}
                 pasteNodeKey={pasteType === 'cut' ? pasteNodeKey : null}
@@ -971,6 +998,7 @@ export const Mind = React.forwardRef(
                 showMoreButton={showMoreButton || false}
                 moreButtonWidth={moreButtonWidth}
                 handleClickDot={clickDot}
+                handleExpand={handleExpand}
                 handleCheck={check}
                 handleClickAvatar={clickAvatar}
                 handleClickStatus={clickStatus}
@@ -992,14 +1020,6 @@ export const Mind = React.forwardRef(
                 bottomOptions={true}
                 hideHour={hideHour}
               />
-              {selectedId === node._key || node.contract ? (
-                <Expand
-                  node={node}
-                  BLOCK_HEIGHT={BLOCK_HEIGHT}
-                  handleClickExpand={() => handleExpand(node)}
-                  position={node.toLeft ? 'left' : 'right'}
-                />
-              ) : null}
             </g>
           ))}
           {/* 拖拽用節點 */}

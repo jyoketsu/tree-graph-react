@@ -53,6 +53,7 @@ interface Props {
   pasteNodeKey: string | null;
   bottomOptions?: boolean;
   hideHour?: boolean;
+  isMind?: boolean;
 }
 
 // let timer: NodeJS.Timeout;
@@ -260,7 +261,11 @@ Props) => {
 
   const nodeRectClassName = rectClassName(node);
 
-  const backgroundColor = node.backgroundColor ? node.backgroundColor : '#FFF';
+  const backgroundColor = node.backgroundColor
+    ? node.backgroundColor
+    : node._key === startId
+    ? '#535953'
+    : '#e8e8e8';
 
   // const urlReg = /\w+\.+[\w\/|]{1,}/g;
   const urlReg = /(http:\/\/+\w+\.+[\w\/|]{1,})|(https:\/\/+\w+\.+[\w\/|]{1,})|(\w+\.+[\w\/|]{1,})/g;
@@ -323,7 +328,7 @@ Props) => {
   if ((dragStarted && hover) || dragIn) {
     nodeRectStyle = {
       fill: '#FFF',
-      stroke: '#333333',
+      stroke: '#35a6f8',
       strokeWidth: 2,
     };
   } else {
@@ -331,14 +336,13 @@ Props) => {
       case 'border-rect':
         nodeRectStyle = {
           fill: backgroundColor,
-          stroke: '#D9D9D9',
         };
         break;
       case 'selected':
         nodeRectStyle = {
           fill: backgroundColor,
-          stroke: '#333333',
-          strokeWidth: node.father === startId ? 2 : 1,
+          stroke: '#35a6f8',
+          strokeWidth: 2,
           fillOpacity: pasteNodeKey && pasteNodeKey === node._key ? 0.4 : 1,
           strokeOpacity: pasteNodeKey && pasteNodeKey === node._key ? 0.4 : 1,
         };
@@ -424,13 +428,13 @@ Props) => {
         ry={4}
         width={node.width}
         height={BLOCK_HEIGHT}
-        filter={
-          nodeRectClassName !== 'selected' &&
-          node.father === startId &&
-          !node.backgroundColor
-            ? 'url(#filterShadow)'
-            : 'unset'
-        }
+        // filter={
+        //   nodeRectClassName !== 'selected' &&
+        //   node.father === startId &&
+        //   !node.backgroundColor
+        //     ? 'url(#filterShadow)'
+        //     : 'unset'
+        // }
         style={{
           ...nodeRectStyle,
         }}
@@ -572,10 +576,14 @@ Props) => {
                   ? '#35a6f8'
                   : node.strikethrough
                   ? '#999'
-                  : nodeRectClassName === 'selected' && !node.color
+                  : nodeRectClassName === 'selected' &&
+                    !node.color &&
+                    node._key !== startId
                   ? '#000000'
                   : node.color
                   ? node.color
+                  : node._key === startId
+                  ? '#FFF'
                   : '#595959',
               fillOpacity: pasteNodeKey && pasteNodeKey === node._key ? 0.4 : 1,
               fontFamily: "'Microsoft YaHei', sans-serif",
@@ -602,10 +610,14 @@ Props) => {
           style={{
             fill: node.strikethrough
               ? '#999'
-              : nodeRectClassName === 'selected' && !node.color
+              : nodeRectClassName === 'selected' &&
+                !node.color &&
+                node._key !== startId
               ? '#000000'
               : node.color
               ? node.color
+              : node._key === startId
+              ? '#FFF'
               : '#595959',
             fillOpacity: pasteNodeKey && pasteNodeKey === node._key ? 0.4 : 1,
             fontFamily: "'Microsoft YaHei', sans-serif",
@@ -685,7 +697,11 @@ Props) => {
           BLOCK_HEIGHT={BLOCK_HEIGHT}
           handleClickExpand={() => handleExpand(node)}
           position={
-            node._key === startId && !singleColumn
+            bottomOptions
+              ? node.toLeft
+                ? 'left'
+                : 'right'
+              : node._key === startId && !singleColumn
               ? 'bottomCenter'
               : 'leftBottom'
           }

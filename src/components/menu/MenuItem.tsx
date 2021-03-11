@@ -289,6 +289,8 @@ const TreeNode = ({
                     ? hoverColor
                     : color,
                 textDecoration: name.type === 'link' ? 'underline' : 'unset',
+                fontWeight:
+                  nodeRectClassName === 'selected' ? 'bold' : 'normal',
               }}
               onClick={() => handleClickLink(name.type, name.text)}
             >

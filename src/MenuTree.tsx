@@ -171,6 +171,8 @@ export const MenuTree = React.forwardRef(
         FONT_SIZE,
         SHOW_ICON,
         false,
+        1,
+        1,
         undefined,
         undefined,
         undefined,

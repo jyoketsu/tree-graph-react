@@ -11,12 +11,19 @@ export default function calculate(
   INDENT: number,
   FONT_SIZE: number,
   showIcon: boolean,
-  showAvatar: boolean
+  showAvatar: boolean,
+  rootZoomRatio: number,
+  secondZoomRatio: number
 ) {
   nodes = JSON.parse(JSON.stringify(nodes));
   // 根节点
   const root = nodes[startId];
-  const rootWidth = getNodeWidth(root, FONT_SIZE, showIcon, showAvatar);
+  const rootWidth = getNodeWidth(
+    root,
+    FONT_SIZE * rootZoomRatio,
+    showIcon,
+    showAvatar
+  );
   root.width = rootWidth;
 
   let MAX_X = rootWidth;
@@ -128,7 +135,16 @@ export default function calculate(
     if (shorted) {
       node.shorted = shorted;
     }
-    const nodeWidth = getNodeWidth(node, FONT_SIZE, showIcon, showAvatar);
+    const nodeWidth = getNodeWidth(
+      node,
+      node._key === startId
+        ? FONT_SIZE * rootZoomRatio
+        : node.father === startId
+        ? FONT_SIZE * secondZoomRatio
+        : FONT_SIZE,
+      showIcon,
+      showAvatar
+    );
     node.x = x;
     node.width = nodeWidth;
     if (toLeft) {

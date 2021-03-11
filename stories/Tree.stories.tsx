@@ -1,12 +1,11 @@
 import React, { useRef } from 'react';
 import { Tree, TreeProps } from '../src';
 import { Meta, Story } from '@storybook/react';
-import { ClickOutside } from '@jyoketsu/click-outside-react';
 
 const nodes = {
   '001': {
     _key: '001',
-    name: '項目管理',
+    name: '項目管理psnine.com',
     father: '',
     sortList: ['002', '003', '004', '005'],
     contract: false,
@@ -403,6 +402,8 @@ MultiCol.args = {
   showCheckbox: true,
   showStatus: true,
   // disabled: true,
+  pathWidth: 2,
+  pathColor: '#535953',
   handleClickDot: (node: any) => console.log('---handleClickDot---', node),
   handleClickMoreButton: (node: any, clientX: number, clientY: number) =>
     console.log('---handleClickMoreButton---', node, clientX, clientY),

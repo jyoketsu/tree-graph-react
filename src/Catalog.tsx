@@ -74,7 +74,9 @@ export const Catalog = ({
       INDENT,
       FONT_SIZE,
       false,
-      false
+      false,
+      1,
+      1
     );
 
     if (cal) {

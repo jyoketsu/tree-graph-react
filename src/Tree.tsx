@@ -21,6 +21,10 @@ import {
 } from './services/util';
 
 const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
+// 根节点放大倍率
+const rootZoomRatio = 1.5;
+// 第二层节点放大倍率
+const secondZoomRatio = 1.2;
 
 interface PasteFunc {
   (
@@ -55,6 +59,7 @@ export interface TreeProps {
   avatarWidth?: number;
   checkBoxWidth?: number;
   pathWidth?: number;
+  pathColor?: string;
   // 线条圆角半径
   lineRadius?: number;
   disableShortcut?: boolean;
@@ -109,6 +114,7 @@ export const Tree = React.forwardRef(
       // avatarWidth,
       // checkBoxWidth,
       pathWidth,
+      pathColor,
       lineRadius,
       disableShortcut,
       disabled,
@@ -146,7 +152,7 @@ export const Tree = React.forwardRef(
   ) => {
     let clickTimeId: NodeJS.Timeout;
 
-    const ITEM_HEIGHT = itemHeight || 50;
+    const ITEM_HEIGHT = itemHeight || 55;
     const BLOCK_HEIGHT = blockHeight || 30;
     const FONT_SIZE = fontSize || 14;
     const INDENT = indent || 25;
@@ -154,6 +160,7 @@ export const Tree = React.forwardRef(
     // const AVATAR_WIDTH = avatarWidth || 22;
     // const CHECK_BOX_WIDTH = checkBoxWidth || 18;
     const PATH_WIDTH = pathWidth || 1;
+    const PATH_COLOR = pathColor || 'rgb(192,192,192)';
     const UNCONTROLLED = uncontrolled === undefined ? true : uncontrolled;
     const SHOW_ICON = showIcon === undefined ? true : showIcon;
     const SHOW_AVATAR = showAvatar === undefined ? false : showAvatar;
@@ -173,6 +180,9 @@ export const Tree = React.forwardRef(
 
     // 拖拽節點相關的狀態
     const [dragStarted, setDragStarted] = useState(false);
+    const [frameSelectionStarted, setFrameSelectionStarted] = useState(false);
+    const [selectionWidth, setselectionWidth] = useState(0);
+    const [selectionHeight, setselectionHeight] = useState(0);
     const [showDragNode, setShowDragNode] = useState(false);
     const [clickX, setClickX] = useState(0);
     const [clickY, setClickY] = useState(0);
@@ -231,6 +241,8 @@ export const Tree = React.forwardRef(
         FONT_SIZE,
         SHOW_ICON,
         SHOW_AVATAR,
+        rootZoomRatio,
+        secondZoomRatio,
         undefined,
         undefined,
         columnSpacing
@@ -278,8 +290,8 @@ export const Tree = React.forwardRef(
     // 根节点底部水平线
     function rootHpaht() {
       const M = `M ${secondStartX ? secondStartX + RADIUS : 0} ${ITEM_HEIGHT *
-        1.5 -
-        (ITEM_HEIGHT * 1.5 - BLOCK_HEIGHT) / 2}`;
+        2 -
+        (ITEM_HEIGHT * 2 - BLOCK_HEIGHT) / 2}`;
       const H = `H ${secondEndX ? secondEndX - RADIUS : 0}`;
       return `${M} ${H}`;
     }
@@ -287,8 +299,7 @@ export const Tree = React.forwardRef(
     // 根节点底部纵线
     function rootVpath(node: CNode) {
       const M = `M ${node.x + node.width / 2} ${node.y + BLOCK_HEIGHT}`;
-      const V = `V ${ITEM_HEIGHT * 1.5 -
-        (ITEM_HEIGHT * 1.5 - BLOCK_HEIGHT) / 2}`;
+      const V = `V ${ITEM_HEIGHT * 2 - (ITEM_HEIGHT * 2 - BLOCK_HEIGHT) / 2}`;
       return `${M} ${V}`;
     }
 
@@ -296,7 +307,7 @@ export const Tree = React.forwardRef(
     function rootBottomVpath(node: CNode) {
       const startX = node.x + node.width / 2;
       const startY = node.y;
-      const endY = node.y - (ITEM_HEIGHT * 1.5 - BLOCK_HEIGHT) / 2;
+      const endY = node.y - (ITEM_HEIGHT * 2 - BLOCK_HEIGHT) / 2;
 
       // 第二层的第一个节点
       if (node.x + node.width / 2 === secondStartX) {
@@ -626,27 +637,20 @@ export const Tree = React.forwardRef(
       }
     }
 
-    // function handleDragStart(e: any) {
-    //   if (disabled) {
-    //     return;
-    //   }
-    //   if (selectedId && e.target.classList.contains('selected')) {
-    //     e.stopPropagation();
-    //     sessionStorage.setItem('cross-comp-drag', selectedId);
-    //     sessionStorage.setItem('cross-drag-compId', compId);
-    //     const node = nodeMap[selectedId];
-    //     if (node.disabled) {
-    //       return;
-    //     }
-    //     setDragStarted(true);
-    //     setDragNodeId(true);
-    //     setDragInfo({ targetNodeKey: selectedId, placement: 'in' });
-    //     setClickX(e.clientX);
-    //     setClickY(e.clientY);
-    //     setMovedNodeX(0);
-    //     setMovedNodeY(0);
-    //   }
-    // }
+    function handleFrameSelectionStart(e: React.MouseEvent) {
+      if (containerRef && containerRef.current) {
+        setFrameSelectionStarted(true);
+        setClickX(e.clientX - containerRef.current?.offsetLeft);
+        setClickY(e.clientY - containerRef.current?.offsetTop);
+      }
+    }
+
+    function handleFrameSelectionEnd() {
+      setFrameSelectionStarted(false);
+      setselectionWidth(0);
+      setselectionHeight(0);
+    }
+
     function handleDragStart(
       node: CNode,
       dragStartX: number,
@@ -685,6 +689,15 @@ export const Tree = React.forwardRef(
 
         setClickX(e.clientX);
         setClickY(e.clientY);
+      }
+      if (frameSelectionStarted && containerRef && containerRef.current) {
+        e.stopPropagation();
+        let movedX = 0;
+        let movedY = 0;
+        movedX = e.clientX - containerRef.current.offsetLeft - clickX;
+        movedY = e.clientY - containerRef.current.offsetTop - clickY;
+        setselectionWidth(Math.abs(movedX));
+        setselectionHeight(Math.abs(movedY));
       }
     }
 
@@ -753,12 +766,14 @@ export const Tree = React.forwardRef(
         sessionStorage.removeItem('cross-comp-drop');
         sessionStorage.removeItem('cross-drag-compId');
       }
+      handleFrameSelectionEnd();
     }
 
     function handleDragLeave() {
       setDragStarted(false);
       setDragInfo(null);
       setShowDragNode(false);
+      handleFrameSelectionEnd();
     }
 
     function updateDragInfo(param: DragInfo) {
@@ -780,6 +795,7 @@ export const Tree = React.forwardRef(
         tabIndex={-1}
         ref={containerRef}
         onKeyDown={(e: any) => handleKeyDown(e)}
+        onMouseDown={handleFrameSelectionStart}
         onMouseMove={handleMoveNode}
         onMouseUp={handleDragEnd}
         onMouseLeave={handleDragLeave}
@@ -998,7 +1014,7 @@ export const Tree = React.forwardRef(
                       <path
                         d={fatherPath(node)}
                         fill="none"
-                        stroke="rgb(192,192,192)"
+                        stroke={PATH_COLOR}
                         strokeWidth={PATH_WIDTH}
                       />
                     ) : null}
@@ -1006,7 +1022,7 @@ export const Tree = React.forwardRef(
                       <path
                         d={childPath(node)}
                         fill="none"
-                        stroke="rgb(192,192,192)"
+                        stroke={PATH_COLOR}
                         strokeWidth={PATH_WIDTH}
                       />
                     ) : null}
@@ -1025,7 +1041,7 @@ export const Tree = React.forwardRef(
                     <path
                       d={fatherPath(node)}
                       fill="none"
-                      stroke="rgb(192,192,192)"
+                      stroke={PATH_COLOR}
                       strokeWidth={PATH_WIDTH}
                     />
                   ) : null}
@@ -1040,7 +1056,7 @@ export const Tree = React.forwardRef(
                     <path
                       d={childPath(node)}
                       fill="none"
-                      stroke="rgb(192,192,192)"
+                      stroke={PATH_COLOR}
                       strokeWidth={PATH_WIDTH}
                     />
                   ) : null}
@@ -1053,7 +1069,7 @@ export const Tree = React.forwardRef(
                     <path
                       d={rootHpaht()}
                       fill="none"
-                      stroke="rgb(192,192,192)"
+                      stroke={PATH_COLOR}
                       strokeWidth={PATH_WIDTH}
                     />
                   ) : null}
@@ -1064,7 +1080,7 @@ export const Tree = React.forwardRef(
                     <path
                       d={rootVpath(node)}
                       fill="none"
-                      stroke="rgb(192,192,192)"
+                      stroke={PATH_COLOR}
                       strokeWidth={PATH_WIDTH}
                     />
                   ) : null}
@@ -1075,7 +1091,7 @@ export const Tree = React.forwardRef(
                     <path
                       d={rootBottomVpath(node)}
                       fill="none"
-                      stroke="rgb(192,192,192)"
+                      stroke={PATH_COLOR}
                       strokeWidth={PATH_WIDTH}
                     />
                   ) : null}
@@ -1083,9 +1099,27 @@ export const Tree = React.forwardRef(
               )}
               <TreeNode
                 node={node}
-                ITEM_HEIGHT={ITEM_HEIGHT}
-                BLOCK_HEIGHT={BLOCK_HEIGHT}
-                FONT_SIZE={FONT_SIZE}
+                ITEM_HEIGHT={
+                  node._key === startId
+                    ? ITEM_HEIGHT * rootZoomRatio
+                    : node.father === startId
+                    ? ITEM_HEIGHT * secondZoomRatio
+                    : ITEM_HEIGHT
+                }
+                BLOCK_HEIGHT={
+                  node._key === startId
+                    ? BLOCK_HEIGHT * rootZoomRatio
+                    : node.father === startId
+                    ? BLOCK_HEIGHT * secondZoomRatio
+                    : BLOCK_HEIGHT
+                }
+                FONT_SIZE={
+                  node._key === startId
+                    ? FONT_SIZE * rootZoomRatio
+                    : node.father === startId
+                    ? FONT_SIZE * secondZoomRatio
+                    : FONT_SIZE
+                }
                 startId={startId}
                 alias={new Date().getTime()}
                 selected={selectedId}
@@ -1144,6 +1178,17 @@ export const Tree = React.forwardRef(
               dragInfo={dragInfo}
             />
           ) : null}
+          {frameSelectionStarted ? (
+            <rect
+              x={clickX}
+              y={clickY}
+              width={selectionWidth}
+              height={selectionHeight}
+              fill="#35a6f8"
+              fillOpacity={0.2}
+              stroke="#35a6f8"
+            ></rect>
+          ) : null}
         </svg>
 
         {/* 節點名輸入框 */}
@@ -1152,7 +1197,24 @@ export const Tree = React.forwardRef(
             selectedId={selectedId}
             nodeList={cnodes}
             handleChangeNodeText={changeText}
-            BLOCK_HEIGHT={BLOCK_HEIGHT}
+            BLOCK_HEIGHT={
+              selectedId === startId
+                ? BLOCK_HEIGHT * rootZoomRatio
+                : nodeMap &&
+                  selectedId &&
+                  nodeMap[selectedId].father === startId
+                ? BLOCK_HEIGHT * secondZoomRatio
+                : BLOCK_HEIGHT
+            }
+            FONT_SIZE={
+              selectedId === startId
+                ? FONT_SIZE * rootZoomRatio
+                : nodeMap &&
+                  selectedId &&
+                  nodeMap[selectedId].father === startId
+                ? FONT_SIZE * secondZoomRatio
+                : FONT_SIZE
+            }
             showIcon={SHOW_ICON}
             showAvatar={SHOW_AVATAR}
           />

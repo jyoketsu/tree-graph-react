@@ -95,7 +95,7 @@ const NodeInput = ({
             fontSize: `${FONT_SIZE || 14}px`,
             top: `${top}px`,
             left: `${left}px`,
-            backgroundColor: selected.backgroundColor,
+            backgroundColor: selected.backgroundColor || '#e8e8e8',
             color: selected.color,
           }}
           ref={inputRef}

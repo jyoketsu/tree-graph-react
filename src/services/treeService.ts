@@ -12,6 +12,8 @@ export default function calculate(
   FONT_SIZE: number,
   showIcon: boolean,
   showAvatar: boolean,
+  rootZoomRatio: number,
+  secondZoomRatio: number,
   startX?: number,
   startY?: number,
   columnSpacing?: number,
@@ -25,7 +27,12 @@ export default function calculate(
     console.error(`Can't find the root node`);
     return;
   }
-  const rootWidth = getNodeWidth(root, FONT_SIZE, showIcon, showAvatar);
+  const rootWidth = getNodeWidth(
+    root,
+    FONT_SIZE * rootZoomRatio,
+    showIcon,
+    showAvatar
+  );
   root.width = rootWidth;
   // 是否是单列：参数单列或者根节点只有一个子节点为单列
   const isSingle =
@@ -57,7 +64,7 @@ export default function calculate(
 
         if (index === 0) {
           SECOND_START_NODE_ID = element?._key;
-          location(nodes, element, 15, ITEM_HEIGHT * 1.5);
+          location(nodes, element, 15, ITEM_HEIGHT * 2);
         } else {
           if (index + 1 === secondLevel.length) {
             SECOND_END_NODE_ID = element?._key;
@@ -66,7 +73,7 @@ export default function calculate(
             nodes,
             element,
             MAX_END + (columnSpacing ? columnSpacing : 55),
-            ITEM_HEIGHT * 1.5
+            ITEM_HEIGHT * 2
           );
         }
       }
@@ -126,7 +133,16 @@ export default function calculate(
     if (shorted) {
       node.shorted = shorted;
     }
-    const nodeWidth = getNodeWidth(node, FONT_SIZE, showIcon, showAvatar);
+    const nodeWidth = getNodeWidth(
+      node,
+      node._key === startId
+        ? FONT_SIZE * rootZoomRatio
+        : node.father === startId
+        ? FONT_SIZE * secondZoomRatio
+        : FONT_SIZE,
+      showIcon,
+      showAvatar
+    );
     node.x = x;
     node.y = y;
     node.width = nodeWidth;
@@ -173,11 +189,11 @@ export default function calculate(
         }
 
         if (index === 0) {
-          childY += ITEM_HEIGHT * 1;
-          lastChildY += ITEM_HEIGHT * 1;
+          childY += ITEM_HEIGHT + 5;
+          lastChildY += ITEM_HEIGHT + 5;
         } else {
-          childY += ITEM_HEIGHT;
-          lastChildY += ITEM_HEIGHT;
+          childY += ITEM_HEIGHT + 5;
+          lastChildY += ITEM_HEIGHT + 5;
         }
         if (childY > MAX_Y) {
           MAX_Y = childY;
