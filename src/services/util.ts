@@ -531,6 +531,189 @@ function dragSort(
   }
 }
 
+// 两点距离
+// function getDistanceBetweenTwoPoints(
+//   x1: number,
+//   y1: number,
+//   x2: number,
+//   y2: number
+// ) {
+//   var a = x1 - x2;
+//   var b = y1 - y2;
+
+//   // c^2 = a^2 + b^2
+//   // a^2 = Math.pow(a, 2)
+//   // b^2 = Math.pow(b, 2)
+//   var result = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
+
+//   return result;
+// }
+
+// 两矩形是否相交
+interface Rect {
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+}
+function crossLine(r1: Rect, r2: Rect) {
+  if (
+    Math.abs((r1.x1 + r1.x2) / 2 - (r2.x1 + r2.x2) / 2) <
+      (r1.x2 + r2.x2 - r1.x1 - r2.x1) / 2 &&
+    Math.abs((r1.y1 + r1.y2) / 2 - (r2.y1 + r2.y2) / 2) <
+      (r1.y2 + r2.y2 - r1.y1 - r2.y1) / 2
+  )
+    return true;
+  return false;
+}
+
+function getNodesInSelection(
+  selectionX: number,
+  selectionY: number,
+  selectionWidth: number,
+  selectionHeight: number,
+  nodeHeight: number,
+  cnodes: Node[]
+) {
+  const selectionStartX = selectionX;
+  const selectionStartY = selectionY;
+  const selectionEndX = selectionX + selectionWidth;
+  const selectionEndY = selectionY + selectionHeight;
+  // const selectionCenterX = selectionX + selectionWidth / 2;
+  // const selectionCenterY = selectionY + selectionHeight / 2;
+  const nodesInSelection: Node[] = [];
+  for (let index = 0; index < cnodes.length; index++) {
+    const node = cnodes[index];
+    if (!node || !node.width || !node.x || !node.y) {
+      break;
+    }
+    const startX = node.x;
+    const startY = node.y;
+    const endX = node.x + node.width;
+    const endY = node.y + nodeHeight;
+    // const centerX = node.x + node.width / 2;
+    // const centerY = node.y + nodeHeight / 2;
+    if (
+      crossLine(
+        {
+          x1: selectionStartX,
+          y1: selectionStartY,
+          x2: selectionEndX,
+          y2: selectionEndY,
+        },
+        { x1: startX, y1: startY, x2: endX, y2: endY }
+      )
+    ) {
+      nodesInSelection.push(node);
+    }
+  }
+  return nodesInSelection;
+}
+
+function changeSelect(
+  selectedId: string,
+  cnodes: Node[],
+  direction: 'ArrowUp' | 'ArrowRight' | 'ArrowDown' | 'ArrowLeft'
+) {
+  let nodes = [...cnodes];
+  const target = nodes.find(node => node._key === selectedId);
+  if (!target || !target.x || !target.y) {
+    return;
+  }
+  // 最短距离
+  let minDistance: number | undefined;
+  let resultNode: Node | undefined;
+  for (let index = 0; index < nodes.length; index++) {
+    const node = nodes[index];
+    if (!node || !node.x || !node.y) {
+      break;
+    }
+    const distanceX = target.x - node.x;
+    const distanceY = target.y - node.y;
+    if (direction === 'ArrowUp') {
+      if (distanceY > 0) {
+        getMinDistance(node, distanceY, distanceX);
+      }
+    } else if (direction === 'ArrowRight') {
+      if (distanceX < 0 && distanceY === 0) {
+        getMinDistance(node, distanceY, distanceX);
+      }
+    } else if (direction === 'ArrowDown') {
+      if (distanceY < 0) {
+        getMinDistance(node, distanceY, distanceX);
+      }
+    } else if (direction === 'ArrowLeft') {
+      if (distanceX > 0 && distanceY === 0) {
+        getMinDistance(node, distanceY, distanceX);
+      }
+    }
+  }
+  return resultNode;
+
+  function getMinDistance(node: Node, distanceY: number, distanceX: number) {
+    if (!minDistance) {
+      minDistance = Math.abs(distanceY) + Math.abs(distanceX);
+      resultNode = node;
+    } else if (Math.abs(distanceY) + Math.abs(distanceX) < minDistance) {
+      minDistance = Math.abs(distanceY) + Math.abs(distanceX);
+      resultNode = node;
+    }
+  }
+}
+
+function changeMindSelect(
+  selectedId: string,
+  cnodes: Node[],
+  direction: 'ArrowUp' | 'ArrowRight' | 'ArrowDown' | 'ArrowLeft'
+) {
+  let nodes = [...cnodes];
+  const target = nodes.find(node => node._key === selectedId);
+  if (!target || !target.x || !target.y || !target.width) {
+    return;
+  }
+  // 最短距离
+  let minDistance: number | undefined;
+  let resultNode: Node | undefined;
+  for (let index = 0; index < nodes.length; index++) {
+    const node = nodes[index];
+    if (!node || !node.x || !node.y || !node.width) {
+      break;
+    }
+    const distanceX = node.toLeft
+      ? target.x + target.width - (node.x + node.width)
+      : target.x - node.x;
+    const distanceY = target.y - node.y;
+    if (direction === 'ArrowUp') {
+      if (distanceY > 0) {
+        getMinDistance(node, distanceY, distanceX);
+      }
+    } else if (direction === 'ArrowRight') {
+      if (distanceX < 0) {
+        getMinDistance(node, distanceY, distanceX);
+      }
+    } else if (direction === 'ArrowDown') {
+      if (distanceY < 0) {
+        getMinDistance(node, distanceY, distanceX);
+      }
+    } else if (direction === 'ArrowLeft') {
+      if (distanceX > 0) {
+        getMinDistance(node, distanceY, distanceX);
+      }
+    }
+  }
+  return resultNode;
+
+  function getMinDistance(node: Node, distanceY: number, distanceX: number) {
+    if (!minDistance) {
+      minDistance = Math.abs(distanceY) + Math.abs(distanceX);
+      resultNode = node;
+    } else if (Math.abs(distanceY) + Math.abs(distanceX) < minDistance) {
+      minDistance = Math.abs(distanceY) + Math.abs(distanceX);
+      resultNode = node;
+    }
+  }
+}
+
 export {
   findNodeById,
   textWidth,
@@ -555,4 +738,7 @@ export {
   getAlphabetNum,
   getNumberNum,
   guid,
+  changeSelect,
+  changeMindSelect,
+  getNodesInSelection,
 };

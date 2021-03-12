@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useImperativeHandle } from 'react';
 import NodeMap from './interfaces/NodeMap';
+import Node from './interfaces/Node';
 import CNode from './interfaces/CNode';
 import DragInfo from './interfaces/DragInfo';
 import TreeNode from './components/TreeNode';
@@ -18,6 +19,8 @@ import {
   dragSort,
   pasteNode,
   guid,
+  changeMindSelect,
+  getNodesInSelection,
 } from './services/util';
 
 const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
@@ -162,11 +165,17 @@ export const Mind = React.forwardRef(
     const [maxY, setmaxY] = useState(0);
     const [maxEnd, setmaxEnd] = useState(0);
     const [selectedId, setselectedId] = useState<string | null>(null);
+    const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
     const [showInput, setshowInput] = useState(false);
     const [showNewInput, setshowNewInput] = useState(false);
 
     // 拖拽節點相關的狀態
     const [dragStarted, setDragStarted] = useState(false);
+    const [frameSelectionStarted, setFrameSelectionStarted] = useState(false);
+    const [selectionX, setselectionX] = useState(0);
+    const [selectionY, setselectionY] = useState(0);
+    const [selectionWidth, setselectionWidth] = useState(0);
+    const [selectionHeight, setselectionHeight] = useState(0);
     const [showDragNode, setShowDragNode] = useState(false);
     const [clickX, setClickX] = useState(0);
     const [clickY, setClickY] = useState(0);
@@ -236,8 +245,17 @@ export const Mind = React.forwardRef(
     useEffect(() => {
       if (defaultSelectedId) {
         setselectedId(defaultSelectedId);
+        setSelectedNodes([]);
       }
     }, [defaultSelectedId]);
+
+    function handleSelectedNodeChanged(node: Node) {
+      setselectedId(node._key);
+      setSelectedNodes([]);
+      if (handleClickNode) {
+        handleClickNode(node);
+      }
+    }
 
     // 单击节点
     function clickNode(node: CNode) {
@@ -247,6 +265,7 @@ export const Mind = React.forwardRef(
       clearTimeout(clickTimeId);
       clickTimeId = setTimeout(function() {
         setselectedId(node._key);
+        setSelectedNodes([]);
         if (handleClickNode) {
           handleClickNode(node);
         }
@@ -260,6 +279,7 @@ export const Mind = React.forwardRef(
         return;
       }
       setselectedId(node._key);
+      setSelectedNodes([]);
       setshowInput(true);
       if (handleDbClickNode) {
         handleDbClickNode(node);
@@ -339,6 +359,7 @@ export const Mind = React.forwardRef(
         }
 
         setselectedId(res.addedNode._key);
+        setSelectedNodes([]);
         setNodeMap(res.nodes);
         setshowInput(true);
       } else {
@@ -360,6 +381,7 @@ export const Mind = React.forwardRef(
           handleAddChild(selectedId, res.addedNode);
         }
         setselectedId(res.addedNode._key);
+        setSelectedNodes([]);
         setNodeMap(res.nodes);
         setshowInput(true);
       } else {
@@ -427,6 +449,7 @@ export const Mind = React.forwardRef(
         }
 
         setselectedId(null);
+        setSelectedNodes([]);
         setNodeMap(nodes);
       } else {
         if (handleDeleteNode) {
@@ -461,13 +484,33 @@ export const Mind = React.forwardRef(
         case 'ArrowUp':
           if (event.shiftKey) {
             shiftUp();
+          } else if (selectedId) {
+            const res = changeMindSelect(selectedId, cnodes, event.key);
+            if (res) {
+              handleSelectedNodeChanged(res);
+            }
           }
           break;
         case 'ArrowDown':
           if (event.shiftKey) {
             shiftDown();
+          } else if (selectedId) {
+            const res = changeMindSelect(selectedId, cnodes, event.key);
+            if (res) {
+              handleSelectedNodeChanged(res);
+            }
           }
           break;
+        case 'ArrowRight':
+        case 'ArrowLeft': {
+          if (selectedId) {
+            const res = changeMindSelect(selectedId, cnodes, event.key);
+            if (res) {
+              handleSelectedNodeChanged(res);
+            }
+          }
+          break;
+        }
         // 複製
         case 'c':
           if (commandKey && selectedId) {
@@ -542,6 +585,32 @@ export const Mind = React.forwardRef(
       }
     }
 
+    function handleFrameSelectionStart(e: React.MouseEvent) {
+      setFrameSelectionStarted(true);
+      setClickX(e.nativeEvent.offsetX);
+      setClickY(e.nativeEvent.offsetY);
+      setselectionX(e.nativeEvent.offsetX);
+      setselectionY(e.nativeEvent.offsetY);
+    }
+
+    function handleFrameSelectionEnd() {
+      if (frameSelectionStarted) {
+        const selectionNodes = getNodesInSelection(
+          selectionX,
+          selectionY,
+          selectionWidth,
+          selectionHeight,
+          BLOCK_HEIGHT,
+          cnodes
+        );
+        setselectedId(null);
+        setSelectedNodes(selectionNodes);
+        setFrameSelectionStarted(false);
+        setselectionWidth(0);
+        setselectionHeight(0);
+      }
+    }
+
     function handleDragStart(
       node: CNode,
       dragStartX: number,
@@ -580,6 +649,32 @@ export const Mind = React.forwardRef(
 
         setClickX(e.clientX);
         setClickY(e.clientY);
+      }
+      if (frameSelectionStarted) {
+        e.stopPropagation();
+        let movedX = 0;
+        let movedY = 0;
+        movedX = e.nativeEvent.offsetX - clickX;
+        movedY = e.nativeEvent.offsetY - clickY;
+        setselectionWidth(Math.abs(movedX));
+        setselectionHeight(Math.abs(movedY));
+        if (movedX >= 0 && movedY >= 0) {
+          setselectionX(clickX);
+          setselectionY(clickY);
+        } else if (movedX < 0 || movedY < 0) {
+          setselectionX(clickX + (movedX < 0 ? movedX : 0));
+          setselectionY(clickY + (movedY < 0 ? movedY : 0));
+        }
+        const selectionNodes = getNodesInSelection(
+          selectionX,
+          selectionY,
+          selectionWidth,
+          selectionHeight,
+          BLOCK_HEIGHT,
+          cnodes
+        );
+        setselectedId(null);
+        setSelectedNodes(selectionNodes);
       }
     }
 
@@ -648,12 +743,14 @@ export const Mind = React.forwardRef(
         sessionStorage.removeItem('cross-comp-drop');
         sessionStorage.removeItem('cross-drag-compId');
       }
+      handleFrameSelectionEnd();
     }
 
     function handleDragLeave() {
       setDragStarted(false);
       setDragInfo(null);
       setShowDragNode(false);
+      handleFrameSelectionEnd();
     }
 
     function updateDragInfo(param: DragInfo) {
@@ -713,6 +810,7 @@ export const Mind = React.forwardRef(
         tabIndex={-1}
         ref={containerRef}
         onKeyDown={(e: any) => handleKeyDown(e)}
+        onMouseDown={handleFrameSelectionStart}
         onMouseMove={handleMoveNode}
         onMouseUp={handleDragEnd}
         onMouseLeave={handleDragLeave}
@@ -988,6 +1086,7 @@ export const Mind = React.forwardRef(
                 }
                 alias={new Date().getTime()}
                 selected={selectedId}
+                selectedNodes={selectedNodes}
                 pasteNodeKey={pasteType === 'cut' ? pasteNodeKey : null}
                 showIcon={SHOW_ICON}
                 showAvatar={SHOW_AVATAR}
@@ -1036,6 +1135,17 @@ export const Mind = React.forwardRef(
               movedNodeY={movedNodeY}
               dragInfo={dragInfo}
             />
+          ) : null}
+          {frameSelectionStarted ? (
+            <rect
+              x={selectionX}
+              y={selectionY}
+              width={selectionWidth}
+              height={selectionHeight}
+              fill="#35a6f8"
+              fillOpacity={0.2}
+              stroke="#35a6f8"
+            ></rect>
           ) : null}
         </svg>
 

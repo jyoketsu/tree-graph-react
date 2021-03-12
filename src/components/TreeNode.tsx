@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import Node from '../interfaces/Node';
 import CNode from '../interfaces/CNode';
 import Dot from '../components/Dot';
 import Expand from '../components/Expand';
@@ -24,6 +25,7 @@ interface Props {
   FONT_SIZE: number;
   alias: number;
   selected: string | null;
+  selectedNodes: Node[];
   showPreviewButton: boolean;
   showAddButton: boolean;
   showMoreButton: boolean;
@@ -66,6 +68,7 @@ const TreeNode = ({
   FONT_SIZE,
   alias,
   selected,
+  selectedNodes,
   showIcon,
   showAvatar,
   singleColumn,
@@ -214,7 +217,10 @@ Props) => {
 
   function rectClassName(node: CNode) {
     // 选中的节点
-    if (selected === node._key) {
+    if (
+      selected === node._key ||
+      selectedNodes.findIndex(item => item._key === node._key) !== -1
+    ) {
       return 'selected';
     } else if (
       // 有边框的节点

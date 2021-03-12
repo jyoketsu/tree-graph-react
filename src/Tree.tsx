@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef, useImperativeHandle } from 'react';
 import NodeMap from './interfaces/NodeMap';
+import Node from './interfaces/Node';
 import CNode from './interfaces/CNode';
 import DragInfo from './interfaces/DragInfo';
 import TreeNode from './components/TreeNode';
@@ -18,6 +19,8 @@ import {
   dragSort,
   pasteNode,
   guid,
+  changeSelect,
+  getNodesInSelection,
 } from './services/util';
 
 const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
@@ -173,6 +176,7 @@ export const Tree = React.forwardRef(
     const [maxY, setmaxY] = useState(0);
     const [maxEnd, setmaxEnd] = useState(0);
     const [selectedId, setselectedId] = useState<string | null>(null);
+    const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
     const [showInput, setshowInput] = useState(false);
     const [showNewInput, setshowNewInput] = useState(false);
     const [isSingle, setisSingle] = useState(singleColumn);
@@ -181,6 +185,8 @@ export const Tree = React.forwardRef(
     // 拖拽節點相關的狀態
     const [dragStarted, setDragStarted] = useState(false);
     const [frameSelectionStarted, setFrameSelectionStarted] = useState(false);
+    const [selectionX, setselectionX] = useState(0);
+    const [selectionY, setselectionY] = useState(0);
     const [selectionWidth, setselectionWidth] = useState(0);
     const [selectionHeight, setselectionHeight] = useState(0);
     const [showDragNode, setShowDragNode] = useState(false);
@@ -263,6 +269,7 @@ export const Tree = React.forwardRef(
       if (defaultSelectedId) {
         // setShowOptionsNode(null);
         setselectedId(defaultSelectedId);
+        setSelectedNodes([]);
       }
     }, [defaultSelectedId]);
 
@@ -334,6 +341,14 @@ export const Tree = React.forwardRef(
       return `${M} ${V}`;
     }
 
+    function handleSelectedNodeChanged(node: Node) {
+      setselectedId(node._key);
+      setSelectedNodes([]);
+      if (handleClickNode) {
+        handleClickNode(node);
+      }
+    }
+
     // 单击节点
     function clickNode(node: CNode) {
       if (disabled) {
@@ -342,6 +357,7 @@ export const Tree = React.forwardRef(
       clearTimeout(clickTimeId);
       clickTimeId = setTimeout(function() {
         setselectedId(node._key);
+        setSelectedNodes([]);
         if (handleClickNode) {
           handleClickNode(node);
         }
@@ -355,6 +371,7 @@ export const Tree = React.forwardRef(
         return;
       }
       setselectedId(node._key);
+      setSelectedNodes([]);
       setshowInput(true);
       if (handleDbClickNode) {
         handleDbClickNode(node);
@@ -434,6 +451,7 @@ export const Tree = React.forwardRef(
         }
 
         setselectedId(res.addedNode._key);
+        setSelectedNodes([]);
         setNodeMap(res.nodes);
         setshowInput(true);
       } else {
@@ -455,6 +473,7 @@ export const Tree = React.forwardRef(
           handleAddChild(selectedId, res.addedNode);
         }
         setselectedId(res.addedNode._key);
+        setSelectedNodes([]);
         setNodeMap(res.nodes);
         setshowInput(true);
       } else {
@@ -522,6 +541,7 @@ export const Tree = React.forwardRef(
         }
 
         setselectedId(null);
+        setSelectedNodes([]);
         setNodeMap(nodes);
       } else {
         if (handleDeleteNode) {
@@ -556,13 +576,33 @@ export const Tree = React.forwardRef(
         case 'ArrowUp':
           if (event.shiftKey) {
             shiftUp();
+          } else if (selectedId) {
+            const res = changeSelect(selectedId, cnodes, event.key);
+            if (res) {
+              handleSelectedNodeChanged(res);
+            }
           }
           break;
         case 'ArrowDown':
           if (event.shiftKey) {
             shiftDown();
+          } else if (selectedId) {
+            const res = changeSelect(selectedId, cnodes, event.key);
+            if (res) {
+              handleSelectedNodeChanged(res);
+            }
           }
           break;
+        case 'ArrowRight':
+        case 'ArrowLeft': {
+          if (selectedId) {
+            const res = changeSelect(selectedId, cnodes, event.key);
+            if (res) {
+              handleSelectedNodeChanged(res);
+            }
+          }
+          break;
+        }
         // 複製
         case 'c':
           if (commandKey && selectedId) {
@@ -603,6 +643,7 @@ export const Tree = React.forwardRef(
             setPasteType(null);
           }
           break;
+
         default:
           break;
       }
@@ -638,17 +679,29 @@ export const Tree = React.forwardRef(
     }
 
     function handleFrameSelectionStart(e: React.MouseEvent) {
-      if (containerRef && containerRef.current) {
-        setFrameSelectionStarted(true);
-        setClickX(e.clientX - containerRef.current?.offsetLeft);
-        setClickY(e.clientY - containerRef.current?.offsetTop);
-      }
+      setFrameSelectionStarted(true);
+      setClickX(e.nativeEvent.offsetX);
+      setClickY(e.nativeEvent.offsetY);
+      setselectionX(e.nativeEvent.offsetX);
+      setselectionY(e.nativeEvent.offsetY);
     }
 
     function handleFrameSelectionEnd() {
-      setFrameSelectionStarted(false);
-      setselectionWidth(0);
-      setselectionHeight(0);
+      if (frameSelectionStarted) {
+        const selectionNodes = getNodesInSelection(
+          selectionX,
+          selectionY,
+          selectionWidth,
+          selectionHeight,
+          BLOCK_HEIGHT,
+          cnodes
+        );
+        setselectedId(null);
+        setSelectedNodes(selectionNodes);
+        setFrameSelectionStarted(false);
+        setselectionWidth(0);
+        setselectionHeight(0);
+      }
     }
 
     function handleDragStart(
@@ -690,14 +743,31 @@ export const Tree = React.forwardRef(
         setClickX(e.clientX);
         setClickY(e.clientY);
       }
-      if (frameSelectionStarted && containerRef && containerRef.current) {
+      if (frameSelectionStarted) {
         e.stopPropagation();
         let movedX = 0;
         let movedY = 0;
-        movedX = e.clientX - containerRef.current.offsetLeft - clickX;
-        movedY = e.clientY - containerRef.current.offsetTop - clickY;
+        movedX = e.nativeEvent.offsetX - clickX;
+        movedY = e.nativeEvent.offsetY - clickY;
         setselectionWidth(Math.abs(movedX));
         setselectionHeight(Math.abs(movedY));
+        if (movedX >= 0 && movedY >= 0) {
+          setselectionX(clickX);
+          setselectionY(clickY);
+        } else if (movedX < 0 || movedY < 0) {
+          setselectionX(clickX + (movedX < 0 ? movedX : 0));
+          setselectionY(clickY + (movedY < 0 ? movedY : 0));
+        }
+        const selectionNodes = getNodesInSelection(
+          selectionX,
+          selectionY,
+          selectionWidth,
+          selectionHeight,
+          BLOCK_HEIGHT,
+          cnodes
+        );
+        setselectedId(null);
+        setSelectedNodes(selectionNodes);
       }
     }
 
@@ -1123,6 +1193,7 @@ export const Tree = React.forwardRef(
                 startId={startId}
                 alias={new Date().getTime()}
                 selected={selectedId}
+                selectedNodes={selectedNodes}
                 singleColumn={singleColumn}
                 pasteNodeKey={pasteType === 'cut' ? pasteNodeKey : null}
                 showIcon={SHOW_ICON}
@@ -1180,8 +1251,8 @@ export const Tree = React.forwardRef(
           ) : null}
           {frameSelectionStarted ? (
             <rect
-              x={clickX}
-              y={clickY}
+              x={selectionX}
+              y={selectionY}
               width={selectionWidth}
               height={selectionHeight}
               fill="#35a6f8"
