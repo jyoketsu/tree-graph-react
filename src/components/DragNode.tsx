@@ -13,6 +13,7 @@ interface Props {
   movedNodeX: number;
   movedNodeY: number;
   dragInfo: DragInfo | null;
+  mutilMode?: boolean;
 }
 
 const DragNode = ({
@@ -25,6 +26,7 @@ const DragNode = ({
   movedNodeX,
   movedNodeY,
   dragInfo,
+  mutilMode,
 }: Props) => {
   const [node, setNode] = useState<CNode | null>(null);
 
@@ -197,7 +199,7 @@ const DragNode = ({
           userSelect: 'none',
         }}
       >
-        {node.name || ''}
+        {mutilMode ? '多个节点' : node.name || ''}
       </text>
     </g>
   ) : null;

@@ -20,7 +20,6 @@ const now = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
 interface Props {
   node: CNode;
   startId: string;
-  ITEM_HEIGHT: number;
   BLOCK_HEIGHT: number;
   FONT_SIZE: number;
   alias: number;
@@ -63,7 +62,6 @@ interface Props {
 const TreeNode = ({
   node,
   startId,
-  ITEM_HEIGHT,
   BLOCK_HEIGHT,
   FONT_SIZE,
   alias,
@@ -422,7 +420,7 @@ Props) => {
         x={node.x}
         y={node.y}
         width={node.name ? node.width + totalButtonWidth : 100}
-        height={ITEM_HEIGHT}
+        height={BLOCK_HEIGHT + 10}
         fillOpacity={0}
       />
       {/* 顯式外框 */}

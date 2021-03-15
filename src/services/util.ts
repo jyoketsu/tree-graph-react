@@ -1,6 +1,7 @@
 import Node from '../interfaces/Node';
 import CNode from '../interfaces/CNode';
 import NodeMap from '../interfaces/NodeMap';
+import MutilSelectedNodeKey from '../interfaces/MutilSelectedNodeKey';
 
 function findNodeById(nodes: CNode[], id: string) {
   return nodes.find((node: CNode) => node._key === id);
@@ -225,6 +226,59 @@ function nodeLocation(
       return null;
   }
 }
+
+const isArrayRepeat = (array1: any[], array2: any[]) => {
+  let set = new Set([...array1, ...array2]);
+  return array1.length + array2.length !== set.size;
+};
+
+const isDragValid = (dragId: string, dropId: string, nodeMap: NodeMap) => {
+  if (!nodeMap[dropId]) {
+    return;
+  }
+  const dropNodeAncestors = getAncestor(nodeMap[dropId], nodeMap, true);
+  if (dropNodeAncestors.includes(dragId)) {
+    return false;
+  } else {
+    return true;
+  }
+};
+
+const isMutilDragValid = (dragIds: any[], dropId: string, nodeMap: NodeMap) => {
+  for (let index = 0; index < dragIds.length; index++) {
+    const dragId = dragIds[index].nodeKey;
+    const dragValid = isDragValid(dragId, dropId, nodeMap);
+    if (!dragValid) {
+      return false;
+    }
+  }
+  return true;
+};
+
+/**
+ * 获取有效的多选节点（框选拖拽节点时，如果同时选择父节点与其子节点，只有父节点为有效节点）
+ * @param selectedNodes
+ * @param nodeMap
+ */
+const getValidSelectedNodes = (selectedNodes: Node[], nodeMap: NodeMap) => {
+  let validSelectedNodes: MutilSelectedNodeKey[] = [];
+  let selectedIds = [];
+  for (let index = 0; index < selectedNodes.length; index++) {
+    const node = selectedNodes[index];
+    selectedIds.push(node._key);
+  }
+  for (let index = 0; index < selectedNodes.length; index++) {
+    const node = selectedNodes[index];
+    const ancestors = getAncestor(node, nodeMap);
+    if (!isArrayRepeat(ancestors, selectedIds)) {
+      validSelectedNodes.push({
+        nodeKey: node._key,
+        oldFather: node.father,
+      });
+    }
+  }
+  return validSelectedNodes;
+};
 
 export const getAncestor = (
   node: Node,
@@ -531,24 +585,6 @@ function dragSort(
   }
 }
 
-// 两点距离
-// function getDistanceBetweenTwoPoints(
-//   x1: number,
-//   y1: number,
-//   x2: number,
-//   y2: number
-// ) {
-//   var a = x1 - x2;
-//   var b = y1 - y2;
-
-//   // c^2 = a^2 + b^2
-//   // a^2 = Math.pow(a, 2)
-//   // b^2 = Math.pow(b, 2)
-//   var result = Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2));
-
-//   return result;
-// }
-
 // 两矩形是否相交
 interface Rect {
   x1: number;
@@ -741,4 +777,7 @@ export {
   changeSelect,
   changeMindSelect,
   getNodesInSelection,
+  getValidSelectedNodes,
+  isDragValid,
+  isMutilDragValid,
 };

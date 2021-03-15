@@ -21,7 +21,11 @@ import {
   guid,
   changeSelect,
   getNodesInSelection,
+  getValidSelectedNodes,
+  isDragValid,
+  isMutilDragValid,
 } from './services/util';
+import MutilSelectedNodeKey from './interfaces/MutilSelectedNodeKey';
 
 const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 // 根节点放大倍率
@@ -679,11 +683,14 @@ export const Tree = React.forwardRef(
     }
 
     function handleFrameSelectionStart(e: React.MouseEvent) {
-      setFrameSelectionStarted(true);
-      setClickX(e.nativeEvent.offsetX);
-      setClickY(e.nativeEvent.offsetY);
-      setselectionX(e.nativeEvent.offsetX);
-      setselectionY(e.nativeEvent.offsetY);
+      if (e.nativeEvent.which === 1) {
+        e.stopPropagation();
+        setFrameSelectionStarted(true);
+        setClickX(e.nativeEvent.offsetX);
+        setClickY(e.nativeEvent.offsetY);
+        setselectionX(e.nativeEvent.offsetX);
+        setselectionY(e.nativeEvent.offsetY);
+      }
     }
 
     function handleFrameSelectionEnd() {
@@ -781,15 +788,26 @@ export const Tree = React.forwardRef(
         e.stopPropagation();
         setDragStarted(false);
         const selectedNode = nodeMap[dragInfo.dragNodeId];
+
+        const dragValid = isDragValid(
+          dragInfo.dragNodeId,
+          dragInfo.dropNodeId,
+          nodeMap
+        );
+
+        let dragValid2 = true;
+        let validSelectedNodes: MutilSelectedNodeKey[] = [];
+        if (selectedNodes.length > 1) {
+          validSelectedNodes = getValidSelectedNodes(selectedNodes, nodeMap);
+          dragValid2 = isMutilDragValid(
+            validSelectedNodes,
+            dragInfo.dropNodeId,
+            nodeMap
+          );
+        }
+
         // 判斷拖拽是否無效
-        if (
-          // 拖拽對象為自己：無效
-          dragInfo.dragNodeId === dragInfo.dropNodeId ||
-          // 拖動對象為拖動節點的父節點：無效
-          (selectedNode &&
-            selectedNode.father === dragInfo.dropNodeId &&
-            dragInfo.placement === 'in')
-        ) {
+        if (!dragValid || !dragValid2) {
           setDragInfo(null);
           // 動畫：移動到最初的選中節點
           const fps = 30;
@@ -808,28 +826,46 @@ export const Tree = React.forwardRef(
         } else if (selectedNode) {
           setShowDragNode(false);
           if (UNCONTROLLED) {
-            const res = dragSort(
-              nodeMap,
-              dragInfo.dragNodeId,
-              dragInfo.dropNodeId,
-              dragInfo.placement
-            );
-            if (res) {
-              setNodeMap(res);
+            if (validSelectedNodes.length > 1) {
+              for (let index = 0; index < validSelectedNodes.length; index++) {
+                const dragId = validSelectedNodes[index].nodeKey;
+                const res = dragSort(
+                  nodeMap,
+                  dragId,
+                  dragInfo.dropNodeId,
+                  dragInfo.placement
+                );
+                if (res) {
+                  setNodeMap(res);
+                }
+              }
+            } else {
+              const res = dragSort(
+                nodeMap,
+                dragInfo.dragNodeId,
+                dragInfo.dropNodeId,
+                dragInfo.placement
+              );
+              if (res) {
+                setNodeMap(res);
+              }
             }
           } else if (handleDrag) {
-            handleDrag(dragInfo);
+            handleDrag(dragInfo, validSelectedNodes);
           }
 
-          const crossCompDragId = sessionStorage.getItem('cross-comp-drag');
-          const crossCompDropId = sessionStorage.getItem('cross-comp-drop');
-          const crossDragCompId = sessionStorage.getItem('cross-drag-compId');
-          if (
-            crossCompDragId &&
-            handleCrossCompDrag &&
-            crossDragCompId !== compId
-          ) {
-            handleCrossCompDrag(crossCompDragId, crossCompDropId);
+          // 跨组件拖拽
+          if (validSelectedNodes.length <= 1) {
+            const crossCompDragId = sessionStorage.getItem('cross-comp-drag');
+            const crossCompDropId = sessionStorage.getItem('cross-comp-drop');
+            const crossDragCompId = sessionStorage.getItem('cross-drag-compId');
+            if (
+              crossCompDragId &&
+              handleCrossCompDrag &&
+              crossDragCompId !== compId
+            ) {
+              handleCrossCompDrag(crossCompDragId, crossCompDropId);
+            }
           }
         }
         sessionStorage.removeItem('cross-comp-drag');
@@ -1169,13 +1205,6 @@ export const Tree = React.forwardRef(
               )}
               <TreeNode
                 node={node}
-                ITEM_HEIGHT={
-                  node._key === startId
-                    ? ITEM_HEIGHT * rootZoomRatio
-                    : node.father === startId
-                    ? ITEM_HEIGHT * secondZoomRatio
-                    : ITEM_HEIGHT
-                }
                 BLOCK_HEIGHT={
                   node._key === startId
                     ? BLOCK_HEIGHT * rootZoomRatio
@@ -1247,6 +1276,7 @@ export const Tree = React.forwardRef(
               movedNodeX={movedNodeX}
               movedNodeY={movedNodeY}
               dragInfo={dragInfo}
+              mutilMode={selectedNodes ? true : false}
             />
           ) : null}
           {frameSelectionStarted ? (

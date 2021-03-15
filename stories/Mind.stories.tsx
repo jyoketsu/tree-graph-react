@@ -17,7 +17,7 @@ const nodes = {
     checked: true,
     hour: 0.1,
     limitDay: new Date(new Date().setHours(0, 0, 0, 0)).getTime(),
-    disabled: true,
+    // disabled: true,
   },
   '002': {
     _key: '002',
@@ -401,6 +401,11 @@ MultiCol.args = {
   showCheckbox: true,
   showStatus: true,
   // disabled: true,
+  itemHeight: 60,
+  blockHeight: 40,
+  fontSize: 18,
+  pathWidth: 3,
+  pathColor: '#535953',
   handleClickDot: (node: any) => console.log('---handleClickDot---', node),
   handleClickMoreButton: (node: any, clientX: number, clientY: number) =>
     console.log('---handleClickMoreButton---', node, clientX, clientY),
@@ -430,4 +435,9 @@ SingleCol.args = {
   nodes: nodes,
   startId: '001',
   singleColumn: true,
+  itemHeight: 60,
+  blockHeight: 40,
+  fontSize: 18,
+  pathWidth: 3,
+  pathColor: '#535953',
 };
