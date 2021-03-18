@@ -8,6 +8,7 @@ export default function calculate(
   startId: string,
   single: boolean | undefined,
   ITEM_HEIGHT: number,
+  BLOCK_HEIGHT: number,
   INDENT: number,
   FONT_SIZE: number,
   showIcon: boolean,
@@ -30,29 +31,24 @@ export default function calculate(
   let MAX_Y = ITEM_HEIGHT;
   let MAX_END = rootWidth * 1.5;
 
-  let MIN_X = 10;
-  let MIN_END = 10;
+  let MIN_X = 8;
+  let MIN_END = 8;
 
   let nodeList: CNode[] = [];
 
   if (single) {
-    location(nodes, root, 10, 10);
+    location(nodes, root, 8, 8);
   } else {
     if (!root.contract) {
       let { rightStarts, leftStarts } = getStarts(nodes, root);
 
-      let [x1, y1, x2, y2] = [
-        10 + rootWidth + INDENT * 2,
-        10,
-        -10 - INDENT * 2,
-        10,
-      ];
+      let [x1, y1, x2, y2] = [rootWidth + INDENT * 2, 8, -INDENT * 2, 8];
 
       for (let index = 0; index < rightStarts.length; index++) {
         let node = rightStarts[index];
         y1 = location(nodes, node, x1, y1);
         if (index + 1 !== rightStarts.length) {
-          y1 += ITEM_HEIGHT * 1.3;
+          y1 += ITEM_HEIGHT * secondZoomRatio;
           if (y1 > MAX_Y) {
             MAX_Y = y1;
           }
@@ -63,7 +59,7 @@ export default function calculate(
         let node = leftStarts[index];
         y2 = location(nodes, node, x2, y2, true);
         if (index + 1 !== leftStarts.length) {
-          y2 += ITEM_HEIGHT * 1.3;
+          y2 += ITEM_HEIGHT * secondZoomRatio;
           if (y2 > MAX_Y) {
             MAX_Y = y2;
           }
@@ -91,8 +87,8 @@ export default function calculate(
         root.rightDots.push(element.y);
       }
     } else {
-      root.x = 10;
-      root.y = 10;
+      root.x = 8;
+      root.y = 8;
       delete root.rightDots;
       delete root.leftDots;
     }
@@ -160,8 +156,9 @@ export default function calculate(
 
     let childX;
 
+    const diffX = node._key === startId ? INDENT * 2 : INDENT;
     if (!toLeft) {
-      childX = x + nodeWidth + INDENT * 2;
+      childX = x + nodeWidth + diffX;
       if (childX > MAX_X) {
         MAX_X = childX;
       }
@@ -169,7 +166,7 @@ export default function calculate(
         MAX_END = node.x + nodeWidth;
       }
     } else {
-      childX = x - nodeWidth - INDENT * 2;
+      childX = x - nodeWidth - diffX;
       if (childX < MIN_X) {
         MIN_X = childX;
       }
@@ -179,20 +176,39 @@ export default function calculate(
     }
 
     if (!node.contract) {
+      const itemHeight =
+        node._key === startId ? ITEM_HEIGHT * secondZoomRatio : ITEM_HEIGHT;
       // 遍历子节点
       for (let index = 0; index < childrenIds.length; index++) {
         const element = nodes[childrenIds[index]];
         childY = location(nodes, element, childX, childY, toLeft);
         node.dots.push(element.y);
         if (index + 1 !== childrenIds.length) {
-          childY += ITEM_HEIGHT * 1.3;
+          childY += itemHeight;
           if (childY > MAX_Y) {
             MAX_Y = childY;
           }
         }
       }
     }
-    node.y = (y + childY) / 2;
+    if (!node.contract && childrenIds.length) {
+      const firstChildY = nodes[childrenIds[0]].y;
+      const lastChildY = nodes[childrenIds[childrenIds.length - 1]].y;
+      // 在子节点的纵向居中
+      const middleY =
+        firstChildY && lastChildY
+          ? (firstChildY + lastChildY) / 2
+          : (y + childY) / 2;
+      if (node.father === startId) {
+        node.y =
+          middleY + BLOCK_HEIGHT / 2 - (BLOCK_HEIGHT * secondZoomRatio) / 2;
+      } else {
+        node.y = middleY;
+      }
+    } else {
+      node.y = (y + childY) / 2;
+    }
+
     nodeList.push(node as CNode);
     return childY;
   }

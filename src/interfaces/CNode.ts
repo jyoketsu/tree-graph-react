@@ -13,11 +13,11 @@ export default interface CNode {
   icon?: string;
   color?: string;
   backgroundColor?: string;
-  dotIcon?:string;
+  dotIcon?: string;
   showCheckbox?: boolean;
   showStatus?: boolean;
-  disabled?:boolean;
-  strikethrough?:boolean;
+  disabled?: boolean;
+  strikethrough?: boolean;
   // 以下为计算属性
   x: number;
   y: number;

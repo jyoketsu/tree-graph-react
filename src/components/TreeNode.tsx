@@ -420,7 +420,7 @@ Props) => {
         x={node.x}
         y={node.y}
         width={node.name ? node.width + totalButtonWidth : 100}
-        height={BLOCK_HEIGHT + 10}
+        height={BLOCK_HEIGHT}
         fillOpacity={0}
       />
       {/* 顯式外框 */}

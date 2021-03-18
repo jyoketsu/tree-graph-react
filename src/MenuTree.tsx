@@ -28,6 +28,7 @@ export interface MenuProps {
   backgroundColor?: string;
   // 选中菜单背景色
   selectedBackgroundColor?: string;
+  dragLineColor?: string;
   // 字体颜色
   color?: string;
   // 选中的字体颜色
@@ -75,6 +76,7 @@ export const MenuTree = React.forwardRef(
       startId,
       backgroundColor,
       selectedBackgroundColor,
+      dragLineColor,
       color,
       selectedColor,
       hoverColor,
@@ -167,6 +169,7 @@ export const MenuTree = React.forwardRef(
         startId,
         true,
         ITEM_HEIGHT,
+        BLOCK_HEIGHT,
         INDENT,
         FONT_SIZE,
         SHOW_ICON,
@@ -503,6 +506,7 @@ export const MenuTree = React.forwardRef(
             BLOCK_HEIGHT={BLOCK_HEIGHT}
             FONT_SIZE={FONT_SIZE}
             selectedBackgroundColor={selectedBackgroundColor || '#00CDD3'}
+            dragLineColor={dragLineColor || '#00CDD3'}
             color={color || '#CDD0D2'}
             selectedColor={selectedColor || '#FFF'}
             hoverColor={hoverColor || '#FFF'}

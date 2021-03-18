@@ -8,6 +8,7 @@ export default function calculate(
   startId: string,
   singleColumn: boolean | undefined,
   ITEM_HEIGHT: number,
+  BLOCK_HEIGHT: number,
   INDENT: number,
   FONT_SIZE: number,
   showIcon: boolean,
@@ -21,6 +22,8 @@ export default function calculate(
   expandedNodeKey?: string | null
 ) {
   nodes = JSON.parse(JSON.stringify(nodes));
+  const start_x = startX || 15;
+  const start_y = startY || 15;
   // 根节点
   const root = nodes[startId];
   if (!root) {
@@ -39,7 +42,7 @@ export default function calculate(
     singleColumn || (root.sortList && root.sortList.length === 1);
 
   let MAX_X = rootWidth;
-  let MAX_Y = ITEM_HEIGHT;
+  let MAX_Y = start_y + ITEM_HEIGHT * rootZoomRatio * 2;
   let MAX_END = rootWidth;
 
   let second_start_x;
@@ -62,9 +65,13 @@ export default function calculate(
       for (let index = 0; index < secondLevel.length; index++) {
         const element = secondLevel[index];
 
+        const diffY =
+          ITEM_HEIGHT - BLOCK_HEIGHT * rootZoomRatio > 40
+            ? ITEM_HEIGHT
+            : BLOCK_HEIGHT * rootZoomRatio + 40;
         if (index === 0) {
           SECOND_START_NODE_ID = element?._key;
-          location(nodes, element, 15, ITEM_HEIGHT * 2);
+          location(nodes, element, 15, start_y + diffY);
         } else {
           if (index + 1 === secondLevel.length) {
             SECOND_END_NODE_ID = element?._key;
@@ -73,7 +80,7 @@ export default function calculate(
             nodes,
             element,
             MAX_END + (columnSpacing ? columnSpacing : 55),
-            ITEM_HEIGHT * 2
+            start_y + diffY
           );
         }
       }
@@ -90,11 +97,11 @@ export default function calculate(
     } else {
       root.x = (MAX_END - root.width) / 2;
     }
-    root.y = 1;
+    root.y = start_y;
     nodeList.push(root as CNode);
   } else {
     // 单列视图
-    location(nodes, root, startX || 10, startY || 10);
+    location(nodes, root, start_x, start_y);
   }
 
   // let nodeList = [];
@@ -188,18 +195,36 @@ export default function calculate(
           continue;
         }
 
-        if (index === 0) {
-          childY += ITEM_HEIGHT + 5;
-          lastChildY += ITEM_HEIGHT + 5;
-        } else {
-          childY += ITEM_HEIGHT + 5;
-          lastChildY += ITEM_HEIGHT + 5;
-        }
+        const diffY =
+          index === 0
+            ? node._key === startId
+              ? ITEM_HEIGHT - BLOCK_HEIGHT * rootZoomRatio > 40
+                ? ITEM_HEIGHT
+                : BLOCK_HEIGHT * rootZoomRatio + 40
+              : node.father === startId
+              ? ITEM_HEIGHT - BLOCK_HEIGHT * secondZoomRatio > 8
+                ? ITEM_HEIGHT
+                : BLOCK_HEIGHT * rootZoomRatio + 8
+              : ITEM_HEIGHT
+            : element._key === startId
+            ? ITEM_HEIGHT - BLOCK_HEIGHT * rootZoomRatio > 40
+              ? ITEM_HEIGHT
+              : BLOCK_HEIGHT * rootZoomRatio + 40
+            : element.father === startId
+            ? ITEM_HEIGHT - BLOCK_HEIGHT * secondZoomRatio > 8
+              ? ITEM_HEIGHT
+              : BLOCK_HEIGHT * rootZoomRatio + 8
+            : ITEM_HEIGHT;
+
+        childY += diffY + 5;
+        lastChildY += diffY + 5;
+
         if (childY > MAX_Y) {
           MAX_Y = childY;
         }
 
         childY = location(nodes, element, childX, childY);
+
         // 非最后一个子节点
         if (index + 1 !== childrenIds.length) {
           lastChildY = childY;

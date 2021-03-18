@@ -8,6 +8,7 @@ interface Props {
   startId: string;
   indent: number;
   selectedBackgroundColor: string;
+  dragLineColor: string;
   selectedColor: string;
   color: string;
   hoverColor: string;
@@ -35,6 +36,7 @@ const TreeNode = ({
   node,
   indent,
   selectedBackgroundColor,
+  dragLineColor,
   color,
   selectedColor,
   hoverColor,
@@ -190,9 +192,7 @@ const TreeNode = ({
         boxSizing: 'border-box',
         backgroundColor:
           nodeRectClassName === 'selected' ? selectedBackgroundColor : 'unset',
-        borderBottom: isDragOver
-          ? `2px solid ${selectedBackgroundColor}`
-          : 'unset',
+        borderBottom: isDragOver ? `2px solid ${dragLineColor}` : 'unset',
       }}
       draggable={showInput || disabled || node.disabled ? false : true}
       onDragStart={handleDragStart}
@@ -314,6 +314,7 @@ const TreeNode = ({
                 : hover
                 ? hoverColor
                 : color,
+            fontWeight: nodeRectClassName === 'selected' ? 800 : 'normal',
           }}
         >
           {node.name || ''}

@@ -32,7 +32,7 @@ const Expand = ({ node, BLOCK_HEIGHT, position, handleClickExpand }: Props) => {
         return node.y + BLOCK_HEIGHT / 2 - 5;
       case 'leftBottom':
       case 'bottomCenter':
-        return node.y + BLOCK_HEIGHT + 5;
+        return node.y + BLOCK_HEIGHT - 5;
       default:
         return node.y + BLOCK_HEIGHT / 2 - 5;
     }

@@ -28,10 +28,6 @@ import {
 import MutilSelectedNodeKey from './interfaces/MutilSelectedNodeKey';
 
 const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
-// 根节点放大倍率
-const rootZoomRatio = 1.5;
-// 第二层节点放大倍率
-const secondZoomRatio = 1.2;
 
 interface PasteFunc {
   (
@@ -79,6 +75,10 @@ export interface TreeProps {
   showIcon?: boolean;
   showAvatar?: boolean;
   hideHour?: boolean;
+  // 根节点放大倍率
+  root_zoom_ratio?: number;
+  // 第二层节点放大倍率
+  second_zoom_ratio?: number;
   handleClickExpand?: Function;
   handleCheck?: Function;
   handleClickAvatar?: Function;
@@ -100,6 +100,7 @@ export interface TreeProps {
   handleMouseEnterAvatar?: Function;
   handleMouseLeaveAvatar?: Function;
   handleCrossCompDrag?: Function;
+  handleChange?: Function;
   ref?: any;
 }
 
@@ -133,6 +134,8 @@ export const Tree = React.forwardRef(
       showIcon,
       showAvatar,
       hideHour,
+      root_zoom_ratio,
+      second_zoom_ratio,
       handleClickExpand,
       handleCheck,
       handleClickAvatar,
@@ -154,12 +157,15 @@ export const Tree = React.forwardRef(
       handleMouseEnterAvatar,
       handleMouseLeaveAvatar,
       handleCrossCompDrag,
+      handleChange,
     }: TreeProps,
     ref
   ) => {
     let clickTimeId: NodeJS.Timeout;
-
-    const ITEM_HEIGHT = itemHeight || 55;
+    const rootZoomRatio = root_zoom_ratio || 1.8;
+    const secondZoomRatio = second_zoom_ratio || 1.4;
+    // const ITEM_HEIGHT = itemHeight || 55;
+    const ITEM_HEIGHT = itemHeight || 35;
     const BLOCK_HEIGHT = blockHeight || 30;
     const FONT_SIZE = fontSize || 14;
     const INDENT = indent || 25;
@@ -247,6 +253,7 @@ export const Tree = React.forwardRef(
         startId,
         singleColumn,
         ITEM_HEIGHT,
+        BLOCK_HEIGHT,
         INDENT,
         FONT_SIZE,
         SHOW_ICON,
@@ -266,6 +273,9 @@ export const Tree = React.forwardRef(
         setSecondStartX(cal.second_start_x);
         setSecondEndX(cal.second_end_x);
         setisSingle(cal.isSingle);
+        if (handleChange) {
+          handleChange();
+        }
       }
     }, [nodeMap, startId, singleColumn]);
 
@@ -281,7 +291,13 @@ export const Tree = React.forwardRef(
     function fatherPath(node: CNode) {
       // 从左向右画
       const startX = node.x;
-      const Y = node.y + BLOCK_HEIGHT / 2;
+      const blockHeight =
+        node._key === startId
+          ? BLOCK_HEIGHT * rootZoomRatio
+          : node.father === startId
+          ? BLOCK_HEIGHT * secondZoomRatio
+          : BLOCK_HEIGHT;
+      const Y = node.y + blockHeight / 2;
       const endX = node.x - (INDENT - 5);
       const lineEndX = endX + RADIUS;
       const curveEndY = Y - RADIUS;
@@ -293,32 +309,60 @@ export const Tree = React.forwardRef(
 
     // 有子节点时的下部纵线
     function childPath(node: CNode) {
-      const M = `M ${node.x + 5} ${node.y + BLOCK_HEIGHT}`;
-      const V = `V ${node.last_child_y + BLOCK_HEIGHT / 2 - RADIUS}`;
+      const blockHeight =
+        node._key === startId
+          ? BLOCK_HEIGHT * rootZoomRatio
+          : node.father === startId
+          ? BLOCK_HEIGHT * secondZoomRatio
+          : BLOCK_HEIGHT;
+      const childBlockHeight =
+        node._key === startId ? BLOCK_HEIGHT * secondZoomRatio : BLOCK_HEIGHT;
+      const M = `M ${node.x + 5} ${node.y + blockHeight}`;
+      const V = `V ${node.last_child_y + childBlockHeight / 2 - RADIUS}`;
       return `${M} ${V}`;
     }
 
     // 根节点底部水平线
-    function rootHpaht() {
-      const M = `M ${secondStartX ? secondStartX + RADIUS : 0} ${ITEM_HEIGHT *
-        2 -
-        (ITEM_HEIGHT * 2 - BLOCK_HEIGHT) / 2}`;
+    function rootHpaht(y: number) {
+      const diffY =
+        ITEM_HEIGHT - BLOCK_HEIGHT * rootZoomRatio > 40
+          ? ITEM_HEIGHT
+          : BLOCK_HEIGHT * rootZoomRatio + 40;
+      const itemY = y + diffY;
+      const blockY = y + BLOCK_HEIGHT * rootZoomRatio;
+      const middleY = itemY - (itemY - blockY) / 2;
+      const M = `M ${secondStartX ? secondStartX + RADIUS : 0} ${middleY}`;
       const H = `H ${secondEndX ? secondEndX - RADIUS : 0}`;
       return `${M} ${H}`;
     }
 
     // 根节点底部纵线
     function rootVpath(node: CNode) {
-      const M = `M ${node.x + node.width / 2} ${node.y + BLOCK_HEIGHT}`;
-      const V = `V ${ITEM_HEIGHT * 2 - (ITEM_HEIGHT * 2 - BLOCK_HEIGHT) / 2}`;
+      const diffY =
+        ITEM_HEIGHT - BLOCK_HEIGHT * rootZoomRatio > 40
+          ? ITEM_HEIGHT
+          : BLOCK_HEIGHT * rootZoomRatio + 40;
+      const itemY = node.y + diffY;
+      const blockY = node.y + BLOCK_HEIGHT * rootZoomRatio;
+      const middleY = itemY - (itemY - blockY) / 2;
+
+      const M = `M ${node.x + node.width / 2} ${blockY}`;
+      const V = `V ${middleY}`;
       return `${M} ${V}`;
     }
 
     // 第二层节点头部纵线（从下往上画）
     function rootBottomVpath(node: CNode) {
+      const diffY =
+        ITEM_HEIGHT - BLOCK_HEIGHT * rootZoomRatio > 40
+          ? ITEM_HEIGHT
+          : BLOCK_HEIGHT * rootZoomRatio + 40;
+
       const startX = node.x + node.width / 2;
       const startY = node.y;
-      const endY = node.y - (ITEM_HEIGHT * 2 - BLOCK_HEIGHT) / 2;
+      const endY =
+        node.y -
+        (diffY - BLOCK_HEIGHT * rootZoomRatio) / 2;
 
       // 第二层的第一个节点
       if (node.x + node.width / 2 === secondStartX) {
@@ -1173,7 +1217,7 @@ export const Tree = React.forwardRef(
                   node.sortList.length &&
                   !node.contract ? (
                     <path
-                      d={rootHpaht()}
+                      d={rootHpaht(node.y)}
                       fill="none"
                       stroke={PATH_COLOR}
                       strokeWidth={PATH_WIDTH}

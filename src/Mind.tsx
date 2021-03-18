@@ -29,11 +29,6 @@ import MutilSelectedNodeKey from './interfaces/MutilSelectedNodeKey';
 
 const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 
-// 根节点放大倍率
-const rootZoomRatio = 1.5;
-// 第二层节点放大倍率
-const secondZoomRatio = 1.2;
-
 interface PasteFunc {
   (
     pasteNodeKey: string,
@@ -76,6 +71,10 @@ export interface MindProps {
   showIcon?: boolean;
   showAvatar?: boolean;
   hideHour?: boolean;
+  // 根节点放大倍率
+  root_zoom_ratio?: number;
+  // 第二层节点放大倍率
+  second_zoom_ratio?: number;
   handleClickExpand?: Function;
   handleCheck?: Function;
   handleClickAvatar?: Function;
@@ -97,6 +96,7 @@ export interface MindProps {
   handleMouseEnterAvatar?: Function;
   handleMouseLeaveAvatar?: Function;
   handleCrossCompDrag?: Function;
+  handleChange?: Function;
   ref?: any;
 }
 
@@ -125,6 +125,8 @@ export const Mind = React.forwardRef(
       showIcon,
       showAvatar,
       hideHour,
+      root_zoom_ratio,
+      second_zoom_ratio,
       handleClickExpand,
       handleCheck,
       handleClickAvatar,
@@ -146,15 +148,18 @@ export const Mind = React.forwardRef(
       handleMouseEnterAvatar,
       handleMouseLeaveAvatar,
       handleCrossCompDrag,
+      handleChange,
     }: MindProps,
     ref
   ) => {
     let clickTimeId: NodeJS.Timeout;
-
+    const radius = 8;
+    const rootZoomRatio = root_zoom_ratio || 1.8;
+    const secondZoomRatio = second_zoom_ratio || 1.4;
     const ITEM_HEIGHT = itemHeight || 50;
     const BLOCK_HEIGHT = blockHeight || 30;
     const FONT_SIZE = fontSize || 14;
-    const INDENT = indent || 25;
+    const INDENT = indent || 35;
     // const AVATAR_WIDTH = avatarWidth || 22;
     // const CHECK_BOX_WIDTH = checkBoxWidth || 18;
     const PATH_WIDTH = pathWidth || 2;
@@ -231,6 +236,7 @@ export const Mind = React.forwardRef(
         startId,
         singleColumn,
         ITEM_HEIGHT,
+        BLOCK_HEIGHT,
         INDENT,
         FONT_SIZE,
         SHOW_ICON,
@@ -243,6 +249,9 @@ export const Mind = React.forwardRef(
         setcnodes(cal.nodes);
         setmaxY(cal.max_y);
         setmaxEnd(cal.max_end);
+        if (handleChange) {
+          handleChange();
+        }
       }
     }, [nodeMap, startId, singleColumn]);
 
@@ -797,46 +806,73 @@ export const Mind = React.forwardRef(
       }
     }
 
-    function path(node: CNode, dotY: any) {
-      const blockHeight = BLOCK_HEIGHT;
-      // selectedId === startId
-      //   ? BLOCK_HEIGHT * rootZoomRatio
-      //   : nodeMap && selectedId && nodeMap[selectedId].father === startId
-      //   ? BLOCK_HEIGHT * secondZoomRatio
-      //   : BLOCK_HEIGHT;
+    // 有子节点的节点后的纵线
+    function childVPath(node: CNode, y1: number, y2: number) {
+      const diff = INDENT - 8;
+      const HlineWidth = diff - radius;
+      const startBlockHeight =
+        node.father === startId ? BLOCK_HEIGHT * secondZoomRatio : BLOCK_HEIGHT;
+      const endBlockHeight = BLOCK_HEIGHT;
 
       const startX = !node.toLeft ? node.x + node.width : node.x;
-      const startY = node.y + blockHeight / 2;
+      const startY = node.y + startBlockHeight / 2;
+      const M = `M ${startX} ${startY}`;
+      const H = !node.toLeft
+        ? `H ${startX + HlineWidth}`
+        : `H ${startX - HlineWidth}`;
+      const M2 = `M ${
+        !node.toLeft ? startX + HlineWidth : startX - HlineWidth
+      } ${y1 + endBlockHeight / 2 + radius}`;
+      const V = `V ${y2 + endBlockHeight / 2 - radius}`;
+
+      if (y1 === y2) {
+        return `${M} ${H}`;
+      } else {
+        return `${M} ${H} ${M2} ${V}`;
+      }
+    }
+
+    // 每个子节点前的横线
+    function path(node: CNode, dotY: any) {
+      const startBlockHeight =
+        node.father === startId ? BLOCK_HEIGHT * secondZoomRatio : BLOCK_HEIGHT;
+      const endBlockHeight = BLOCK_HEIGHT;
+      const nodeMiddleY = node.y + startBlockHeight / 2;
 
       const endX = !node.toLeft
-        ? node.x + node.width + INDENT * 2 - 8
-        : node.x - INDENT * 2 + 8;
-      const endY = dotY + blockHeight / 2;
+        ? node.x + node.width + INDENT - 8
+        : node.x - INDENT + 8;
+      const endY = dotY + endBlockHeight / 2;
+      const startX = !node.toLeft ? endX - radius : endX + radius;
 
-      const x1 = (startX + endX) / 2;
-      const y1 = startY;
-      const x2 = x1;
-      const y2 = endY;
+      let startY;
+      if (nodeMiddleY === endY) {
+        startY = endY;
+      } else if (nodeMiddleY > endY) {
+        startY = endY + radius;
+      } else {
+        startY = endY - radius;
+      }
+
+      const x1 = startX;
+      const y1 = endY;
 
       const M = `M ${startX} ${startY}`;
-      const C = `C ${x1} ${y1},${x2} ${y2}, ${endX} ${endY}`;
-      return `${M} ${C}`;
+      const Q = `Q ${x1} ${y1},${endX} ${endY}`;
+      return `${M} ${Q}`;
     }
 
     function rootPath(node: CNode, dotY: any, isLeft?: boolean) {
-      const blockHeight =
-        selectedId === startId
-          ? BLOCK_HEIGHT * rootZoomRatio
-          : nodeMap && selectedId && nodeMap[selectedId].father === startId
-          ? BLOCK_HEIGHT * secondZoomRatio
-          : BLOCK_HEIGHT;
+      const startBlockHeight = BLOCK_HEIGHT * rootZoomRatio;
+      const endBlockHeight = BLOCK_HEIGHT * secondZoomRatio;
       const startX = node.x + node.width / 2;
-      const startY = node.y + blockHeight / 2;
+      // const middleY = node.y + startBlockHeight / 2;
+      const startY = node.y + startBlockHeight / 2;
 
       const endX = !isLeft
-        ? node.x + node.width + INDENT * 2
-        : node.x - INDENT * 2;
-      const endY = dotY + blockHeight / 2;
+        ? node.x + node.width + INDENT * 2 - 8
+        : node.x - INDENT * 2 + 8;
+      const endY = dotY + endBlockHeight / 2;
 
       const x1 = (startX + endX) / 2;
       const y1 = startY;
@@ -1070,7 +1106,7 @@ export const Mind = React.forwardRef(
               className={`node-group-${node._key}`}
             >
               <g>
-                {node.dots && node.x && node.y
+                {node.dots && node.x && node.y && node._key !== startId
                   ? node.dots.map((dotY, index) => (
                       <path
                         key={index}
@@ -1106,7 +1142,30 @@ export const Mind = React.forwardRef(
                         />
                       ))
                     : null}
+                  {node.dots
+                    ? node.dots.map((dotY, index) => (
+                        <path
+                          key={index}
+                          d={rootPath(node, dotY, false)}
+                          stroke={PATH_COLOR}
+                          strokeWidth={PATH_WIDTH}
+                          fill="transparent"
+                        />
+                      ))
+                    : null}
                 </g>
+              ) : node.dots && node.dots.length ? (
+                <path
+                  key={`path-${index}`}
+                  d={childVPath(
+                    node,
+                    node.dots[0],
+                    node.dots[node.dots.length - 1]
+                  )}
+                  stroke={PATH_COLOR}
+                  strokeWidth={PATH_WIDTH}
+                  fill="transparent"
+                />
               ) : null}
 
               <TreeNode

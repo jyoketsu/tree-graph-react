@@ -64,7 +64,8 @@ const NodeInput = ({
       showAvatar
     );
     if (selected.toLeft && !selected.name) {
-      left = textX ? textX.x - 85 : selected.x - 85;
+      // left = textX ? textX.x + 85 : selected.x + 85;
+      left = textX ? textX.x : selected.x;
     } else {
       left = textX ? textX.x : selected.x;
       top = top;
