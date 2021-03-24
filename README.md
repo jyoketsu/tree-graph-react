@@ -328,7 +328,7 @@ interface DragInfo {
 | handleAddNext           | 向後添加兄弟節點事件,参数：selectedNode | Function | 否       | -                     |
 | handleAddChild          | 添加子節點事件,参数：selectedNode       | Function | 否       | -                     |
 | handleDeleteNode        | 刪除節點事件,参数：selectedId           | Function | 否       | -                     |
-| handleClickMoreButton   | 點擊更多按鈕,參數：clickNode            | Function | 否       | -                     |
+| handleClickMoreButton   | 點擊更多按鈕,參數：clickNode,offsetTop  | Function | 否       | -                     |
 | handleSave              | 保存樹                                  | Function | 否       | -                     |
 | handleDrag              | 拖拽節點,參數：dragNodeId,dragInfo      | Function | 否       | -                     |
 | dragEndFromOutside      | 從外部拖入樹節點,參數：node             | Function | 否       | -                     |

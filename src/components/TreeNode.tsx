@@ -109,9 +109,9 @@ Props) => {
   const [hoverMore, setHoverMore] = useState(false);
 
   let limitDayNum = node.limitDay
-    ? node.limitDay - now >= 0
-      ? Math.floor((node.limitDay - now) / 86400000) + 1
-      : Math.floor((node.limitDay - now) / 86400000)
+    ? node.limitDay - now > 0
+      ? Math.floor((node.limitDay - now) / 86400000)
+      : Math.floor((node.limitDay - now) / 86400000) - 1
     : 0;
 
   function handleMouseEnter(e: React.MouseEvent) {

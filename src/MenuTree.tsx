@@ -451,9 +451,9 @@ export const MenuTree = React.forwardRef(
       }
     }
 
-    function handleClickMore(node: CNode) {
+    function handleClickMore(node: CNode, offsetTop: number) {
       if (handleClickMoreButton) {
-        handleClickMoreButton(node);
+        handleClickMoreButton(node, offsetTop);
       }
     }
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import CNode from '../../interfaces/CNode';
 import { ClickOutside } from '@jyoketsu/click-outside-react';
 import { textWidthAll } from '../../services/util';
@@ -61,7 +61,7 @@ const TreeNode = ({
   collapseModeCollapsed,
 }: Props) => {
   const width = 12;
-
+  const containerRef = useRef<HTMLDivElement>(null);
   const [hover, sethover] = useState(false);
   const [value, setValue] = useState(node.name);
   const [dragStarted, setDragStarted] = useState(false);
@@ -75,7 +75,10 @@ const TreeNode = ({
   }
 
   function handleClickMore() {
-    clickMore(node);
+    clickMore(
+      node,
+      containerRef && containerRef.current ? containerRef.current.offsetTop : 0
+    );
   }
 
   function handleClick(e: React.MouseEvent) {
@@ -200,6 +203,7 @@ const TreeNode = ({
       onDragLeave={handleDragLeave}
       onDrop={handleDropNode}
       onDragEnd={handleDragEnd}
+      ref={containerRef}
     >
       <div
         style={{
