@@ -280,6 +280,25 @@ const getValidSelectedNodes = (selectedNodes: Node[], nodeMap: NodeMap) => {
   return validSelectedNodes;
 };
 
+export const getNextSelect = (node: Node, nodeMap: NodeMap) => {
+  const father = nodeMap[node.father];
+  if (father) {
+    const sortList = father.sortList;
+    if (sortList.length > 1) {
+      const index = sortList.findIndex(key => key === node._key);
+      if (index > 0) {
+        return sortList[index - 1];
+      } else {
+        return sortList[index + 1];
+      }
+    } else {
+      return node.father;
+    }
+  } else {
+    return null;
+  }
+};
+
 export const getAncestor = (
   node: Node,
   nodeMap: NodeMap,

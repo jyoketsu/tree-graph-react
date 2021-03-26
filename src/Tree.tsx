@@ -24,6 +24,7 @@ import {
   getValidSelectedNodes,
   isDragValid,
   isMutilDragValid,
+  getNextSelect,
 } from './services/util';
 import MutilSelectedNodeKey from './interfaces/MutilSelectedNodeKey';
 
@@ -101,6 +102,7 @@ export interface TreeProps {
   handleMouseLeaveAvatar?: Function;
   handleCrossCompDrag?: Function;
   handleChange?: Function;
+  showDeleteConform?: Function;
   ref?: any;
 }
 
@@ -158,6 +160,7 @@ export const Tree = React.forwardRef(
       handleMouseLeaveAvatar,
       handleCrossCompDrag,
       handleChange,
+      showDeleteConform,
     }: TreeProps,
     ref
   ) => {
@@ -172,8 +175,8 @@ export const Tree = React.forwardRef(
     const RADIUS = lineRadius || 4;
     // const AVATAR_WIDTH = avatarWidth || 22;
     // const CHECK_BOX_WIDTH = checkBoxWidth || 18;
-    const PATH_WIDTH = pathWidth || 1;
-    const PATH_COLOR = pathColor || 'rgb(192,192,192)';
+    const PATH_WIDTH = pathWidth || 2;
+    const PATH_COLOR = pathColor || '#535953';
     const UNCONTROLLED = uncontrolled === undefined ? true : uncontrolled;
     const SHOW_ICON = showIcon === undefined ? true : showIcon;
     const SHOW_AVATAR = showAvatar === undefined ? false : showAvatar;
@@ -360,9 +363,7 @@ export const Tree = React.forwardRef(
 
       const startX = node.x + node.width / 2;
       const startY = node.y;
-      const endY =
-        node.y -
-        (diffY - BLOCK_HEIGHT * rootZoomRatio) / 2;
+      const endY = node.y - (diffY - BLOCK_HEIGHT * rootZoomRatio) / 2;
 
       // 第二层的第一个节点
       if (node.x + node.width / 2 === secondStartX) {
@@ -582,13 +583,19 @@ export const Tree = React.forwardRef(
 
       // setShowOptionsNode(null);
       if (UNCONTROLLED) {
+        const nextSelectId = getNextSelect(node, nodeMap);
+        if (nextSelectId) {
+          setselectedId(nextSelectId);
+        } else {
+          setselectedId(null);
+        }
+
         let nodes = deleteNode(nodeMap, selectedId);
 
         if (handleDeleteNode) {
           handleDeleteNode(selectedId);
         }
 
-        setselectedId(null);
         setSelectedNodes([]);
         setNodeMap(nodes);
       } else {
@@ -618,9 +625,19 @@ export const Tree = React.forwardRef(
           addChild();
           break;
         case 'Delete':
-        case 'Backspace':
-          deletenode();
+        case 'Backspace': {
+          if (showDeleteConform) {
+            const node = selectedId ? nodeMap[selectedId] : null;
+            if (node && node.sortList.length) {
+              showDeleteConform();
+            } else {
+              deletenode();
+            }
+          } else {
+            deletenode();
+          }
           break;
+        }
         case 'ArrowUp':
           if (event.shiftKey) {
             shiftUp();

@@ -202,6 +202,11 @@ export default function calculate(
       if (node.father === startId) {
         node.y =
           middleY + BLOCK_HEIGHT / 2 - (BLOCK_HEIGHT * secondZoomRatio) / 2;
+      } else if (node._key === startId) {
+        node.y =
+          middleY +
+          (BLOCK_HEIGHT * secondZoomRatio) / 2 -
+          (BLOCK_HEIGHT * rootZoomRatio) / 2;
       } else {
         node.y = middleY;
       }

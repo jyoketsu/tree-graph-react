@@ -268,7 +268,7 @@ Props) => {
   const backgroundColor = node.backgroundColor
     ? node.backgroundColor
     : node._key === startId
-    ? '#535953'
+    ? '#CB1B45'
     : '#e8e8e8';
 
   // const urlReg = /\w+\.+[\w\/|]{1,}/g;
@@ -340,6 +340,8 @@ Props) => {
       case 'border-rect':
         nodeRectStyle = {
           fill: backgroundColor,
+          stroke: hover ? '#bed2fc' : 'unset',
+          strokeWidth: 2,
         };
         break;
       case 'selected':
@@ -352,9 +354,12 @@ Props) => {
         };
         break;
       default:
-        nodeRectStyle = node.backgroundColor
-          ? { fill: backgroundColor, stroke: backgroundColor }
-          : { fillOpacity: 0 };
+        nodeRectStyle = {
+          fill: node.backgroundColor ? backgroundColor : 'unset',
+          fillOpacity: node.backgroundColor ? 1 : 0,
+          stroke: hover ? '#bed2fc' : 'unset',
+          strokeWidth: 2,
+        };
         break;
     }
   }
