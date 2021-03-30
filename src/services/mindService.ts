@@ -14,7 +14,8 @@ export default function calculate(
   showIcon: boolean,
   showAvatar: boolean,
   rootZoomRatio: number,
-  secondZoomRatio: number
+  secondZoomRatio: number,
+  inputNodeKey?: string
 ) {
   nodes = JSON.parse(JSON.stringify(nodes));
   // 根节点
@@ -23,7 +24,9 @@ export default function calculate(
     root,
     FONT_SIZE * rootZoomRatio,
     showIcon,
-    showAvatar
+    showAvatar,
+    undefined,
+    inputNodeKey
   );
   root.width = rootWidth;
 
@@ -139,7 +142,9 @@ export default function calculate(
         ? FONT_SIZE * secondZoomRatio
         : FONT_SIZE,
       showIcon,
-      showAvatar
+      showAvatar,
+      undefined,
+      inputNodeKey
     );
     node.x = x;
     node.width = nodeWidth;

@@ -133,7 +133,8 @@ function getNodeWidth(
   fontSize: number,
   showIcon: boolean,
   showAvatar: boolean,
-  padding?: number
+  padding?: number,
+  inputNodeKey?: string
 ) {
   const str = node.shorted || node.name;
   // let full = getFullAngleNum(str);
@@ -144,7 +145,10 @@ function getNodeWidth(
   //   full = 1;
   // }
   // const width = textWidth(fontSize);
-  const width = textWidthAll(fontSize, str);
+  let width = textWidthAll(fontSize, str);
+  if (inputNodeKey === node._key && width < 100) {
+    width = 100;
+  }
 
   const paddingWidth = padding ? padding * 1.5 : 15;
   const extInfoWidth = getExtInfoWidth(node, showIcon, showAvatar);

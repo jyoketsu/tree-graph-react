@@ -159,7 +159,7 @@ export const Mind = React.forwardRef(
     const radius = 8;
     const rootZoomRatio = root_zoom_ratio || 1.8;
     const secondZoomRatio = second_zoom_ratio || 1.4;
-    const ITEM_HEIGHT = itemHeight || 50;
+    const ITEM_HEIGHT = itemHeight || 38;
     const BLOCK_HEIGHT = blockHeight || 30;
     const FONT_SIZE = fontSize || 14;
     const INDENT = indent || 35;
@@ -245,7 +245,8 @@ export const Mind = React.forwardRef(
         SHOW_ICON,
         SHOW_AVATAR,
         rootZoomRatio,
-        secondZoomRatio
+        secondZoomRatio,
+        showInput && selectedId ? selectedId : undefined
       );
 
       if (cal) {
@@ -256,7 +257,7 @@ export const Mind = React.forwardRef(
           handleChange();
         }
       }
-    }, [nodeMap, startId, singleColumn]);
+    }, [nodeMap, startId, singleColumn, showInput]);
 
     useEffect(() => {
       if (defaultSelectedId) {
@@ -485,7 +486,13 @@ export const Mind = React.forwardRef(
     }
 
     function handleKeyDown(event: KeyboardEvent) {
-      if (disabled || disableShortcut || showInput || showNewInput) {
+      if (
+        !selectedId ||
+        disabled ||
+        disableShortcut ||
+        showInput ||
+        showNewInput
+      ) {
         return;
       }
       event.preventDefault();
@@ -584,8 +591,19 @@ export const Mind = React.forwardRef(
             setPasteType(null);
           }
           break;
-        default:
+        default: {
+          if (!showInput) {
+            if (UNCONTROLLED) {
+              let nodes = changeNodeText(nodeMap, selectedId, '');
+              setNodeMap(nodes);
+            }
+            if (handleChangeNodeText) {
+              handleChangeNodeText(selectedId, '');
+            }
+            setshowInput(true);
+          }
           break;
+        }
       }
     }
 

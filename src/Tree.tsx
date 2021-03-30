@@ -265,7 +265,10 @@ export const Tree = React.forwardRef(
         secondZoomRatio,
         undefined,
         undefined,
-        columnSpacing
+        columnSpacing,
+        undefined,
+        undefined,
+        showInput && selectedId ? selectedId : undefined
       );
 
       if (cal) {
@@ -280,7 +283,7 @@ export const Tree = React.forwardRef(
           handleChange();
         }
       }
-    }, [nodeMap, startId, singleColumn]);
+    }, [nodeMap, startId, singleColumn, showInput]);
 
     useEffect(() => {
       if (defaultSelectedId) {
@@ -610,7 +613,13 @@ export const Tree = React.forwardRef(
     }
 
     function handleKeyDown(event: KeyboardEvent) {
-      if (disabled || disableShortcut || showInput || showNewInput) {
+      if (
+        !selectedId ||
+        disabled ||
+        disableShortcut ||
+        showInput ||
+        showNewInput
+      ) {
         return;
       }
       event.preventDefault();
@@ -709,8 +718,19 @@ export const Tree = React.forwardRef(
           }
           break;
 
-        default:
+        default: {
+          if (!showInput) {
+            if (UNCONTROLLED) {
+              let nodes = changeNodeText(nodeMap, selectedId, '');
+              setNodeMap(nodes);
+            }
+            if (handleChangeNodeText) {
+              handleChangeNodeText(selectedId, '');
+            }
+            setshowInput(true);
+          }
           break;
+        }
       }
     }
 

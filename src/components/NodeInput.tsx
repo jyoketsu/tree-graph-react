@@ -26,9 +26,9 @@ const NodeInput = ({
   const [value, setValue] = useState('');
   const [selected, setSelected] = useState<CNode | null>(null);
 
-  function handleCommit(event: KeyboardEvent) {
-    if (event.key === 'Enter' && selected) {
-      handleChangeNodeText(selected._key, value);
+  function handleCommit(e: React.KeyboardEvent) {
+    if (e.key === 'Enter' && selected) {
+      handleChangeNodeText(selected._key, value.replaceAll("'", ''));
     }
   }
 
@@ -81,6 +81,7 @@ const NodeInput = ({
       {selected ? (
         <input
           className="node-input"
+          type="text"
           style={{
             boxSizing: 'border-box',
             // border: '1px solid #000000',
@@ -90,7 +91,7 @@ const NodeInput = ({
             padding: 'unset',
             outline: 'none',
             position: 'absolute',
-            width: `${inputWidth || 100}px`,
+            width: `${inputWidth < 100 ? 100 : inputWidth}px`,
             // height: `${BLOCK_HEIGHT ? BLOCK_HEIGHT + 2 : 30}px`,
             height: `${FONT_SIZE || 14}px`,
             fontSize: `${FONT_SIZE || 14}px`,
@@ -104,7 +105,7 @@ const NodeInput = ({
           placeholder="请输入名称"
           value={value}
           onChange={e => setValue(e.target.value)}
-          onKeyDown={(e: any) => handleCommit(e)}
+          onKeyDown={handleCommit}
           onMouseDown={(e: React.MouseEvent) => e.stopPropagation()}
           onMouseMove={(e: React.MouseEvent) => e.stopPropagation()}
           onContextMenu={(e: React.MouseEvent) => e.stopPropagation()}

@@ -19,7 +19,8 @@ export default function calculate(
   startY?: number,
   columnSpacing?: number,
   collapseMode?: boolean,
-  expandedNodeKey?: string | null
+  expandedNodeKey?: string | null,
+  inputNodeKey?: string
 ) {
   nodes = JSON.parse(JSON.stringify(nodes));
   const start_x = startX || 15;
@@ -34,7 +35,9 @@ export default function calculate(
     root,
     FONT_SIZE * rootZoomRatio,
     showIcon,
-    showAvatar
+    showAvatar,
+    undefined,
+    inputNodeKey
   );
   root.width = rootWidth;
   // 是否是单列：参数单列或者根节点只有一个子节点为单列
@@ -148,7 +151,9 @@ export default function calculate(
         ? FONT_SIZE * secondZoomRatio
         : FONT_SIZE,
       showIcon,
-      showAvatar
+      showAvatar,
+      undefined,
+      inputNodeKey
     );
     node.x = x;
     node.y = y;
