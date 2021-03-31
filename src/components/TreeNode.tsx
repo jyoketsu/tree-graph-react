@@ -55,6 +55,7 @@ interface Props {
   bottomOptions?: boolean;
   hideHour?: boolean;
   isMind?: boolean;
+  fontWeight?: number;
 }
 
 // let timer: NodeJS.Timeout;
@@ -95,6 +96,7 @@ const TreeNode = ({
   pasteNodeKey,
   bottomOptions,
   hideHour,
+  fontWeight,
 }: // nodeOptionsOpened,
 Props) => {
   const [hover, sethover] = useState(false);
@@ -404,10 +406,12 @@ Props) => {
       onDoubleClick={() => handleDbClickNode(node)}
       // onMouseDown={(e: React.MouseEvent) => handleDragStart(node, e)}
       onMouseDown={(e: React.MouseEvent) => {
-        e.stopPropagation();
-        setMouseDown(true);
-        setclickX(e.clientX);
-        setclickY(e.clientY);
+        if (e.button === 0) {
+          e.stopPropagation();
+          setMouseDown(true);
+          setclickX(e.clientX);
+          setclickY(e.clientY);
+        }
       }}
       onMouseUp={() => setMouseDown(false)}
       onMouseMove={(e: React.MouseEvent) => {
@@ -599,6 +603,7 @@ Props) => {
               userSelect: 'none',
               textDecoration: node.strikethrough ? 'line-through' : 'unset',
               cursor: name.type === 'link' ? 'pointer' : 'auto',
+              fontWeight: fontWeight ? fontWeight : 'normal',
             }}
             onDragEnter={handleDragEnter}
             onDragLeave={handleDragLeave}
@@ -632,6 +637,7 @@ Props) => {
             fontFamily: "'Microsoft YaHei', sans-serif",
             userSelect: 'none',
             textDecoration: node.strikethrough ? 'line-through' : 'unset',
+            fontWeight: fontWeight ? fontWeight : 'normal',
           }}
           onDragEnter={handleDragEnter}
           onDragLeave={handleDragLeave}

@@ -407,6 +407,7 @@ MultiCol.args = {
   // fontSize: 18,
   // pathWidth: 3,
   // pathColor: '#535953',
+  // fontWeight: 800,
   handleClickDot: (node: any) => console.log('---handleClickDot---', node),
   handleClickMoreButton: (node: any, clientX: number, clientY: number) =>
     console.log('---handleClickMoreButton---', node, clientX, clientY),

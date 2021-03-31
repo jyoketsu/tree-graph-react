@@ -55,6 +55,7 @@ export interface MindProps {
   blockHeight?: number;
   // 节点字体大小
   fontSize?: number;
+  fontWeight?: number;
   // 缩进
   indent?: number;
   // 头像宽度
@@ -115,6 +116,7 @@ export const Mind = React.forwardRef(
       itemHeight,
       blockHeight,
       fontSize,
+      fontWeight,
       indent,
       pathWidth,
       pathColor,
@@ -672,6 +674,16 @@ export const Mind = React.forwardRef(
     ) {
       if (disabled || node.disabled) {
         return;
+      }
+
+      // 如果框选了多个节点，而拖拽的节点不在其中的话，则取消框选
+      if (selectedNodes.length) {
+        const index = selectedNodes.findIndex(
+          element => node._key === element._key
+        );
+        if (index === -1) {
+          setSelectedNodes([]);
+        }
       }
 
       sessionStorage.setItem('cross-comp-drag', node._key);
@@ -1255,6 +1267,7 @@ export const Mind = React.forwardRef(
                 }}
                 bottomOptions={true}
                 hideHour={hideHour}
+                fontWeight={fontWeight}
               />
             </g>
           ))}
@@ -1271,6 +1284,7 @@ export const Mind = React.forwardRef(
               movedNodeX={movedNodeX}
               movedNodeY={movedNodeY}
               dragInfo={dragInfo}
+              mutilMode={selectedNodes.length > 1 ? true : false}
             />
           ) : null}
           {frameSelectionStarted ? (

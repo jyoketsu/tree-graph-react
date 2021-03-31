@@ -55,6 +55,7 @@ export interface TreeProps {
   blockHeight?: number;
   // 节点字体大小
   fontSize?: number;
+  fontWeight?: number;
   // 缩进
   indent?: number;
   // 列間距
@@ -119,6 +120,7 @@ export const Tree = React.forwardRef(
       itemHeight,
       blockHeight,
       fontSize,
+      fontWeight,
       indent,
       columnSpacing,
       // avatarWidth,
@@ -717,9 +719,12 @@ export const Tree = React.forwardRef(
             setPasteType(null);
           }
           break;
-
         default: {
-          if (!showInput) {
+          if (
+            !showInput &&
+            event.key.length === 1 &&
+            /[a-zA-Z]+/.test(event.key)
+          ) {
             if (UNCONTROLLED) {
               let nodes = changeNodeText(nodeMap, selectedId, '');
               setNodeMap(nodes);
@@ -799,6 +804,16 @@ export const Tree = React.forwardRef(
     ) {
       if (disabled || node.disabled) {
         return;
+      }
+
+      // 如果框选了多个节点，而拖拽的节点不在其中的话，则取消框选
+      if (selectedNodes.length) {
+        const index = selectedNodes.findIndex(
+          element => node._key === element._key
+        );
+        if (index === -1) {
+          setSelectedNodes([]);
+        }
       }
 
       sessionStorage.setItem('cross-comp-drag', node._key);
@@ -1341,6 +1356,7 @@ export const Tree = React.forwardRef(
                   if (handleMouseLeaveAvatar) handleMouseLeaveAvatar(node);
                 }}
                 hideHour={hideHour}
+                fontWeight={fontWeight}
               />
             </g>
           ))}
@@ -1357,7 +1373,7 @@ export const Tree = React.forwardRef(
               movedNodeX={movedNodeX}
               movedNodeY={movedNodeY}
               dragInfo={dragInfo}
-              mutilMode={selectedNodes ? true : false}
+              mutilMode={selectedNodes.length > 1 ? true : false}
             />
           ) : null}
           {frameSelectionStarted ? (
