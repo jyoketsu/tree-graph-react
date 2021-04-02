@@ -77,6 +77,13 @@ export interface MindProps {
   root_zoom_ratio?: number;
   // 第二层节点放大倍率
   second_zoom_ratio?: number;
+  // 背景色
+  backgroundColor?: string;
+  // 字体颜色
+  color?: string;
+  hoverBorderColor?: string;
+  selectedBorderColor?: string;
+  selectedBackgroundColor?: string;
   handleClickExpand?: Function;
   handleCheck?: Function;
   handleClickAvatar?: Function;
@@ -131,6 +138,11 @@ export const Mind = React.forwardRef(
       hideHour,
       root_zoom_ratio,
       second_zoom_ratio,
+      backgroundColor,
+      color,
+      hoverBorderColor,
+      selectedBorderColor,
+      selectedBackgroundColor,
       handleClickExpand,
       handleCheck,
       handleClickAvatar,
@@ -172,6 +184,11 @@ export const Mind = React.forwardRef(
     const UNCONTROLLED = uncontrolled === undefined ? true : uncontrolled;
     const SHOW_ICON = showIcon === undefined ? true : showIcon;
     const SHOW_AVATAR = showAvatar === undefined ? false : showAvatar;
+    const BACKGROUND_COLOR = backgroundColor ? backgroundColor : 'unset';
+    const COLOR = color || '#595959';
+    const HOVER_BORDER_COLOR = hoverBorderColor || '#bed2fc';
+    const SELECTED_BORDER_COLOR = selectedBorderColor || '#35a6f8';
+    const SELECTED_BACKGROUND_COLOR = selectedBackgroundColor || '#e8e8e8';
 
     const [nodeMap, setNodeMap] = useState(nodes);
     const [cnodes, setcnodes] = useState<CNode[]>([]);
@@ -218,6 +235,9 @@ export const Mind = React.forwardRef(
         } else {
           alert('请先选中节点');
         }
+      },
+      renameById: function(id: string, text: string) {
+        changeText(id, text);
       },
       getSelectedId: function() {
         return selectedId;
@@ -594,7 +614,11 @@ export const Mind = React.forwardRef(
           }
           break;
         default: {
-          if (!showInput) {
+          if (
+            !showInput &&
+            event.key.length === 1 &&
+            /[a-zA-Z]+/.test(event.key)
+          ) {
             if (UNCONTROLLED) {
               let nodes = changeNodeText(nodeMap, selectedId, '');
               setNodeMap(nodes);
@@ -953,6 +977,7 @@ export const Mind = React.forwardRef(
           viewBox={`0 0 ${maxEnd + 100} ${maxY + ITEM_HEIGHT}`}
           width={maxEnd + 100}
           height={maxY + ITEM_HEIGHT}
+          style={{ backgroundColor: BACKGROUND_COLOR }}
         >
           <defs>
             <filter id="filterShadow" x="0" y="0" width="200%" height="200%">
@@ -1052,7 +1077,7 @@ export const Mind = React.forwardRef(
               viewBox="0,0,22,22"
               preserveAspectRatio="xMinYMin meet"
             >
-              <path d="M0 0 L 22 22 H 0 Z" fill="#417505" />
+              <path d="M0 0 L 22 22 H 0 Z" fill="#b6b7b7" />
               <path d="M 0 0 H 22 V 22 Z" fill="rgb(53, 166, 248)" />
             </g>
             <g
@@ -1233,6 +1258,7 @@ export const Mind = React.forwardRef(
                     ? FONT_SIZE * secondZoomRatio
                     : FONT_SIZE
                 }
+                color={COLOR}
                 alias={new Date().getTime()}
                 selected={selectedId}
                 selectedNodes={selectedNodes}
@@ -1268,6 +1294,10 @@ export const Mind = React.forwardRef(
                 bottomOptions={true}
                 hideHour={hideHour}
                 fontWeight={fontWeight}
+                dotColor={PATH_COLOR}
+                hoverBorderColor={HOVER_BORDER_COLOR}
+                selectedBorderColor={SELECTED_BORDER_COLOR}
+                selectedBackgroundColor={SELECTED_BACKGROUND_COLOR}
               />
             </g>
           ))}
@@ -1326,6 +1356,7 @@ export const Mind = React.forwardRef(
             }
             showIcon={SHOW_ICON}
             showAvatar={SHOW_AVATAR}
+            startId={startId}
           />
         ) : null}
       </div>

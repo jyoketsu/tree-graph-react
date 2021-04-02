@@ -17,7 +17,7 @@ const nodes = {
     showCheckbox: true,
     showStatus: true,
     limitDay: new Date(new Date()).getTime(),
-    disabled: true,
+    // disabled: true,
   },
   '002': {
     _key: '002',
@@ -408,6 +408,7 @@ MultiCol.args = {
   // pathWidth: 3,
   // pathColor: '#535953',
   // fontWeight: 800,
+
   handleClickDot: (node: any) => console.log('---handleClickDot---', node),
   handleClickMoreButton: (node: any, clientX: number, clientY: number) =>
     console.log('---handleClickMoreButton---', node, clientX, clientY),
@@ -430,6 +431,17 @@ MultiCol.args = {
     console.log('---handleMouseEnterAvatar---', node),
   handleMouseLeaveAvatar: (node: any) =>
     console.log('---handleMouseLeaveAvatar---', node),
+};
+
+export const MultiColDark = Template.bind({});
+MultiColDark.args = {
+  nodes: nodes,
+  startId: '001',
+  pathColor: '#FFF',
+  backgroundColor: '#434343',
+  color: '#FFF',
+  hoverBorderColor: '#FFE4E1',
+  selectedBorderColor: '#FF0000',
 };
 
 export const SingleCol = Template.bind({});

@@ -22,6 +22,7 @@ interface Props {
   startId: string;
   BLOCK_HEIGHT: number;
   FONT_SIZE: number;
+  color: string;
   alias: number;
   selected: string | null;
   selectedNodes: Node[];
@@ -33,6 +34,10 @@ interface Props {
   showAvatar: boolean;
   singleColumn?: boolean;
   hideBorder?: boolean;
+  dotColor: string;
+  hoverBorderColor: string;
+  selectedBorderColor: string;
+  selectedBackgroundColor: string;
   handleCheck: CheckFunc;
   handleClickAvatar: Function;
   handleClickStatus: Function;
@@ -65,6 +70,7 @@ const TreeNode = ({
   startId,
   BLOCK_HEIGHT,
   FONT_SIZE,
+  color,
   alias,
   selected,
   selectedNodes,
@@ -76,6 +82,10 @@ const TreeNode = ({
   showAddButton,
   showMoreButton,
   moreButtonWidth,
+  dotColor,
+  hoverBorderColor,
+  selectedBorderColor,
+  selectedBackgroundColor,
   handleCheck,
   handleClickAvatar,
   handleClickStatus,
@@ -271,7 +281,7 @@ Props) => {
     ? node.backgroundColor
     : node._key === startId
     ? '#CB1B45'
-    : '#e8e8e8';
+    : selectedBackgroundColor;
 
   // const urlReg = /\w+\.+[\w\/|]{1,}/g;
   const urlReg = /(http:\/\/+\w+\.+[\w\/|]{1,})|(https:\/\/+\w+\.+[\w\/|]{1,})|(\w+\.+[\w\/|]{1,})/g;
@@ -334,7 +344,7 @@ Props) => {
   if ((dragStarted && hover) || dragIn) {
     nodeRectStyle = {
       fill: '#FFF',
-      stroke: '#35a6f8',
+      stroke: selectedBorderColor,
       strokeWidth: 2,
     };
   } else {
@@ -342,14 +352,14 @@ Props) => {
       case 'border-rect':
         nodeRectStyle = {
           fill: backgroundColor,
-          stroke: hover ? '#bed2fc' : 'unset',
+          stroke: hover ? hoverBorderColor : 'unset',
           strokeWidth: 2,
         };
         break;
       case 'selected':
         nodeRectStyle = {
           fill: backgroundColor,
-          stroke: '#35a6f8',
+          stroke: selectedBorderColor,
           strokeWidth: 2,
           fillOpacity: pasteNodeKey && pasteNodeKey === node._key ? 0.4 : 1,
           strokeOpacity: pasteNodeKey && pasteNodeKey === node._key ? 0.4 : 1,
@@ -359,13 +369,14 @@ Props) => {
         nodeRectStyle = {
           fill: node.backgroundColor ? backgroundColor : 'unset',
           fillOpacity: node.backgroundColor ? 1 : 0,
-          stroke: hover ? '#bed2fc' : 'unset',
+          stroke: hover ? hoverBorderColor : 'unset',
           strokeWidth: 2,
         };
         break;
     }
   }
 
+  const normalTextColor = nodeRectClassName ? '#595959' : color;
   const buttonWidth = moreButtonWidth ? moreButtonWidth : BLOCK_HEIGHT * 0.5;
 
   const buttonY = bottomOptions
@@ -586,18 +597,18 @@ Props) => {
             style={{
               fill:
                 name.type === 'link'
-                  ? '#35a6f8'
+                  ? '#6495ED'
                   : node.strikethrough
                   ? '#999'
                   : nodeRectClassName === 'selected' &&
                     !node.color &&
                     node._key !== startId
                   ? '#000000'
-                  : node.color
-                  ? node.color
                   : node._key === startId
                   ? '#FFF'
-                  : '#595959',
+                  : node.color
+                  ? node.color
+                  : normalTextColor,
               fillOpacity: pasteNodeKey && pasteNodeKey === node._key ? 0.4 : 1,
               fontFamily: "'Microsoft YaHei', sans-serif",
               userSelect: 'none',
@@ -632,7 +643,7 @@ Props) => {
               ? node.color
               : node._key === startId
               ? '#FFF'
-              : '#595959',
+              : normalTextColor,
             fillOpacity: pasteNodeKey && pasteNodeKey === node._key ? 0.4 : 1,
             fontFamily: "'Microsoft YaHei', sans-serif",
             userSelect: 'none',
@@ -702,6 +713,7 @@ Props) => {
           handleClick={handleClickDot}
           dragStarted={dragStarted}
           // nodeHover={hover}
+          color={dotColor}
           position={node.toLeft ? 'right' : 'left'}
         />
       ) : null}

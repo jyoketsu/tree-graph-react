@@ -10,6 +10,7 @@ interface Props {
   FONT_SIZE?: number;
   showIcon: boolean;
   showAvatar: boolean;
+  startId: string;
   handleChangeNodeText: Function;
 }
 
@@ -20,6 +21,7 @@ const NodeInput = ({
   FONT_SIZE,
   showIcon,
   showAvatar,
+  startId,
   handleChangeNodeText,
 }: Props) => {
   const inputRef = useRef<any>(null);
@@ -27,7 +29,7 @@ const NodeInput = ({
   const [selected, setSelected] = useState<CNode | null>(null);
 
   function handleCommit(e: React.KeyboardEvent) {
-    if (e.key === 'Enter' && selected) {
+    if ((e.key === 'Enter' || e.key === 'Tab') && selected) {
       handleChangeNodeText(selected._key, value.replaceAll("'", ''));
     }
   }
@@ -97,8 +99,11 @@ const NodeInput = ({
             fontSize: `${FONT_SIZE || 14}px`,
             top: `${top}px`,
             left: `${left}px`,
-            backgroundColor: selected.backgroundColor || '#e8e8e8',
-            color: selected.color,
+            backgroundColor:
+              selected._key === startId
+                ? '#CB1B45'
+                : selected.backgroundColor || '#e8e8e8',
+            color: selected._key === startId ? '#FFF' : selected.color,
           }}
           ref={inputRef}
           autoFocus={true}

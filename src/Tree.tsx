@@ -81,6 +81,13 @@ export interface TreeProps {
   root_zoom_ratio?: number;
   // 第二层节点放大倍率
   second_zoom_ratio?: number;
+  // 背景色
+  backgroundColor?: string;
+  // 字体颜色
+  color?: string;
+  hoverBorderColor?: string;
+  selectedBorderColor?: string;
+  selectedBackgroundColor?: string;
   handleClickExpand?: Function;
   handleCheck?: Function;
   handleClickAvatar?: Function;
@@ -140,6 +147,11 @@ export const Tree = React.forwardRef(
       hideHour,
       root_zoom_ratio,
       second_zoom_ratio,
+      backgroundColor,
+      color,
+      hoverBorderColor,
+      selectedBorderColor,
+      selectedBackgroundColor,
       handleClickExpand,
       handleCheck,
       handleClickAvatar,
@@ -182,6 +194,11 @@ export const Tree = React.forwardRef(
     const UNCONTROLLED = uncontrolled === undefined ? true : uncontrolled;
     const SHOW_ICON = showIcon === undefined ? true : showIcon;
     const SHOW_AVATAR = showAvatar === undefined ? false : showAvatar;
+    const BACKGROUND_COLOR = backgroundColor ? backgroundColor : 'unset';
+    const COLOR = color || '#595959';
+    const HOVER_BORDER_COLOR = hoverBorderColor || '#bed2fc';
+    const SELECTED_BORDER_COLOR = selectedBorderColor || '#35a6f8';
+    const SELECTED_BACKGROUND_COLOR = selectedBackgroundColor || '#e8e8e8';
 
     const [nodeMap, setNodeMap] = useState(nodes);
     const [secondStartX, setSecondStartX] = useState<number | undefined>(0);
@@ -232,6 +249,9 @@ export const Tree = React.forwardRef(
         } else {
           alert('请先选中节点');
         }
+      },
+      renameById: function(id: string, text: string) {
+        changeText(id, text);
       },
       getSelectedId: function() {
         return selectedId;
@@ -1007,6 +1027,7 @@ export const Tree = React.forwardRef(
           viewBox={`0 0 ${maxEnd + 100} ${maxY + ITEM_HEIGHT}`}
           width={maxEnd + 100}
           height={maxY + ITEM_HEIGHT}
+          style={{ backgroundColor: BACKGROUND_COLOR }}
         >
           <defs>
             <filter id="filterShadow" x="0" y="0" width="200%" height="200%">
@@ -1106,7 +1127,7 @@ export const Tree = React.forwardRef(
               viewBox="0,0,22,22"
               preserveAspectRatio="xMinYMin meet"
             >
-              <path d="M0 0 L 22 22 H 0 Z" fill="#417505" />
+              <path d="M0 0 L 22 22 H 0 Z" fill="#b6b7b7" />
               <path d="M 0 0 H 22 V 22 Z" fill="rgb(53, 166, 248)" />
             </g>
 
@@ -1315,6 +1336,7 @@ export const Tree = React.forwardRef(
                     ? FONT_SIZE * secondZoomRatio
                     : FONT_SIZE
                 }
+                color={COLOR}
                 startId={startId}
                 alias={new Date().getTime()}
                 selected={selectedId}
@@ -1357,6 +1379,10 @@ export const Tree = React.forwardRef(
                 }}
                 hideHour={hideHour}
                 fontWeight={fontWeight}
+                dotColor={PATH_COLOR}
+                hoverBorderColor={HOVER_BORDER_COLOR}
+                selectedBorderColor={SELECTED_BORDER_COLOR}
+                selectedBackgroundColor={SELECTED_BACKGROUND_COLOR}
               />
             </g>
           ))}
@@ -1415,6 +1441,7 @@ export const Tree = React.forwardRef(
             }
             showIcon={SHOW_ICON}
             showAvatar={SHOW_AVATAR}
+            startId={startId}
           />
         ) : null}
 

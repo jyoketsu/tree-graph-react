@@ -230,67 +230,73 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 
 ## Functions
 
-| 方法名        | 說明              |
-| ------------- | ----------------- |
-| addNext       | 添加節點          |
-| addChild      | 添加子節點        |
-| deleteNode    | 刪除節點          |
-| rename        | 重命名            |
-| closeOptions  | 關閉選項面板      |
-| getSelectedId | 獲取選中節點的 id |
+| 方法名        | 說明                        |
+| ------------- | --------------------------- |
+| addNext       | 添加節點                    |
+| addChild      | 添加子節點                  |
+| deleteNode    | 刪除節點                    |
+| rename        | 重命名                      |
+| getSelectedId | 獲取選中節點的 id           |
+| renameById    | 根據 id 修改名字（id,text） |
 
 <br/>
 
 ## Tree Props
 
-| 屬性                     | 說明                                                 | 類型     | 是否必須 | 默認值 |
-| ------------------------ | ---------------------------------------------------- | -------- | -------- | ------ |
-| nodes                    | 節點                                                 | Object   | 是       | -      |
-| uncontrolled             | 是否為非受控組件                                     | Boolean  | 否       | true   |
-| startId                  | 根節點 id                                            | String   | 是       | -      |
-| defaultSelectedId        | 選中的節點 id                                        | String   | 是       | -      |
-| ref                      | 通過 ref 調用組件內部方法                            | -        | 否       | -      |
-| singleColumn             | 是否是單列視圖                                       | Boolean  | 否       | false  |
-| itemHeight               | 節點元素高度                                         | Number   | 否       | 50     |
-| blockHeight              | 節點塊高度                                           | Number   | 否       | 30     |
-| fontSize                 | 節點字體大小                                         | Number   | 否       | 14     |
-| indent                   | 縮進                                                 | Number   | 否       | 25     |
-| columnSpacing            | 列間距                                               | Number   | 否       | 55     |
-| avatarWidth              | 頭像寬度                                             | Number   | 否       | 22     |
-| pathWidth                | 線條寬度                                             | Number   | 否       | 1      |
-| lineRadius               | 線條圓角半徑                                         | Number   | 否       | 4      |
-| checkBoxWidth            | 勾選框寬度                                           | Number   | 否       | 18     |
-| disableShortcut          | 是否禁用快捷鍵                                       | Number   | 否       | -      |
-| disabled                 | 是否只讀                                             | Number   | 否       | -      |
-| showPreviewButton        | 是否顯示節點預覽按鈕                                 | boolean  | 否       | -      |
-| showAddButton            | 是否顯示節點新增節點按鈕                             | boolean  | 否       | -      |
-| showMoreButton           | 是否顯示節點更多按鈕                                 | boolean  | 否       | -      |
-| moreButtonWidth          | 節點操作按鈕寬度                                     | boolean  | 否       | -      |
-| showIcon                 | 是否顯示圖標                                         | boolean  | 否       | true   |
+| 屬性                     | 說明                                                 | 類型     | 是否必須 | 默認值  |
+| ------------------------ | ---------------------------------------------------- | -------- | -------- | ------- |
+| nodes                    | 節點                                                 | Object   | 是       | -       |
+| uncontrolled             | 是否為非受控組件                                     | Boolean  | 否       | true    |
+| startId                  | 根節點 id                                            | String   | 是       | -       |
+| defaultSelectedId        | 選中的節點 id                                        | String   | 是       | -       |
+| ref                      | 通過 ref 調用組件內部方法                            | -        | 否       | -       |
+| singleColumn             | 是否是單列視圖                                       | Boolean  | 否       | false   |
+| itemHeight               | 節點元素高度                                         | Number   | 否       | 50      |
+| blockHeight              | 節點塊高度                                           | Number   | 否       | 30      |
+| fontSize                 | 節點字體大小                                         | Number   | 否       | 14      |
+| fontWeight               | 節點字體粗細                                         | Number   | 否       | -       |
+| indent                   | 縮進                                                 | Number   | 否       | 25      |
+| columnSpacing            | 列間距                                               | Number   | 否       | 55      |
+| avatarWidth              | 頭像寬度                                             | Number   | 否       | 22      |
+| pathWidth                | 線條寬度                                             | Number   | 否       | 1       |
+| backgroundColor          | 背景色                                               | Number   | 否       | unset   |
+| color                    | 字體顏色                                             | Number   | 否       | #595959 |
+| hoverBorderColor         | 移上節點邊框顏色                                     | Number   | 否       | #bed2fc |
+| selectedBorderColor      | 選中節點邊框顏色                                     | Number   | 否       | #35a6f8 |
+| selectedBackgroundColor  | 選中節點背景色                                       | Number   | 否       | #e8e8e8 |
+| lineRadius               | 線條圓角半徑                                         | Number   | 否       | 4       |
+| checkBoxWidth            | 勾選框寬度                                           | Number   | 否       | 18      |
+| disableShortcut          | 是否禁用快捷鍵                                       | Number   | 否       | -       |
+| disabled                 | 是否只讀                                             | Number   | 否       | -       |
+| showPreviewButton        | 是否顯示節點預覽按鈕                                 | boolean  | 否       | -       |
+| showAddButton            | 是否顯示節點新增節點按鈕                             | boolean  | 否       | -       |
+| showMoreButton           | 是否顯示節點更多按鈕                                 | boolean  | 否       | -       |
+| moreButtonWidth          | 節點操作按鈕寬度                                     | boolean  | 否       | -       |
+| showIcon                 | 是否顯示圖標                                         | boolean  | 否       | true    |
 | showAvatar               | 是否顯示頭像                                         | Boolean  |
 | avatarUri                | 頭像地址                                             | String   |
-| handleClickNode          | 點擊節點事件,参数：node                              | Function | 否       | -      |
-| handleDbClickNode        | 雙擊節點事件,参数：node                              | Function | 否       | -      |
-| handleClickExpand        | 點擊收起/展開事件,参数：node                         | Function | 否       | -      |
-| handleCheck              | 點擊勾選框事件,参数：node                            | Function | 否       | -      |
-| handleClickAvatar        | 點擊頭像事件,参数：node                              | Function | 否       | -      |
-| handleClickStatus        | 點擊狀態事件,参数：node                              | Function | 否       | -      |
-| handleChangeNodeText     | 更改節點名事件,参数：nodeId, text                    | Function | 否       | -      |
-| handleAddNext            | 向後添加兄弟節點事件,参数：selectedNode              | Function | 否       | -      |
-| handleAddChild           | 添加子節點事件,參數：selectedNode                    | Function | 否       | -      |
-| handleDeleteNode         | 刪除節點事件,參數：selectedId                        | Function | 否       | -      |
-| handleClickPreviewButton | 點擊更多按鈕,參數：clickNode                         | Function | 否       | -      |
-| handleClickAddButton     | 點擊更多按鈕,參數：clickNode                         | Function | 否       | -      |
-| handleClickMoreButton    | 點擊更多按鈕,參數：clickNode                         | Function | 否       | -      |
-| handleClickDot           | 點擊圓點                                             | Function | 否       | -      |
-| handleShiftUpDown        | 向上/向下移動節點，參數 id, sortList, type           | Function | 否       | -      |
-| handleSave               | 保存樹                                               | Function | 否       | -      |
-| handleDrag               | 拖拽節點,參數：dragInfo                              | Function | 否       | -      |
-| handlePaste              | 複製節點：參數：pasteNodeKey,pasteType,targetNodeKey | Function | 否       | -      |
-| hideHour                 | 隱藏任務小時數                                       | boolean  | 否       | -      |
-| dragEndFromOutside       | 從外部拖入樹節點,參數：node                          | Function | 否       | -      |
-| handleMouseEnterAvatar   | 鼠標移入頭像 ,參數：node                             | Function | 否       | -      |
-| handleMouseLeaveAvatar   | 鼠標移出頭像,參數：node                              | Function | 否       | -      |
+| handleClickNode          | 點擊節點事件,参数：node                              | Function | 否       | -       |
+| handleDbClickNode        | 雙擊節點事件,参数：node                              | Function | 否       | -       |
+| handleClickExpand        | 點擊收起/展開事件,参数：node                         | Function | 否       | -       |
+| handleCheck              | 點擊勾選框事件,参数：node                            | Function | 否       | -       |
+| handleClickAvatar        | 點擊頭像事件,参数：node                              | Function | 否       | -       |
+| handleClickStatus        | 點擊狀態事件,参数：node                              | Function | 否       | -       |
+| handleChangeNodeText     | 更改節點名事件,参数：nodeId, text                    | Function | 否       | -       |
+| handleAddNext            | 向後添加兄弟節點事件,参数：selectedNode              | Function | 否       | -       |
+| handleAddChild           | 添加子節點事件,參數：selectedNode                    | Function | 否       | -       |
+| handleDeleteNode         | 刪除節點事件,參數：selectedId                        | Function | 否       | -       |
+| handleClickPreviewButton | 點擊更多按鈕,參數：clickNode                         | Function | 否       | -       |
+| handleClickAddButton     | 點擊更多按鈕,參數：clickNode                         | Function | 否       | -       |
+| handleClickMoreButton    | 點擊更多按鈕,參數：clickNode                         | Function | 否       | -       |
+| handleClickDot           | 點擊圓點                                             | Function | 否       | -       |
+| handleShiftUpDown        | 向上/向下移動節點，參數 id, sortList, type           | Function | 否       | -       |
+| handleSave               | 保存樹                                               | Function | 否       | -       |
+| handleDrag               | 拖拽節點,參數：dragInfo                              | Function | 否       | -       |
+| handlePaste              | 複製節點：參數：pasteNodeKey,pasteType,targetNodeKey | Function | 否       | -       |
+| hideHour                 | 隱藏任務小時數                                       | boolean  | 否       | -       |
+| dragEndFromOutside       | 從外部拖入樹節點,參數：node                          | Function | 否       | -       |
+| handleMouseEnterAvatar   | 鼠標移入頭像 ,參數：node                             | Function | 否       | -       |
+| handleMouseLeaveAvatar   | 鼠標移出頭像,參數：node                              | Function | 否       | -       |
 | handleChange             | 樹數據變更                                           | Function | 否｜-｜  |
 | showDeleteConform        | 顯示刪除提示（非受控模式）                           | Function | 否｜-｜  |
 
@@ -304,53 +310,59 @@ interface DragInfo {
 
 ## Mind Props
 
-| 屬性                     | 說明                                                 | 類型     | 是否必須 | 默認值 |
-| ------------------------ | ---------------------------------------------------- | -------- | -------- | ------ |
-| nodes                    | 節點                                                 | Object   | 是       | -      |
-| uncontrolled             | 是否為非受控組件                                     | Boolean  | 否       | true   |
-| startId                  | 根節點 id                                            | String   | 是       | -      |
-| defaultSelectedId        | 選中的節點 id                                        | String   | 是       | -      |
-| ref                      | 通過 ref 調用組件內部方法                            | -        | 否       | -      |
-| singleColumn             | 是否是單向視圖                                       | Boolean  | 否       | false  |
-| itemHeight               | 節點元素高度                                         | Number   | 否       | 50     |
-| blockHeight              | 節點塊高度                                           | Number   | 否       | 30     |
-| fontSize                 | 節點字體大小                                         | Number   | 否       | 14     |
-| indent                   | 縮進                                                 | Number   | 否       | 25     |
-| columnSpacing            | 列間距                                               | Number   | 否       | 55     |
-| avatarWidth              | 頭像寬度                                             | Number   | 否       | 22     |
-| pathWidth                | 線條寬度                                             | Number   | 否       | 1      |
-| checkBoxWidth            | 勾選框寬度                                           | Number   | 否       | 18     |
-| disableShortcut          | 是否禁用快捷鍵                                       | Number   | 否       | -      |
-| disabled                 | 是否只讀                                             | Number   | 否       | -      |
-| showPreviewButton        | 是否顯示節點預覽按鈕                                 | boolean  | 否       | -      |
-| showAddButton            | 是否顯示節點新增節點按鈕                             | boolean  | 否       | -      |
-| showMoreButton           | 是否顯示節點更多按鈕                                 | boolean  | 否       | -      |
-| moreButtonWidth          | 節點操作按鈕寬度                                     | boolean  | 否       | -      |
-| showIcon                 | 是否顯示圖標                                         | boolean  | 否       | true   |
+| 屬性                     | 說明                                                 | 類型     | 是否必須 | 默認值  |
+| ------------------------ | ---------------------------------------------------- | -------- | -------- | ------- |
+| nodes                    | 節點                                                 | Object   | 是       | -       |
+| uncontrolled             | 是否為非受控組件                                     | Boolean  | 否       | true    |
+| startId                  | 根節點 id                                            | String   | 是       | -       |
+| defaultSelectedId        | 選中的節點 id                                        | String   | 是       | -       |
+| ref                      | 通過 ref 調用組件內部方法                            | -        | 否       | -       |
+| singleColumn             | 是否是單向視圖                                       | Boolean  | 否       | false   |
+| itemHeight               | 節點元素高度                                         | Number   | 否       | 50      |
+| blockHeight              | 節點塊高度                                           | Number   | 否       | 30      |
+| fontSize                 | 節點字體大小                                         | Number   | 否       | 14      |
+| fontWeight               | 節點字體粗細                                         | Number   | 否       | -       |
+| indent                   | 縮進                                                 | Number   | 否       | 25      |
+| columnSpacing            | 列間距                                               | Number   | 否       | 55      |
+| avatarWidth              | 頭像寬度                                             | Number   | 否       | 22      |
+| pathWidth                | 線條寬度                                             | Number   | 否       | 1       |
+| backgroundColor          | 背景色                                               | Number   | 否       | unset   |
+| color                    | 字體顏色                                             | Number   | 否       | #595959 |
+| hoverBorderColor         | 移上節點邊框顏色                                     | Number   | 否       | #bed2fc |
+| selectedBorderColor      | 選中節點邊框顏色                                     | Number   | 否       | #35a6f8 |
+| selectedBackgroundColor  | 選中節點背景色                                       | Number   | 否       | #e8e8e8 |
+| checkBoxWidth            | 勾選框寬度                                           | Number   | 否       | 18      |
+| disableShortcut          | 是否禁用快捷鍵                                       | Number   | 否       | -       |
+| disabled                 | 是否只讀                                             | Number   | 否       | -       |
+| showPreviewButton        | 是否顯示節點預覽按鈕                                 | boolean  | 否       | -       |
+| showAddButton            | 是否顯示節點新增節點按鈕                             | boolean  | 否       | -       |
+| showMoreButton           | 是否顯示節點更多按鈕                                 | boolean  | 否       | -       |
+| moreButtonWidth          | 節點操作按鈕寬度                                     | boolean  | 否       | -       |
+| showIcon                 | 是否顯示圖標                                         | boolean  | 否       | true    |
 | showAvatar               | 是否顯示頭像                                         | Boolean  |
 | avatarUri                | 頭像地址                                             | String   |
-| handleClickNode          | 點擊節點事件,参数：node                              | Function | 否       | -      |
-| handleDbClickNode        | 雙擊節點事件,参数：node                              | Function | 否       | -      |
-| handleClickExpand        | 點擊收起/展開事件,参数：node                         | Function | 否       | -      |
-| handleCheck              | 點擊勾選框事件,参数：node                            | Function | 否       | -      |
-| handleClickAvatar        | 點擊頭像事件,参数：node                              | Function | 否       | -      |
-| handleClickStatus        | 點擊狀態事件,参数：node                              | Function | 否       | -      |
-| handleChangeNodeText     | 更改節點名事件,参数：nodeId, text                    | Function | 否       | -      |
-| handleAddNext            | 向後添加兄弟節點事件,参数：selectedNode              | Function | 否       | -      |
-| handleAddChild           | 添加子節點事件,參數：selectedNode                    | Function | 否       | -      |
-| handleDeleteNode         | 刪除節點事件,參數：selectedId                        | Function | 否       | -      |
-| handleClickPreviewButton | 點擊更多按鈕,參數：clickNode                         | Function | 否       | -      |
-| handleClickAddButton     | 點擊更多按鈕,參數：clickNode                         | Function | 否       | -      |
-| handleClickMoreButton    | 點擊更多按鈕,參數：clickNode                         | Function | 否       | -      |
-| handleClickDot           | 點擊圓點                                             | Function | 否       | -      |
-| handleShiftUpDown        | 向上/向下移動節點，參數 id, sortList, type           | Function | 否       | -      |
-| handleSave               | 保存樹                                               | Function | 否       | -      |
-| handleDrag               | 拖拽節點,參數：dragInfo                              | Function | 否       | -      |
-| handlePaste              | 複製節點：參數：pasteNodeKey,pasteType,targetNodeKey | Function | 否       | -      |
-| hideHour                 | 隱藏任務小時數                                       | boolean  | 否       | -      |
-| dragEndFromOutside       | 從外部拖入樹節點,參數：node                          | Function | 否       | -      |
-| handleMouseEnterAvatar   | 鼠標移入頭像 ,參數：node                             | Function | 否       | -      |
-| handleMouseLeaveAvatar   | 鼠標移出頭像,參數：node                              | Function | 否       | -      |
+| handleClickNode          | 點擊節點事件,参数：node                              | Function | 否       | -       |
+| handleDbClickNode        | 雙擊節點事件,参数：node                              | Function | 否       | -       |
+| handleClickExpand        | 點擊收起/展開事件,参数：node                         | Function | 否       | -       |
+| handleCheck              | 點擊勾選框事件,参数：node                            | Function | 否       | -       |
+| handleClickAvatar        | 點擊頭像事件,参数：node                              | Function | 否       | -       |
+| handleClickStatus        | 點擊狀態事件,参数：node                              | Function | 否       | -       |
+| handleChangeNodeText     | 更改節點名事件,参数：nodeId, text                    | Function | 否       | -       |
+| handleAddNext            | 向後添加兄弟節點事件,参数：selectedNode              | Function | 否       | -       |
+| handleAddChild           | 添加子節點事件,參數：selectedNode                    | Function | 否       | -       |
+| handleDeleteNode         | 刪除節點事件,參數：selectedId                        | Function | 否       | -       |
+| handleClickPreviewButton | 點擊更多按鈕,參數：clickNode                         | Function | 否       | -       |
+| handleClickAddButton     | 點擊更多按鈕,參數：clickNode                         | Function | 否       | -       |
+| handleClickMoreButton    | 點擊更多按鈕,參數：clickNode                         | Function | 否       | -       |
+| handleClickDot           | 點擊圓點                                             | Function | 否       | -       |
+| handleShiftUpDown        | 向上/向下移動節點，參數 id, sortList, type           | Function | 否       | -       |
+| handleSave               | 保存樹                                               | Function | 否       | -       |
+| handleDrag               | 拖拽節點,參數：dragInfo                              | Function | 否       | -       |
+| handlePaste              | 複製節點：參數：pasteNodeKey,pasteType,targetNodeKey | Function | 否       | -       |
+| hideHour                 | 隱藏任務小時數                                       | boolean  | 否       | -       |
+| dragEndFromOutside       | 從外部拖入樹節點,參數：node                          | Function | 否       | -       |
+| handleMouseEnterAvatar   | 鼠標移入頭像 ,參數：node                             | Function | 否       | -       |
+| handleMouseLeaveAvatar   | 鼠標移出頭像,參數：node                              | Function | 否       | -       |
 | handleChange             | 樹數據變更                                           | Function | 否｜-｜  |
 | showDeleteConform        | 顯示刪除提示（非受控模式）                           | Function | 否｜-｜  |
 

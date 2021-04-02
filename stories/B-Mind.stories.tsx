@@ -398,6 +398,7 @@ MultiCol.args = {
   showAvatar: true,
   showCheckbox: true,
   showStatus: true,
+
   handleClickDot: (node: any) => console.log('---handleClickDot---', node),
   handleClickMoreButton: (node: any, clientX: number, clientY: number) =>
     console.log('---handleClickMoreButton---', node, clientX, clientY),
@@ -420,6 +421,17 @@ MultiCol.args = {
     console.log('---handleMouseEnterAvatar---', node),
   handleMouseLeaveAvatar: (node: any) =>
     console.log('---handleMouseLeaveAvatar---', node),
+};
+
+export const MultiColDark = Template.bind({});
+MultiColDark.args = {
+  nodes: nodes,
+  startId: '001',
+  pathColor: '#FFF',
+  backgroundColor: '#434343',
+  color: '#FFF',
+  hoverBorderColor: '#FFE4E1',
+  selectedBorderColor: '#FF0000',
 };
 
 export const SingleCol = Template.bind({});
