@@ -284,12 +284,23 @@ Props) => {
     : selectedBackgroundColor;
 
   // const urlReg = /\w+\.+[\w\/|]{1,}/g;
-  const urlReg = /(http:\/\/+\w+\.+[\w\/|]{1,})|(https:\/\/+\w+\.+[\w\/|]{1,})|(\w+\.+[\w\/|]{1,})/g;
+  // const urlReg = /(http:\/\/+\w+\.+[\w\/|]{1,})|(https:\/\/+\w+\.+[\w\/|]{1,})|(\w+\.+[\w\/|]{1,})/g;
+  const urlReg = /(http:\/\/+\w+\.[\w\/|]{1,}(\.[\w\/|]{1,}){0,1})|(https:\/\/+\w+\.[\w\/|]{1,}(\.[\w\/|]{1,}){0,1})|(\w+\.[\w\/|]{1,}(\.[\w\/|]{1,}){0,1})/g;
   let nameLinkArr = [];
   if (urlReg.test(node.name)) {
-    const arr1 = node.name
-      .split(urlReg)
-      .filter(str => str !== '' && str !== undefined);
+    let arr1: string[] = [];
+    const matchList = node.name.match(urlReg);
+    if (matchList) {
+      const splitReg = new RegExp(matchList.join('|'));
+      const textList = node.name.split(splitReg);
+      for (let index = 0; index < textList.length; index++) {
+        const text = textList[index];
+        arr1.push(text);
+        if (matchList[index]) {
+          arr1.push(matchList[index]);
+        }
+      }
+    }
 
     let marginLeft = 0;
     let count = 0;
