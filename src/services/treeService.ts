@@ -82,7 +82,7 @@ export default function calculate(
           location(
             nodes,
             element,
-            MAX_END + (columnSpacing ? columnSpacing : 55),
+            MAX_END + (columnSpacing ? columnSpacing : 55 * secondZoomRatio),
             start_y + diffY
           );
         }

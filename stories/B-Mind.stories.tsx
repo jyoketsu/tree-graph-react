@@ -432,6 +432,9 @@ MultiColDark.args = {
   color: '#FFF',
   hoverBorderColor: '#FFE4E1',
   selectedBorderColor: '#FF0000',
+  showPreviewButton: true,
+  showAddButton: true,
+  showMoreButton: true,
 };
 
 export const SingleCol = Template.bind({});

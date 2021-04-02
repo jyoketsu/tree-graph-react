@@ -639,10 +639,10 @@ Props) => {
                 !node.color &&
                 node._key !== startId
               ? '#000000'
-              : node.color
-              ? node.color
               : node._key === startId
               ? '#FFF'
+              : node.color
+              ? node.color
               : normalTextColor,
             fillOpacity: pasteNodeKey && pasteNodeKey === node._key ? 0.4 : 1,
             fontFamily: "'Microsoft YaHei', sans-serif",
@@ -671,7 +671,8 @@ Props) => {
               width={hoverPreview ? buttonWidth + 2 : buttonWidth}
               height={hoverPreview ? buttonWidth + 2 : buttonWidth}
               onClick={handleClickPreview}
-              fill={hoverPreview ? '#000000' : '#757676'}
+              // fill={hoverPreview ? '#000000' : '#757676'}
+              fill={color}
               onMouseEnter={handleMouseEnterPreview}
               onMouseLeave={handleMouseLeavePreview}
             />
@@ -685,7 +686,8 @@ Props) => {
               width={hoverAdd ? buttonWidth + 2 : buttonWidth}
               height={hoverAdd ? buttonWidth + 2 : buttonWidth}
               onClick={handleClickAdd}
-              fill={hoverAdd ? '#000000' : '#757676'}
+              // fill={hoverAdd ? '#000000' : '#757676'}
+              fill={color}
               onMouseEnter={handleMouseEnterAdd}
               onMouseLeave={handleMouseLeaveAdd}
             />
@@ -699,7 +701,8 @@ Props) => {
               width={hoverMore ? buttonWidth + 2 : buttonWidth}
               height={hoverMore ? buttonWidth + 2 : buttonWidth}
               onClick={handleClickMore}
-              fill={hoverMore ? '#000000' : '#757676'}
+              // fill={hoverMore ? '#000000' : '#757676'}
+              fill={color}
               onMouseEnter={handleMouseEnterMore}
               onMouseLeave={handleMouseLeaveMore}
             />
