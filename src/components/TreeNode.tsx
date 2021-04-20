@@ -283,9 +283,7 @@ Props) => {
     ? '#CB1B45'
     : selectedBackgroundColor;
 
-  // const urlReg = /\w+\.+[\w\/|]{1,}/g;
-  // const urlReg = /(http:\/\/+\w+\.+[\w\/|]{1,})|(https:\/\/+\w+\.+[\w\/|]{1,})|(\w+\.+[\w\/|]{1,})/g;
-  const urlReg = /(http:\/\/+\w+\.[\w\/|]{1,}(\.[\w\/|]{1,}){0,1})|(https:\/\/+\w+\.[\w\/|]{1,}(\.[\w\/|]{1,}){0,1})|(\w+\.[\w\/|]{1,}(\.[\w\/|]{1,}){0,1})/g;
+  const urlReg = /((\w{1,}\.+)+(com|cn|org|net|info))|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info))|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info))/g;
   let nameLinkArr = [];
   if (urlReg.test(node.name)) {
     let arr1: string[] = [];

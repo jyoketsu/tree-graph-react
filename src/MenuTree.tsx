@@ -460,13 +460,14 @@ export const MenuTree = React.forwardRef(
     function handleDrop() {
       const dragNodeId = sessionStorage.getItem('dragNodeId');
       const dropNodeId = sessionStorage.getItem('dropNodeId');
+      const placement = sessionStorage.getItem('placement');
       if (!dragNodeId || !dropNodeId) {
         return;
       }
       const dragInfo: DragInfo = {
         dragNodeId: dragNodeId,
         dropNodeId: dropNodeId,
-        placement: 'down',
+        placement: placement as 'up' | 'down' | 'in',
       };
 
       if (UNCONTROLLED) {

@@ -66,6 +66,7 @@ const TreeNode = ({
   const [value, setValue] = useState(node.name);
   const [dragStarted, setDragStarted] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [isDragIn, setIsDragIn] = useState(false);
 
   function rectClassName(node: CNode) {
     // 选中的节点
@@ -112,6 +113,7 @@ const TreeNode = ({
   function handleDropNode() {
     setIsDragOver(false);
     sessionStorage.setItem('dropNodeId', node._key);
+    sessionStorage.setItem('placement', isDragIn ? 'in' : 'down');
     handleDrop();
     sessionStorage.removeItem('cross-comp-drag');
     sessionStorage.removeItem('cross-drag-compId');
@@ -121,8 +123,14 @@ const TreeNode = ({
     if (!node.disabled) {
       e.preventDefault();
     }
+
     if (!isDragOver) {
       setIsDragOver(true);
+    }
+    if (BLOCK_HEIGHT - e.nativeEvent.offsetY > 5) {
+      setIsDragIn(true);
+    } else {
+      setIsDragIn(false);
     }
   }
 
@@ -144,14 +152,25 @@ const TreeNode = ({
 
   const nodeRectClassName = rectClassName(node);
 
-  const urlReg = /(http:\/\/+\w+\.+[\w\/|]{1,})|(https:\/\/+\w+\.+[\w\/|]{1,})|(\w+\.+[\w\/|]{1,})/g;
+  const urlReg = /((\w{1,}\.+)+(com|cn|org|net|info))|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info))|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info))/g;
   let nameLinkArr = [];
   if (urlReg.test(node.name)) {
-    const arr1 = node.name
-      .split(urlReg)
-      .filter(str => str !== '' && str !== undefined);
+    let arr1: string[] = [];
+    const matchList = node.name.match(urlReg);
+    if (matchList) {
+      const splitReg = new RegExp(matchList.join('|'));
+      const textList = node.name.split(splitReg);
+      for (let index = 0; index < textList.length; index++) {
+        const text = textList[index];
+        arr1.push(text);
+        if (matchList[index]) {
+          arr1.push(matchList[index]);
+        }
+      }
+    }
 
     let marginLeft = 0;
+    let count = 0;
     if (arr1 && arr1.length) {
       for (let index = 0; index < arr1.length; index++) {
         let name = arr1[index];
@@ -160,11 +179,41 @@ const TreeNode = ({
         }
         let type = urlReg.test(name) ? 'link' : 'text';
 
-        nameLinkArr.push({
-          text: name,
-          type,
-          marginLeft,
-        });
+        let shortedName = '';
+        if (node.shorted) {
+          for (let index = 0; index < name.length; index++) {
+            if (count < 28) {
+              const char = name[index];
+              // 全角
+              if (char.match(/[^\x00-\xff]/g)) {
+                count++;
+              } else {
+                count += 0.5;
+              }
+              shortedName += char;
+            } else {
+              break;
+            }
+          }
+          if (count >= 28) {
+            shortedName = `${shortedName}...`;
+          }
+        }
+        if (count >= 28) {
+          nameLinkArr.push({
+            text: name,
+            shortedName,
+            type,
+            marginLeft,
+          });
+          break;
+        } else {
+          nameLinkArr.push({
+            text: name,
+            type,
+            marginLeft,
+          });
+        }
       }
     }
   }
@@ -195,7 +244,9 @@ const TreeNode = ({
         boxSizing: 'border-box',
         backgroundColor:
           nodeRectClassName === 'selected' ? selectedBackgroundColor : 'unset',
-        borderBottom: isDragOver ? `2px solid ${dragLineColor}` : 'unset',
+        borderStyle: 'solid',
+        borderColor: dragLineColor,
+        borderWidth: isDragOver ? (isDragIn ? '3px' : '0 0 2px 0') : 0,
       }}
       draggable={showInput || disabled || node.disabled ? false : true}
       onDragStart={handleDragStart}
