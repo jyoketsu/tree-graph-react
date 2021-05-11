@@ -201,7 +201,7 @@ Default.args = {
   nodes: nodes,
   startId: '001',
   showMoreButton: true,
-  // collapseMode: true,
+  collapseMode: true,
   handleClickMoreButton: (node: any) =>
     console.log('---handleClickMoreButton---', node),
   handleClickIcon: (node: any) => console.log('---handleClickIcon---', node),

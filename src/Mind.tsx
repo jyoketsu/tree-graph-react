@@ -232,8 +232,6 @@ export const Mind = React.forwardRef(
       rename: function() {
         if (selectedId) {
           setshowInput(true);
-        } else {
-          alert('请先选中节点');
         }
       },
       renameById: function(id: string, text: string) {
@@ -384,7 +382,7 @@ export const Mind = React.forwardRef(
     // 添加平级节点
     function addNext() {
       if (!selectedId) {
-        return alert('请先选中节点！');
+        return;
       }
       if (selectedId === startId) {
         return alert('根节点无法添加兄弟节点！');
@@ -411,7 +409,7 @@ export const Mind = React.forwardRef(
     // 添加子节点
     function addChild() {
       if (!selectedId) {
-        return alert('请先选中节点！');
+        return;
       }
       // setShowOptionsNode(null);
       if (UNCONTROLLED) {
@@ -433,7 +431,7 @@ export const Mind = React.forwardRef(
     // 節點上移
     function shiftUp() {
       if (!selectedId) {
-        return alert('请先选中节点！');
+        return;
       }
       const res = changeSortList(nodeMap, selectedId, 'up');
 
@@ -451,7 +449,7 @@ export const Mind = React.forwardRef(
     // 節點下移
     function shiftDown() {
       if (!selectedId) {
-        return alert('请先选中节点！');
+        return;
       }
       const res = changeSortList(nodeMap, selectedId, 'down');
       if (res) {
@@ -468,7 +466,7 @@ export const Mind = React.forwardRef(
     // 删除节点
     function deletenode() {
       if (!selectedId) {
-        return alert('请先选中节点！');
+        return;
       }
 
       const node = nodeMap[selectedId];
