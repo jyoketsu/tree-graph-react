@@ -34,18 +34,18 @@ export default function calculate(
   let MAX_Y = ITEM_HEIGHT;
   let MAX_END = rootWidth * 1.5;
 
-  let MIN_X = 8;
-  let MIN_END = 8;
+  let MIN_X = 85;
+  let MIN_END = 55;
 
   let nodeList: CNode[] = [];
 
   if (single) {
-    location(nodes, root, 8, 8);
+    location(nodes, root, 85, 55);
   } else {
     if (!root.contract) {
       let { rightStarts, leftStarts } = getStarts(nodes, root);
 
-      let [x1, y1, x2, y2] = [rootWidth + INDENT * 2, 8, -INDENT * 2, 8];
+      let [x1, y1, x2, y2] = [rootWidth + INDENT * 2, 85, -INDENT * 2, 55];
 
       for (let index = 0; index < rightStarts.length; index++) {
         let node = rightStarts[index];
@@ -90,8 +90,8 @@ export default function calculate(
         root.rightDots.push(element.y);
       }
     } else {
-      root.x = 8;
-      root.y = 8;
+      root.x = 85;
+      root.y = 55;
       delete root.rightDots;
       delete root.leftDots;
     }
@@ -100,7 +100,7 @@ export default function calculate(
 
   return {
     max_x: MAX_X,
-    max_y: MAX_Y + ITEM_HEIGHT,
+    max_y: MAX_Y + ITEM_HEIGHT + 100,
     max_end: MAX_END,
     nodes: nodeList,
   };

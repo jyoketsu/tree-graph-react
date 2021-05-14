@@ -74,7 +74,7 @@ export default function calculate(
             : BLOCK_HEIGHT * rootZoomRatio + 40;
         if (index === 0) {
           SECOND_START_NODE_ID = element?._key;
-          location(nodes, element, 15, start_y + diffY);
+          location(nodes, element, start_x, start_y + diffY);
         } else {
           if (index + 1 === secondLevel.length) {
             SECOND_END_NODE_ID = element?._key;

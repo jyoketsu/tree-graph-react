@@ -148,6 +148,9 @@ export const MenuTree = React.forwardRef(
           setshowInput(true);
         }
       },
+      clearSelect: function() {
+        setselectedId(null);
+      },
     }));
 
     useEffect(() => {
@@ -197,6 +200,9 @@ export const MenuTree = React.forwardRef(
     useEffect(() => {
       if (defaultSelectedId) {
         setselectedId(defaultSelectedId);
+        if (nodeMap && nodeMap[defaultSelectedId]) {
+          setExpandedNodeKey(nodeMap[defaultSelectedId].father);
+        }
       }
     }, [defaultSelectedId]);
 
@@ -307,6 +313,7 @@ export const MenuTree = React.forwardRef(
           handleAddChild(selectedId, res.addedNode);
         }
 
+        setExpandedNodeKey(selectedId);
         setselectedId(res.addedNode._key);
         setNodeMap(res.nodes);
         setshowInput(true);
