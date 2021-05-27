@@ -134,7 +134,9 @@ export const MenuTree = React.forwardRef(
 
     const containerRef = useRef<HTMLDivElement>(null);
 
-    const [expandedNodeKey, setExpandedNodeKey] = useState<string | null>(null);
+    const [expandedNodeKey, setExpandedNodeKey] = useState<string | null>(
+      startId
+    );
     const [ancestorList, setAncestorList] = useState<string[]>([]);
 
     // 暴露方法

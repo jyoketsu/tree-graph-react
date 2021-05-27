@@ -178,9 +178,7 @@ export default function calculate(
 
     let collapsed;
     if (collapseMode) {
-      if (node._key === startId) {
-        collapsed = node.contract;
-      } else if (expandedNodeKey && ancestorList.includes(node._key)) {
+      if (expandedNodeKey && ancestorList.includes(node._key)) {
         collapsed = node.contract;
       } else {
         collapsed = true;

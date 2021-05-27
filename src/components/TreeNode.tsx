@@ -235,9 +235,7 @@ Props) => {
     } else if (
       // 有边框的节点
       !hideBorder &&
-      ((node.sortList && node.sortList.length) ||
-        node.father === startId ||
-        node._key === startId)
+      (node.father === startId || node._key === startId)
     ) {
       return 'border-rect';
     } else return '';
@@ -376,8 +374,8 @@ Props) => {
         break;
       default:
         nodeRectStyle = {
-          fill: node.backgroundColor ? backgroundColor : 'unset',
-          fillOpacity: node.backgroundColor ? 1 : 0,
+          fill: node.backgroundColor ? backgroundColor : '#f0f0f0',
+          // fillOpacity: node.backgroundColor ? 1 : 0,
           stroke: hover ? hoverBorderColor : 'unset',
           strokeWidth: 2,
         };
