@@ -94,9 +94,8 @@ export default function calculate(
     }
 
     // 根节点坐标
-    // root.x = (MAX_END - root.width) / 2;
     if (second_start_x && second_end_x) {
-      root.x = (second_end_x - second_start_x) / 2;
+      root.x = (second_end_x + second_start_x) / 2 - root.width / 2;
     } else {
       root.x = (MAX_END - root.width) / 2;
     }

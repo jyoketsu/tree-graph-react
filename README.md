@@ -284,7 +284,7 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | handleChangeNodeText     | 更改節點名事件,参数：nodeId, text                    | Function | 否       | -       |
 | handleAddNext            | 向後添加兄弟節點事件,参数：selectedNode              | Function | 否       | -       |
 | handleAddChild           | 添加子節點事件,參數：selectedNode                    | Function | 否       | -       |
-| handleDeleteNode         | 刪除節點事件,參數：selectedId                        | Function | 否       | -       |
+| handleDeleteNode         | 刪除節點事件,參數：selectedId,selectedNodes          | Function | 否       | -       |
 | handleClickPreviewButton | 點擊更多按鈕,參數：clickNode                         | Function | 否       | -       |
 | handleClickAddButton     | 點擊更多按鈕,參數：clickNode                         | Function | 否       | -       |
 | handleClickMoreButton    | 點擊更多按鈕,參數：clickNode                         | Function | 否       | -       |
@@ -299,6 +299,7 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | handleMouseLeaveAvatar   | 鼠標移出頭像,參數：node                              | Function | 否       | -       |
 | handleChange             | 樹數據變更                                           | Function | 否｜-｜  |
 | showDeleteConform        | 顯示刪除提示（非受控模式）                           | Function | 否｜-｜  |
+| handleMutiSelect         | 框選節點，參數：selectedNodes                        | Function | 否｜-｜  |
 
 ```javascript
 interface DragInfo {
@@ -350,7 +351,7 @@ interface DragInfo {
 | handleChangeNodeText     | 更改節點名事件,参数：nodeId, text                    | Function | 否       | -       |
 | handleAddNext            | 向後添加兄弟節點事件,参数：selectedNode              | Function | 否       | -       |
 | handleAddChild           | 添加子節點事件,參數：selectedNode                    | Function | 否       | -       |
-| handleDeleteNode         | 刪除節點事件,參數：selectedId                        | Function | 否       | -       |
+| handleDeleteNode         | 刪除節點事件,參數：selectedId,selectedNodes          | Function | 否       | -       |
 | handleClickPreviewButton | 點擊更多按鈕,參數：clickNode                         | Function | 否       | -       |
 | handleClickAddButton     | 點擊更多按鈕,參數：clickNode                         | Function | 否       | -       |
 | handleClickMoreButton    | 點擊更多按鈕,參數：clickNode                         | Function | 否       | -       |
@@ -365,6 +366,7 @@ interface DragInfo {
 | handleMouseLeaveAvatar   | 鼠標移出頭像,參數：node                              | Function | 否       | -       |
 | handleChange             | 樹數據變更                                           | Function | 否｜-｜  |
 | showDeleteConform        | 顯示刪除提示（非受控模式）                           | Function | 否｜-｜  |
+| handleMutiSelect         | 框選節點，參數：selectedNodes                        | Function | 否｜-｜  |
 
 ## Menu Props
 

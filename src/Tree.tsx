@@ -38,6 +38,10 @@ interface PasteFunc {
   ): void;
 }
 
+interface MutiSelectFunc {
+  (selectedNodes: Node[]): void;
+}
+
 export interface TreeProps {
   // 节点
   nodes: NodeMap;
@@ -111,6 +115,7 @@ export interface TreeProps {
   handleCrossCompDrag?: Function;
   handleChange?: Function;
   showDeleteConform?: Function;
+  handleMutiSelect?: MutiSelectFunc;
   ref?: any;
 }
 
@@ -175,6 +180,7 @@ export const Tree = React.forwardRef(
       handleCrossCompDrag,
       handleChange,
       showDeleteConform,
+      handleMutiSelect,
     }: TreeProps,
     ref
   ) => {
@@ -312,6 +318,12 @@ export const Tree = React.forwardRef(
         setSelectedNodes([]);
       }
     }, [defaultSelectedId]);
+
+    useEffect(() => {
+      if (handleMutiSelect) {
+        handleMutiSelect(selectedNodes);
+      }
+    }, [selectedNodes]);
 
     // 有父节点时的左侧水平线条
     function fatherPath(node: CNode) {
@@ -592,38 +604,47 @@ export const Tree = React.forwardRef(
 
     // 删除节点
     function deletenode() {
-      if (!selectedId) {
+      if (!selectedId && !selectedNodes.length) {
         return;
       }
-
-      const node = nodeMap[selectedId];
-      if (node.disabled) {
-        return;
-      }
-      if (selectedId === startId) {
-        return alert('根节点不允许删除！');
-      }
-
-      // setShowOptionsNode(null);
       if (UNCONTROLLED) {
-        const nextSelectId = getNextSelect(node, nodeMap);
-        if (nextSelectId) {
-          setselectedId(nextSelectId);
+        // 删除单个节点
+        if (!selectedNodes.length && selectedId) {
+          const node = nodeMap[selectedId];
+          if (node.disabled) {
+            return;
+          }
+          if (selectedId === startId) {
+            return alert('根节点不允许删除！');
+          }
+          const nextSelectId = getNextSelect(node, nodeMap);
+          if (nextSelectId) {
+            setselectedId(nextSelectId);
+          } else {
+            setselectedId(null);
+          }
+          let nodes = deleteNode(nodeMap, selectedId);
+          setSelectedNodes([]);
+          setNodeMap(nodes);
         } else {
-          setselectedId(null);
+          // 批量删除
+          let nodes = nodeMap;
+          for (let index = 0; index < selectedNodes.length; index++) {
+            const element = selectedNodes[index];
+            if (element._key !== startId) {
+              nodes = deleteNode(nodes, element._key);
+            }
+          }
+          setSelectedNodes([]);
+          setNodeMap(nodes);
         }
-
-        let nodes = deleteNode(nodeMap, selectedId);
 
         if (handleDeleteNode) {
-          handleDeleteNode(selectedId);
+          handleDeleteNode(selectedId, selectedNodes);
         }
-
-        setSelectedNodes([]);
-        setNodeMap(nodes);
       } else {
         if (handleDeleteNode) {
-          handleDeleteNode(selectedId);
+          handleDeleteNode(selectedId, selectedNodes);
         }
       }
     }
@@ -633,13 +654,7 @@ export const Tree = React.forwardRef(
     }
 
     function handleKeyDown(event: KeyboardEvent) {
-      if (
-        !selectedId ||
-        disabled ||
-        disableShortcut ||
-        showInput ||
-        showNewInput
-      ) {
+      if (disabled || disableShortcut || showInput || showNewInput) {
         return;
       }
       event.preventDefault();
@@ -657,7 +672,7 @@ export const Tree = React.forwardRef(
         case 'Backspace': {
           if (showDeleteConform) {
             const node = selectedId ? nodeMap[selectedId] : null;
-            if (node && node.sortList.length) {
+            if ((node && node.sortList.length) || selectedNodes.length > 1) {
               showDeleteConform();
             } else {
               deletenode();
@@ -739,6 +754,7 @@ export const Tree = React.forwardRef(
           break;
         default: {
           if (
+            selectedId &&
             !showInput &&
             event.key.length === 1 &&
             /[a-zA-Z]+/.test(event.key)
