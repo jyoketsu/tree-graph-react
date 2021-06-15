@@ -350,7 +350,8 @@ Props) => {
   let nodeRectStyle = {};
   if ((dragStarted && hover) || dragIn) {
     nodeRectStyle = {
-      fill: '#FFF',
+      fill: backgroundColor,
+      fillOpacity: 0.5,
       stroke: selectedBorderColor,
       strokeWidth: 2,
     };
