@@ -227,8 +227,14 @@ const TreeNode = ({
 
   return node.x && node.y ? (
     <div
-      onClick={() => handleClickNode(node)}
-      onDoubleClick={() => handleDbClickNode(node)}
+      onClick={(e: React.MouseEvent) => {
+        e.stopPropagation();
+        handleClickNode(node);
+      }}
+      onDoubleClick={(e: React.MouseEvent) => {
+        e.stopPropagation();
+        handleDbClickNode(node);
+      }}
       onMouseEnter={() => sethover(true)}
       onMouseLeave={() => sethover(false)}
       style={{
