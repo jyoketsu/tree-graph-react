@@ -19,6 +19,10 @@ import DragInfo from './interfaces/DragInfo';
 
 const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 
+interface NodeClickFunc {
+  (node: CNode, targetEl: HTMLElement): void;
+}
+
 export interface MenuProps {
   // 节点
   nodes: NodeMap;
@@ -62,7 +66,7 @@ export interface MenuProps {
   handleAddNext?: Function;
   handleAddChild?: Function;
   handleDeleteNode?: Function;
-  handleClickMoreButton?: Function;
+  handleClickMoreButton?: NodeClickFunc;
   handleShiftUpDown?: Function;
   handlePaste?: Function;
   handleDrag?: Function;
@@ -462,9 +466,12 @@ export const MenuTree = React.forwardRef(
       }
     }
 
-    function handleClickMore(node: CNode, offsetTop: number) {
+    function handleClickMore(
+      node: CNode,
+      event: React.MouseEvent<HTMLButtonElement>
+    ) {
       if (handleClickMoreButton) {
-        handleClickMoreButton(node, offsetTop);
+        handleClickMoreButton(node, event.currentTarget);
       }
     }
 

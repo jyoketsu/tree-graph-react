@@ -411,8 +411,8 @@ MultiCol.args = {
   // fontWeight: 800,
 
   handleClickDot: (node: any) => console.log('---handleClickDot---', node),
-  handleClickMoreButton: (node: any, clientX: number, clientY: number) =>
-    console.log('---handleClickMoreButton---', node, clientX, clientY),
+  handleClickMoreButton: (node: any, element: any) =>
+    console.log('---handleClickMoreButton---', node, element),
   handleClickPreviewButton: (node: any) =>
     console.log('---handleClickPreviewButton---', node),
   handleClickAddButton: (node: any, clientX: number, clientY: number) =>
@@ -424,8 +424,8 @@ MultiCol.args = {
     console.log('---handlePaste---', pasteNodeKey, pasteType, selectedId),
   handleClickAvatar: (node: any) =>
     console.log('---handleClickAvatar---', node),
-  handleClickStatus: (node: any) =>
-    console.log('---handleClickStatus---', node),
+  handleClickStatus: (node: any, element: any) =>
+    console.log('---handleClickStatus---', node, element),
   dragEndFromOutside: (node: any) =>
     console.log('---dragEndFromOutside---', node),
   handleMouseEnterAvatar: (node: any) =>
@@ -440,7 +440,7 @@ MultiColDark.args = {
   startId: '001',
   pathColor: '#FFF',
   backgroundColor: '#434343',
-  color: '#FFF',
+  // color: '#FFF',
   hoverBorderColor: '#FFE4E1',
   selectedBorderColor: '#FF0000',
   showPreviewButton: true,

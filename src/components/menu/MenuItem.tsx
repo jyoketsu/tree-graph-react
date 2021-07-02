@@ -75,11 +75,8 @@ const TreeNode = ({
     } else return '';
   }
 
-  function handleClickMore() {
-    clickMore(
-      node,
-      containerRef && containerRef.current ? containerRef.current.offsetTop : 0
-    );
+  function handleClickMore(e: React.MouseEvent) {
+    clickMore(node, e);
   }
 
   function handleClick(e: React.MouseEvent) {
@@ -383,8 +380,13 @@ const TreeNode = ({
       )}
 
       <div style={{ flex: 1 }}></div>
-      {showMoreButton && hover && !dragStarted ? (
-        <div onClick={handleClickMore}>
+      {showMoreButton ? (
+        <div
+          onClick={handleClickMore}
+          style={{
+            opacity: hover && !dragStarted ? 1 : 0,
+          }}
+        >
           <svg
             viewBox="0 0 1024 1024"
             version="1.1"

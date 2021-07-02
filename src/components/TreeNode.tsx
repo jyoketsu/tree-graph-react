@@ -197,12 +197,12 @@ Props) => {
 
   function handleClickAdd(event: React.MouseEvent) {
     event.stopPropagation();
-    clickAdd(node, event.clientX, event.clientY);
+    clickAdd(node, event);
   }
 
   function handleClickMore(event: React.MouseEvent) {
     // clearTimeout(timer);
-    clickMore(node, event.clientX, event.clientY);
+    clickMore(node, event);
   }
 
   function handleDragEnter() {
@@ -667,9 +667,13 @@ Props) => {
         </text>
       )}
 
-      {hover && !dragStarted ? (
+      {true ? (
         // || nodeOptionsOpened
-        <g>
+        <g
+          style={{
+            opacity: hover && !dragStarted ? 1 : 0,
+          }}
+        >
           {/* 預覽按鈕 */}
           {showPreviewButton ? (
             <use

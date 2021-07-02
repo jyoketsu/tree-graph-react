@@ -42,6 +42,10 @@ interface MutiSelectFunc {
   (selectedNodes: Node[]): void;
 }
 
+interface NodeClickFunc {
+  (node: CNode, targetEl: HTMLElement): void;
+}
+
 export interface TreeProps {
   // 节点
   nodes: NodeMap;
@@ -94,8 +98,8 @@ export interface TreeProps {
   selectedBackgroundColor?: string;
   handleClickExpand?: Function;
   handleCheck?: Function;
-  handleClickAvatar?: Function;
-  handleClickStatus?: Function;
+  handleClickAvatar?: NodeClickFunc;
+  handleClickStatus?: NodeClickFunc;
   handleClickNode?: Function;
   handleDbClickNode?: Function;
   handleChangeNodeText?: Function;
@@ -103,8 +107,8 @@ export interface TreeProps {
   handleAddChild?: Function;
   handleDeleteNode?: Function;
   handleClickPreviewButton?: Function;
-  handleClickAddButton?: Function;
-  handleClickMoreButton?: Function;
+  handleClickAddButton?: NodeClickFunc;
+  handleClickMoreButton?: NodeClickFunc;
   handleClickDot?: Function;
   handleShiftUpDown?: Function;
   handleDrag?: Function;
@@ -487,17 +491,23 @@ export const Tree = React.forwardRef(
       }
     }
 
-    function clickAvatar(node: CNode, e: MouseEvent) {
+    function clickAvatar(
+      node: CNode,
+      event: React.MouseEvent<HTMLButtonElement>
+    ) {
       if (handleClickAvatar) {
-        e.stopPropagation();
-        handleClickAvatar(node);
+        event.stopPropagation();
+        handleClickAvatar(node, event.currentTarget);
       }
     }
 
-    function clickStatus(node: CNode, e: MouseEvent) {
+    function clickStatus(
+      node: CNode,
+      event: React.MouseEvent<HTMLButtonElement>
+    ) {
       if (handleClickStatus) {
-        e.stopPropagation();
-        handleClickStatus(node);
+        event.stopPropagation();
+        handleClickStatus(node, event.currentTarget);
       }
     }
 
@@ -778,9 +788,12 @@ export const Tree = React.forwardRef(
     //   setShowOptionsNode(node);
     // }
 
-    function clickMore(node: CNode, clientX: number, clientY: number) {
+    function clickMore(
+      node: CNode,
+      event: React.MouseEvent<HTMLButtonElement>
+    ) {
       if (handleClickMoreButton) {
-        handleClickMoreButton(node, clientX, clientY);
+        handleClickMoreButton(node, event.currentTarget);
       }
     }
 
@@ -790,9 +803,9 @@ export const Tree = React.forwardRef(
       }
     }
 
-    function clickAdd(node: CNode, clientX: number, clientY: number) {
+    function clickAdd(node: CNode, event: React.MouseEvent<HTMLButtonElement>) {
       if (handleClickAddButton) {
-        handleClickAddButton(node, clientX, clientY);
+        handleClickAddButton(node, event.currentTarget);
       }
     }
 
