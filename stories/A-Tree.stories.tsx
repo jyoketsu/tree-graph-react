@@ -432,6 +432,7 @@ MultiCol.args = {
     console.log('---handleMouseEnterAvatar---', node),
   handleMouseLeaveAvatar: (node: any) =>
     console.log('---handleMouseLeaveAvatar---', node),
+  handleChange: () => console.log('---handleChange---'),
 };
 
 export const MultiColDark = Template.bind({});

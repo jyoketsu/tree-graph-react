@@ -309,9 +309,6 @@ export const Tree = React.forwardRef(
         setSecondStartX(cal.second_start_x);
         setSecondEndX(cal.second_end_x);
         setisSingle(cal.isSingle);
-        if (handleChange) {
-          handleChange();
-        }
       }
     }, [nodeMap, startId, singleColumn, showInput]);
 
@@ -471,6 +468,9 @@ export const Tree = React.forwardRef(
       if (UNCONTROLLED) {
         let nodes = dot(nodeMap, node._key);
         setNodeMap(nodes);
+        if (handleChange) {
+          handleChange();
+        }
       }
       if (handleClickExpand) {
         handleClickExpand(node);
@@ -485,6 +485,9 @@ export const Tree = React.forwardRef(
       if (UNCONTROLLED) {
         let nodes = checkNode(nodeMap, node._key);
         setNodeMap(nodes);
+        if (handleChange) {
+          handleChange();
+        }
       }
       if (handleCheck) {
         handleCheck(node);
@@ -519,6 +522,9 @@ export const Tree = React.forwardRef(
       if (UNCONTROLLED) {
         let nodes = changeNodeText(nodeMap, nodeId, text);
         setNodeMap(nodes);
+        if (handleChange) {
+          handleChange();
+        }
       }
       if (handleChangeNodeText) {
         handleChangeNodeText(nodeId, text);
@@ -548,6 +554,9 @@ export const Tree = React.forwardRef(
         setSelectedNodes([]);
         setNodeMap(res.nodes);
         setshowInput(true);
+        if (handleChange) {
+          handleChange();
+        }
       } else {
         if (handleAddNext) {
           handleAddNext(selectedId);
@@ -570,6 +579,9 @@ export const Tree = React.forwardRef(
         setSelectedNodes([]);
         setNodeMap(res.nodes);
         setshowInput(true);
+        if (handleChange) {
+          handleChange();
+        }
       } else {
         if (handleAddChild) {
           handleAddChild(selectedId);
@@ -587,6 +599,9 @@ export const Tree = React.forwardRef(
       if (res) {
         if (UNCONTROLLED) {
           setNodeMap(res.nodes);
+          if (handleChange) {
+            handleChange();
+          }
         } else {
           if (handleShiftUpDown) {
             handleShiftUpDown(selectedId, res.brotherKeys, 'up');
@@ -604,6 +619,9 @@ export const Tree = React.forwardRef(
       if (res) {
         if (UNCONTROLLED) {
           setNodeMap(res.nodes);
+          if (handleChange) {
+            handleChange();
+          }
         } else {
           if (handleShiftUpDown) {
             handleShiftUpDown(selectedId, res.brotherKeys, 'down');
@@ -636,6 +654,9 @@ export const Tree = React.forwardRef(
           let nodes = deleteNode(nodeMap, selectedId);
           setSelectedNodes([]);
           setNodeMap(nodes);
+          if (handleChange) {
+            handleChange();
+          }
         } else {
           // 批量删除
           let nodes = nodeMap;
@@ -647,6 +668,9 @@ export const Tree = React.forwardRef(
           }
           setSelectedNodes([]);
           setNodeMap(nodes);
+          if (handleChange) {
+            handleChange();
+          }
         }
 
         if (handleDeleteNode) {
@@ -754,6 +778,9 @@ export const Tree = React.forwardRef(
               );
               if (res) {
                 setNodeMap(res);
+                if (handleChange) {
+                  handleChange();
+                }
               }
             } else if (handlePaste) {
               handlePaste(pasteNodeKey, pasteType, selectedId);
@@ -772,6 +799,9 @@ export const Tree = React.forwardRef(
             if (UNCONTROLLED) {
               let nodes = changeNodeText(nodeMap, selectedId, '');
               setNodeMap(nodes);
+              if (handleChange) {
+                handleChange();
+              }
             }
             if (handleChangeNodeText) {
               handleChangeNodeText(selectedId, '');
@@ -980,6 +1010,9 @@ export const Tree = React.forwardRef(
                 );
                 if (res) {
                   setNodeMap(res);
+                  if (handleChange) {
+                    handleChange();
+                  }
                 }
               }
             } else {
@@ -991,6 +1024,9 @@ export const Tree = React.forwardRef(
               );
               if (res) {
                 setNodeMap(res);
+                if (handleChange) {
+                  handleChange();
+                }
               }
             }
           } else if (handleDrag) {
