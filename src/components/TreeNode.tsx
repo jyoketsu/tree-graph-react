@@ -22,6 +22,7 @@ interface Props {
   startId: string;
   BLOCK_HEIGHT: number;
   FONT_SIZE: number;
+  avatarRadius: number;
   color: string;
   alias: number;
   selected: string | null;
@@ -70,6 +71,7 @@ const TreeNode = ({
   startId,
   BLOCK_HEIGHT,
   FONT_SIZE,
+  avatarRadius,
   color,
   alias,
   selected,
@@ -254,7 +256,14 @@ Props) => {
   }
 
   function location(node: CNode, type: string) {
-    return nodeLocation(node, type, BLOCK_HEIGHT, showIcon, showAvatar);
+    return nodeLocation(
+      node,
+      type,
+      BLOCK_HEIGHT,
+      showIcon,
+      showAvatar,
+      avatarRadius
+    );
   }
 
   function handleClickLink(type: string, url: string) {
@@ -489,20 +498,20 @@ Props) => {
           onClick={(event: React.MouseEvent) => handleClickAvatar(node, event)}
           onMouseEnter={handleMouseEnterAvatar}
           onMouseLeave={handleMouseLeaveAvatar}
-          viewBox="0,0,22,22"
+          viewBox={`0,0,${avatarRadius * 2},${avatarRadius * 2}`}
         >
           <clipPath id={`${alias}-avatar-clip-${node._key}`}>
             <circle
-              cx={circleLocationRes ? circleLocationRes.x + 11 : 0}
-              cy={circleLocationRes ? circleLocationRes.y + 11 : 0}
-              r="11"
+              cx={circleLocationRes ? circleLocationRes.x + avatarRadius : 0}
+              cy={circleLocationRes ? circleLocationRes.y + avatarRadius : 0}
+              r={avatarRadius}
             />
           </clipPath>
           <image
             x={circleLocationRes?.x}
             y={circleLocationRes?.y}
-            width="22"
-            height="22"
+            width={avatarRadius * 2}
+            height={avatarRadius * 2}
             xlinkHref={node.avatarUri}
             clipPath={`url(#${alias}-avatar-clip-${node._key})`}
             preserveAspectRatio="xMidYMid slice"
@@ -556,7 +565,7 @@ Props) => {
               x={
                 statusLocationRes
                   ? !hideHour
-                    ? statusLocationRes.x + 6
+                    ? statusLocationRes.x + 9
                     : statusLocationRes.x + 11
                   : 0
               }

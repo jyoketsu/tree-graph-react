@@ -75,6 +75,8 @@ export interface TreeProps {
   pathColor?: string;
   // 线条圆角半径
   lineRadius?: number;
+  // 头像半径
+  avatarRadius?: number;
   disableShortcut?: boolean;
   disabled?: boolean;
   showPreviewButton?: boolean;
@@ -144,6 +146,7 @@ export const Tree = React.forwardRef(
       pathWidth,
       pathColor,
       lineRadius,
+      avatarRadius = 11,
       disableShortcut,
       disabled,
       showPreviewButton,
@@ -291,6 +294,7 @@ export const Tree = React.forwardRef(
         FONT_SIZE,
         SHOW_ICON,
         SHOW_AVATAR,
+        avatarRadius,
         rootZoomRatio,
         secondZoomRatio,
         85,
@@ -823,6 +827,10 @@ export const Tree = React.forwardRef(
       event: React.MouseEvent<HTMLButtonElement>
     ) {
       if (handleClickMoreButton) {
+        const selectedKeys = selectedNodes.map(item => item._key);
+        if (selectedKeys.length && selectedKeys.includes(node._key)) {
+          event.stopPropagation();
+        }
         handleClickMoreButton(node, event.currentTarget);
       }
     }
@@ -867,6 +875,9 @@ export const Tree = React.forwardRef(
           cnodes
         );
         setselectedId(null);
+        if (handleClickNode) {
+          handleClickNode(null);
+        }
         setSelectedNodes(selectionNodes);
         setFrameSelectionStarted(false);
         setselectionWidth(0);
@@ -1399,6 +1410,7 @@ export const Tree = React.forwardRef(
                     ? FONT_SIZE * secondZoomRatio
                     : FONT_SIZE
                 }
+                avatarRadius={avatarRadius}
                 color={COLOR}
                 startId={startId}
                 alias={new Date().getTime()}
@@ -1459,6 +1471,7 @@ export const Tree = React.forwardRef(
               alias={new Date().getTime()}
               showIcon={SHOW_ICON}
               showAvatar={SHOW_AVATAR}
+              avatarRadius={avatarRadius}
               movedNodeX={movedNodeX}
               movedNodeY={movedNodeY}
               dragInfo={dragInfo}
@@ -1502,6 +1515,7 @@ export const Tree = React.forwardRef(
                 ? FONT_SIZE * secondZoomRatio
                 : FONT_SIZE
             }
+            avatarRadius={avatarRadius}
             showIcon={SHOW_ICON}
             showAvatar={SHOW_AVATAR}
             startId={startId}

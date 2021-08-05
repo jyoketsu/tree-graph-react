@@ -133,6 +133,7 @@ function getNodeWidth(
   fontSize: number,
   showIcon: boolean,
   showAvatar: boolean,
+  avatarRadius: number,
   padding?: number,
   inputNodeKey?: string
 ) {
@@ -151,7 +152,12 @@ function getNodeWidth(
   }
 
   const paddingWidth = padding ? padding * 1.5 : 15;
-  const extInfoWidth = getExtInfoWidth(node, showIcon, showAvatar);
+  const extInfoWidth = getExtInfoWidth(
+    node,
+    showIcon,
+    showAvatar,
+    avatarRadius
+  );
 
   return (
     // width.fullAngleWidth * full +
@@ -163,9 +169,14 @@ function getNodeWidth(
 }
 
 // 获取额外信息宽度
-function getExtInfoWidth(node: Node, showIcon: boolean, showAvatar: boolean) {
+function getExtInfoWidth(
+  node: Node,
+  showIcon: boolean,
+  showAvatar: boolean,
+  avatarRadius: number
+) {
   const iconWidth = showIcon && node.icon ? 22 : 0;
-  const avatarWidth = showAvatar && node.avatarUri ? 22 : 0;
+  const avatarWidth = showAvatar && node.avatarUri ? avatarRadius * 2 : 0;
   const checkboxWidth = node.showCheckbox ? 18 : 0;
   const statusWidth = node.showStatus ? 22 : 0;
   const temp = [iconWidth, avatarWidth, checkboxWidth, statusWidth];
@@ -187,6 +198,7 @@ function nodeLocation(
   BLOCK_HEIGHT: number,
   showIcon: boolean,
   showAvatar: boolean,
+  avatarRadius: number,
   paddingLeft?: number
 ) {
   const startX = paddingLeft || 5;
@@ -199,7 +211,7 @@ function nodeLocation(
     case 'avatar':
       return {
         x: node.x + startX + (showIcon && node.icon ? 22 + 2 : 0),
-        y: node.y + (BLOCK_HEIGHT - 22) / 2,
+        y: node.y + (BLOCK_HEIGHT - avatarRadius * 2) / 2,
       };
     case 'checkbox':
       return {
@@ -207,7 +219,7 @@ function nodeLocation(
           node.x +
           startX +
           (showIcon && node.icon ? 22 + 2 : 0) +
-          (showAvatar && node.avatarUri ? 22 + 2 : 0),
+          (showAvatar && node.avatarUri ? avatarRadius * 2 + 2 : 0),
         y: node.y + (BLOCK_HEIGHT - 18) / 2,
       };
     case 'status':
@@ -216,12 +228,17 @@ function nodeLocation(
           node.x +
           startX +
           (showIcon && node.icon ? 22 + 2 : 0) +
-          (showAvatar && node.avatarUri ? 22 + 2 : 0) +
+          (showAvatar && node.avatarUri ? avatarRadius * 2 + 2 : 0) +
           (node.showCheckbox ? 18 + 2 : 0),
         y: node.y + (BLOCK_HEIGHT - 22) / 2,
       };
     case 'text':
-      const extWidth = getExtInfoWidth(node, showIcon, showAvatar);
+      const extWidth = getExtInfoWidth(
+        node,
+        showIcon,
+        showAvatar,
+        avatarRadius
+      );
       return {
         x: node.x + startX + extWidth + (extWidth ? 2 : 0),
         y: node.y + BLOCK_HEIGHT / 2 + 1,

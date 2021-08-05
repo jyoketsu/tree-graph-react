@@ -7,6 +7,7 @@ interface Props {
   nodeList: CNode[];
   BLOCK_HEIGHT: number;
   FONT_SIZE: number;
+  avatarRadius: number;
   alias: number;
   showIcon: boolean;
   showAvatar: boolean;
@@ -20,6 +21,7 @@ const DragNode = ({
   nodeList,
   BLOCK_HEIGHT,
   FONT_SIZE,
+  avatarRadius,
   alias,
   showIcon,
   showAvatar,
@@ -41,7 +43,14 @@ const DragNode = ({
   }, [dragInfo, nodeList]);
 
   function location(node: CNode, type: string) {
-    return nodeLocation(node, type, BLOCK_HEIGHT, showIcon, showAvatar);
+    return nodeLocation(
+      node,
+      type,
+      BLOCK_HEIGHT,
+      showIcon,
+      showAvatar,
+      avatarRadius
+    );
   }
 
   if (!node) {
@@ -199,7 +208,7 @@ const DragNode = ({
           userSelect: 'none',
         }}
       >
-        {mutilMode ? '多个节点' : node.name || ''}
+        {mutilMode ? '多个节点' : node.shorted || node.name || ''}
       </text>
     </g>
   ) : null;

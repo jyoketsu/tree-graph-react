@@ -13,6 +13,7 @@ export default function calculate(
   FONT_SIZE: number,
   showIcon: boolean,
   showAvatar: boolean,
+  avatarRadius: number,
   rootZoomRatio: number,
   secondZoomRatio: number,
   inputNodeKey?: string
@@ -25,6 +26,7 @@ export default function calculate(
     FONT_SIZE * rootZoomRatio,
     showIcon,
     showAvatar,
+    avatarRadius,
     undefined,
     inputNodeKey
   );
@@ -143,6 +145,7 @@ export default function calculate(
         : FONT_SIZE,
       showIcon,
       showAvatar,
+      avatarRadius,
       undefined,
       inputNodeKey
     );

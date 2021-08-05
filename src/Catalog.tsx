@@ -76,6 +76,7 @@ export const Catalog = ({
       FONT_SIZE,
       false,
       false,
+      11,
       1,
       1
     );

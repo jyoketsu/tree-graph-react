@@ -71,6 +71,8 @@ export interface MindProps {
   checkBoxWidth?: number;
   pathWidth?: number;
   pathColor?: string;
+  // 头像半径
+  avatarRadius?: number;
   disableShortcut?: boolean;
   disabled?: boolean;
   showPreviewButton?: boolean;
@@ -136,6 +138,7 @@ export const Mind = React.forwardRef(
       indent,
       pathWidth,
       pathColor,
+      avatarRadius = 11,
       disableShortcut,
       disabled,
       showPreviewButton,
@@ -274,6 +277,7 @@ export const Mind = React.forwardRef(
         FONT_SIZE,
         SHOW_ICON,
         SHOW_AVATAR,
+        avatarRadius,
         rootZoomRatio,
         secondZoomRatio,
         showInput && selectedId ? selectedId : undefined
@@ -697,6 +701,10 @@ export const Mind = React.forwardRef(
       event: React.MouseEvent<HTMLButtonElement>
     ) {
       if (handleClickMoreButton) {
+        const selectedKeys = selectedNodes.map(item => item._key);
+        if (selectedKeys.length && selectedKeys.includes(node._key)) {
+          event.stopPropagation();
+        }
         handleClickMoreButton(node, event.currentTarget);
       }
     }
@@ -741,6 +749,9 @@ export const Mind = React.forwardRef(
           cnodes
         );
         setselectedId(null);
+        if (handleClickNode) {
+          handleClickNode(null);
+        }
         setSelectedNodes(selectionNodes);
         setFrameSelectionStarted(false);
         setselectionWidth(0);
@@ -1321,6 +1332,7 @@ export const Mind = React.forwardRef(
                     ? FONT_SIZE * secondZoomRatio
                     : FONT_SIZE
                 }
+                avatarRadius={avatarRadius}
                 color={COLOR}
                 alias={new Date().getTime()}
                 selected={selectedId}
@@ -1374,6 +1386,7 @@ export const Mind = React.forwardRef(
               alias={new Date().getTime()}
               showIcon={SHOW_ICON}
               showAvatar={SHOW_AVATAR}
+              avatarRadius={avatarRadius}
               movedNodeX={movedNodeX}
               movedNodeY={movedNodeY}
               dragInfo={dragInfo}
@@ -1419,6 +1432,7 @@ export const Mind = React.forwardRef(
             }
             showIcon={SHOW_ICON}
             showAvatar={SHOW_AVATAR}
+            avatarRadius={avatarRadius}
             startId={startId}
           />
         ) : null}

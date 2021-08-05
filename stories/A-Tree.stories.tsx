@@ -5,13 +5,12 @@ import { Meta, Story } from '@storybook/react';
 const nodes = {
   '001': {
     _key: '001',
-    name: '項目管理psnine.com',
+    name: '項目管理',
     father: '',
     sortList: ['002', '003', '004', '005'],
     contract: false,
-    // avatarUri: 'https://psnine.com/Upload/game/11387.png',
-    avatarUri: 'https://psnine.com/img/drdeceiver-1610162148.jpg',
-    icon: 'https://cdn-icare.qingtime.cn/rooter.svg',
+    icon:
+      'https://static-resource.np.community.playstation.net/avatar/SCEI/I0078.png',
     checked: true,
     hour: 0.1,
     showCheckbox: true,
@@ -32,6 +31,7 @@ const nodes = {
     hour: 0.1,
     limitDay: 1610812800111,
     // disabled: true,
+    avatarUri: 'https://psnine.com/Upload/game/10992.png',
     icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
     dotIcon: 'https://cdn-icare.qingtime.cn/shareOut1.svg?v=1604893936765',
   },
@@ -48,6 +48,7 @@ const nodes = {
     hour: 0.1,
     limitDay: 1616515200000,
     icon: 'https://cdn-icare.qingtime.cn/favFolder.svg',
+    avatarUri: 'https://psnine.com/Upload/game/11333.png',
   },
   '004': {
     _key: '004',
@@ -409,7 +410,7 @@ MultiCol.args = {
   // pathWidth: 3,
   // pathColor: '#535953',
   // fontWeight: 800,
-
+  handleClickNode: (node: any) => console.log('---handleClickNode---', node),
   handleClickDot: (node: any) => console.log('---handleClickDot---', node),
   handleClickMoreButton: (node: any, element: any) =>
     console.log('---handleClickMoreButton---', node, element),

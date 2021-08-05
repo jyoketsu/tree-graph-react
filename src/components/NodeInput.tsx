@@ -10,6 +10,7 @@ interface Props {
   FONT_SIZE?: number;
   showIcon: boolean;
   showAvatar: boolean;
+  avatarRadius: number;
   startId: string;
   handleChangeNodeText: Function;
 }
@@ -21,6 +22,7 @@ const NodeInput = ({
   FONT_SIZE,
   showIcon,
   showAvatar,
+  avatarRadius,
   startId,
   handleChangeNodeText,
 }: Props) => {
@@ -63,7 +65,8 @@ const NodeInput = ({
       'text',
       BLOCK_HEIGHT || 30,
       showIcon,
-      showAvatar
+      showAvatar,
+      avatarRadius
     );
     if (selected.toLeft && !selected.name) {
       // left = textX ? textX.x + 85 : selected.x + 85;
