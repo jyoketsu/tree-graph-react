@@ -38,6 +38,7 @@ export interface MenuProps {
   // 选中的字体颜色
   selectedColor?: string;
   hoverColor?: string;
+  hoverBackgroundColor?: string;
   cutColor?: string;
   // 选中节点id
   defaultSelectedId?: string;
@@ -58,6 +59,7 @@ export interface MenuProps {
   disabled?: boolean;
   showMoreButton?: boolean;
   showIcon?: boolean;
+  showChildNum?: boolean;
   handleClickExpand?: Function;
   handleClickNode?: Function;
   handleClickIcon?: Function;
@@ -84,6 +86,7 @@ export const MenuTree = React.forwardRef(
       color,
       selectedColor,
       hoverColor,
+      hoverBackgroundColor = '#4d4d4d',
       cutColor,
       defaultSelectedId,
       uncontrolled,
@@ -95,6 +98,7 @@ export const MenuTree = React.forwardRef(
       disabled,
       showMoreButton,
       showIcon,
+      showChildNum = false,
       handleClickExpand,
       handleClickNode,
       handleDbClickNode,
@@ -530,9 +534,11 @@ export const MenuTree = React.forwardRef(
             color={color || '#CDD0D2'}
             selectedColor={selectedColor || '#FFF'}
             hoverColor={hoverColor || '#FFF'}
+            hoverBackgroundColor={hoverBackgroundColor}
             selected={selectedId}
             showIcon={SHOW_ICON}
             disabled={disabled || false}
+            showChildNum={showChildNum}
             cutColor={cutColor || 'rgba(255,255,255,0.5)'}
             pasteNodeKey={pasteType === 'cut' ? pasteNodeKey : null}
             showMoreButton={showMoreButton && !disabled ? true : false}

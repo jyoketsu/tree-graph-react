@@ -12,6 +12,7 @@ interface Props {
   selectedColor: string;
   color: string;
   hoverColor: string;
+  hoverBackgroundColor: string;
   cutColor: string;
   BLOCK_HEIGHT: number;
   FONT_SIZE: number;
@@ -19,6 +20,7 @@ interface Props {
   showMoreButton: boolean;
   showIcon: boolean;
   disabled: boolean;
+  showChildNum: boolean;
   handleClickNode: Function;
   handleDbClickNode: Function;
   handleClickExpand: Function;
@@ -40,12 +42,14 @@ const TreeNode = ({
   color,
   selectedColor,
   hoverColor,
+  hoverBackgroundColor,
   cutColor,
   BLOCK_HEIGHT,
   FONT_SIZE,
   selected,
   showIcon,
   disabled,
+  showChildNum,
   showMoreButton,
   handleClickNode,
   handleDbClickNode,
@@ -245,8 +249,11 @@ const TreeNode = ({
         paddingLeft: `${node.x - indent}px`,
         fontSize: `${FONT_SIZE}px`,
         boxSizing: 'border-box',
-        backgroundColor:
-          nodeRectClassName === 'selected' ? selectedBackgroundColor : 'unset',
+        backgroundColor: hover
+          ? hoverBackgroundColor
+          : nodeRectClassName === 'selected'
+          ? selectedBackgroundColor
+          : 'unset',
         borderStyle: 'solid',
         borderColor: dragLineColor,
         borderWidth: isDragOver ? (isDragIn ? '3px' : '0 0 2px 0') : 0,
@@ -349,12 +356,31 @@ const TreeNode = ({
                 textDecoration: name.type === 'link' ? 'underline' : 'unset',
                 fontWeight:
                   nodeRectClassName === 'selected' ? 'bold' : 'normal',
+                // overflow: 'hidden',
+                // whiteSpace: 'nowrap',
+                // textOverflow: 'ellipsis',
               }}
               onClick={() => handleClickLink(name.type, name.text)}
             >
               {name.text || ''}
             </span>
           ))}
+          {showChildNum ? (
+            <span
+              style={{
+                color:
+                  pasteNodeKey === node._key
+                    ? cutColor
+                    : nodeRectClassName === 'selected'
+                    ? selectedColor
+                    : hover
+                    ? hoverColor
+                    : color,
+                fontWeight:
+                  nodeRectClassName === 'selected' ? 'bold' : 'normal',
+              }}
+            >{` (${node.childNum || node.sortList.length})`}</span>
+          ) : null}
         </span>
       ) : (
         <span
@@ -375,7 +401,9 @@ const TreeNode = ({
             fontWeight: nodeRectClassName === 'selected' ? 800 : 'normal',
           }}
         >
-          {node.name || ''}
+          {`${node.name || ''}${
+            showChildNum ? ` (${node.childNum || node.sortList.length})` : ''
+          }`}
         </span>
       )}
 

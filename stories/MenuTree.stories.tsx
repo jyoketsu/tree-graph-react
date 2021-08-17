@@ -36,7 +36,7 @@ const nodes = {
     name: '項目狀態',
     father: '001',
     sortList: ['010', '011'],
-
+    childNum: 100,
     checked: false,
 
     hour: 0.1,

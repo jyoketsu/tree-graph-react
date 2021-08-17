@@ -27,4 +27,5 @@ export default interface CNode {
   dots?: any[];
   rightDots?: any[];
   leftDots?: any[];
+  childNum?: number;
 }

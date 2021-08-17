@@ -433,6 +433,8 @@ interface DragInfo {
 | disabled                | 是否只读                                         | Number   | 否       | -                     |
 | showMoreButton          | 是否显示节点选项菜单                             | boolean  | 否       | false                 |
 | showIcon                | 是否显示图标                                     | boolean  | 否       | true                  |
+| hoverBackgroundColor    | hover 背景颜色                                   | string   | 否       | #4d4d4d               |
+| showChildNum            | 是否显示子节点数量                               | boolean  | 否       | false                 |
 | handleClickNode         | 点击节点事件,参数：node                          | Function | 否       | -                     |
 | handleDbClickNode       | 双击节点事件,参数：node                          | Function | 否       | -                     |
 | handleClickExpand       | 点击收起/展开事件,参数：node                     | Function | 否       | -                     |
