@@ -31,9 +31,7 @@ const nodes = {
     name: '項目狀態',
     father: '001',
     sortList: ['010', '011'],
-
     checked: false,
-
     hour: 0.1,
     limitDay: 1610726400000,
     icon: 'https://cdn-icare.qingtime.cn/favFolder.svg',
@@ -43,7 +41,6 @@ const nodes = {
     name: '項目會議',
     father: '001',
     sortList: [],
-
     checked: false,
     icon:
       'https://cdn-icare.qingtime.cn/编组 27.png0.1111110010000101001011000001011011011010110100111111607668436820?v=1607668438818',
@@ -232,6 +229,7 @@ export const Default = Template.bind({});
 Default.args = {
   nodes: nodes,
   startId: '001',
+  // dropdownNodeKeyList: ['001', '002', '003'],
   normalFirstLevel: false,
   handleClickNode: (node: any) => console.log('---handleClickNode---', node),
   handleClickExpand: (node: any) =>

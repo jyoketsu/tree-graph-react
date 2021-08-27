@@ -281,6 +281,7 @@ Props) => {
   const checkLocationRes = location(node, 'checkbox');
   const statusLocationRes = location(node, 'status');
   const iconLocationRes = location(node, 'icon');
+  const favoriteLocationRes = location(node, 'favorite');
 
   const nodeRectClassName = rectClassName(node);
 
@@ -481,6 +482,17 @@ Props) => {
         }}
       />
 
+      {node.hasCollect ? (
+        <use
+          key="favorite"
+          href="#favorite"
+          width="22"
+          height="22"
+          x={favoriteLocationRes?.x}
+          y={favoriteLocationRes?.y}
+          onClick={(event: any) => handleCheck(node, event)}
+        />
+      ) : null}
       {/* 图标 */}
       {showIcon && node.icon ? (
         <image
@@ -580,11 +592,11 @@ Props) => {
               fontWeight="800"
               style={{ userSelect: 'none' }}
             >
-              {node.limitDay !== undefined
+              {node.limitDay
                 ? Math.abs(limitDayNum) > 99
                   ? '99+'
                   : Math.abs(limitDayNum)
-                : '-'}
+                : '∞'}
             </text>
             {!hideHour ? (
               <text

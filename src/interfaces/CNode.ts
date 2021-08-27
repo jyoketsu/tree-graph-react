@@ -6,6 +6,7 @@ export default interface CNode {
   shorted?: string;
   // 是否收起子节点
   contract?: boolean;
+  hasCollect?: boolean;
   checked?: boolean;
   hour?: number;
   limitDay?: number;

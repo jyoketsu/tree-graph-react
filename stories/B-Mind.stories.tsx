@@ -86,6 +86,7 @@ const nodes = {
     limitDay: 1610726400000,
   },
   '007': {
+    hasCollect: true,
     _key: '007',
     name: '階段二',
     father: '002',

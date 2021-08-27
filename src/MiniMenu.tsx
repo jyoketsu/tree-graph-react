@@ -24,6 +24,8 @@ export interface MiniMenuProps {
   nodes: NodeMap;
   // 根节点id
   startId: string;
+  // 下拉节点列表，如果有此参数，则不使用startId的子节点，用此列表代替
+  dropdownNodeKeyList?: string[];
   // 菜单宽度
   width?: number;
   // 菜单背景色
@@ -51,6 +53,7 @@ export const MiniMenu = ({
   nodes,
   // 根节点id
   startId,
+  dropdownNodeKeyList,
   // 菜单宽度
   width,
   // 菜单背景色
@@ -108,6 +111,10 @@ export const MiniMenu = ({
   //   }
   // }, [selectedId]);
 
+  const keyList = dropdownNodeKeyList
+    ? dropdownNodeKeyList
+    : rootNode && rootNode.sortList;
+
   return (
     <div
       style={{
@@ -133,20 +140,19 @@ export const MiniMenu = ({
           handleCrossCompDrag,
         }}
       >
-        {rootNode &&
-          rootNode.sortList.map((key, index) =>
-            nodes[key] ? (
-              <MenuItem
-                key={`${index}_${key}`}
-                node={nodes[key]}
-                firstLevel={normalFirstLevel ? false : true}
-                columnSpacing={columnSpacing}
-                borderRadius={borderRadius}
-                compId={compId}
-                // selectedId={firstLevelId}
-              />
-            ) : null
-          )}
+        {keyList.map((key, index) =>
+          nodes[key] ? (
+            <MenuItem
+              key={`${index}_${key}`}
+              node={nodes[key]}
+              firstLevel={normalFirstLevel ? false : true}
+              columnSpacing={columnSpacing}
+              borderRadius={borderRadius}
+              compId={compId}
+              // selectedId={firstLevelId}
+            />
+          ) : null
+        )}
       </ThemeContext.Provider>
     </div>
   );

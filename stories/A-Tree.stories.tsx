@@ -30,6 +30,7 @@ const nodes = {
     checked: true,
     hour: 0.1,
     limitDay: 1610812800111,
+    hasCollect: true,
     // disabled: true,
     avatarUri: 'https://psnine.com/Upload/game/10992.png',
     icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
@@ -55,11 +56,10 @@ const nodes = {
     name: '項目會議',
     father: '001',
     sortList: [],
-
+    showStatus: true,
     checked: false,
-
-    hour: 0.1,
-    limitDay: 1610726400000,
+    limitDay: null,
+    hour: null,
   },
   '005': {
     _key: '005',

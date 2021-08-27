@@ -175,11 +175,18 @@ function getExtInfoWidth(
   showAvatar: boolean,
   avatarRadius: number
 ) {
+  const favoriteWidth = node.hasCollect ? 22 : 0;
   const iconWidth = showIcon && node.icon ? 22 : 0;
   const avatarWidth = showAvatar && node.avatarUri ? avatarRadius * 2 : 0;
   const checkboxWidth = node.showCheckbox ? 18 : 0;
   const statusWidth = node.showStatus ? 22 : 0;
-  const temp = [iconWidth, avatarWidth, checkboxWidth, statusWidth];
+  const temp = [
+    favoriteWidth,
+    iconWidth,
+    avatarWidth,
+    checkboxWidth,
+    statusWidth,
+  ];
   let count = 0;
   for (let index = 0; index < temp.length; index++) {
     const element = temp[index];
@@ -189,7 +196,14 @@ function getExtInfoWidth(
   }
 
   const marginWidth = count ? count * 1.5 : 0;
-  return iconWidth + avatarWidth + checkboxWidth + statusWidth + marginWidth;
+  return (
+    favoriteWidth +
+    iconWidth +
+    avatarWidth +
+    checkboxWidth +
+    statusWidth +
+    marginWidth
+  );
 }
 
 function nodeLocation(
@@ -203,14 +217,23 @@ function nodeLocation(
 ) {
   const startX = paddingLeft || 5;
   switch (type) {
-    case 'icon':
+    case 'favorite':
       return {
         x: node.x + startX,
         y: node.y + (BLOCK_HEIGHT - 22) / 2,
       };
+    case 'icon':
+      return {
+        x: node.x + startX + (node.hasCollect ? 22 + 2 : 0),
+        y: node.y + (BLOCK_HEIGHT - 22) / 2,
+      };
     case 'avatar':
       return {
-        x: node.x + startX + (showIcon && node.icon ? 22 + 2 : 0),
+        x:
+          node.x +
+          startX +
+          +(node.hasCollect ? 22 + 2 : 0) +
+          (showIcon && node.icon ? 22 + 2 : 0),
         y: node.y + (BLOCK_HEIGHT - avatarRadius * 2) / 2,
       };
     case 'checkbox':
@@ -218,6 +241,7 @@ function nodeLocation(
         x:
           node.x +
           startX +
+          (node.hasCollect ? 22 + 2 : 0) +
           (showIcon && node.icon ? 22 + 2 : 0) +
           (showAvatar && node.avatarUri ? avatarRadius * 2 + 2 : 0),
         y: node.y + (BLOCK_HEIGHT - 18) / 2,
@@ -227,6 +251,7 @@ function nodeLocation(
         x:
           node.x +
           startX +
+          (node.hasCollect ? 22 + 2 : 0) +
           (showIcon && node.icon ? 22 + 2 : 0) +
           (showAvatar && node.avatarUri ? avatarRadius * 2 + 2 : 0) +
           (node.showCheckbox ? 18 + 2 : 0),
