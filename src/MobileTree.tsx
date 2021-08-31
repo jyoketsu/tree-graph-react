@@ -59,6 +59,7 @@ export interface MobileTreeProps {
   handleClickExpand?: Function;
   handleClickNode?: Function;
   handleClickIcon?: Function;
+  handleClickDot?: Function;
   handleDbClickNode?: Function;
   handleChangeNodeText?: Function;
   handleAddNext?: Function;
@@ -98,6 +99,7 @@ export const MobileTree = React.forwardRef(
       handleClickNode,
       handleDbClickNode,
       handleClickIcon,
+      handleClickDot,
       handleChangeNodeText,
       handleAddNext,
       handleAddChild,
@@ -483,6 +485,12 @@ export const MobileTree = React.forwardRef(
       }
     }
 
+    function clickDot(node: CNode) {
+      if (handleClickDot) {
+        handleClickDot(node);
+      }
+    }
+
     return (
       <div
         className="menu-wrapper"
@@ -524,6 +532,7 @@ export const MobileTree = React.forwardRef(
             handleChangeNodeText={changeText}
             handleClickIcon={clickIcon}
             handleDrop={handleDrop}
+            handleClickDot={clickDot}
             compId={compId}
             collapseMode={collapseMode}
             collapseModeCollapsed={

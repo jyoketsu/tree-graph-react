@@ -205,4 +205,5 @@ Default.args = {
   handleClickMoreButton: (node: any) =>
     console.log('---handleClickMoreButton---', node),
   handleClickIcon: (node: any) => console.log('---handleClickIcon---', node),
+  handleClickDot: (node: any) => console.log('---handleClickDot---', node),
 };

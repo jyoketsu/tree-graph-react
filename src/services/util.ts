@@ -175,12 +175,14 @@ function getExtInfoWidth(
   showAvatar: boolean,
   avatarRadius: number
 ) {
+  const packWidth = node.isPack ? 22 : 0;
   const favoriteWidth = node.hasCollect ? 22 : 0;
   const iconWidth = showIcon && node.icon ? 22 : 0;
   const avatarWidth = showAvatar && node.avatarUri ? avatarRadius * 2 : 0;
   const checkboxWidth = node.showCheckbox ? 18 : 0;
   const statusWidth = node.showStatus ? 22 : 0;
   const temp = [
+    packWidth,
     favoriteWidth,
     iconWidth,
     avatarWidth,
@@ -197,6 +199,7 @@ function getExtInfoWidth(
 
   const marginWidth = count ? count * 1.5 : 0;
   return (
+    packWidth +
     favoriteWidth +
     iconWidth +
     avatarWidth +
@@ -217,14 +220,23 @@ function nodeLocation(
 ) {
   const startX = paddingLeft || 5;
   switch (type) {
-    case 'favorite':
+    case 'pack':
       return {
         x: node.x + startX,
         y: node.y + (BLOCK_HEIGHT - 22) / 2,
       };
+    case 'favorite':
+      return {
+        x: node.x + startX + (node.isPack ? 22 + 2 : 0),
+        y: node.y + (BLOCK_HEIGHT - 22) / 2,
+      };
     case 'icon':
       return {
-        x: node.x + startX + (node.hasCollect ? 22 + 2 : 0),
+        x:
+          node.x +
+          startX +
+          (node.isPack ? 22 + 2 : 0) +
+          (node.hasCollect ? 22 + 2 : 0),
         y: node.y + (BLOCK_HEIGHT - 22) / 2,
       };
     case 'avatar':
@@ -232,7 +244,8 @@ function nodeLocation(
         x:
           node.x +
           startX +
-          +(node.hasCollect ? 22 + 2 : 0) +
+          (node.isPack ? 22 + 2 : 0) +
+          (node.hasCollect ? 22 + 2 : 0) +
           (showIcon && node.icon ? 22 + 2 : 0),
         y: node.y + (BLOCK_HEIGHT - avatarRadius * 2) / 2,
       };
@@ -241,6 +254,7 @@ function nodeLocation(
         x:
           node.x +
           startX +
+          (node.isPack ? 22 + 2 : 0) +
           (node.hasCollect ? 22 + 2 : 0) +
           (showIcon && node.icon ? 22 + 2 : 0) +
           (showAvatar && node.avatarUri ? avatarRadius * 2 + 2 : 0),
@@ -251,6 +265,7 @@ function nodeLocation(
         x:
           node.x +
           startX +
+          (node.isPack ? 22 + 2 : 0) +
           (node.hasCollect ? 22 + 2 : 0) +
           (showIcon && node.icon ? 22 + 2 : 0) +
           (showAvatar && node.avatarUri ? avatarRadius * 2 + 2 : 0) +

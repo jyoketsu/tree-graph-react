@@ -282,6 +282,7 @@ Props) => {
   const statusLocationRes = location(node, 'status');
   const iconLocationRes = location(node, 'icon');
   const favoriteLocationRes = location(node, 'favorite');
+  const packLocationRes = location(node, 'pack');
 
   const nodeRectClassName = rectClassName(node);
 
@@ -482,6 +483,16 @@ Props) => {
         }}
       />
 
+      {node.isPack ? (
+        <use
+          key="pack"
+          href="#pack"
+          width="22"
+          height="22"
+          x={packLocationRes?.x}
+          y={packLocationRes?.y}
+        />
+      ) : null}
       {node.hasCollect ? (
         <use
           key="favorite"
@@ -490,7 +501,6 @@ Props) => {
           height="22"
           x={favoriteLocationRes?.x}
           y={favoriteLocationRes?.y}
-          onClick={(event: any) => handleCheck(node, event)}
         />
       ) : null}
       {/* 图标 */}

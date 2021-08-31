@@ -1206,6 +1206,18 @@ export const Mind = React.forwardRef(
               ></path>
             </symbol>
             <symbol
+              id="pack"
+              width="200"
+              height="200"
+              viewBox="0,0,1024,1024"
+              preserveAspectRatio="xMinYMin meet"
+            >
+              <path
+                d="M640 42.7H512V128h85.3v85.3H512v85.3h85.3V384H512v85.3h85.3v85.3H512v-85.3h-85.3V384H512v-85.3h-85.3v-85.3H512V128h-85.3V42.7h-256c-23.6 0-42.7 19.1-42.7 42.7v853.3c0 23.6 19.1 42.7 42.7 42.7h682.7c23.6 0 42.7-19.1 42.7-42.7v-640C796 198.7 740 142.6 640 42.7zM597.3 896H426.7V597.3h170.7V896zM640 298.7V128l170.7 170.7H640z"
+                fill="#8476EF"
+              ></path>
+            </symbol>
+            <symbol
               id="preview"
               width="200"
               height="200"

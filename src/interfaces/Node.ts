@@ -7,6 +7,8 @@ export default interface Node {
   // 是否收起子节点
   contract?: boolean;
   hasCollect?: boolean;
+  // 是否已歸檔
+  isPack?: boolean;
   checked?: boolean;
   hour?: number;
   limitDay?: number;

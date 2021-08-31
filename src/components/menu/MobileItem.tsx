@@ -25,6 +25,7 @@ interface Props {
   handleDbClickNode: Function;
   handleClickExpand: Function;
   handleClickIcon: Function;
+  handleClickDot: Function;
   showInput: boolean;
   handleChangeNodeText: Function;
   handleDrop: Function;
@@ -54,6 +55,7 @@ const MobileItem = ({
   handleDbClickNode,
   handleClickExpand,
   handleClickIcon,
+  handleClickDot,
   showInput,
   handleChangeNodeText,
   handleDrop,
@@ -265,7 +267,13 @@ const MobileItem = ({
           flexShrink: 0,
         }}
       ></div>
-      <div style={{ marginRight: '12px', flexShrink: 0 }}>
+      <div
+        style={{ marginRight: '12px', flexShrink: 0 }}
+        onClick={e => {
+          e.stopPropagation();
+          handleClickDot(node);
+        }}
+      >
         <svg width={8} height={8} viewBox={`0,0,${8},${8}`}>
           <circle
             id="dot"

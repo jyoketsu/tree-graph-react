@@ -31,6 +31,7 @@ const nodes = {
     hour: 0.1,
     limitDay: 1610812800111,
     hasCollect: true,
+    isPack: true,
     // disabled: true,
     avatarUri: 'https://psnine.com/Upload/game/10992.png',
     icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',

@@ -29,6 +29,7 @@ const nodes = {
     showCheckbox: true,
     showStatus: true,
     checked: true,
+    isPack: true,
     hour: 0.1,
     limitDay: 1610812800111,
     // disabled: true,
