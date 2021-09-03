@@ -113,7 +113,9 @@ export const MiniMenu = ({
 
   const keyList = dropdownNodeKeyList
     ? dropdownNodeKeyList
-    : rootNode && rootNode.sortList;
+    : rootNode && rootNode.sortList
+    ? rootNode.sortList
+    : [];
 
   return (
     <div
