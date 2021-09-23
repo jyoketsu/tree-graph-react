@@ -5,3 +5,4 @@ export * from './Catalog';
 export * from './Mind';
 export * from './Calculate';
 export * from './MobileTree';
+export * from './Slides';
