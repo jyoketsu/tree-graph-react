@@ -75,6 +75,8 @@
     "mind"
   ],
   "dependencies": {
-    "@jyoketsu/click-outside-react": "^0.1.2"
+    "@jyoketsu/click-outside-react": "^0.1.2",
+    "react-tooltip": "^4.2.21",
+    "screenfull": "^5.1.0"
   }
 }

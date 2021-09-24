@@ -1,3 +1,5 @@
+import Attach from './Attach';
+
 export default interface Node {
   _key: string;
   name: string;
@@ -22,6 +24,8 @@ export default interface Node {
   disabled?: boolean;
   strikethrough?: boolean;
   updateTime?: number;
+  // 节点附件
+  attach?: Attach[];
   // 以下为计算属性
   x?: number;
   y?: number;
