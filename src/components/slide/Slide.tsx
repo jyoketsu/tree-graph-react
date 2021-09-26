@@ -1,7 +1,7 @@
 import React from 'react';
 import SlideType from '../../interfaces/SlideType';
 import Title from './Title';
-import Webview from './Webview';
+import Webview from '../common/Webview';
 
 interface props {
   slide: SlideType;

@@ -19,7 +19,7 @@ export interface SlideProps {
   nodes: NodeMap;
   // 根节点id
   startId: string;
-  themeColor: string;
+  themeColor?: string;
   getNodeUrl: GetNodeUrlFunc;
 }
 
@@ -146,10 +146,17 @@ export const Slides = ({
       <div
         data-tip="幻灯片放映"
         style={{
+          width: '40px',
+          height: '40px',
+          borderRadius: '20px',
           position: 'absolute',
           right: '65px',
           bottom: '45px',
           cursor: 'pointer',
+          backgroundColor: '#FFF',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
         }}
         onClick={() => {
           if (slideList.length) {
