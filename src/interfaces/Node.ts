@@ -5,6 +5,7 @@ export default interface Node {
   name: string;
   father: string;
   sortList: string[];
+  type?: string;
   shorted?: string;
   // 是否收起子节点
   contract?: boolean;

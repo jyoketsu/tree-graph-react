@@ -2,17 +2,22 @@ import Attach from '../interfaces/Attach';
 import Node from '../interfaces/Node';
 import NodeMap from '../interfaces/NodeMap';
 import SlideType from '../interfaces/SlideType';
+import { GetNodeUrlFunc } from '../Slides';
 
-export default function getSlideList(nodes: NodeMap, startId: string) {
+export default function getSlideList(
+  nodes: NodeMap,
+  startId: string,
+  getNodeUrlFunc: GetNodeUrlFunc
+) {
   let slideList: SlideType[] = [];
   const node = nodes[startId];
   if (!node) {
     return slideList;
   }
-  getSlide(node);
+  getSlide(node, getNodeUrlFunc);
   return slideList;
 
-  function getSlide(node: Node) {
+  function getSlide(node: Node, getNodeUrlFunc: GetNodeUrlFunc) {
     // 图片附件
     let imageList: Attach[] = [];
     if (node.attach && node.attach.length) {
@@ -25,7 +30,14 @@ export default function getSlideList(nodes: NodeMap, startId: string) {
     }
     // 如果该节点为根节点或者有图片附件，则单独有一张幻灯片
     if (node._key === startId || imageList.length) {
-      slideList.push({ title: node.name, subTitleList: [], imageList });
+      slideList.push({ title: node.name, imageList });
+    }
+    // 如果节点为文档，则获取文档地址，且单独有一张幻灯片
+    if (node.type === 'doc') {
+      const url = getNodeUrlFunc(node);
+      if (url) {
+        slideList.push({ title: node.name, url });
+      }
     }
 
     const childrenIds = node.sortList;
@@ -47,7 +59,7 @@ export default function getSlideList(nodes: NodeMap, startId: string) {
       const nodeKey = childrenIds[index];
       const node = nodes[nodeKey];
       if (node) {
-        getSlide(node);
+        getSlide(node, getNodeUrlFunc);
       }
     }
   }

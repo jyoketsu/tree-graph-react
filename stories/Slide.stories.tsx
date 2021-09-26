@@ -19,17 +19,17 @@ const nodes = {
     // disabled: true,
     attach: [
       {
-        url: 'https://z3.ax1x.com/2021/09/24/4By5a6.jpg',
+        url: 'https://z3.ax1x.com/2021/09/26/4yruQg.jpg',
         type: 'image/jpeg',
         name: '4By5a6',
       },
       {
-        url: 'https://z3.ax1x.com/2021/09/24/4BygxJ.jpg',
+        url: 'https://z3.ax1x.com/2021/09/26/4yrKyQ.jpg',
         type: 'image/jpeg',
         name: '4BygxJ',
       },
       {
-        url: 'https://z3.ax1x.com/2021/09/24/4Byfq1.jpg',
+        url: 'https://z3.ax1x.com/2021/09/26/4yreW8.jpg',
         type: 'image/jpeg',
         name: '4Byfq1',
       },
@@ -54,49 +54,24 @@ const nodes = {
     dotIcon: 'https://cdn-icare.qingtime.cn/shareOut1.svg?v=1604893936765',
     attach: [
       {
-        url: 'https://z3.ax1x.com/2021/09/24/4By5a6.jpg',
+        url: 'https://z3.ax1x.com/2021/09/26/4yrMLj.jpg',
         type: 'image/jpeg',
         name: '4By5a6',
       },
       {
-        url: 'https://z3.ax1x.com/2021/09/24/4BygxJ.jpg',
+        url: 'https://z3.ax1x.com/2021/09/26/4yrles.jpg',
         type: 'image/jpeg',
         name: '4BygxJ',
       },
       {
-        url: 'https://z3.ax1x.com/2021/09/24/4Byfq1.jpg',
+        url: 'https://z3.ax1x.com/2021/09/26/4yrnSS.jpg',
         type: 'image/jpeg',
         name: '4Byfq1',
       },
       {
-        url: 'https://z3.ax1x.com/2021/09/24/4ByWrR.jpg',
+        url: 'https://z3.ax1x.com/2021/09/26/4yrKyQ.jpg',
         type: 'image/jpeg',
         name: '4By5a6',
-      },
-      {
-        url: 'https://z3.ax1x.com/2021/09/24/4ByRM9.jpg',
-        type: 'image/jpeg',
-        name: '4ByRM9',
-      },
-      {
-        url: 'https://z3.ax1x.com/2021/09/24/4ByIIK.jpg',
-        type: 'image/jpeg',
-        name: '4ByIIK',
-      },
-      {
-        url: 'https://z3.ax1x.com/2021/09/24/4ByTPO.jpg',
-        type: 'image/jpeg',
-        name: '4ByTPO',
-      },
-      {
-        url: 'https://z3.ax1x.com/2021/09/24/4By7GD.jpg',
-        type: 'image/jpeg',
-        name: '4By7GD',
-      },
-      {
-        url: 'https://z3.ax1x.com/2021/09/24/4ByHRe.jpg',
-        type: 'image/jpeg',
-        name: '4ByHRe',
       },
     ],
   },
@@ -124,6 +99,13 @@ const nodes = {
     checked: false,
     limitDay: null,
     hour: null,
+    attach: [
+      {
+        url: 'https://z3.ax1x.com/2021/09/26/4yrnSS.jpg',
+        type: 'image/jpeg',
+        name: '4Byfq1',
+      },
+    ],
   },
   '005': {
     _key: '005',
@@ -164,11 +146,7 @@ const nodes = {
     name: '备份json文件',
     father: '006',
     sortList: [],
-
-    checked: false,
-
-    hour: 0.1,
-    limitDay: 1610726400000,
+    type: 'doc',
   },
   '009': {
     _key: '009',
@@ -282,4 +260,7 @@ export const Default = Template.bind({});
 Default.args = {
   nodes: nodes,
   startId: '001',
+  getNodeUrl: () => {
+    return 'https://psnine.com/';
+  },
 };

@@ -26,26 +26,30 @@ export default function SlidePlay({
   const [transition, setTransition] = useState(false);
 
   useEffect(() => {
-    if (
-      containerRef &&
-      containerRef.current &&
-      containerRef.current.clientWidth
-    ) {
+    if (containerRef?.current?.clientWidth) {
       containerRef.current.focus();
       setSlideWidth(containerRef.current.clientWidth);
       setSlideHeight(containerRef.current.clientHeight);
-      setTranslateX(-containerRef.current.clientWidth * currentPage);
     }
   }, [containerRef?.current?.clientWidth]);
+
+  useEffect(() => {
+    if (slideWidth) {
+      if (currentPage === 0) {
+        setTranslateX(0);
+      } else if (currentPage === slideList.length - 1) {
+        setTranslateX(-slideWidth);
+      } else {
+        setTranslateX(-slideWidth);
+      }
+    }
+  }, [currentPage, slideWidth]);
 
   function handleKeyDown(event: React.KeyboardEvent) {
     event.preventDefault();
     switch (event.key) {
       case 'ArrowRight':
-        if (transition) {
-          break;
-        }
-        if (currentPage + 1 < slideList.length) {
+        if (currentPage + 1 < slideList.length && !transition) {
           setTransition(true);
           setTranslateX((prevX: number) => prevX - slideWidth);
           setTimeout(() => {
@@ -55,10 +59,7 @@ export default function SlidePlay({
         }
         break;
       case 'ArrowLeft':
-        if (transition) {
-          break;
-        }
-        if (currentPage - 1 >= 0) {
+        if (currentPage - 1 >= 0 && !transition) {
           setTransition(true);
           setTranslateX((prevX: number) => prevX + slideWidth);
           setTimeout(() => {
@@ -97,16 +98,28 @@ export default function SlidePlay({
             : 'unset',
         }}
       >
-        {slideList.map((slide, index) => (
+        {currentPage - 1 >= 0 ? (
           <Slide
-            key={index}
             width={`${slideWidth}px`}
             height={`${slideHeight}px`}
             style={{ flexShrink: 0 }}
-            slide={slide}
-            active={index === currentPage}
+            slide={slideList[currentPage - 1]}
           />
-        ))}
+        ) : null}
+        <Slide
+          width={`${slideWidth}px`}
+          height={`${slideHeight}px`}
+          style={{ flexShrink: 0 }}
+          slide={slideList[currentPage]}
+        />
+        {currentPage + 1 < slideList.length ? (
+          <Slide
+            width={`${slideWidth}px`}
+            height={`${slideHeight}px`}
+            style={{ flexShrink: 0 }}
+            slide={slideList[currentPage + 1]}
+          />
+        ) : null}
       </div>
     </div>
   );

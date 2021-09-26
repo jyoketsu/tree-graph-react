@@ -8,6 +8,11 @@ import Icon from './components/icon';
 import ReactTooltip from 'react-tooltip';
 import SlidePlay from './components/slide/SlidePlay';
 import screenfull from 'screenfull';
+import Node from './interfaces/Node';
+
+export interface GetNodeUrlFunc {
+  (node: Node): string;
+}
 
 export interface SlideProps {
   // 节点
@@ -15,12 +20,14 @@ export interface SlideProps {
   // 根节点id
   startId: string;
   themeColor: string;
+  getNodeUrl: GetNodeUrlFunc;
 }
 
 export const Slides = ({
   nodes,
   startId,
   themeColor = '#1CA8B3',
+  getNodeUrl,
 }: SlideProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [slideList, setSlideList] = useState<SlideType[]>([]);
@@ -28,10 +35,10 @@ export const Slides = ({
   const [playMode, setPlayMode] = useState(false);
 
   useEffect(() => {
-    if (containerRef && containerRef.current) {
+    if (containerRef?.current) {
       containerRef.current.focus();
     }
-  }, [containerRef]);
+  }, [containerRef?.current]);
 
   // 监听全屏事件
   useEffect(() => {
@@ -40,6 +47,10 @@ export const Slides = ({
         // 监听到退出全屏，则退出放映模式
         if (!screenfull.isFullscreen) {
           setPlayMode(false);
+        } else {
+          setTimeout(() => {
+            setPlayMode(true);
+          }, 1000);
         }
       });
     }
@@ -47,7 +58,7 @@ export const Slides = ({
 
   // 计算得到幻灯片数据
   useEffect(() => {
-    const slideList = getSlideList(nodes, startId);
+    const slideList = getSlideList(nodes, startId, getNodeUrl);
     setSlideList(slideList);
   }, [nodes, startId]);
 
@@ -128,7 +139,7 @@ export const Slides = ({
               boxShadow: '0 0 15px 0 rgb(0 0 0 / 10%)',
             }}
           >
-            <Slide slide={slideList[currentPage]} />
+            <Slide slide={slideList[currentPage]} active={true} />
           </div>
         ) : null}
       </div>
@@ -142,7 +153,6 @@ export const Slides = ({
         }}
         onClick={() => {
           if (slideList.length) {
-            setPlayMode(true);
             if (screenfull.isEnabled) {
               screenfull.request();
             }
@@ -196,7 +206,7 @@ function SlidePreview({
           transform: 'scale(0.4)',
           transformOrigin: 'top left',
         }}
-        isPreview={true}
+        active={false}
       />
     </div>
   );

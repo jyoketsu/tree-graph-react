@@ -18,12 +18,12 @@ export default function ImageSlides({ imageList }: Props) {
   const [transition, setTransition] = useState(true);
 
   useEffect(() => {
-    if (containerRef && containerRef.current) {
+    if (containerRef?.current?.clientWidth) {
       containerRef.current.focus();
       setSlideWidth(containerRef.current.clientWidth);
       setSlideHeight(containerRef.current.clientHeight);
     }
-  }, [containerRef]);
+  }, [containerRef?.current?.clientWidth]);
 
   useEffect(() => {
     setTransition(false);
@@ -43,7 +43,7 @@ export default function ImageSlides({ imageList }: Props) {
       }, 3000);
     }
     return () => clearInterval(interval);
-  }, [imageList, buttonRef]);
+  }, [imageList.length, buttonRef]);
 
   const nextPage = (currentPage: number) => {
     if (transition) {
@@ -77,6 +77,8 @@ export default function ImageSlides({ imageList }: Props) {
       {slideWidth ? (
         <div
           style={{
+            width: '100%',
+            height: '100%',
             display: 'flex',
             transform: `translateX(${translateX}px)`,
             transition: transition
@@ -156,13 +158,13 @@ function ImageSlide({ image, width, height, style }: SlideProps) {
         style={{
           flex: 1,
           width: '100%',
-          backgroundImage: `url(${image.url})`,
+          backgroundImage: `url(${image?.url})`,
           backgroundSize: 'contain',
           backgroundRepeat: 'no-repeat',
           backgroundPosition: 'center',
         }}
       ></div>
-      <span style={{ padding: '5px 0', color: '#A9A9A9' }}>{image.name}</span>
+      <span style={{ padding: '5px 0', color: '#A9A9A9' }}>{image?.name}</span>
     </div>
   );
 }
