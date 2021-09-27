@@ -13,7 +13,7 @@ export default function Webview({ uri, id }: Props) {
   function handleOnload() {
     setloading(false);
   }
-  
+
   return (
     <div style={{ position: 'relative', width: '100%', height: '100%' }}>
       <iframe

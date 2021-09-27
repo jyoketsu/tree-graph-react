@@ -33,6 +33,10 @@ export const Slides = ({
   const [slideList, setSlideList] = useState<SlideType[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [playMode, setPlayMode] = useState(false);
+  const [paperColor, setpaperColor] = useState('#434343');
+  const [color, setcolor] = useState('#FFF');
+  const [backgroundColor, setbackgroundColor] = useState('#656765');
+  const [borderColor, setborderColor] = useState('#1C1C1C');
 
   useEffect(() => {
     if (containerRef?.current) {
@@ -83,92 +87,144 @@ export const Slides = ({
     }
   }
 
+  const handleChangeColor = () => {
+    if (paperColor === '#434343') {
+      setpaperColor('#FFF');
+      setcolor('#434343');
+      setbackgroundColor('#f5f5f5');
+      setborderColor('#eee');
+    } else {
+      setpaperColor('#434343');
+      setcolor('#FFF');
+      setbackgroundColor('#656765');
+      setborderColor('#1C1C1C');
+    }
+  };
+
   return (
     <div
+      tabIndex={-1}
       ref={containerRef}
       style={{
         position: 'relative',
         width: '100%',
         height: '100%',
         display: 'grid',
-        gridTemplateColumns: '230px 1fr',
-        backgroundColor: '#f5f5f5',
-        color: '#424242',
+        gridTemplateRows: '40px 1fr',
+        backgroundColor: backgroundColor,
+        color: color,
         outline: 'none',
       }}
-      tabIndex={-1}
       onKeyDown={(e: React.KeyboardEvent) => handleKeyDown(e)}
     >
       <div
         style={{
-          width: '100%',
-          height: '100%',
-          borderRight: '1px solid #e0e0e0',
-          overflow: 'auto',
+          padding: '0 15px',
           display: 'flex',
-          flexDirection: 'column',
           alignItems: 'center',
-          backgroundColor: '#FFF',
+          backgroundColor: paperColor,
+          borderBottom: `1px solid ${borderColor}`,
+          boxSizing: 'border-box',
         }}
       >
-        {slideList.map((slide, index) => (
-          <SlidePreview
-            key={index}
-            slide={slide}
-            themeColor={themeColor}
-            isActive={index === currentPage}
-            handleClick={() => setCurrentPage(index)}
-          />
-        ))}
+        <span style={{ fontSize: '18px' }}>{nodes[startId]?.name}</span>
+        <div style={{ flex: 1 }}></div>
+        <div
+          data-tip={
+            paperColor === '#434343' ? '切换为亮色风格' : '切换为暗色风格'
+          }
+          style={{
+            cursor: 'pointer',
+            height: '29px',
+            marginRight: '15px',
+          }}
+          onClick={handleChangeColor}
+        >
+          {paperColor === '#434343' ? (
+            <Icon name="sun" fill={color} />
+          ) : (
+            <Icon name="moon" fill={color} />
+          )}
+        </div>
+        <div
+          data-tip="幻灯片放映"
+          style={{
+            cursor: 'pointer',
+            height: '29px',
+          }}
+          onClick={() => {
+            if (slideList.length) {
+              if (screenfull.isEnabled) {
+                screenfull.request();
+              }
+            }
+          }}
+        >
+          <Icon name="play" fill={color} />
+        </div>
+        <ReactTooltip place="bottom" type="dark" effect="solid" />
       </div>
       <div
         style={{
+          position: 'relative',
           width: '100%',
           height: '100%',
-          boxSizing: 'border-box',
-          padding: '35px 45px',
+          display: 'grid',
+          gridTemplateColumns: '230px 1fr',
           overflow: 'hidden',
         }}
       >
-        {slideList.length ? (
-          <div
-            style={{
-              width: '100%',
-              height: '100%',
-              backgroundColor: '#FFF',
-              boxShadow: '0 0 15px 0 rgb(0 0 0 / 10%)',
-            }}
-          >
-            <Slide slide={slideList[currentPage]} active={true} />
-          </div>
-        ) : null}
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            borderRight: `1px solid ${borderColor}`,
+            overflow: 'auto',
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            backgroundColor: paperColor,
+            boxSizing: 'border-box',
+            padding: '15px 0',
+          }}
+        >
+          {slideList.map((slide, index) => (
+            <SlidePreview
+              key={index}
+              slide={slide}
+              themeColor={themeColor}
+              isActive={index === currentPage}
+              handleClick={() => setCurrentPage(index)}
+              borderColor={borderColor}
+            />
+          ))}
+        </div>
+        <div
+          style={{
+            width: '100%',
+            height: '100%',
+            boxSizing: 'border-box',
+            padding: '35px 45px',
+            overflow: 'hidden',
+          }}
+        >
+          {slideList.length ? (
+            <div
+              style={{
+                width: '100%',
+                height: '100%',
+                boxShadow: '0 0 15px 0 rgb(0 0 0 / 10%)',
+              }}
+            >
+              <Slide
+                slide={slideList[currentPage]}
+                active={true}
+                style={{ backgroundColor: paperColor, color }}
+              />
+            </div>
+          ) : null}
+        </div>
       </div>
-      <div
-        data-tip="幻灯片放映"
-        style={{
-          width: '40px',
-          height: '40px',
-          borderRadius: '20px',
-          position: 'absolute',
-          right: '65px',
-          bottom: '45px',
-          cursor: 'pointer',
-          backgroundColor: '#FFF',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-        }}
-        onClick={() => {
-          if (slideList.length) {
-            if (screenfull.isEnabled) {
-              screenfull.request();
-            }
-          }
-        }}
-      >
-        <Icon name="play" />
-      </div>
-      <ReactTooltip place="top" type="dark" effect="solid" />
       {playMode ? (
         <SlidePlay
           slideList={slideList}
@@ -185,6 +241,7 @@ interface previewProps {
   themeColor: string;
   isActive: boolean;
   handleClick: Function;
+  borderColor: string;
 }
 
 function SlidePreview({
@@ -192,6 +249,7 @@ function SlidePreview({
   themeColor,
   isActive,
   handleClick,
+  borderColor,
 }: previewProps) {
   return (
     <div
@@ -199,7 +257,7 @@ function SlidePreview({
         width: '200px',
         height: '180px',
         overflow: 'hidden',
-        border: `1px solid ${isActive ? themeColor : '#e0e0e0'}`,
+        border: `1px solid ${isActive ? themeColor : borderColor}`,
         flexShrink: 0,
         margin: '5px 0',
       }}

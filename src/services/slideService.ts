@@ -32,28 +32,30 @@ export default function getSlideList(
     if (node._key === startId || imageList.length) {
       slideList.push({ title: node.name, imageList });
     }
+
+    const childrenIds = node.sortList;
+
     // 如果节点为文档，则获取文档地址，且单独有一张幻灯片
-    if (node.type === 'doc') {
+    if (node.type === 'doc' || node.type === 'file') {
       const url = getNodeUrlFunc(node);
       if (url) {
         slideList.push({ title: node.name, url });
       }
-    }
-
-    const childrenIds = node.sortList;
-    let subTitleList = [];
-    for (let index = 0; index < childrenIds.length; index++) {
-      const nodeKey = childrenIds[index];
-      const node = nodes[nodeKey];
-      if (node) {
-        subTitleList.push(node.name);
+    } else {
+      let subTitleList = [];
+      for (let index = 0; index < childrenIds.length; index++) {
+        const nodeKey = childrenIds[index];
+        const node = nodes[nodeKey];
+        if (node) {
+          subTitleList.push(node.name);
+        }
       }
+      const slide = {
+        title: node.name,
+        subTitleList,
+      };
+      slideList.push(slide);
     }
-    const slide = {
-      title: node.name,
-      subTitleList,
-    };
-    slideList.push(slide);
 
     for (let index = 0; index < childrenIds.length; index++) {
       const nodeKey = childrenIds[index];

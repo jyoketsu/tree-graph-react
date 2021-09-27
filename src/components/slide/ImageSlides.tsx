@@ -69,7 +69,7 @@ export default function ImageSlides({ imageList }: Props) {
       style={{
         width: '100%',
         height: '100%',
-        backgroundColor: '#FFF',
+        backgroundColor: 'inherit',
         outline: 'none',
         overflow: 'hidden',
       }}
