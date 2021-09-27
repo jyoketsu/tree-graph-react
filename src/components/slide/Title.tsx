@@ -29,12 +29,12 @@ export default function Title({ slide, active }: props) {
         }}
       >
         {/* 标题 */}
-        <span style={{ fontSize: '48px' }}>{slide.title}</span>
+        <span style={{ fontSize: '8vh' }}>{slide.title}</span>
         {/* 子标题列表 */}
         {slide.subTitleList?.length ? (
           <ul>
             {slide.subTitleList.map((title: string, index: number) => (
-              <li key={index} style={{ fontSize: '18px' }}>
+              <li key={index} style={{ fontSize: '4vh' }}>
                 {title}
               </li>
             ))}

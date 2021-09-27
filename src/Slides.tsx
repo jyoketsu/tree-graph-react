@@ -265,10 +265,10 @@ function SlidePreview({
     >
       <Slide
         slide={slide}
-        width={`${200 / 0.4}px`}
-        height={`${180 / 0.4}px`}
+        width={`${200 / 0.2}px`}
+        height={`${180 / 0.2}px`}
         style={{
-          transform: 'scale(0.4)',
+          transform: 'scale(0.2)',
           transformOrigin: 'top left',
         }}
         active={false}
