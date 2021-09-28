@@ -230,6 +230,7 @@ export const Slides = ({
           slideList={slideList}
           currentPage={currentPage}
           changePage={(pageNumber: number) => setCurrentPage(pageNumber)}
+          themeColor={themeColor}
         />
       ) : null}
     </div>
