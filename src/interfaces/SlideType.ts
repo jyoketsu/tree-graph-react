@@ -5,4 +5,6 @@ export default interface SlideType {
   subTitleList?: string[];
   imageList?: Attach[];
   url?: string;
+  type?: string;
+  icon?: string;
 }

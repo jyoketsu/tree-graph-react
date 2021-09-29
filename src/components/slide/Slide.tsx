@@ -9,6 +9,7 @@ interface props {
   height?: string;
   style?: object;
   active?: boolean;
+  thumbnailMode?: boolean;
 }
 export default function Slide({
   slide,
@@ -16,6 +17,7 @@ export default function Slide({
   height = '100%',
   style,
   active,
+  thumbnailMode,
 }: props) {
   return (
     <div
@@ -26,10 +28,10 @@ export default function Slide({
         ...style,
       }}
     >
-      {slide.url ? (
+      {slide.url && slide.type !== 'link' && !thumbnailMode ? (
         <Webview uri={slide.url} />
       ) : (
-        <Title slide={slide} active={active} />
+        <Title slide={slide} active={active} thumbnailMode={thumbnailMode} />
       )}
       {!active ? (
         <div

@@ -137,7 +137,8 @@ const nodes = {
     sortList: [],
     color: '#8D742A',
     checked: false,
-
+    type: 'doc',
+    icon: 'https://mindcute.com/icon/logo.svg',
     hour: 0.1,
     limitDay: 1610726400000,
   },
@@ -146,7 +147,9 @@ const nodes = {
     name: '备份json文件',
     father: '006',
     sortList: [],
-    type: 'doc',
+    type: 'link',
+    icon: 'https://mindcute.com/icon/logo.svg',
+    url: 'https://psnine.com/',
   },
   '009': {
     _key: '009',

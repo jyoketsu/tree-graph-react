@@ -25,6 +25,7 @@ export default interface Node {
   disabled?: boolean;
   strikethrough?: boolean;
   updateTime?: number;
+  url?: string;
   // 节点附件
   attach?: Attach[];
   // 以下为计算属性

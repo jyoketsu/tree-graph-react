@@ -273,6 +273,7 @@ function SlidePreview({
           transformOrigin: 'top left',
         }}
         active={false}
+        thumbnailMode={true}
       />
     </div>
   );

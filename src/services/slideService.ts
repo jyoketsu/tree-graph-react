@@ -30,16 +30,23 @@ export default function getSlideList(
     }
     // 如果该节点为根节点或者有图片附件，则单独有一张幻灯片
     if (node._key === startId || imageList.length) {
-      slideList.push({ title: node.name, imageList });
+      slideList.push({
+        title: node.name,
+        imageList,
+      });
     }
 
     const childrenIds = node.sortList;
 
     // 如果节点为文档，则获取文档地址，且单独有一张幻灯片
-    if (node.type === 'doc' || node.type === 'file' || node.type === 'link') {
+    if (node.type === 'doc' || node.type === 'file') {
       const url = getNodeUrlFunc(node);
       if (url) {
-        slideList.push({ title: node.name, url });
+        slideList.push({
+          title: node.name,
+          url,
+          icon: node.icon,
+        });
       }
     } else {
       let subTitleList = [];
@@ -55,6 +62,8 @@ export default function getSlideList(
         const slide = {
           title: node.name,
           subTitleList,
+          type: node.type,
+          url: node.url,
         };
         slideList.push(slide);
       }

@@ -127,6 +127,7 @@ export default function SlidePlay({
           bottom: '2vh',
           display: 'flex',
           justifyContent: 'space-between',
+          zIndex: 999,
         }}
       >
         <div style={{ cursor: 'pointer' }} onClick={prevPage}>
