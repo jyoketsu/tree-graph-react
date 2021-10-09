@@ -18,6 +18,8 @@ export default function getSlideList(
   return slideList;
 
   function getSlide(node: Node, getNodeUrlFunc: GetNodeUrlFunc) {
+    // 获取祖先
+    const ancestor = getAncestor(node, nodes);
     // 图片附件
     let imageList: Attach[] = [];
     if (node.attach && node.attach.length) {
@@ -28,10 +30,11 @@ export default function getSlideList(
         }
       }
     }
-    // 如果该节点为根节点或者有图片附件，则单独有一张幻灯片
-    if (node._key === startId || imageList.length) {
+    // 如果该节点为根节点或者有图片附件的非叶子节点，则单独有一张幻灯片
+    if (node._key === startId || (imageList.length && node.sortList.length)) {
       slideList.push({
         title: node.name,
+        paths: ancestor,
         imageList,
       });
     }
@@ -44,6 +47,7 @@ export default function getSlideList(
       if (url) {
         slideList.push({
           title: node.name,
+          paths: ancestor,
           url,
           icon: node.icon,
         });
@@ -54,13 +58,17 @@ export default function getSlideList(
         const nodeKey = childrenIds[index];
         const node = nodes[nodeKey];
         if (node) {
-          subTitleList.push(node.name);
+          subTitleList.push({
+            title: node.name,
+            type: node.type,
+            url: node.url,
+          });
         }
       }
-      if (imageList.length && !subTitleList.length) {
-      } else {
+      if (subTitleList.length) {
         const slide = {
           title: node.name,
+          paths: ancestor,
           subTitleList,
           type: node.type,
           url: node.url,
@@ -78,3 +86,17 @@ export default function getSlideList(
     }
   }
 }
+
+const getAncestor = (node: Node, nodeMap: NodeMap, includeSelf?: boolean) => {
+  const getFather = (node: Node) => {
+    const father = nodeMap[node.father];
+    if (father) {
+      ancestorList.unshift(father.name);
+      getFather(father);
+    }
+  };
+
+  let ancestorList: string[] = includeSelf ? [node.name] : [];
+  getFather(node);
+  return ancestorList;
+};

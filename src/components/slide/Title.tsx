@@ -9,10 +9,12 @@ interface props {
 }
 export default function Title({ slide, active, thumbnailMode }: props) {
   const showImage = slide.imageList?.length;
+  const path = slide.paths.join(' > ');
 
   return (
     <div
       style={{
+        position: 'relative',
         width: '100%',
         height: '100%',
         boxSizing: 'border-box',
@@ -22,6 +24,17 @@ export default function Title({ slide, active, thumbnailMode }: props) {
         fontWeight: 500,
       }}
     >
+      <div
+        style={{
+          position: 'absolute',
+          top: '15px',
+          left: '15px',
+          width: '100%',
+          fontSize: '2vh',
+        }}
+      >
+        {path}
+      </div>
       <div
         style={{
           width: showImage ? '50%' : thumbnailMode ? 'unset' : '100%',
@@ -48,9 +61,19 @@ export default function Title({ slide, active, thumbnailMode }: props) {
         {/* 子标题列表 */}
         {slide.subTitleList?.length ? (
           <ul>
-            {slide.subTitleList.map((title: string, index: number) => (
+            {slide.subTitleList.map((item, index) => (
               <li key={index} style={{ fontSize: '4vh' }}>
-                {title}
+                {item.type === 'link' && item.url ? (
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    style={{ color: '#1CA8B3' }}
+                  >
+                    {item.title}
+                  </a>
+                ) : (
+                  item.title
+                )}
               </li>
             ))}
           </ul>
