@@ -78,6 +78,7 @@ export interface MindProps {
   showPreviewButton?: boolean;
   showAddButton?: boolean;
   showMoreButton?: boolean;
+  showChildNum?: boolean;
   moreButtonWidth?: number;
   // nodeOptions?: any;
   showIcon?: boolean;
@@ -144,6 +145,7 @@ export const Mind = React.forwardRef(
       showPreviewButton,
       showAddButton,
       showMoreButton,
+      showChildNum = false,
       moreButtonWidth,
       showIcon,
       showAvatar,
@@ -1369,6 +1371,7 @@ export const Mind = React.forwardRef(
                   disabled || node.disabled ? false : showAddButton || false
                 }
                 showMoreButton={showMoreButton || false}
+                showChildNum={showChildNum}
                 moreButtonWidth={moreButtonWidth}
                 handleClickDot={clickDot}
                 handleExpand={handleExpand}

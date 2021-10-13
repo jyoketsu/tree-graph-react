@@ -30,6 +30,7 @@ interface Props {
   showPreviewButton: boolean;
   showAddButton: boolean;
   showMoreButton: boolean;
+  showChildNum: boolean;
   moreButtonWidth?: number;
   showIcon: boolean;
   showAvatar: boolean;
@@ -83,6 +84,7 @@ const TreeNode = ({
   showPreviewButton,
   showAddButton,
   showMoreButton,
+  showChildNum,
   moreButtonWidth,
   dotColor,
   hoverBorderColor,
@@ -779,6 +781,43 @@ Props) => {
               : 'leftBottom'
           }
         />
+      ) : null}
+
+      {showChildNum && !hover && node.childNum ? (
+        <g>
+          <circle
+            cx={
+              !bottomOptions
+                ? node.x + node.width + 2 + 15
+                : node.x + node.width - 15
+            }
+            cy={
+              !bottomOptions
+                ? node.y + BLOCK_HEIGHT / 2 + 2
+                : node.y + BLOCK_HEIGHT + 2 + 15
+            }
+            r="15"
+            fill={backgroundColor}
+          />
+          <text
+            x={
+              !bottomOptions
+                ? node.x + node.width + 2 + 15
+                : node.x + node.width - 15
+            }
+            y={
+              !bottomOptions
+                ? node.y + BLOCK_HEIGHT / 2 + 3
+                : node.y + BLOCK_HEIGHT + 3 + 15
+            }
+            alignment-baseline="middle"
+            text-anchor="middle"
+            font-size={node.childNum > 999 ? 12 : 14}
+            fill={node.color || color}
+          >
+            {node.childNum > 999 ? '999+' : node.childNum}
+          </text>
+        </g>
       ) : null}
 
       {/* <div

@@ -51,6 +51,7 @@ const nodes = {
     limitDay: 1616515200000,
     icon: 'https://cdn-icare.qingtime.cn/favFolder.svg',
     avatarUri: 'https://psnine.com/Upload/game/11333.png',
+    childNum: 100,
   },
   '004': {
     _key: '004',
@@ -142,6 +143,7 @@ const nodes = {
     checked: true,
     hour: 0.1,
     limitDay: 1610726400000,
+    childNum: 3,
   },
   '012': {
     _key: '012',
@@ -404,7 +406,7 @@ MultiCol.args = {
   showAvatar: true,
   showCheckbox: true,
   showStatus: true,
-
+  showChildNum: true,
   handleClickDot: (node: any) => console.log('---handleClickDot---', node),
   handleClickMoreButton: (node: any, clientX: number, clientY: number) =>
     console.log('---handleClickMoreButton---', node, clientX, clientY),

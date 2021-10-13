@@ -29,7 +29,6 @@ export default function Title({ slide, active, thumbnailMode }: props) {
           position: 'absolute',
           top: '15px',
           left: '15px',
-          width: '100%',
           fontSize: '2vh',
         }}
       >

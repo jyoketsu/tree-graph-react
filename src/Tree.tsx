@@ -82,6 +82,7 @@ export interface TreeProps {
   showPreviewButton?: boolean;
   showAddButton?: boolean;
   showMoreButton?: boolean;
+  showChildNum?: boolean;
   moreButtonWidth?: number;
   // nodeOptions?: any;
   showIcon?: boolean;
@@ -152,6 +153,7 @@ export const Tree = React.forwardRef(
       showPreviewButton,
       showAddButton,
       showMoreButton,
+      showChildNum = false,
       moreButtonWidth,
       // nodeOptions,
       showIcon,
@@ -1449,6 +1451,7 @@ export const Tree = React.forwardRef(
                   disabled || node.disabled ? false : showAddButton || false
                 }
                 showMoreButton={showMoreButton || false}
+                showChildNum={showChildNum}
                 moreButtonWidth={moreButtonWidth}
                 // openOptions={clickOptionsButton}
                 // nodeOptionsOpened={

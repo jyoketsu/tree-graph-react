@@ -36,6 +36,7 @@ const nodes = {
     avatarUri: 'https://psnine.com/Upload/game/10992.png',
     icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
     dotIcon: 'https://cdn-icare.qingtime.cn/shareOut1.svg?v=1604893936765',
+    childNum: 1000,
   },
   '003': {
     _key: '003',
@@ -51,6 +52,7 @@ const nodes = {
     limitDay: 1616515200000,
     icon: 'https://cdn-icare.qingtime.cn/favFolder.svg',
     avatarUri: 'https://psnine.com/Upload/game/11333.png',
+    childNum: 1,
   },
   '004': {
     _key: '004',
@@ -84,6 +86,7 @@ const nodes = {
 
     hour: 0.1,
     limitDay: 1610726400000,
+    childNum: 22,
   },
   '007': {
     _key: '007',
@@ -140,6 +143,7 @@ const nodes = {
     checked: true,
     hour: 0.1,
     limitDay: 1610726400000,
+    childNum: 3,
   },
   '012': {
     _key: '012',
@@ -403,6 +407,7 @@ MultiCol.args = {
   columnSpacing: 65,
   showAvatar: true,
   showCheckbox: true,
+  showChildNum: true,
   showStatus: true,
   // disabled: true,
   // itemHeight: 60,
