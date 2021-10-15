@@ -294,14 +294,19 @@ Props) => {
     ? '#CB1B45'
     : selectedBackgroundColor;
 
-  const urlReg = /((\w{1,}\.+)+(com|cn|org|net|info))|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info))|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info))/g;
+  const urlReg = /((\w{1,}\.+)+(com|cn|org|net|info)\/*[\w+\/+\?+=+&]*)|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w+\/+\?+=+&]*)|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w+\/+\?+=+&]*)/g;
   let nameLinkArr = [];
   if (urlReg.test(node.name)) {
     let arr1: string[] = [];
     const matchList = node.name.match(urlReg);
     if (matchList) {
-      const splitReg = new RegExp(matchList.join('|'));
-      const textList = node.name.split(splitReg);
+      let tempText = node.name;
+      let textList = [];
+      for (let index = 0; index < matchList.length; index++) {
+        const element = matchList[index];
+        tempText = tempText.replace(element, '!@#');
+      }
+      textList = tempText.split('!@#');
       for (let index = 0; index < textList.length; index++) {
         const text = textList[index];
         arr1.push(text);
@@ -310,7 +315,7 @@ Props) => {
         }
       }
     }
-
+    console.log('---arr1---', arr1);
     let marginLeft = 0;
     let count = 0;
     if (arr1 && arr1.length) {
@@ -810,9 +815,9 @@ Props) => {
                 ? node.y + BLOCK_HEIGHT / 2 + 3
                 : node.y + BLOCK_HEIGHT + 3 + 15
             }
-            alignment-baseline="middle"
-            text-anchor="middle"
-            font-size={node.childNum > 999 ? 12 : 14}
+            alignmentBaseline="middle"
+            textAnchor="middle"
+            fontSize={node.childNum > 999 ? 12 : 14}
             fill={node.color || color}
           >
             {node.childNum > 999 ? '999+' : node.childNum}

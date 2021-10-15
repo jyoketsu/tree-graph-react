@@ -21,7 +21,7 @@ const nodes = {
   '002': {
     _key: '002',
     name:
-      '链接地址是http://www.jyoketsu.com和psnine.com/gene还有playstation.com',
+      '链接地址是http://www.jyoketsu.com?key=123和psnine.com/gene还有playstation.com',
     father: '001',
     sortList: ['006', '007'],
     contract: false,

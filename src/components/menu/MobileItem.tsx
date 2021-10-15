@@ -146,14 +146,19 @@ const MobileItem = ({
 
   const nodeRectClassName = rectClassName(node);
 
-  const urlReg = /((\w{1,}\.+)+(com|cn|org|net|info))|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info))|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info))/g;
+  const urlReg = /((\w{1,}\.+)+(com|cn|org|net|info)\/*[\w+\/+\?+=+&]*)|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w+\/+\?+=+&]*)|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w+\/+\?+=+&]*)/g;
   let nameLinkArr = [];
   if (urlReg.test(node.name)) {
     let arr1: string[] = [];
     const matchList = node.name.match(urlReg);
     if (matchList) {
-      const splitReg = new RegExp(matchList.join('|'));
-      const textList = node.name.split(splitReg);
+      let tempText = node.name;
+      let textList = [];
+      for (let index = 0; index < matchList.length; index++) {
+        const element = matchList[index];
+        tempText = tempText.replace(element, '!@#');
+      }
+      textList = tempText.split('!@#');
       for (let index = 0; index < textList.length; index++) {
         const text = textList[index];
         arr1.push(text);
