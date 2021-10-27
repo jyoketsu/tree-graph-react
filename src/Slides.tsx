@@ -10,6 +10,9 @@ import SlidePlay from './components/slide/SlidePlay';
 import screenfull from 'screenfull';
 import Node from './interfaces/Node';
 
+const backgroundColor = '#f5f5f5';
+const borderColor = '#eee';
+
 export interface GetNodeUrlFunc {
   (node: Node): string;
 }
@@ -19,24 +22,24 @@ export interface SlideProps {
   nodes: NodeMap;
   // 根节点id
   startId: string;
-  themeColor?: string;
   getNodeUrl: GetNodeUrlFunc;
+  themeColor?: string;
+  bright?: boolean;
 }
 
 export const Slides = ({
   nodes,
   startId,
-  themeColor = '#1CA8B3',
   getNodeUrl,
+  themeColor = '#1CA8B3',
+  bright = true,
 }: SlideProps) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [slideList, setSlideList] = useState<SlideType[]>([]);
   const [currentPage, setCurrentPage] = useState(0);
   const [playMode, setPlayMode] = useState(false);
-  const [paperColor, setpaperColor] = useState('#434343');
-  const [color, setcolor] = useState('#FFF');
-  const [backgroundColor, setbackgroundColor] = useState('#656765');
-  const [borderColor, setborderColor] = useState('#1C1C1C');
+  const [paperColor, setpaperColor] = useState(bright ? '#FFF' : '#434343');
+  const [color, setcolor] = useState(bright ? '#434343' : '#FFF');
 
   useEffect(() => {
     if (containerRef?.current) {
@@ -91,13 +94,9 @@ export const Slides = ({
     if (paperColor === '#434343') {
       setpaperColor('#FFF');
       setcolor('#434343');
-      setbackgroundColor('#f5f5f5');
-      setborderColor('#eee');
     } else {
       setpaperColor('#434343');
       setcolor('#FFF');
-      setbackgroundColor('#656765');
-      setborderColor('#1C1C1C');
     }
   };
 
@@ -112,7 +111,7 @@ export const Slides = ({
         display: 'grid',
         gridTemplateRows: '40px 1fr',
         backgroundColor: backgroundColor,
-        color: color,
+        color: '#434343',
         outline: 'none',
       }}
       onKeyDown={(e: React.KeyboardEvent) => handleKeyDown(e)}
@@ -122,7 +121,7 @@ export const Slides = ({
           padding: '0 15px',
           display: 'flex',
           alignItems: 'center',
-          backgroundColor: paperColor,
+          backgroundColor: '#FFF',
           borderBottom: `1px solid ${borderColor}`,
           boxSizing: 'border-box',
         }}
@@ -141,9 +140,9 @@ export const Slides = ({
           onClick={handleChangeColor}
         >
           {paperColor === '#434343' ? (
-            <Icon name="sun" fill={color} />
+            <Icon name="sun" fill="#434343" />
           ) : (
-            <Icon name="moon" fill={color} />
+            <Icon name="moon" fill="#434343" />
           )}
         </div>
         <div
@@ -160,7 +159,7 @@ export const Slides = ({
             }
           }}
         >
-          <Icon name="play" fill={color} />
+          <Icon name="play" fill="#434343" />
         </div>
         <ReactTooltip place="bottom" type="dark" effect="solid" />
       </div>
@@ -183,7 +182,7 @@ export const Slides = ({
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            backgroundColor: paperColor,
+            backgroundColor: '#FFF',
             boxSizing: 'border-box',
             padding: '15px 0',
           }}
@@ -196,6 +195,7 @@ export const Slides = ({
               isActive={index === currentPage}
               handleClick={() => setCurrentPage(index)}
               borderColor={borderColor}
+              style={{ backgroundColor: paperColor, color }}
             />
           ))}
         </div>
@@ -231,6 +231,7 @@ export const Slides = ({
           currentPage={currentPage}
           changePage={(pageNumber: number) => setCurrentPage(pageNumber)}
           themeColor={themeColor}
+          style={{ backgroundColor: paperColor, color }}
         />
       ) : null}
     </div>
@@ -243,6 +244,7 @@ interface previewProps {
   isActive: boolean;
   handleClick: Function;
   borderColor: string;
+  style: React.CSSProperties;
 }
 
 function SlidePreview({
@@ -251,6 +253,7 @@ function SlidePreview({
   isActive,
   handleClick,
   borderColor,
+  style,
 }: previewProps) {
   return (
     <div
@@ -271,6 +274,7 @@ function SlidePreview({
         style={{
           transform: 'scale(0.2)',
           transformOrigin: 'top left',
+          ...style,
         }}
         active={false}
         thumbnailMode={true}

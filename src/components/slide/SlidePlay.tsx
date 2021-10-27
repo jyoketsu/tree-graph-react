@@ -12,6 +12,7 @@ interface Props {
   currentPage: number;
   changePage: ChangePageFunc;
   themeColor: string;
+  style?: React.CSSProperties;
 }
 
 const ANIME_TIME = 800;
@@ -21,6 +22,7 @@ export default function SlidePlay({
   currentPage,
   changePage,
   themeColor,
+  style,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
   const [slideWidth, setSlideWidth] = useState(0);
@@ -95,6 +97,7 @@ export default function SlidePlay({
         backgroundColor: 'inherit',
         outline: 'none',
         overflow: 'hidden',
+        ...style,
       }}
       tabIndex={-1}
       onKeyDown={(e: React.KeyboardEvent) => handleKeyDown(e)}
