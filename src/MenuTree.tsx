@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef, useImperativeHandle } from 'react';
 import NodeMap from './interfaces/NodeMap';
 import CNode from './interfaces/CNode';
-import MenuItem from './components/menu/MenuItem';
+import MenuItem from './components/nodeItem/MenuItem';
 import calculate from './services/treeService';
 import {
   dot,
@@ -345,14 +345,14 @@ export const MenuTree = React.forwardRef(
       }
 
       if (UNCONTROLLED) {
-        let nodes = deleteNode(nodeMap, selectedId);
+        let res = deleteNode(nodeMap, selectedId);
 
         if (handleDeleteNode) {
           handleDeleteNode(selectedId);
         }
 
         setselectedId(null);
-        setNodeMap(nodes);
+        setNodeMap(res.nodes);
       } else {
         if (handleDeleteNode) {
           handleDeleteNode(selectedId);

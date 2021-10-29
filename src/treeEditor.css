@@ -1,0 +1,13 @@
+.t-editor {
+  user-select: text;
+  word-wrap: break-word;
+  cursor: text;
+  outline: 0;
+  white-space: pre-wrap;
+  color: #1d1d1f;
+  flex: 1;
+}
+.t-editor:empty:before {
+  content: '无标题';
+  color: #D3D3D3;
+}

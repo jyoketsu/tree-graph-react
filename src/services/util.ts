@@ -458,9 +458,16 @@ function changeSortList(
 function deleteNode(nodeMap: NodeMap, selectedId: string) {
   let nodes = { ...nodeMap };
   let selectedNode = nodes[selectedId];
+  let nextSelectNodeKey;
   let fatherNode = nodes[selectedNode.father];
   let brotherKeys = fatherNode.sortList;
-  brotherKeys.splice(brotherKeys.indexOf(selectedId), 1);
+  const index = brotherKeys.indexOf(selectedId);
+  brotherKeys.splice(index, 1);
+  if (brotherKeys.length) {
+    nextSelectNodeKey = brotherKeys[index - 1];
+  } else {
+    nextSelectNodeKey = fatherNode._key;
+  }
   fatherNode.sortList = brotherKeys;
 
   deleteNodeById(selectedNode);
@@ -475,7 +482,7 @@ function deleteNode(nodeMap: NodeMap, selectedId: string) {
     delete nodes[node._key];
   }
 
-  return nodes;
+  return { nodes, nextSelectNodeKey };
 }
 
 function dot(nodeMap: NodeMap, nodeId: string) {
@@ -507,6 +514,7 @@ function checkNode(nodeMap: NodeMap, nodeId: string) {
 function changeNodeText(nodeMap: NodeMap, id: string, text: string) {
   let nodes = { ...nodeMap };
   let node = nodes[id];
+  if (!node) return nodes;
   if (!text) {
     text = '';
   }

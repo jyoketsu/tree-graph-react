@@ -657,9 +657,9 @@ export const Tree = React.forwardRef(
           } else {
             setselectedId(null);
           }
-          let nodes = deleteNode(nodeMap, selectedId);
+          let res = deleteNode(nodeMap, selectedId);
           setSelectedNodes([]);
-          setNodeMap(nodes);
+          setNodeMap(res.nodes);
           if (handleChange) {
             handleChange();
           }
@@ -669,7 +669,8 @@ export const Tree = React.forwardRef(
           for (let index = 0; index < selectedNodes.length; index++) {
             const element = selectedNodes[index];
             if (element._key !== startId) {
-              nodes = deleteNode(nodes, element._key);
+              const res = deleteNode(nodes, element._key);
+              nodes = res.nodes;
             }
           }
           setSelectedNodes([]);

@@ -15,7 +15,7 @@ import {
   getAncestor,
 } from './services/util';
 import DragInfo from './interfaces/DragInfo';
-import MobileItem from './components/menu/MobileItem';
+import MobileItem from './components/nodeItem/MobileItem';
 
 const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 
@@ -331,14 +331,14 @@ export const MobileTree = React.forwardRef(
       }
 
       if (uncontrolled) {
-        let nodes = deleteNode(nodeMap, selectedId);
+        let res = deleteNode(nodeMap, selectedId);
 
         if (handleDeleteNode) {
           handleDeleteNode(selectedId);
         }
 
         setselectedId(null);
-        setNodeMap(nodes);
+        setNodeMap(res.nodes);
       } else {
         if (handleDeleteNode) {
           handleDeleteNode(selectedId);

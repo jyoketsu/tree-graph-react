@@ -21,7 +21,8 @@ export default function calculate(
   columnSpacing?: number,
   collapseMode?: boolean,
   expandedNodeKey?: string | null,
-  inputNodeKey?: string
+  inputNodeKey?: string,
+  hideRoot?: boolean
 ) {
   nodes = JSON.parse(JSON.stringify(nodes));
   const start_x = startX || 15;
@@ -140,53 +141,59 @@ export default function calculate(
   }
 
   function location(nodes: NodeMap, node: Node, x: number, y: number) {
-    const shorted = getShortedStr(node.name);
-    if (shorted) {
-      node.shorted = shorted;
-    }
-    const nodeWidth = getNodeWidth(
-      node,
-      node._key === startId
-        ? FONT_SIZE * rootZoomRatio
-        : node.father === startId
-        ? FONT_SIZE * secondZoomRatio
-        : FONT_SIZE,
-      showIcon,
-      showAvatar,
-      avatarRadius,
-      undefined,
-      inputNodeKey
-    );
-    node.x = x;
-    node.y = y;
-    node.width = nodeWidth;
-    const childrenIds = node.sortList || [];
-    let childX = x + INDENT;
+    let childX = x;
     let childY = y;
     let lastChildY = y;
-    if (childX > MAX_X) {
-      MAX_X = childX;
-    }
-    if (MAX_END < node.x + nodeWidth) {
-      MAX_END = node.x + nodeWidth;
-    }
-
-    if (node._key === SECOND_START_NODE_ID) {
-      second_start_x = node.x + nodeWidth / 2;
-    }
-    if (node._key === SECOND_END_NODE_ID) {
-      second_end_x = node.x + nodeWidth / 2;
-    }
-
     let collapsed;
-    if (collapseMode) {
-      if (expandedNodeKey && ancestorList.includes(node._key)) {
-        collapsed = node.contract;
-      } else {
-        collapsed = true;
+    const childrenIds = node.sortList || [];
+
+    if (!(hideRoot && node._key === startId)) {
+      const shorted = getShortedStr(node.name);
+      if (shorted) {
+        node.shorted = shorted;
       }
-    } else {
-      collapsed = node.contract;
+      const nodeWidth = getNodeWidth(
+        node,
+        node._key === startId
+          ? FONT_SIZE * rootZoomRatio
+          : node.father === startId
+          ? FONT_SIZE * secondZoomRatio
+          : FONT_SIZE,
+        showIcon,
+        showAvatar,
+        avatarRadius,
+        undefined,
+        inputNodeKey
+      );
+      node.x = x;
+      node.y = y;
+      node.width = nodeWidth;
+
+      childX = childX + INDENT;
+
+      if (childX > MAX_X) {
+        MAX_X = childX;
+      }
+      if (MAX_END < node.x + nodeWidth) {
+        MAX_END = node.x + nodeWidth;
+      }
+
+      if (node._key === SECOND_START_NODE_ID) {
+        second_start_x = node.x + nodeWidth / 2;
+      }
+      if (node._key === SECOND_END_NODE_ID) {
+        second_end_x = node.x + nodeWidth / 2;
+      }
+
+      if (collapseMode) {
+        if (expandedNodeKey && ancestorList.includes(node._key)) {
+          collapsed = node.contract;
+        } else {
+          collapsed = true;
+        }
+      } else {
+        collapsed = node.contract;
+      }
     }
 
     if (!collapsed) {
