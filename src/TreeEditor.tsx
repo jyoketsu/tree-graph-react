@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useImperativeHandle } from 'react';
 import './treeEditor.css';
 import NodeMap from './interfaces/NodeMap';
-import Node from './interfaces/Node';
 import CNode from './interfaces/CNode';
 import calculate from './services/singleColumnService';
 import {
@@ -146,6 +145,7 @@ export const TreeEditor = React.forwardRef(
           setExpandedNodeKey(nodeMap[defaultFocusedId].father);
         }
       }
+      setFocusedKey(defaultFocusedId);
     }, [defaultFocusedId]);
 
     // 单击节点
@@ -390,36 +390,3 @@ export const TreeEditor = React.forwardRef(
     );
   }
 );
-
-interface TitleProps {
-  node: Node | null;
-  handleChangeNodeText: Function;
-}
-function Title({ node, handleChangeNodeText }: TitleProps) {
-  function saveText(e: React.FocusEvent<HTMLDivElement>) {
-    if (!node) return;
-    const value = e.target.innerText;
-    if (value !== node.name) {
-      handleChangeNodeText(node._key, value);
-    }
-  }
-
-  return (
-    <div
-      className="t-editor"
-      contentEditable="true"
-      spellCheck="true"
-      autoCapitalize="off"
-      suppressContentEditableWarning={true}
-      style={{
-        color: '#16181a',
-        fontSize: '34px',
-        fontWeight: 600,
-        lineHeight: '48px',
-      }}
-      onBlur={saveText}
-    >
-      {node?.name}
-    </div>
-  );
-}
