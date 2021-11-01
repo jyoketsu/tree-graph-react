@@ -1,9 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import CNode from '../../interfaces/CNode';
 import { textWidthAll } from '../../services/util';
+import { HandlePasteFile } from '../../TreeEditor';
+import AttachItem from './AttachItem';
 
 interface HandleKeyDown {
   (key: string, nodeKey: string): void;
+}
+
+interface HandleClickAttachFunc {
+  (attachId: string): void;
 }
 
 interface Props {
@@ -13,14 +19,16 @@ interface Props {
   themeColor: string;
   showIcon: boolean;
   disabled: boolean;
+  selectedAttachId: string;
   handleClickNode: Function;
-  handleDbClickNode: Function;
   handleClickExpand: Function;
   handleClickIcon: Function;
   handleClickDot: Function;
   handleChangeNodeText: Function;
   handleDrop: Function;
   handleKeyDown: HandleKeyDown;
+  handleClickAttach: HandleClickAttachFunc;
+  handlePasteFiles: HandlePasteFile;
   compId: string;
   isRoot: boolean;
   focusedKey?: string;
@@ -34,14 +42,16 @@ const EditorItem = ({
   themeColor,
   showIcon,
   disabled,
+  selectedAttachId,
   handleClickNode,
-  handleDbClickNode,
   // handleClickExpand,
   handleClickIcon,
   handleClickDot,
   handleChangeNodeText,
   handleDrop,
   handleKeyDown,
+  handleClickAttach,
+  handlePasteFiles,
   compId,
   isRoot,
   focusedKey,
@@ -130,6 +140,14 @@ Props) => {
     }
   }
 
+  function handlePaste(event: React.ClipboardEvent) {
+    if (event.clipboardData.files.length) {
+      event.preventDefault();
+      let files = event.clipboardData.files;
+      handlePasteFiles(node._key, files);
+    }
+  }
+
   const urlReg = /((\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)/g;
   let nameLinkArr = [];
   if (urlReg.test(node.name)) {
@@ -210,27 +228,17 @@ Props) => {
 
   return (
     <div
-      onClick={(e: React.MouseEvent) => {
-        e.stopPropagation();
-        handleClickNode(node);
-      }}
-      onDoubleClick={(e: React.MouseEvent) => {
-        e.stopPropagation();
-        handleDbClickNode(node);
-      }}
       style={{
-        width: '100%',
-        display: 'flex',
         paddingLeft: `${node.x - (node._key === startId ? indent : 0)}px`,
-        fontSize: isRoot ? '34px' : '16px',
-        color: isRoot ? '#16181a' : '#1d1d1f',
-        lineHeight: isRoot ? '48px' : '26px',
-        fontWeight: isRoot ? 600 : 'normal',
         boxSizing: 'border-box',
         borderStyle: 'solid',
         borderColor: themeColor,
         borderWidth: isDragOver ? '0 0 2px 0' : 0,
         opacity: dragStarted ? 0.8 : 1,
+      }}
+      onClick={(e: React.MouseEvent) => {
+        e.stopPropagation();
+        handleClickNode(node);
       }}
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
@@ -238,78 +246,123 @@ Props) => {
       onDrop={handleDropNode}
       onDragEnd={handleDragEnd}
     >
-      {/* 小圆点 */}
-      {!isRoot ? (
-        <div
-          draggable={disabled || node.disabled ? false : true}
-          style={{ marginRight: '12px', flexShrink: 0 }}
-          onClick={e => {
-            e.stopPropagation();
-            handleClickDot(node);
-          }}
-        >
-          <svg width={8} height={8} viewBox={`0,0,${8},${8}`}>
-            <circle
-              id="dot"
-              cx={4}
-              cy={4}
-              r={4}
-              fill="#D3D3D3"
-              fillOpacity={1}
-              cursor="pointer"
-            />
-          </svg>
-        </div>
-      ) : null}
+      <div
+        style={{
+          width: '100%',
+          display: 'flex',
+          fontSize: isRoot ? '34px' : '16px',
+          color: isRoot ? '#16181a' : '#1d1d1f',
+          lineHeight: isRoot ? '48px' : '26px',
+          fontWeight: isRoot ? 600 : 'normal',
+        }}
+      >
+        {/* 小圆点 */}
+        {!isRoot ? (
+          <div
+            draggable={disabled || node.disabled ? false : true}
+            style={{ marginRight: '12px', flexShrink: 0 }}
+            onClick={e => {
+              e.stopPropagation();
+              handleClickDot(node);
+            }}
+          >
+            <svg width={8} height={8} viewBox={`0,0,${8},${8}`}>
+              <circle
+                id="dot"
+                cx={4}
+                cy={4}
+                r={4}
+                fill="#D3D3D3"
+                fillOpacity={1}
+                cursor="pointer"
+              />
+            </svg>
+          </div>
+        ) : null}
 
-      {/* 圖標 */}
-      {showIcon && node.icon && !isRoot ? (
+        {/* 圖標 */}
+        {showIcon && node.icon && !isRoot ? (
+          <div
+            style={{
+              width: '22px',
+              height: '22px',
+              backgroundImage: `url("${node.icon}")`,
+              backgroundPosition: 'center',
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+              marginRight: '4px',
+              flexShrink: 0,
+            }}
+            onClick={() => handleClickIcon(node)}
+          ></div>
+        ) : null}
+
+        {/* 文字 */}
+        <div
+          className="t-editor"
+          contentEditable="true"
+          spellCheck="true"
+          autoCapitalize="off"
+          suppressContentEditableWarning={true}
+          ref={editorRef}
+          onBlur={saveText}
+          onKeyDown={keyDown}
+          onPaste={handlePaste}
+        >
+          {nameLinkArr.length ? (
+            <span>
+              {nameLinkArr.map((name, index) => (
+                <span
+                  key={index}
+                  style={{
+                    textDecoration:
+                      name.type === 'link' ? 'underline' : 'unset',
+                    cursor: name.type === 'link' ? 'pointer' : 'text',
+                    color: name.type === 'link' ? themeColor : 'inherit',
+                  }}
+                  onClick={() => handleClickLink(name.type, name.text)}
+                >
+                  {name.text || ''}
+                </span>
+              ))}
+            </span>
+          ) : (
+            node.name
+          )}
+        </div>
+      </div>
+      {node.attach || node.note ? (
         <div
           style={{
-            width: '22px',
-            height: '22px',
-            backgroundImage: `url("${node.icon}")`,
-            backgroundPosition: 'center',
-            backgroundSize: 'contain',
-            backgroundRepeat: 'no-repeat',
-            marginRight: '4px',
-            flexShrink: 0,
+            marginLeft: '4px',
+            paddingLeft: '16px',
+            borderLeft: '1px solid #DEDEE1',
           }}
-          onClick={() => handleClickIcon(node)}
-        ></div>
+        >
+          {(node.attach || []).map((attach, index) => (
+            <AttachItem
+              key={`${node._key}-${index}-${attach.name}`}
+              id={`${node._key}-${index}-${attach.name}`}
+              attach={attach}
+              selectedAttachId={selectedAttachId}
+              themeColor={themeColor}
+              handleClick={handleClickAttach}
+            />
+          ))}
+          {node.note ? (
+            <div
+              className="t-editor item-note"
+              contentEditable="true"
+              spellCheck="true"
+              autoCapitalize="off"
+              suppressContentEditableWarning={true}
+              style={{ fontSize: '14px', color: '#797B7C' }}
+            >
+              {node.note}
+            </div>
+          ) : null}
+        </div>
       ) : null}
-
-      {/* 文字 */}
-      <div
-        className="t-editor"
-        contentEditable="true"
-        spellCheck="true"
-        autoCapitalize="off"
-        suppressContentEditableWarning={true}
-        onBlur={saveText}
-        onKeyDown={keyDown}
-        ref={editorRef}
-      >
-        {nameLinkArr.length ? (
-          <span>
-            {nameLinkArr.map((name, index) => (
-              <span
-                key={index}
-                style={{
-                  textDecoration: name.type === 'link' ? 'underline' : 'unset',
-                  cursor: name.type === 'link' ? 'pointer' : 'text',
-                  color: name.type === 'link' ? themeColor : 'inherit',
-                }}
-                onClick={() => handleClickLink(name.type, name.text)}
-              >
-                {name.text || ''}
-              </span>
-            ))}
-          </span>
-        ) : (
-          node.name
-        )}
-      </div>
     </div>
   );
 };

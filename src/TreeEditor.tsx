@@ -19,6 +19,21 @@ import DragInfo from './interfaces/DragInfo';
 import EditorItem from './components/nodeItem/EditorItem';
 
 // const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
+export interface HandlePasteFile {
+  (nodeKey: string, files: FileList): void;
+}
+
+export interface HandleAddNote {
+  (nodeKey: string): void;
+}
+
+export interface HandleChangeNote {
+  (nodeKey: string, note: string): void;
+}
+
+export interface HandleDeleteNote {
+  (nodeKey: string): void;
+}
 
 export interface TreeEditorProps {
   // 节点
@@ -37,11 +52,11 @@ export interface TreeEditorProps {
   checkBoxWidth?: number;
   disabled?: boolean;
   showIcon?: boolean;
+  handlePasteFiles: HandlePasteFile;
   handleClickExpand?: Function;
   handleClickNode?: Function;
   handleClickIcon?: Function;
   handleClickDot?: Function;
-  handleDbClickNode?: Function;
   handleChangeNodeText?: Function;
   handleAddNext?: Function;
   handleAddChild?: Function;
@@ -49,6 +64,9 @@ export interface TreeEditorProps {
   handleShiftUpDown?: Function;
   handlePaste?: Function;
   handleDrag?: Function;
+  handleAddNote?: HandleAddNote;
+  handleChangeNote?: HandleChangeNote;
+  handleDeleteNote?: HandleDeleteNote;
   ref?: any;
   collapseMode?: boolean;
 }
@@ -63,9 +81,9 @@ export const TreeEditor = React.forwardRef(
       indent = 30,
       disabled,
       showIcon = true,
+      handlePasteFiles,
       handleClickExpand,
       handleClickNode,
-      handleDbClickNode,
       handleClickIcon,
       handleClickDot,
       handleChangeNodeText,
@@ -79,7 +97,6 @@ export const TreeEditor = React.forwardRef(
     }: TreeEditorProps,
     ref
   ) => {
-    let clickTimeId: NodeJS.Timeout;
     const [nodeMap, setNodeMap] = useState(nodes);
     const [cnodes, setcnodes] = useState<CNode[]>([]);
 
@@ -95,6 +112,7 @@ export const TreeEditor = React.forwardRef(
     );
     const [ancestorList, setAncestorList] = useState<string[]>([]);
     const [focusedKey, setFocusedKey] = useState(defaultFocusedId);
+    const [selectedAttachId, setSelectedAttachId] = useState('');
 
     // 暴露方法
     useImperativeHandle(ref, () => ({
@@ -150,22 +168,8 @@ export const TreeEditor = React.forwardRef(
 
     // 单击节点
     function clickNode(node: CNode) {
-      clearTimeout(clickTimeId);
-      clickTimeId = setTimeout(function() {
-        if (handleClickNode) {
-          handleClickNode(node);
-        }
-      }, 250);
-    }
-
-    // 双击节点
-    function dbClickNode(node: CNode) {
-      if (disabled || node.disabled) {
-        return;
-      }
-      clearTimeout(clickTimeId);
-      if (handleDbClickNode) {
-        handleDbClickNode(node);
+      if (handleClickNode) {
+        handleClickNode(node);
       }
     }
 
@@ -366,14 +370,16 @@ export const TreeEditor = React.forwardRef(
             showIcon={showIcon}
             disabled={disabled || false}
             focusedKey={focusedKey}
+            selectedAttachId={selectedAttachId}
             handleClickNode={clickNode}
-            handleDbClickNode={dbClickNode}
             handleClickExpand={handleExpand}
             handleChangeNodeText={changeText}
             handleClickIcon={clickIcon}
             handleDrop={handleDrop}
             handleClickDot={clickDot}
             handleKeyDown={handleKeyDown}
+            handleClickAttach={attachId => setSelectedAttachId(attachId)}
+            handlePasteFiles={handlePasteFiles}
             compId={compId}
             isRoot={index === 0 ? true : false}
             collapseMode={collapseMode}

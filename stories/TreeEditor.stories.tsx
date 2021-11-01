@@ -98,17 +98,39 @@ const nodes = {
 
     hour: 0.1,
     limitDay: 1610726400000,
+    attach: [
+      {
+        url: 'https://z3.ax1x.com/2021/09/26/4yrMLj.jpg',
+        type: 'image/jpeg',
+        name: '4By5a6',
+      },
+      {
+        url: 'https://z3.ax1x.com/2021/09/26/4yrles.jpg',
+        type: 'image/jpeg',
+        name: '4BygxJ',
+      },
+      {
+        url: 'https://z3.ax1x.com/2021/09/26/4yrnSS.jpg',
+        type: 'image/jpeg',
+        name: '4Byfq1',
+      },
+      {
+        url: 'https://z3.ax1x.com/2021/09/26/4yrKyQ.jpg',
+        type: 'image/jpeg',
+        name: '4By5a6',
+      },
+    ],
   },
   '009': {
     _key: '009',
     name: '還原數據',
     father: '006',
     sortList: ['015'],
-
     checked: false,
-
     hour: 0.1,
     limitDay: 1610726400000,
+    note:
+      '改编自十日草辅漫画原作的TV动画《国王排名》（王様ランキング）公布了第一弹PV，该作将于10月开播。动画由WIT STUDIO负责制作，八田洋介担任监督，MAYUKO负责音乐；参演声优有日向未南、村濑步、 梶裕贵、佐藤利奈等。片头曲为King Gnu的《BOY》。',
   },
   '010': {
     _key: '010',
@@ -188,16 +210,14 @@ const meta: Meta = {
 export default meta;
 
 const Template: Story<TreeEditorProps> = args => {
-  return (
-    <TreeEditor {...args} />
-  );
+  return <TreeEditor {...args} />;
 };
 
 export const Default = Template.bind({});
 Default.args = {
   nodes: nodes,
   startId: '001',
-  getNodeUrl: () => {
-    return 'https://psnine.com/';
+  handlePasteFiles: (nodeKey: string, files: FileList) => {
+    console.log('---handlePasteFiles---', nodeKey, files);
   },
 };

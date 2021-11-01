@@ -9,5 +9,17 @@
 }
 .t-editor:empty:before {
   content: '无标题';
-  color: #D3D3D3;
+  color: #d3d3d3;
+}
+.t-editor.item-note {
+  display: -webkit-box;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  white-space: pre-wrap;
+}
+.t-editor.item-note:focus {
+  overflow: visible;
+  -webkit-line-clamp: initial;
 }
