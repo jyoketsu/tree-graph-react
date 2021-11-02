@@ -522,6 +522,37 @@ function changeNodeText(nodeMap: NodeMap, id: string, text: string) {
   return nodes;
 }
 
+function addNodeNote(nodeMap: NodeMap, nodeId: string) {
+  let nodes = { ...nodeMap };
+  const node = nodes[nodeId];
+  if (!node.note) {
+    node.note = '';
+  }
+  return {
+    nodes,
+  };
+}
+
+function deleteNodeNote(nodeMap: NodeMap, nodeId: string) {
+  let nodes = { ...nodeMap };
+  const node = nodes[nodeId];
+  delete node.note;
+  return {
+    nodes,
+  };
+}
+
+function changeNodeNote(nodeMap: NodeMap, id: string, text: string) {
+  let nodes = { ...nodeMap };
+  let node = nodes[id];
+  if (!node) return nodes;
+  if (!text) {
+    text = '';
+  }
+  node.note = text;
+  return nodes;
+}
+
 function editNode(c_nodes: Node[], nodeId: string, prop: any) {
   const index = c_nodes.findIndex((node: Node) => node._key === nodeId);
   c_nodes[index] = { ...c_nodes[index], ...prop };
@@ -838,6 +869,17 @@ function changeMindSelect(
   }
 }
 
+// 光标移动到文本末尾
+function moveCursorToEnd(elment: HTMLDivElement) {
+  elment.focus();
+  if (!window.getSelection) return;
+  const range = window.getSelection(); //创建range
+  if (range) {
+    range.selectAllChildren(elment); //range 选择obj下所有子内容
+    range.collapseToEnd(); //光标移至最后
+  }
+}
+
 export {
   findNodeById,
   textWidth,
@@ -868,4 +910,8 @@ export {
   getValidSelectedNodes,
   isDragValid,
   isMutilDragValid,
+  addNodeNote,
+  moveCursorToEnd,
+  changeNodeNote,
+  deleteNodeNote,
 };

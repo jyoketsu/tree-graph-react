@@ -220,4 +220,7 @@ Default.args = {
   handlePasteFiles: (nodeKey: string, files: FileList) => {
     console.log('---handlePasteFiles---', nodeKey, files);
   },
+  handleChangeNote: (nodeKey: string, text: string) => {
+    console.log('---handleChangeNote---', nodeKey, text);
+  },
 };

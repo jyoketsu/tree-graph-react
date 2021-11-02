@@ -14,6 +14,9 @@ import {
   dragSort,
   guid,
   getAncestor,
+  addNodeNote,
+  changeNodeNote,
+  deleteNodeNote,
 } from './services/util';
 import DragInfo from './interfaces/DragInfo';
 import EditorItem from './components/nodeItem/EditorItem';
@@ -42,7 +45,10 @@ export interface TreeEditorProps {
   startId: string;
   themeColor?: string;
   cutColor?: string;
+  // 默认focused的节点
   defaultFocusedId?: string;
+  // 默认备注focused的节点
+  defaultNoteFocusedNodeId?: string;
   //  非受控模式
   uncontrolled?: boolean;
   // 缩进
@@ -77,6 +83,7 @@ export const TreeEditor = React.forwardRef(
       startId,
       themeColor = '#1CA8B3',
       defaultFocusedId,
+      defaultNoteFocusedNodeId,
       uncontrolled = true,
       indent = 30,
       disabled,
@@ -93,6 +100,9 @@ export const TreeEditor = React.forwardRef(
       // handleShiftUpDown,
       // handlePaste,
       handleDrag,
+      handleAddNote,
+      handleChangeNote,
+      handleDeleteNote,
       collapseMode,
     }: TreeEditorProps,
     ref
@@ -112,6 +122,9 @@ export const TreeEditor = React.forwardRef(
     );
     const [ancestorList, setAncestorList] = useState<string[]>([]);
     const [focusedKey, setFocusedKey] = useState(defaultFocusedId);
+    const [noteFocusedKey, setNoteFocusedKey] = useState(
+      defaultNoteFocusedNodeId
+    );
     const [selectedAttachId, setSelectedAttachId] = useState('');
 
     // 暴露方法
@@ -212,6 +225,17 @@ export const TreeEditor = React.forwardRef(
       }
     }
 
+    // 更改节点备注
+    function changeNote(nodeId: string, text: string) {
+      if (uncontrolled) {
+        let nodes = changeNodeNote(nodeMap, nodeId, text);
+        setNodeMap(nodes);
+      }
+      if (handleChangeNote) {
+        handleChangeNote(nodeId, text);
+      }
+    }
+
     // 添加平级节点
     function addNext(nodeKey: string) {
       if (nodeKey === startId) {
@@ -227,6 +251,43 @@ export const TreeEditor = React.forwardRef(
       } else {
         if (handleAddNext) {
           handleAddNext(nodeKey);
+        }
+      }
+    }
+
+    // 添加节点备注
+    function addNote(nodeKey: string) {
+      if (nodeKey === startId) {
+        return;
+      }
+      if (uncontrolled) {
+        const res = addNodeNote(nodeMap, nodeKey);
+        if (handleAddNote) {
+          handleAddNote(nodeKey);
+        }
+        setNoteFocusedKey(nodeKey);
+        setNodeMap(res.nodes);
+      } else {
+        if (handleAddNote) {
+          handleAddNote(nodeKey);
+        }
+      }
+    }
+
+    function deleteNote(nodeKey: string) {
+      if (uncontrolled) {
+        const res = deleteNodeNote(nodeMap, nodeKey);
+        console.log('---res---', res);
+
+        if (handleDeleteNote) {
+          handleDeleteNote(nodeKey);
+        }
+        setNoteFocusedKey('');
+        setFocusedKey(nodeKey);
+        setNodeMap(res.nodes);
+      } else {
+        if (handleDeleteNote) {
+          handleDeleteNote(nodeKey);
         }
       }
     }
@@ -337,11 +398,20 @@ export const TreeEditor = React.forwardRef(
 
     function handleKeyDown(key: string, nodeKey: string) {
       if (key === 'Enter') {
+        // 添加弟弟节点
         addNext(nodeKey);
       } else if (key === 'Tab') {
+        // 添加子节点
         addChild(nodeKey);
       } else if (key === 'Backspace') {
+        // 删除节点
         deletenode(nodeKey);
+      } else if (key === 'AddNote') {
+        // 添加节点备注
+        addNote(nodeKey);
+      } else if (key === 'DeleteNote') {
+        // 删除节点备注
+        deleteNote(nodeKey);
       }
     }
 
@@ -370,6 +440,7 @@ export const TreeEditor = React.forwardRef(
             showIcon={showIcon}
             disabled={disabled || false}
             focusedKey={focusedKey}
+            noteFocusedKey={noteFocusedKey}
             selectedAttachId={selectedAttachId}
             handleClickNode={clickNode}
             handleClickExpand={handleExpand}
@@ -380,6 +451,7 @@ export const TreeEditor = React.forwardRef(
             handleKeyDown={handleKeyDown}
             handleClickAttach={attachId => setSelectedAttachId(attachId)}
             handlePasteFiles={handlePasteFiles}
+            handleChangeNote={changeNote}
             compId={compId}
             isRoot={index === 0 ? true : false}
             collapseMode={collapseMode}

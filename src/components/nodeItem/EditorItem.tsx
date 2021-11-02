@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import CNode from '../../interfaces/CNode';
-import { textWidthAll } from '../../services/util';
-import { HandlePasteFile } from '../../TreeEditor';
+import { moveCursorToEnd, textWidthAll } from '../../services/util';
+import { HandleChangeNote, HandlePasteFile } from '../../TreeEditor';
 import AttachItem from './AttachItem';
 
 interface HandleKeyDown {
@@ -29,9 +29,11 @@ interface Props {
   handleKeyDown: HandleKeyDown;
   handleClickAttach: HandleClickAttachFunc;
   handlePasteFiles: HandlePasteFile;
+  handleChangeNote: HandleChangeNote;
   compId: string;
   isRoot: boolean;
   focusedKey?: string;
+  noteFocusedKey?: string;
   collapseMode?: boolean;
   collapseModeCollapsed?: boolean;
 }
@@ -52,31 +54,41 @@ const EditorItem = ({
   handleKeyDown,
   handleClickAttach,
   handlePasteFiles,
+  handleChangeNote,
   compId,
   isRoot,
   focusedKey,
+  noteFocusedKey,
 }: // collapseMode,
 // collapseModeCollapsed,
 Props) => {
+  let deletable = false;
   const editorRef = useRef<HTMLDivElement>(null);
+  const noteEditorRef = useRef<HTMLDivElement>(null);
   const [dragStarted, setDragStarted] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
 
   useEffect(() => {
     if (focusedKey === node._key && editorRef && editorRef.current) {
-      if (window.getSelection) {
-        handleClickNode(node);
-        editorRef.current.focus(); //解决ff不获取焦点无法定位问题
-        const range = window.getSelection(); //创建range
-        if (range) {
-          range.selectAllChildren(editorRef.current); //range 选择obj下所有子内容
-          range.collapseToEnd(); //光标移至最后
-        }
-      }
+      deletable = false;
+      handleClickNode(node);
+      moveCursorToEnd(editorRef.current);
     }
   }, [focusedKey]);
 
+  useEffect(() => {
+    if (
+      noteFocusedKey === node._key &&
+      noteEditorRef &&
+      noteEditorRef.current
+    ) {
+      deletable = false;
+      moveCursorToEnd(noteEditorRef.current);
+    }
+  }, [noteFocusedKey, noteEditorRef.current]);
+
   function saveText(e: React.FocusEvent<HTMLDivElement>) {
+    if (deletable) return;
     // 值（去除了换行符）
     const value = e.target.innerText.replace(/[\r\n]/g, '');
     if (value !== node.name) {
@@ -84,8 +96,29 @@ Props) => {
     }
   }
 
+  function saveNote(e: React.FocusEvent<HTMLDivElement>) {
+    if (deletable) return;
+    const value = e.target.innerText;
+    if (value !== node.note) {
+      handleChangeNote(node._key, value);
+    }
+  }
+
   function keyDown(event: React.KeyboardEvent<HTMLDivElement>) {
-    if (event.key === 'Enter' || event.key === 'Tab') {
+    if (event.shiftKey && event.key === 'Enter') {
+      event.preventDefault();
+      if (node.note) {
+        if (!noteEditorRef || !noteEditorRef.current) return;
+        noteEditorRef.current.focus();
+        const range = window.getSelection();
+        if (range) {
+          range.selectAllChildren(noteEditorRef.current);
+          range.collapseToEnd();
+        }
+      } else {
+        handleKeyDown('AddNote', node._key);
+      }
+    } else if (event.key === 'Enter' || event.key === 'Tab') {
       event.preventDefault();
       handleKeyDown(event.key, node._key);
     }
@@ -93,7 +126,18 @@ Props) => {
     if (event.key === 'Backspace' && !node.sortList.length) {
       const value = event.currentTarget.innerText.replace(/[\r\n]/g, '');
       if (!value) {
+        deletable = true;
         handleKeyDown(event.key, node._key);
+      }
+    }
+  }
+
+  function noteKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.key === 'Backspace') {
+      const value = event.currentTarget.innerText;
+      if (!value) {
+        deletable = true;
+        handleKeyDown('DeleteNote', node._key);
       }
     }
   }
@@ -331,38 +375,42 @@ Props) => {
           )}
         </div>
       </div>
-      {node.attach || node.note ? (
+      <div
+        style={{
+          marginLeft: '4px',
+          paddingLeft: '16px',
+          borderLeft: '1px solid #DEDEE1',
+        }}
+      >
+        {(node.attach || []).map((attach, index) => (
+          <AttachItem
+            key={`${node._key}-${index}-${attach.name}`}
+            id={`${node._key}-${index}-${attach.name}`}
+            attach={attach}
+            selectedAttachId={selectedAttachId}
+            themeColor={themeColor}
+            handleClick={handleClickAttach}
+          />
+        ))}
         <div
+          className="t-editor item-note"
+          contentEditable="true"
+          spellCheck="true"
+          autoCapitalize="off"
+          suppressContentEditableWarning={true}
           style={{
-            marginLeft: '4px',
-            paddingLeft: '16px',
-            borderLeft: '1px solid #DEDEE1',
+            fontSize: '14px',
+            color: '#797B7C',
+            lineHeight: node.note !== undefined ? '22px' : 0,
           }}
+          ref={noteEditorRef}
+          onBlur={saveNote}
+          onKeyDown={noteKeyDown}
+          onPaste={handlePaste}
         >
-          {(node.attach || []).map((attach, index) => (
-            <AttachItem
-              key={`${node._key}-${index}-${attach.name}`}
-              id={`${node._key}-${index}-${attach.name}`}
-              attach={attach}
-              selectedAttachId={selectedAttachId}
-              themeColor={themeColor}
-              handleClick={handleClickAttach}
-            />
-          ))}
-          {node.note ? (
-            <div
-              className="t-editor item-note"
-              contentEditable="true"
-              spellCheck="true"
-              autoCapitalize="off"
-              suppressContentEditableWarning={true}
-              style={{ fontSize: '14px', color: '#797B7C' }}
-            >
-              {node.note}
-            </div>
-          ) : null}
+          {node.note}
         </div>
-      ) : null}
+      </div>
     </div>
   );
 };
