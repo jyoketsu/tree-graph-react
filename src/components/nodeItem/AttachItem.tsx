@@ -1,5 +1,6 @@
 import React from 'react';
 import Attach from '../../interfaces/Attach';
+import { HandleDeleteAttach } from '../../TreeEditor';
 import Icon from '../icon';
 
 interface ClickFunc {
@@ -8,17 +9,23 @@ interface ClickFunc {
 
 interface Props {
   id: string;
+  attachIndex: number;
+  nodeKey: string;
   attach: Attach;
   selectedAttachId: string;
   themeColor: string;
   handleClick: ClickFunc;
+  handleDeleteAttach: HandleDeleteAttach;
 }
 export default function AttachItem({
   id,
+  attachIndex,
+  nodeKey,
   attach,
   selectedAttachId,
   themeColor,
   handleClick,
+  handleDeleteAttach,
 }: Props) {
   const isImage = attach.type.includes('image/');
 
@@ -29,6 +36,13 @@ export default function AttachItem({
       handleClick(id);
     }
   }
+
+  function handleKeyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (event.key === 'Backspace' && selectedAttachId === id) {
+      handleDeleteAttach(nodeKey, attachIndex);
+    }
+  }
+
   return (
     <div
       style={{
@@ -44,7 +58,9 @@ export default function AttachItem({
         marginBottom: '8px',
         boxSizing: 'border-box',
       }}
+      tabIndex={-1}
       onClick={clickAttach}
+      onKeyDown={handleKeyDown}
     >
       {isImage ? (
         <img

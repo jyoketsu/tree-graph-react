@@ -1,8 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { HandleDeleteAttach } from '../..';
 import CNode from '../../interfaces/CNode';
 import { moveCursorToEnd, textWidthAll } from '../../services/util';
 import { HandleChangeNote, HandlePasteFile } from '../../TreeEditor';
 import AttachItem from './AttachItem';
+
+let deletable = false;
 
 interface HandleKeyDown {
   (key: string, nodeKey: string): void;
@@ -30,6 +33,7 @@ interface Props {
   handleClickAttach: HandleClickAttachFunc;
   handlePasteFiles: HandlePasteFile;
   handleChangeNote: HandleChangeNote;
+  handleDeleteAttach:HandleDeleteAttach;
   compId: string;
   isRoot: boolean;
   focusedKey?: string;
@@ -55,6 +59,7 @@ const EditorItem = ({
   handleClickAttach,
   handlePasteFiles,
   handleChangeNote,
+  handleDeleteAttach,
   compId,
   isRoot,
   focusedKey,
@@ -62,7 +67,6 @@ const EditorItem = ({
 }: // collapseMode,
 // collapseModeCollapsed,
 Props) => {
-  let deletable = false;
   const editorRef = useRef<HTMLDivElement>(null);
   const noteEditorRef = useRef<HTMLDivElement>(null);
   const [dragStarted, setDragStarted] = useState(false);
@@ -70,7 +74,6 @@ Props) => {
 
   useEffect(() => {
     if (focusedKey === node._key && editorRef && editorRef.current) {
-      deletable = false;
       handleClickNode(node);
       moveCursorToEnd(editorRef.current);
     }
@@ -82,7 +85,6 @@ Props) => {
       noteEditorRef &&
       noteEditorRef.current
     ) {
-      deletable = false;
       moveCursorToEnd(noteEditorRef.current);
     }
   }, [noteFocusedKey, noteEditorRef.current]);
@@ -107,7 +109,7 @@ Props) => {
   function keyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (event.shiftKey && event.key === 'Enter') {
       event.preventDefault();
-      if (node.note) {
+      if (node.note !== undefined) {
         if (!noteEditorRef || !noteEditorRef.current) return;
         noteEditorRef.current.focus();
         const range = window.getSelection();
@@ -121,14 +123,16 @@ Props) => {
     } else if (event.key === 'Enter' || event.key === 'Tab') {
       event.preventDefault();
       handleKeyDown(event.key, node._key);
-    }
-
-    if (event.key === 'Backspace' && !node.sortList.length) {
+    } else if (event.key === 'Backspace' && !node.sortList.length) {
       const value = event.currentTarget.innerText.replace(/[\r\n]/g, '');
       if (!value) {
         deletable = true;
         handleKeyDown(event.key, node._key);
+      } else {
+        deletable = false;
       }
+    } else {
+      deletable = false;
     }
   }
 
@@ -138,7 +142,11 @@ Props) => {
       if (!value) {
         deletable = true;
         handleKeyDown('DeleteNote', node._key);
+      } else {
+        deletable = false;
       }
+    } else {
+      deletable = false;
     }
   }
 
@@ -343,7 +351,7 @@ Props) => {
 
         {/* 文字 */}
         <div
-          className="t-editor"
+          className="t-editor node-editor"
           contentEditable="true"
           spellCheck="true"
           autoCapitalize="off"
@@ -386,10 +394,13 @@ Props) => {
           <AttachItem
             key={`${node._key}-${index}-${attach.name}`}
             id={`${node._key}-${index}-${attach.name}`}
+            attachIndex={index}
+            nodeKey={node._key}
             attach={attach}
             selectedAttachId={selectedAttachId}
             themeColor={themeColor}
             handleClick={handleClickAttach}
+            handleDeleteAttach={handleDeleteAttach}
           />
         ))}
         <div

@@ -38,6 +38,10 @@ export interface HandleDeleteNote {
   (nodeKey: string): void;
 }
 
+export interface HandleDeleteAttach {
+  (nodeKey: string, attachIndex: number): void;
+}
+
 export interface TreeEditorProps {
   // 节点
   nodes: NodeMap;
@@ -59,6 +63,10 @@ export interface TreeEditorProps {
   disabled?: boolean;
   showIcon?: boolean;
   handlePasteFiles: HandlePasteFile;
+  handleAddNote: HandleAddNote;
+  handleChangeNote: HandleChangeNote;
+  handleDeleteNote: HandleDeleteNote;
+  handleDeleteAttach: HandleDeleteAttach;
   handleClickExpand?: Function;
   handleClickNode?: Function;
   handleClickIcon?: Function;
@@ -70,9 +78,6 @@ export interface TreeEditorProps {
   handleShiftUpDown?: Function;
   handlePaste?: Function;
   handleDrag?: Function;
-  handleAddNote?: HandleAddNote;
-  handleChangeNote?: HandleChangeNote;
-  handleDeleteNote?: HandleDeleteNote;
   ref?: any;
   collapseMode?: boolean;
 }
@@ -89,6 +94,10 @@ export const TreeEditor = React.forwardRef(
       disabled,
       showIcon = true,
       handlePasteFiles,
+      handleAddNote,
+      handleChangeNote,
+      handleDeleteNote,
+      handleDeleteAttach,
       handleClickExpand,
       handleClickNode,
       handleClickIcon,
@@ -100,9 +109,6 @@ export const TreeEditor = React.forwardRef(
       // handleShiftUpDown,
       // handlePaste,
       handleDrag,
-      handleAddNote,
-      handleChangeNote,
-      handleDeleteNote,
       collapseMode,
     }: TreeEditorProps,
     ref
@@ -178,6 +184,10 @@ export const TreeEditor = React.forwardRef(
       }
       setFocusedKey(defaultFocusedId);
     }, [defaultFocusedId]);
+
+    useEffect(() => {
+      setNoteFocusedKey(defaultNoteFocusedNodeId);
+    }, [defaultNoteFocusedNodeId]);
 
     // 单击节点
     function clickNode(node: CNode) {
@@ -452,6 +462,7 @@ export const TreeEditor = React.forwardRef(
             handleClickAttach={attachId => setSelectedAttachId(attachId)}
             handlePasteFiles={handlePasteFiles}
             handleChangeNote={changeNote}
+            handleDeleteAttach={handleDeleteAttach}
             compId={compId}
             isRoot={index === 0 ? true : false}
             collapseMode={collapseMode}

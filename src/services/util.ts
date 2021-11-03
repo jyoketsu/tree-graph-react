@@ -535,8 +535,10 @@ function addNodeNote(nodeMap: NodeMap, nodeId: string) {
 
 function deleteNodeNote(nodeMap: NodeMap, nodeId: string) {
   let nodes = { ...nodeMap };
+  // let nodes = JSON.parse(JSON.stringify(nodeMap));
   const node = nodes[nodeId];
   delete node.note;
+  // node.note = undefined;
   return {
     nodes,
   };

@@ -7,7 +7,7 @@
   color: #1d1d1f;
   flex: 1;
 }
-.t-editor:empty:before {
+.t-editor.node-editor:empty:before {
   content: '无标题';
   color: #d3d3d3;
 }

@@ -223,4 +223,7 @@ Default.args = {
   handleChangeNote: (nodeKey: string, text: string) => {
     console.log('---handleChangeNote---', nodeKey, text);
   },
+  handleDeleteAttach: (nodeKey: string, index: number) => {
+    console.log('---handleDeleteAttach---', nodeKey, index);
+  },
 };
