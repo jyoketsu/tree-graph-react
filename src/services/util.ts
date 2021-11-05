@@ -399,13 +399,13 @@ function addChildNode(nodeMap: NodeMap, selectedId: string) {
 }
 
 // 向后新增同辈节点
-function addNextNode(nodeMap: NodeMap, selectedId: string) {
+function addNextNode(nodeMap: NodeMap, selectedId: string, value?: string) {
   let nodes = { ...nodeMap };
   let selectedNode = nodes[selectedId];
   let fatherNode = nodes[selectedNode.father];
   const nextNode: Node = {
     _key: guid(8, 16),
-    name: '',
+    name: value || '',
     father: fatherNode._key,
     sortList: [],
     checked: false,
@@ -483,6 +483,26 @@ function deleteNode(nodeMap: NodeMap, selectedId: string) {
   }
 
   return { nodes, nextSelectNodeKey };
+}
+
+function toBrotherChild(
+  nodeMap: NodeMap,
+  nodeIndex: number,
+  nodeId: string,
+  brotherId: string
+) {
+  let nodes = { ...nodeMap };
+  const node = nodes[nodeId];
+  const father = nodes[node.father];
+  const brother = nodes[brotherId];
+  const fatherSortList = father.sortList;
+  fatherSortList.splice(nodeIndex, 1);
+  father.sortList = fatherSortList;
+  node.father = brotherId;
+  const brotherSortList = brother.sortList || [];
+  brotherSortList.push(nodeId);
+  brother.sortList = brotherSortList;
+  return { nodes };
 }
 
 function dot(nodeMap: NodeMap, nodeId: string) {
@@ -877,8 +897,39 @@ function moveCursorToEnd(elment: HTMLDivElement) {
   if (!window.getSelection) return;
   const range = window.getSelection(); //创建range
   if (range) {
+    sessionStorage.setItem('cursorInTail', 'tail');
     range.selectAllChildren(elment); //range 选择obj下所有子内容
     range.collapseToEnd(); //光标移至最后
+  }
+}
+
+// 获取光标后的文本
+function getTextAfterCursor(elment: HTMLDivElement) {
+  const cursorInTail = sessionStorage.getItem('cursorInTail');
+  if (cursorInTail === 'tail') {
+    return '';
+  }
+  if (!window.getSelection) return '';
+  const selection = window.getSelection();
+  if (selection) {
+    const range = selection.getRangeAt(0);
+    const cursorPosition = range.startOffset;
+    const value = elment.innerText.substr(cursorPosition);
+    return value;
+  } else {
+    return '';
+  }
+}
+
+function moveCursor(type: 'up' | 'down', cnodes: Node[], nodeId: string) {
+  const index = cnodes.findIndex(item => item._key === nodeId);
+  if (index === -1) return;
+  if (type === 'up') {
+    if (index === 0) return;
+    return cnodes[index - 1];
+  } else {
+    if (index + 1 === cnodes.length) return;
+    return cnodes[index + 1];
   }
 }
 
@@ -916,4 +967,7 @@ export {
   moveCursorToEnd,
   changeNodeNote,
   deleteNodeNote,
+  getTextAfterCursor,
+  toBrotherChild,
+  moveCursor,
 };

@@ -1,14 +1,18 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { HandleDeleteAttach } from '../..';
 import CNode from '../../interfaces/CNode';
-import { moveCursorToEnd, textWidthAll } from '../../services/util';
+import {
+  getTextAfterCursor,
+  moveCursorToEnd,
+  textWidthAll,
+} from '../../services/util';
 import { HandleChangeNote, HandlePasteFile } from '../../TreeEditor';
 import AttachItem from './AttachItem';
 
 let deletable = false;
 
-interface HandleKeyDown {
-  (key: string, nodeKey: string): void;
+interface ActionCommand {
+  (command: string, nodeKey: string, value?: string): void;
 }
 
 interface HandleClickAttachFunc {
@@ -29,11 +33,11 @@ interface Props {
   handleClickDot: Function;
   handleChangeNodeText: Function;
   handleDrop: Function;
-  handleKeyDown: HandleKeyDown;
+  actionCommand: ActionCommand;
   handleClickAttach: HandleClickAttachFunc;
   handlePasteFiles: HandlePasteFile;
   handleChangeNote: HandleChangeNote;
-  handleDeleteAttach:HandleDeleteAttach;
+  handleDeleteAttach: HandleDeleteAttach;
   compId: string;
   isRoot: boolean;
   focusedKey?: string;
@@ -55,7 +59,7 @@ const EditorItem = ({
   handleClickDot,
   handleChangeNodeText,
   handleDrop,
-  handleKeyDown,
+  actionCommand,
   handleClickAttach,
   handlePasteFiles,
   handleChangeNote,
@@ -112,25 +116,52 @@ Props) => {
       if (node.note !== undefined) {
         if (!noteEditorRef || !noteEditorRef.current) return;
         noteEditorRef.current.focus();
-        const range = window.getSelection();
-        if (range) {
-          range.selectAllChildren(noteEditorRef.current);
-          range.collapseToEnd();
+        moveCursorToEnd(noteEditorRef.current);
+      } else {
+        actionCommand('AddNote', node._key);
+      }
+    } else if (event.key === 'Enter') {
+      event.preventDefault();
+      if (editorRef && editorRef.current) {
+        const valuePart2 = getTextAfterCursor(editorRef.current);
+        if (valuePart2) {
+          // 如果光标后有文字，则分割成两段文字同时生成2条节点
+          const value = editorRef.current.innerText.replace(/[\r\n]/g, '');
+          const valuePart1 = value.replace(valuePart2, '');
+          editorRef.current.innerText = valuePart1;
+          handleChangeNodeText(node._key, valuePart1);
+          actionCommand('AddNext', node._key, valuePart2);
+        } else {
+          actionCommand('AddNext', node._key);
         }
       } else {
-        handleKeyDown('AddNote', node._key);
+        actionCommand('AddNext', node._key);
       }
-    } else if (event.key === 'Enter' || event.key === 'Tab') {
+    } else if (event.key === 'Tab') {
       event.preventDefault();
-      handleKeyDown(event.key, node._key);
+      const value = event.currentTarget.innerText.replace(/[\r\n]/g, '');
+      if (value) {
+        actionCommand('AddChild', node._key);
+      } else {
+        // 空白结点按Tab，将当前结点转换为哥哥结点的最后一个子结点。
+        actionCommand('ToBrotherChild', node._key);
+      }
     } else if (event.key === 'Backspace' && !node.sortList.length) {
       const value = event.currentTarget.innerText.replace(/[\r\n]/g, '');
       if (!value) {
         deletable = true;
-        handleKeyDown(event.key, node._key);
+        actionCommand(event.key, node._key);
       } else {
         deletable = false;
       }
+    } else if (event.key === 'ArrowUp') {
+      event.preventDefault();
+      actionCommand('up', node._key);
+    } else if (event.key === 'ArrowDown') {
+      event.preventDefault();
+      actionCommand('down', node._key);
+    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+      sessionStorage.removeItem('cursorInTail');
     } else {
       deletable = false;
     }
@@ -141,7 +172,7 @@ Props) => {
       const value = event.currentTarget.innerText;
       if (!value) {
         deletable = true;
-        handleKeyDown('DeleteNote', node._key);
+        actionCommand('DeleteNote', node._key);
       } else {
         deletable = false;
       }
@@ -290,6 +321,7 @@ Props) => {
       }}
       onClick={(e: React.MouseEvent) => {
         e.stopPropagation();
+        sessionStorage.removeItem('cursorInTail');
         handleClickNode(node);
       }}
       onDragStart={handleDragStart}

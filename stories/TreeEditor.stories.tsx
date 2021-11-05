@@ -100,11 +100,6 @@ const nodes = {
     limitDay: 1610726400000,
     attach: [
       {
-        url: 'https://z3.ax1x.com/2021/09/26/4yrMLj.jpg',
-        type: 'image/jpeg',
-        name: '4By5a6',
-      },
-      {
         url: 'https://z3.ax1x.com/2021/09/26/4yrles.jpg',
         type: 'image/jpeg',
         name: '4BygxJ',

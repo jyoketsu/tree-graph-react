@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useImperativeHandle } from 'react';
 import './treeEditor.css';
 import NodeMap from './interfaces/NodeMap';
+import Node from './interfaces/Node';
 import CNode from './interfaces/CNode';
 import calculate from './services/singleColumnService';
 import {
@@ -17,6 +18,8 @@ import {
   addNodeNote,
   changeNodeNote,
   deleteNodeNote,
+  toBrotherChild,
+  moveCursor,
 } from './services/util';
 import DragInfo from './interfaces/DragInfo';
 import EditorItem from './components/nodeItem/EditorItem';
@@ -42,6 +45,14 @@ export interface HandleDeleteAttach {
   (nodeKey: string, attachIndex: number): void;
 }
 
+interface HandleAddNext {
+  (nodeKey: string, addedNode?: Node, value?: string): void;
+}
+
+interface SwitchNodeToBrotherChild {
+  (nodeIndex: number, nodeKey: string, brotherKey: string): void;
+}
+
 export interface TreeEditorProps {
   // 节点
   nodes: NodeMap;
@@ -63,16 +74,17 @@ export interface TreeEditorProps {
   disabled?: boolean;
   showIcon?: boolean;
   handlePasteFiles: HandlePasteFile;
-  handleAddNote: HandleAddNote;
-  handleChangeNote: HandleChangeNote;
-  handleDeleteNote: HandleDeleteNote;
   handleDeleteAttach: HandleDeleteAttach;
+  handleAddNote?: HandleAddNote;
+  handleChangeNote?: HandleChangeNote;
+  handleDeleteNote?: HandleDeleteNote;
+  handleSwitchToBrotherChild?: SwitchNodeToBrotherChild;
   handleClickExpand?: Function;
   handleClickNode?: Function;
   handleClickIcon?: Function;
   handleClickDot?: Function;
   handleChangeNodeText?: Function;
-  handleAddNext?: Function;
+  handleAddNext?: HandleAddNext;
   handleAddChild?: Function;
   handleDeleteNode?: Function;
   handleShiftUpDown?: Function;
@@ -94,10 +106,11 @@ export const TreeEditor = React.forwardRef(
       disabled,
       showIcon = true,
       handlePasteFiles,
+      handleDeleteAttach,
       handleAddNote,
       handleChangeNote,
       handleDeleteNote,
-      handleDeleteAttach,
+      handleSwitchToBrotherChild,
       handleClickExpand,
       handleClickNode,
       handleClickIcon,
@@ -247,20 +260,20 @@ export const TreeEditor = React.forwardRef(
     }
 
     // 添加平级节点
-    function addNext(nodeKey: string) {
+    function addNext(nodeKey: string, value?: string) {
       if (nodeKey === startId) {
         return alert('根节点无法添加兄弟节点！');
       }
       if (uncontrolled) {
-        const res = addNextNode(nodeMap, nodeKey);
+        const res = addNextNode(nodeMap, nodeKey, value);
         if (handleAddNext) {
-          handleAddNext(nodeKey, res.addedNode);
+          handleAddNext(nodeKey, res.addedNode, value);
         }
         setFocusedKey(res.addedNode._key);
         setNodeMap(res.nodes);
       } else {
         if (handleAddNext) {
-          handleAddNext(nodeKey);
+          handleAddNext(nodeKey, undefined, value);
         }
       }
     }
@@ -287,8 +300,6 @@ export const TreeEditor = React.forwardRef(
     function deleteNote(nodeKey: string) {
       if (uncontrolled) {
         const res = deleteNodeNote(nodeMap, nodeKey);
-        console.log('---res---', res);
-
         if (handleDeleteNote) {
           handleDeleteNote(nodeKey);
         }
@@ -336,6 +347,24 @@ export const TreeEditor = React.forwardRef(
       } else {
         if (handleDeleteNode) {
           handleDeleteNode(nodeKey);
+        }
+      }
+    }
+
+    function switchNodeToBrotherChild(
+      nodeIndex: number,
+      nodeKey: string,
+      brotherKey: string
+    ) {
+      if (uncontrolled) {
+        let res = toBrotherChild(nodeMap, nodeIndex, nodeKey, brotherKey);
+        if (handleSwitchToBrotherChild) {
+          handleSwitchToBrotherChild(nodeIndex, nodeKey, brotherKey);
+        }
+        setNodeMap(res.nodes);
+      } else {
+        if (handleSwitchToBrotherChild) {
+          handleSwitchToBrotherChild(nodeIndex, nodeKey, brotherKey);
         }
       }
     }
@@ -406,22 +435,41 @@ export const TreeEditor = React.forwardRef(
       }
     }
 
-    function handleKeyDown(key: string, nodeKey: string) {
-      if (key === 'Enter') {
+    function actionCommand(command: string, nodeKey: string, value?: string) {
+      if (command === 'AddNext') {
         // 添加弟弟节点
-        addNext(nodeKey);
-      } else if (key === 'Tab') {
+        addNext(nodeKey, value);
+      } else if (command === 'AddChild') {
         // 添加子节点
         addChild(nodeKey);
-      } else if (key === 'Backspace') {
+      } else if (command === 'Backspace') {
         // 删除节点
         deletenode(nodeKey);
-      } else if (key === 'AddNote') {
+      } else if (command === 'AddNote') {
         // 添加节点备注
         addNote(nodeKey);
-      } else if (key === 'DeleteNote') {
+      } else if (command === 'DeleteNote') {
         // 删除节点备注
         deleteNote(nodeKey);
+      } else if (command === 'ToBrotherChild') {
+        const node = nodeMap[nodeKey];
+        if (!node) return;
+        const father = nodeMap[node.father];
+        if (!father) return;
+        const sortList = father.sortList;
+        if (!sortList.length) return;
+        const currentNodeIndex = sortList.findIndex(id => id === nodeKey);
+        if (currentNodeIndex === -1 || currentNodeIndex === 0) return;
+        const brother = nodeMap[sortList[currentNodeIndex - 1]];
+        if (!brother) return;
+        switchNodeToBrotherChild(currentNodeIndex, nodeKey, brother._key);
+      } else if (command === 'up' || command === 'down') {
+        const nextNode = moveCursor(command, cnodes, nodeKey);
+        if (!nextNode) return;
+        setFocusedKey(nextNode._key);
+        if (handleClickNode) {
+          handleClickNode(nextNode);
+        }
       }
     }
 
@@ -458,7 +506,7 @@ export const TreeEditor = React.forwardRef(
             handleClickIcon={clickIcon}
             handleDrop={handleDrop}
             handleClickDot={clickDot}
-            handleKeyDown={handleKeyDown}
+            actionCommand={actionCommand}
             handleClickAttach={attachId => setSelectedAttachId(attachId)}
             handlePasteFiles={handlePasteFiles}
             handleChangeNote={changeNote}
