@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { HandleDeleteAttach } from '../..';
+import { HandleClickMore, HandleDeleteAttach } from '../..';
 import CNode from '../../interfaces/CNode';
 import {
   getTextAfterCursor,
@@ -7,6 +7,7 @@ import {
   textWidthAll,
 } from '../../services/util';
 import { HandleChangeNote, HandlePasteFile } from '../../TreeEditor';
+import Icon from '../icon';
 import AttachItem from './AttachItem';
 
 let deletable = false;
@@ -21,14 +22,13 @@ interface HandleClickAttachFunc {
 
 interface Props {
   node: CNode;
-  startId: string;
-  indent: number;
   themeColor: string;
   showIcon: boolean;
   disabled: boolean;
   selectedAttachId: string;
   handleClickNode: Function;
   handleClickExpand: Function;
+  clickMore: HandleClickMore;
   handleClickIcon: Function;
   handleClickDot: Function;
   handleChangeNodeText: Function;
@@ -47,14 +47,13 @@ interface Props {
 }
 const EditorItem = ({
   node,
-  startId,
-  indent,
   themeColor,
   showIcon,
   disabled,
   selectedAttachId,
   handleClickNode,
-  // handleClickExpand,
+  handleClickExpand,
+  clickMore,
   handleClickIcon,
   handleClickDot,
   handleChangeNodeText,
@@ -75,6 +74,7 @@ Props) => {
   const noteEditorRef = useRef<HTMLDivElement>(null);
   const [dragStarted, setDragStarted] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
+  const [hover, sethover] = useState(false);
 
   useEffect(() => {
     if (focusedKey === node._key && editorRef && editorRef.current) {
@@ -231,6 +231,10 @@ Props) => {
     }
   }
 
+  function handleClickMore(event: React.MouseEvent<HTMLDivElement>) {
+    clickMore(node, event.currentTarget);
+  }
+
   const urlReg = /((\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)/g;
   let nameLinkArr = [];
   if (urlReg.test(node.name)) {
@@ -312,7 +316,10 @@ Props) => {
   return (
     <div
       style={{
-        paddingLeft: `${node.x - (node._key === startId ? indent : 0)}px`,
+        position: 'relative',
+        // paddingLeft: `${node.x - (node._key === startId ? indent : 0)}px`,
+        paddingLeft: `${node.x + 35}px`,
+        paddingRight: '35px',
         boxSizing: 'border-box',
         borderStyle: 'solid',
         borderColor: themeColor,
@@ -329,6 +336,8 @@ Props) => {
       onDragLeave={handleDragLeave}
       onDrop={handleDropNode}
       onDragEnd={handleDragEnd}
+      onMouseEnter={() => sethover(true)}
+      onMouseLeave={() => sethover(false)}
     >
       <div
         style={{
@@ -344,7 +353,13 @@ Props) => {
         {!isRoot ? (
           <div
             draggable={disabled || node.disabled ? false : true}
-            style={{ marginRight: '12px', flexShrink: 0 }}
+            style={{
+              height: '26px',
+              marginRight: '12px',
+              flexShrink: 0,
+              display: 'flex',
+              alignItems: 'center',
+            }}
             onClick={e => {
               e.stopPropagation();
               handleClickDot(node);
@@ -454,6 +469,45 @@ Props) => {
           {node.note}
         </div>
       </div>
+      {!isRoot && hover ? (
+        <div
+          style={{
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            height: '26px',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          {/* 折叠按钮 */}
+          {node.sortList.length ? (
+            <div
+              onClick={e => {
+                e.stopPropagation();
+                handleClickExpand(node);
+              }}
+            >
+              <Icon
+                width="18px"
+                height="18px"
+                name={node.contract ? 'collapsed' : 'collapse'}
+                fill="#b2b3b4"
+                style={{ cursor: 'pointer' }}
+              />
+            </div>
+          ) : null}
+          <div onClick={handleClickMore}>
+            <Icon
+              width="18px"
+              height="18px"
+              name="more"
+              fill="#b2b3b4"
+              style={{ cursor: 'pointer' }}
+            />
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 };

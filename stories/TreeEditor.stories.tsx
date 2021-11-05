@@ -1,6 +1,7 @@
 import React from 'react';
 import { TreeEditor, TreeEditorProps } from '../src';
 import { Meta, Story } from '@storybook/react';
+import CNode from '../src/interfaces/CNode';
 
 const nodes = {
   '001': {
@@ -220,5 +221,11 @@ Default.args = {
   },
   handleDeleteAttach: (nodeKey: string, index: number) => {
     console.log('---handleDeleteAttach---', nodeKey, index);
+  },
+  handleClickNode: (node: CNode) => {
+    console.log('---handleClickNode---', node);
+  },
+  handleClickMoreButton: (node: CNode, targetEl: HTMLElement) => {
+    console.log('---handleClickMoreButton---', node, targetEl);
   },
 };

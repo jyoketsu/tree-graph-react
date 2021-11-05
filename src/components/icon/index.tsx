@@ -6,6 +6,9 @@ import Sun from './Sun';
 import Next from './Next';
 import Prev from './Prev';
 import Attach from './Attach';
+import Collapse from './Collapse';
+import Collapsed from './Collapsed';
+import More from './More';
 
 const Icon = (props: IconProps) => {
   switch (props.name) {
@@ -21,6 +24,12 @@ const Icon = (props: IconProps) => {
       return <Prev {...props} />;
     case 'attach':
       return <Attach {...props} />;
+    case 'collapse':
+      return <Collapse {...props} />;
+    case 'collapsed':
+      return <Collapsed {...props} />;
+    case 'more':
+      return <More {...props} />;
     default:
       return null;
   }

@@ -53,6 +53,10 @@ interface SwitchNodeToBrotherChild {
   (nodeIndex: number, nodeKey: string, brotherKey: string): void;
 }
 
+export interface HandleClickMore {
+  (node: CNode, targetEl: HTMLElement): void;
+}
+
 export interface TreeEditorProps {
   // 节点
   nodes: NodeMap;
@@ -90,6 +94,7 @@ export interface TreeEditorProps {
   handleShiftUpDown?: Function;
   handlePaste?: Function;
   handleDrag?: Function;
+  handleClickMoreButton?: HandleClickMore;
   ref?: any;
   collapseMode?: boolean;
 }
@@ -122,6 +127,7 @@ export const TreeEditor = React.forwardRef(
       // handleShiftUpDown,
       // handlePaste,
       handleDrag,
+      handleClickMoreButton,
       collapseMode,
     }: TreeEditorProps,
     ref
@@ -473,12 +479,19 @@ export const TreeEditor = React.forwardRef(
       }
     }
 
+    function handleClickMore(node: CNode, el: HTMLElement) {
+      if (handleClickMoreButton) {
+        handleClickMoreButton(node, el);
+      }
+    }
+
     return (
       <div
         className="menu-wrapper"
         style={{
           position: 'relative',
           width: '100%',
+          boxSizing: 'border-box',
         }}
         // onKeyDown={(e: any) => handleKeyDown(e)}
       >
@@ -491,8 +504,6 @@ export const TreeEditor = React.forwardRef(
         {cnodes.map((node, index) => (
           <EditorItem
             key={`${index}_${node._key}`}
-            startId={startId}
-            indent={indent}
             node={node}
             themeColor={themeColor}
             showIcon={showIcon}
@@ -511,6 +522,7 @@ export const TreeEditor = React.forwardRef(
             handlePasteFiles={handlePasteFiles}
             handleChangeNote={changeNote}
             handleDeleteAttach={handleDeleteAttach}
+            clickMore={handleClickMore}
             compId={compId}
             isRoot={index === 0 ? true : false}
             collapseMode={collapseMode}
