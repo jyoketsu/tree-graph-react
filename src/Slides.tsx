@@ -102,6 +102,7 @@ export const Slides = ({
 
   return (
     <div
+      className="tree-graph-react-slides"
       tabIndex={-1}
       ref={containerRef}
       style={{

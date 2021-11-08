@@ -24,6 +24,7 @@ import {
 import DragInfo from './interfaces/DragInfo';
 import EditorItem from './components/nodeItem/EditorItem';
 
+const indent = 30;
 // const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 export interface HandlePasteFile {
   (nodeKey: string, files: FileList): void;
@@ -70,12 +71,6 @@ export interface TreeEditorProps {
   defaultNoteFocusedNodeId?: string;
   //  非受控模式
   uncontrolled?: boolean;
-  // 缩进
-  indent?: number;
-  // 头像宽度
-  avatarWidth?: number;
-  checkBoxWidth?: number;
-  disabled?: boolean;
   showIcon?: boolean;
   handlePasteFiles: HandlePasteFile;
   handleDeleteAttach: HandleDeleteAttach;
@@ -107,8 +102,6 @@ export const TreeEditor = React.forwardRef(
       defaultFocusedId,
       defaultNoteFocusedNodeId,
       uncontrolled = true,
-      indent = 30,
-      disabled,
       showIcon = true,
       handlePasteFiles,
       handleDeleteAttach,
@@ -176,7 +169,7 @@ export const TreeEditor = React.forwardRef(
         nodeMap,
         startId,
         indent,
-        1,
+        0,
         collapseMode,
         expandedNodeKey,
         true
@@ -507,7 +500,6 @@ export const TreeEditor = React.forwardRef(
             node={node}
             themeColor={themeColor}
             showIcon={showIcon}
-            disabled={disabled || false}
             focusedKey={focusedKey}
             noteFocusedKey={noteFocusedKey}
             selectedAttachId={selectedAttachId}

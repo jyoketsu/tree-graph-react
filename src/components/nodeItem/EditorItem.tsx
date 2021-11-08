@@ -24,7 +24,6 @@ interface Props {
   node: CNode;
   themeColor: string;
   showIcon: boolean;
-  disabled: boolean;
   selectedAttachId: string;
   handleClickNode: Function;
   handleClickExpand: Function;
@@ -49,7 +48,6 @@ const EditorItem = ({
   node,
   themeColor,
   showIcon,
-  disabled,
   selectedAttachId,
   handleClickNode,
   handleClickExpand,
@@ -70,11 +68,13 @@ const EditorItem = ({
 }: // collapseMode,
 // collapseModeCollapsed,
 Props) => {
+  const isDragging = sessionStorage.getItem('isDragging');
   const editorRef = useRef<HTMLDivElement>(null);
   const noteEditorRef = useRef<HTMLDivElement>(null);
   const [dragStarted, setDragStarted] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
   const [hover, sethover] = useState(false);
+  const indentCount = node.x / 30;
 
   useEffect(() => {
     if (focusedKey === node._key && editorRef && editorRef.current) {
@@ -184,17 +184,25 @@ Props) => {
   function handleDragStart(e: React.DragEvent) {
     e.dataTransfer.dropEffect = 'move';
     setDragStarted(true);
+    sessionStorage.setItem('isDragging', 'true');
     sessionStorage.setItem('dragNodeId', node._key);
     sessionStorage.setItem('cross-comp-drag', node._key);
     sessionStorage.setItem('cross-drag-compId', compId);
   }
 
-  function handleDropNode() {
+  function handleDropNode(e: React.DragEvent) {
+    e.preventDefault();
     setIsDragOver(false);
-    sessionStorage.setItem('dropNodeId', node._key);
-    handleDrop();
-    sessionStorage.removeItem('cross-comp-drag');
-    sessionStorage.removeItem('cross-drag-compId');
+    sessionStorage.removeItem('isDragging');
+    const files = e.dataTransfer.files;
+    if (files.length) {
+      handlePasteFiles(node._key, files);
+    } else {
+      sessionStorage.setItem('dropNodeId', node._key);
+      handleDrop();
+      sessionStorage.removeItem('cross-comp-drag');
+      sessionStorage.removeItem('cross-drag-compId');
+    }
   }
 
   function handleDragOver(e: React.MouseEvent) {
@@ -212,6 +220,7 @@ Props) => {
   }
   function handleDragEnd() {
     setDragStarted(false);
+    sessionStorage.removeItem('isDragging');
   }
   function handleClickLink(type: string, url: string) {
     if (type === 'link') {
@@ -316,14 +325,18 @@ Props) => {
   return (
     <div
       style={{
+        display: 'flex',
         position: 'relative',
+        width: '100%',
         // paddingLeft: `${node.x - (node._key === startId ? indent : 0)}px`,
-        paddingLeft: `${node.x + 35}px`,
+        // paddingLeft: `${node.x + 35}px`,
+        paddingLeft: '35px',
         paddingRight: '35px',
         boxSizing: 'border-box',
         borderStyle: 'solid',
         borderColor: themeColor,
-        borderWidth: isDragOver ? '0 0 2px 0' : 0,
+        borderWidth:
+          isDragging && isDragOver ? '0 0 2px 0' : isDragOver ? '2px' : '0',
         opacity: dragStarted ? 0.8 : 1,
       }}
       onClick={(e: React.MouseEvent) => {
@@ -339,134 +352,147 @@ Props) => {
       onMouseEnter={() => sethover(true)}
       onMouseLeave={() => sethover(false)}
     >
-      <div
-        style={{
-          width: '100%',
-          display: 'flex',
-          fontSize: isRoot ? '34px' : '16px',
-          color: isRoot ? '#16181a' : '#1d1d1f',
-          lineHeight: isRoot ? '48px' : '26px',
-          fontWeight: isRoot ? 600 : 'normal',
-        }}
-      >
-        {/* 小圆点 */}
-        {!isRoot ? (
-          <div
-            draggable={disabled || node.disabled ? false : true}
-            style={{
-              height: '26px',
-              marginRight: '12px',
-              flexShrink: 0,
-              display: 'flex',
-              alignItems: 'center',
-            }}
-            onClick={e => {
-              e.stopPropagation();
-              handleClickDot(node);
-            }}
-          >
-            <svg width={8} height={8} viewBox={`0,0,${8},${8}`}>
-              <circle
-                id="dot"
-                cx={4}
-                cy={4}
-                r={4}
-                fill="#D3D3D3"
-                fillOpacity={1}
-                cursor="pointer"
-              />
-            </svg>
-          </div>
-        ) : null}
-
-        {/* 圖標 */}
-        {showIcon && node.icon && !isRoot ? (
-          <div
-            style={{
-              width: '22px',
-              height: '22px',
-              backgroundImage: `url("${node.icon}")`,
-              backgroundPosition: 'center',
-              backgroundSize: 'contain',
-              backgroundRepeat: 'no-repeat',
-              marginRight: '4px',
-              flexShrink: 0,
-            }}
-            onClick={() => handleClickIcon(node)}
-          ></div>
-        ) : null}
-
-        {/* 文字 */}
+      {Array.from(new Array(indentCount).keys()).map(item => (
         <div
-          className="t-editor node-editor"
-          contentEditable="true"
-          spellCheck="true"
-          autoCapitalize="off"
-          suppressContentEditableWarning={true}
-          ref={editorRef}
-          onBlur={saveText}
-          onKeyDown={keyDown}
-          onPaste={handlePaste}
-        >
-          {nameLinkArr.length ? (
-            <span>
-              {nameLinkArr.map((name, index) => (
-                <span
-                  key={index}
-                  style={{
-                    textDecoration:
-                      name.type === 'link' ? 'underline' : 'unset',
-                    cursor: name.type === 'link' ? 'pointer' : 'text',
-                    color: name.type === 'link' ? themeColor : 'inherit',
-                  }}
-                  onClick={() => handleClickLink(name.type, name.text)}
-                >
-                  {name.text || ''}
-                </span>
-              ))}
-            </span>
-          ) : (
-            node.name
-          )}
-        </div>
-      </div>
-      <div
-        style={{
-          marginLeft: '4px',
-          paddingLeft: '16px',
-          borderLeft: '1px solid #DEDEE1',
-        }}
-      >
-        {(node.attach || []).map((attach, index) => (
-          <AttachItem
-            key={`${node._key}-${index}-${attach.name}`}
-            id={`${node._key}-${index}-${attach.name}`}
-            attachIndex={index}
-            nodeKey={node._key}
-            attach={attach}
-            selectedAttachId={selectedAttachId}
-            themeColor={themeColor}
-            handleClick={handleClickAttach}
-            handleDeleteAttach={handleDeleteAttach}
-          />
-        ))}
-        <div
-          className="t-editor item-note"
-          contentEditable="true"
-          spellCheck="true"
-          autoCapitalize="off"
-          suppressContentEditableWarning={true}
+          key={item}
           style={{
-            fontSize: '14px',
-            color: '#797B7C',
-            lineHeight: node.note !== undefined ? '22px' : 0,
+            marginLeft: '3px',
+            width: '27px',
+            flexShrink: 0,
+            borderLeft: '1px solid #DEDEE1',
           }}
-          ref={noteEditorRef}
-          onBlur={saveNote}
-          onKeyDown={noteKeyDown}
-          onPaste={handlePaste}
+        ></div>
+      ))}
+      <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+        <div
+          style={{
+            width: '100%',
+            display: 'flex',
+            fontSize: isRoot ? '34px' : '16px',
+            color: isRoot ? '#16181a' : '#1d1d1f',
+            lineHeight: isRoot ? '48px' : '26px',
+            fontWeight: isRoot ? 600 : 'normal',
+          }}
         >
-          {node.note}
+          {/* 小圆点 */}
+          {!isRoot ? (
+            <div
+              draggable
+              style={{
+                height: '26px',
+                marginRight: '12px',
+                flexShrink: 0,
+                display: 'flex',
+                alignItems: 'center',
+              }}
+              onClick={e => {
+                e.stopPropagation();
+                handleClickDot(node);
+              }}
+            >
+              <svg width={8} height={8} viewBox={`0,0,${8},${8}`}>
+                <circle
+                  id="dot"
+                  cx={4}
+                  cy={4}
+                  r={4}
+                  fill="#D3D3D3"
+                  fillOpacity={1}
+                  cursor="pointer"
+                />
+              </svg>
+            </div>
+          ) : null}
+
+          {/* 圖標 */}
+          {showIcon && node.icon && !isRoot ? (
+            <div
+              style={{
+                width: '22px',
+                height: '22px',
+                backgroundImage: `url("${node.icon}")`,
+                backgroundPosition: 'center',
+                backgroundSize: 'contain',
+                backgroundRepeat: 'no-repeat',
+                marginRight: '4px',
+                flexShrink: 0,
+              }}
+              onClick={() => handleClickIcon(node)}
+            ></div>
+          ) : null}
+
+          {/* 文字 */}
+          <div
+            className="t-editor node-editor"
+            contentEditable="true"
+            spellCheck="true"
+            autoCapitalize="off"
+            suppressContentEditableWarning={true}
+            ref={editorRef}
+            onBlur={saveText}
+            onKeyDown={keyDown}
+            onPaste={handlePaste}
+          >
+            {nameLinkArr.length ? (
+              <span>
+                {nameLinkArr.map((name, index) => (
+                  <span
+                    key={index}
+                    style={{
+                      textDecoration:
+                        name.type === 'link' ? 'underline' : 'unset',
+                      cursor: name.type === 'link' ? 'pointer' : 'text',
+                      color: name.type === 'link' ? themeColor : 'inherit',
+                    }}
+                    onClick={() => handleClickLink(name.type, name.text)}
+                  >
+                    {name.text || ''}
+                  </span>
+                ))}
+              </span>
+            ) : (
+              node.name
+            )}
+          </div>
+        </div>
+        <div
+          style={{
+            marginLeft: '3.3px',
+            paddingLeft: '16px',
+            borderLeft: '1px solid #DEDEE1',
+          }}
+        >
+          {(node.attach || []).map((attach, index) => (
+            <AttachItem
+              key={`${node._key}-${index}-${attach.name}`}
+              id={`${node._key}-${index}-${attach.name}`}
+              attachIndex={index}
+              nodeKey={node._key}
+              attach={attach}
+              selectedAttachId={selectedAttachId}
+              themeColor={themeColor}
+              handleClick={handleClickAttach}
+              handleDeleteAttach={handleDeleteAttach}
+            />
+          ))}
+          <div
+            className="t-editor item-note"
+            contentEditable="true"
+            spellCheck="true"
+            autoCapitalize="off"
+            suppressContentEditableWarning={true}
+            style={{
+              fontSize: '14px',
+              color: '#797B7C',
+              lineHeight: node.note !== undefined ? '22px' : 0,
+            }}
+            ref={noteEditorRef}
+            onBlur={saveNote}
+            onKeyDown={noteKeyDown}
+            onPaste={handlePaste}
+          >
+            {node.note}
+          </div>
         </div>
       </div>
       {!isRoot && hover ? (

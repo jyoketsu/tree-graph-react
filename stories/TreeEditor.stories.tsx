@@ -110,11 +110,6 @@ const nodes = {
         type: 'image/jpeg',
         name: '4Byfq1',
       },
-      {
-        url: 'https://z3.ax1x.com/2021/09/26/4yrKyQ.jpg',
-        type: 'image/jpeg',
-        name: '4By5a6',
-      },
     ],
   },
   '009': {

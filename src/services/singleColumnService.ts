@@ -13,7 +13,7 @@ export default function calculate(
   hideRoot?: boolean
 ) {
   nodes = JSON.parse(JSON.stringify(nodes));
-  const start_x = startX || 15;
+  const start_x = startX !== undefined ? startX : 15;
   const start_y = 1;
   // 根节点
   const root = nodes[startId];

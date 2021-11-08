@@ -61,17 +61,24 @@ npm i tree-graph-react
 [![fV6gaV.png](https://z3.ax1x.com/2021/08/05/fV6gaV.png)](https://imgtu.com/i/fV6gaV)
 
 ### Slides
+
 [![5iN4X9.png](https://z3.ax1x.com/2021/10/09/5iN4X9.png)](https://imgtu.com/i/5iN4X9)
+
+### TreeEditor（Outline text editor）
+
+[![I87KLd.png](https://z3.ax1x.com/2021/11/08/I87KLd.png)](https://imgtu.com/i/I87KLd)
 
 ## Use case
 
 [![fVgoAx.png](https://z3.ax1x.com/2021/08/05/fVgoAx.png)](https://imgtu.com/i/fVgoAx)
 [![fVg5H1.png](https://z3.ax1x.com/2021/08/05/fVg5H1.png)](https://imgtu.com/i/fVg5H1)
+[![IGS9VU.png](https://z3.ax1x.com/2021/11/08/IGS9VU.png)](https://imgtu.com/i/IGS9VU)
 
 ## Usage
 
 ```jsx
 import { Tree, MenuTree, MiniMenu, Catalog, Mind } from 'tree-graph-react';
+import 'tree-graph-react/dist/tree-graph-react.cjs.development.css';
 
 const nodes = {
   '001': {
@@ -83,9 +90,7 @@ const nodes = {
 
     avatarUri: 'https://psnine.com/Upload/game/11387.png',
     icon: 'https://cdn-icare.qingtime.cn/rooter.svg',
-
     checked: true,
-
     hour: 0.1,
     limitDay: 1610726400000,
   },
@@ -95,9 +100,7 @@ const nodes = {
     father: '001',
     sortList: ['006', '007'],
     contract: false,
-
     checked: true,
-
     hour: 0.1,
     limitDay: 1610726400000,
     icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
@@ -107,9 +110,7 @@ const nodes = {
     name: '项目状态',
     father: '001',
     sortList: ['010', '011'],
-
     checked: false,
-
     hour: 0.1,
     limitDay: 1610726400000,
     icon: 'https://cdn-icare.qingtime.cn/favFolder.svg',
@@ -119,9 +120,7 @@ const nodes = {
     name: '项目会议',
     father: '001',
     sortList: [],
-
     checked: false,
-
     hour: 0.1,
     limitDay: 1610726400000,
   },
@@ -130,9 +129,7 @@ const nodes = {
     name: '验收',
     father: '001',
     sortList: [],
-
     checked: false,
-
     hour: 0.1,
     limitDay: 1610726400000,
   },
@@ -283,7 +280,7 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 
 <br/>
 
-## Tree Props
+## Props
 
 | 属性                     | 说明                                                 | 类型     | 是否必须 | 默认值  |
 | ------------------------ | ---------------------------------------------------- | -------- | -------- | ------- |
@@ -352,106 +349,11 @@ interface DragInfo {
 }
 ```
 
-## Mind Props
-
-| 属性                     | 说明                                                 | 类型     | 是否必须 | 默认值  |
-| ------------------------ | ---------------------------------------------------- | -------- | -------- | ------- |
-| nodes                    | 节点                                                 | Object   | 是       | -       |
-| uncontrolled             | 是否为非受控组件                                     | Boolean  | 否       | true    |
-| startId                  | 根节点 id                                            | String   | 是       | -       |
-| defaultSelectedId        | 选中的节点 id                                        | String   | 是       | -       |
-| ref                      | 通过 ref 调用组件内部方法                            | -        | 否       | -       |
-| singleColumn             | 是否是单向视图                                       | Boolean  | 否       | false   |
-| itemHeight               | 节点元素高度                                         | Number   | 否       | 50      |
-| blockHeight              | 节点块高度                                           | Number   | 否       | 30      |
-| fontSize                 | 节点字体大小                                         | Number   | 否       | 14      |
-| fontWeight               | 节点字体粗细                                         | Number   | 否       | -       |
-| indent                   | 缩进                                                 | Number   | 否       | 25      |
-| columnSpacing            | 列间距                                               | Number   | 否       | 55      |
-| avatarWidth              | 头像宽度                                             | Number   | 否       | 22      |
-| pathWidth                | 线条宽度                                             | Number   | 否       | 1       |
-| avatarRadius             | 头像宽度                                             | Number   | 否       | 11      |
-| backgroundColor          | 背景色                                               | Number   | 否       | unset   |
-| color                    | 字体颜色                                             | Number   | 否       | #595959 |
-| hoverBorderColor         | 移上节点边框颜色                                     | Number   | 否       | #bed2fc |
-| selectedBorderColor      | 选中节点边框颜色                                     | Number   | 否       | #35a6f8 |
-| selectedBackgroundColor  | 选中节点背景色                                       | Number   | 否       | #e8e8e8 |
-| checkBoxWidth            | 勾选框宽度                                           | Number   | 否       | 18      |
-| disableShortcut          | 是否禁用快捷键                                       | Number   | 否       | -       |
-| disabled                 | 是否只读                                             | Number   | 否       | -       |
-| showPreviewButton        | 是否显示节点预览按钮                                 | boolean  | 否       | -       |
-| showAddButton            | 是否显示节点新增节点按钮                             | boolean  | 否       | -       |
-| showMoreButton           | 是否显示节点更多按钮                                 | boolean  | 否       | -       |
-| moreButtonWidth          | 节点操作按钮宽度                                     | boolean  | 否       | -       |
-| showIcon                 | 是否显示图标                                         | boolean  | 否       | true    |
-| showAvatar               | 是否显示头像                                         | Boolean  |
-| avatarUri                | 头像地址                                             | String   |
-| handleClickNode          | 点击节点事件,参数：node                              | Function | 否       | -       |
-| handleDbClickNode        | 双击节点事件,参数：node                              | Function | 否       | -       |
-| handleClickExpand        | 点击收起/展开事件,参数：node                         | Function | 否       | -       |
-| handleCheck              | 点击勾选框事件,参数：node                            | Function | 否       | -       |
-| handleClickAvatar        | 点击头像事件,参数：node                              | Function | 否       | -       |
-| handleClickStatus        | 点击状态事件,参数：node                              | Function | 否       | -       |
-| handleChangeNodeText     | 更改节点名事件,参数：nodeId, text                    | Function | 否       | -       |
-| handleAddNext            | 向后添加兄弟节点事件,参数：selectedNode              | Function | 否       | -       |
-| handleAddChild           | 添加子节点事件,参数：selectedNode                    | Function | 否       | -       |
-| handleDeleteNode         | 删除节点事件,参数：selectedId,selectedNodes          | Function | 否       | -       |
-| handleClickPreviewButton | 点击更多按钮,参数：clickNode                         | Function | 否       | -       |
-| handleClickAddButton     | 点击更多按钮,参数：clickNode                         | Function | 否       | -       |
-| handleClickMoreButton    | 点击更多按钮,参数：clickNode                         | Function | 否       | -       |
-| handleClickDot           | 点击圆点                                             | Function | 否       | -       |
-| handleShiftUpDown        | 向上/向下移动节点，参数 id, sortList, type           | Function | 否       | -       |
-| handleSave               | 保存树                                               | Function | 否       | -       |
-| handleDrag               | 拖拽节点,参数：dragInfo                              | Function | 否       | -       |
-| handlePaste              | 複制节点：参数：pasteNodeKey,pasteType,targetNodeKey | Function | 否       | -       |
-| hideHour                 | 隐藏任务小时数                                       | boolean  | 否       | -       |
-| dragEndFromOutside       | 从外部拖入树节点,参数：node                          | Function | 否       | -       |
-| handleMouseEnterAvatar   | 鼠标移入头像 ,参数：node                             | Function | 否       | -       |
-| handleMouseLeaveAvatar   | 鼠标移出头像,参数：node                              | Function | 否       | -       |
-| handleChange             | 树数据变更                                           | Function | 否｜-｜  |
-| showDeleteConform        | 显示删除提示（非受控模式）                           | Function | 否｜-｜  |
-| handleMutiSelect         | 框选节点，参数：selectedNodes                        | Function | 否｜-｜  |
-
 ## Menu Props
 
-| 属性                    | 说明                                             | 类型     | 是否必须 | 默认值                |
-| ----------------------- | ------------------------------------------------ | -------- | -------- | --------------------- |
-| nodes                   | 节点                                             | Object   | 是       | -                     |
-| startId                 | 根节点 id                                        | String   | 是       | -                     |
-| backgroundColor         | 菜单背景色                                       | string   | 否       | #333333               |
-| selectedBackgroundColor | 选中的菜单背景色                                 | string   | 否       | #00CDD3               |
-| color                   | 文字颜色                                         | string   | 否       | #CDD0D2               |
-| selectedColor           | 选中文字颜色                                     | string   | 否       | #FFF                  |
-| hoverColor              | hover 文字颜色                                   | string   | 否       | #FFFFFF               |
-| cutColor                | 剪切后文字颜色                                   | string   | 否       | rgba(255,255,255,0.5) |
-| defaultSelectedId       | 选中的节点 id                                    | String   | 是       | -                     |
-| ref                     | 通过 ref 调用组件内部方法                        | -        | 否       | -                     |
-| singleColumn            | 是否是单列视图                                   | Boolean  | 否       | false                 |
-| uncontrolled            | 是否为非受控组件                                 | Boolean  | 否       | true                  |
-| itemHeight              | 节点元素高度                                     | Number   | 否       | 50                    |
-| blockHeight             | 节点块高度                                       | Number   | 否       | 30                    |
-| fontSize                | 节点字体大小                                     | Number   | 否       | 14                    |
-| indent                  | 缩进                                             | Number   | 否       | 25                    |
-| disableShortcut         | 是否禁用快捷键                                   | Number   | 否       | -                     |
-| disabled                | 是否只读                                         | Number   | 否       | -                     |
-| showMoreButton          | 是否显示节点选项菜单                             | boolean  | 否       | false                 |
-| showIcon                | 是否显示图标                                     | boolean  | 否       | true                  |
-| hoverBackgroundColor    | hover 背景颜色                                   | string   | 否       | #4d4d4d               |
-| showChildNum            | 是否显示子节点数量                               | boolean  | 否       | false                 |
-| handleClickNode         | 点击节点事件,参数：node                          | Function | 否       | -                     |
-| handleDbClickNode       | 双击节点事件,参数：node                          | Function | 否       | -                     |
-| handleClickExpand       | 点击收起/展开事件,参数：node                     | Function | 否       | -                     |
-| handleChangeNodeText    | 更改节点名事件,参数：nodeId, text                | Function | 否       | -                     |
-| handleAddNext           | 向后添加兄弟节点事件,参数：selectedNode          | Function | 否       | -                     |
-| handleAddChild          | 添加子节点事件,参数：selectedNode                | Function | 否       | -                     |
-| handleDeleteNode        | 删除节点事件,参数：selectedId                    | Function | 否       | -                     |
-| handleClickMoreButton   | 点击更多按钮,参数：clickNode,offsetTop           | Function | 否       | -                     |
-| handleSave              | 保存树                                           | Function | 否       | -                     |
-| handleDrag              | 拖拽节点,参数：dragNodeId,dragInfo               | Function | 否       | -                     |
-| dragEndFromOutside      | 从外部拖入树节点,参数：node                      | Function | 否       | -                     |
-| handleMouseEnterAvatar  | 鼠标移入头像 ,参数：node                         | Function | 否       | -                     |
-| handleMouseLeaveAvatar  | 鼠标移出头像,参数：node                          | Function | 否       | -                     |
-| collapseMode            | 是否是折叠模式（每次仅打开一级，其他的自动折叠） | boolean  | 否       | false                 |
+| 属性         | 说明                                             | 类型    | 是否必须 | 默认值 |
+| ------------ | ------------------------------------------------ | ------- | -------- | ------ |
+| collapseMode | 是否是折叠模式（每次仅打开一级，其他的自动折叠） | boolean | 否       | false  |
 
 ## MiniMenu Props
 
@@ -490,6 +392,17 @@ interface DragInfo {
 | indent          | 缩进                    | Number                                         | 否       | 25      |
 | info            | 目录描述信息            | ReactElement                                   | 否       | -       |
 | itemInfoMap     | 目录项目描述信息        | `ItemInfoMap { [_key: string]: ReactElement;}` | 否       | -       |
+
+## TreeEditor Props
+
+| 属性                       | 说明                                                       | 类型     | 是否必须 | 默认值 |
+| -------------------------- | ---------------------------------------------------------- | -------- | -------- | ------ |
+| handlePasteFiles           | 粘贴附件                                                   | Function | 是       | -      |
+| handleDeleteAttach         | 删除附件                                                   | Function | 是       | -      |
+| handleAddNote              | 添加备注                                                   | Function | 否       | -      |
+| handleChangeNote           | 更改备注                                                   | Function | 否       | -      |
+| handleDeleteNote           | 删除备注                                                   | Function | 否       | -      |
+| handleSwitchToBrotherChild | 空白结点按 Tab，将当前结点转换为哥哥结点的最后一个子结点。 | Function | 否       | -      |
 
 ## Node Props
 
