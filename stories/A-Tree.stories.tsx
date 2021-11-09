@@ -17,6 +17,7 @@ const nodes = {
     showStatus: true,
     limitDay: new Date(new Date()).getTime(),
     // disabled: true,
+    childNum: 1000,
   },
   '002': {
     _key: '002',
@@ -440,6 +441,8 @@ MultiCol.args = {
   handleMouseLeaveAvatar: (node: any) =>
     console.log('---handleMouseLeaveAvatar---', node),
   handleChange: () => console.log('---handleChange---'),
+  handleFileChange: (nodeKey: string, files: FileList) =>
+    console.log('---handleFileChange---', nodeKey, files),
 };
 
 export const MultiColDark = Template.bind({});

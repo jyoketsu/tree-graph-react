@@ -5,6 +5,7 @@ import Dot from '../components/Dot';
 import Expand from '../components/Expand';
 import DragInfo from '../interfaces/DragInfo';
 import { nodeLocation, textWidthAll } from '../services/util';
+import { HandleFileChange } from '..';
 
 interface CheckFunc {
   (node: CNode, event: MouseEvent): void;
@@ -63,6 +64,7 @@ interface Props {
   hideHour?: boolean;
   isMind?: boolean;
   fontWeight?: number;
+  handleFileChange?: HandleFileChange;
 }
 
 // let timer: NodeJS.Timeout;
@@ -111,6 +113,7 @@ const TreeNode = ({
   bottomOptions,
   hideHour,
   fontWeight,
+  handleFileChange,
 }: // nodeOptionsOpened,
 Props) => {
   const [hover, sethover] = useState(false);
@@ -221,11 +224,16 @@ Props) => {
     event.preventDefault();
   }
 
-  function handleDragEnd(event: React.MouseEvent) {
+  function handleDragEnd(event: React.DragEvent) {
     event.preventDefault();
-    setDragIn(false);
-    if (dragEndFromOutside) {
-      dragEndFromOutside(node);
+    const files = event.dataTransfer.files;
+    if (files.length && handleFileChange) {
+      handleFileChange(node._key, files);
+    } else {
+      setDragIn(false);
+      if (dragEndFromOutside) {
+        dragEndFromOutside(node);
+      }
     }
   }
 
@@ -798,7 +806,7 @@ Props) => {
             }
             cy={
               !bottomOptions
-                ? node.y + BLOCK_HEIGHT / 2 + 2
+                ? node.y + BLOCK_HEIGHT / 2 + 1
                 : node.y + BLOCK_HEIGHT + 2 + 15
             }
             r="15"
@@ -812,13 +820,13 @@ Props) => {
             }
             y={
               !bottomOptions
-                ? node.y + BLOCK_HEIGHT / 2 + 3
+                ? node.y + BLOCK_HEIGHT / 2 + 2
                 : node.y + BLOCK_HEIGHT + 3 + 15
             }
             alignmentBaseline="middle"
             textAnchor="middle"
             fontSize={node.childNum > 999 ? 12 : 14}
-            fill={node.color || color}
+            fill={node._key === startId ? '#FFF' : node.color || color}
           >
             {node.childNum > 999 ? '999+' : node.childNum}
           </text>

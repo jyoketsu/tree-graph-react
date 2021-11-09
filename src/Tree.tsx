@@ -27,8 +27,7 @@ import {
   getNextSelect,
 } from './services/util';
 import MutilSelectedNodeKey from './interfaces/MutilSelectedNodeKey';
-
-const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
+import copy from 'copy-to-clipboard';
 
 interface PasteFunc {
   (
@@ -44,6 +43,9 @@ interface MutiSelectFunc {
 
 interface NodeClickFunc {
   (node: CNode, targetEl: HTMLElement): void;
+}
+export interface HandleFileChange {
+  (nodeKey: string, files: FileList): void;
 }
 
 export interface TreeProps {
@@ -123,6 +125,7 @@ export interface TreeProps {
   handleChange?: Function;
   showDeleteConform?: Function;
   handleMutiSelect?: MutiSelectFunc;
+  handleFileChange?: HandleFileChange;
   ref?: any;
 }
 
@@ -190,6 +193,7 @@ export const Tree = React.forwardRef(
       handleChange,
       showDeleteConform,
       handleMutiSelect,
+      handleFileChange,
     }: TreeProps,
     ref
   ) => {
@@ -694,23 +698,72 @@ export const Tree = React.forwardRef(
       return { rootKey: startId, data: nodeMap };
     }
 
+    function handleCopy(event: React.ClipboardEvent) {
+      event.preventDefault();
+      copy(selectedId || '');
+      setPasteNodeKey(selectedId);
+      setPasteType('copy');
+    }
+
+    function handleCut(event: React.ClipboardEvent) {
+      // 剪切
+      if (selectedId) {
+        event.preventDefault();
+        // 根節點不允許剪切
+        if (selectedId === startId) {
+          setPasteNodeKey(null);
+          copy(selectedId || '');
+          setPasteType(null);
+          return;
+        }
+        setPasteNodeKey(selectedId);
+        copy(selectedId || '');
+        setPasteType('cut');
+      }
+    }
+
+    function handlePasteFile(event: React.ClipboardEvent) {
+      if (event.clipboardData.files.length && handleFileChange && selectedId) {
+        event.preventDefault();
+        let files = event.clipboardData.files;
+        handleFileChange(selectedId, files);
+      } else {
+        if (pasteType && pasteNodeKey && selectedId) {
+          if (UNCONTROLLED) {
+            const res = pasteNode(nodeMap, pasteNodeKey, pasteType, selectedId);
+            if (res) {
+              setNodeMap(res);
+              if (handleChange) {
+                handleChange();
+              }
+            }
+          } else if (handlePaste) {
+            handlePaste(pasteNodeKey, pasteType, selectedId);
+          }
+          setPasteNodeKey(null);
+          setPasteType(null);
+        }
+      }
+    }
+
     function handleKeyDown(event: KeyboardEvent) {
       if (disabled || disableShortcut || showInput || showNewInput) {
         return;
       }
-      event.preventDefault();
-
-      const commandKey = isMac ? event.metaKey : event.ctrlKey;
-
       switch (event.key) {
-        case 'Enter':
+        case 'Enter': {
+          event.preventDefault();
           addNext();
           break;
-        case 'Tab':
+        }
+        case 'Tab': {
+          event.preventDefault();
           addChild();
           break;
+        }
         case 'Delete':
         case 'Backspace': {
+          event.preventDefault();
           if (showDeleteConform) {
             const node = selectedId ? nodeMap[selectedId] : null;
             if ((node && node.sortList.length) || selectedNodes.length > 1) {
@@ -723,7 +776,8 @@ export const Tree = React.forwardRef(
           }
           break;
         }
-        case 'ArrowUp':
+        case 'ArrowUp': {
+          event.preventDefault();
           if (event.shiftKey) {
             shiftUp();
           } else if (selectedId) {
@@ -733,7 +787,9 @@ export const Tree = React.forwardRef(
             }
           }
           break;
-        case 'ArrowDown':
+        }
+        case 'ArrowDown': {
+          event.preventDefault();
           if (event.shiftKey) {
             shiftDown();
           } else if (selectedId) {
@@ -743,8 +799,10 @@ export const Tree = React.forwardRef(
             }
           }
           break;
+        }
         case 'ArrowRight':
         case 'ArrowLeft': {
+          event.preventDefault();
           if (selectedId) {
             const res = changeSelect(selectedId, cnodes, event.key);
             if (res) {
@@ -753,69 +811,25 @@ export const Tree = React.forwardRef(
           }
           break;
         }
-        // 複製
-        case 'c':
-          if (commandKey && selectedId) {
-            setPasteNodeKey(selectedId);
-            setPasteType('copy');
-          }
-          break;
-        // 剪切
-        case 'x':
-          if (commandKey && selectedId) {
-            // 根節點不允許剪切
-            if (selectedId === startId) {
-              setPasteNodeKey(null);
-              setPasteType(null);
-              return;
-            }
-            setPasteNodeKey(selectedId);
-            setPasteType('cut');
-          }
-          break;
-        // 粘貼
-        case 'v':
-          if (commandKey && pasteType && pasteNodeKey && selectedId) {
-            if (UNCONTROLLED) {
-              const res = pasteNode(
-                nodeMap,
-                pasteNodeKey,
-                pasteType,
-                selectedId
-              );
-              if (res) {
-                setNodeMap(res);
-                if (handleChange) {
-                  handleChange();
-                }
-              }
-            } else if (handlePaste) {
-              handlePaste(pasteNodeKey, pasteType, selectedId);
-            }
-            setPasteNodeKey(null);
-            setPasteType(null);
-          }
-          break;
         default: {
-          if (
-            selectedId &&
-            !showInput &&
-            event.key.length === 1 &&
-            /[a-zA-Z]+/.test(event.key)
-          ) {
-            if (UNCONTROLLED) {
-              let nodes = changeNodeText(nodeMap, selectedId, '');
-              setNodeMap(nodes);
-              if (handleChange) {
-                handleChange();
-              }
-            }
-            if (handleChangeNodeText) {
-              handleChangeNodeText(selectedId, '');
-            }
-            setshowInput(true);
-          }
-          break;
+          // if (
+          //   selectedId &&
+          //   !showInput &&
+          //   event.key.length === 1 &&
+          //   /[a-zA-Z]+/.test(event.key)
+          // ) {
+          //   if (UNCONTROLLED) {
+          //     let nodes = changeNodeText(nodeMap, selectedId, '');
+          //     setNodeMap(nodes);
+          //     if (handleChange) {
+          //       handleChange();
+          //     }
+          //   }
+          //   if (handleChangeNodeText) {
+          //     handleChangeNodeText(selectedId, '');
+          //   }
+          //   setshowInput(true);
+          // }
         }
       }
     }
@@ -1098,6 +1112,9 @@ export const Tree = React.forwardRef(
         onMouseMove={handleMoveNode}
         onMouseUp={handleDragEnd}
         onMouseLeave={handleDragLeave}
+        onCopy={handleCopy}
+        onCut={handleCut}
+        onPaste={handlePasteFile}
       >
         <svg
           className="tree-svg"
@@ -1486,6 +1503,7 @@ export const Tree = React.forwardRef(
                 hoverBorderColor={HOVER_BORDER_COLOR}
                 selectedBorderColor={SELECTED_BORDER_COLOR}
                 selectedBackgroundColor={SELECTED_BACKGROUND_COLOR}
+                handleFileChange={handleFileChange}
               />
             </g>
           ))}
