@@ -3,6 +3,7 @@ import { HandleClickMore, HandleDeleteAttach } from '../..';
 import CNode from '../../interfaces/CNode';
 import {
   getTextAfterCursor,
+  isCursorHead,
   moveCursorToEnd,
   textWidthAll,
 } from '../../services/util';
@@ -10,6 +11,7 @@ import { HandleChangeNote, HandlePasteFile } from '../../TreeEditor';
 import Icon from '../icon';
 import AttachItem from './AttachItem';
 
+// 为了在删除节点后失去焦点不触发更改节点名
 let deletable = false;
 
 interface ActionCommand {
@@ -112,6 +114,7 @@ Props) => {
 
   function keyDown(event: React.KeyboardEvent<HTMLDivElement>) {
     if (event.shiftKey && event.key === 'Enter') {
+      // shift+enter 添加节点备注
       event.preventDefault();
       if (node.note !== undefined) {
         if (!noteEditorRef || !noteEditorRef.current) return;
@@ -120,9 +123,16 @@ Props) => {
       } else {
         actionCommand('AddNote', node._key);
       }
+    } else if (event.shiftKey && event.key === 'Tab') {
+      event.preventDefault();
+      if (isRoot) return;
+      actionCommand('ShiftTab', node._key);
     } else if (event.key === 'Enter') {
       event.preventDefault();
-      if (editorRef && editorRef.current) {
+      if (isRoot) {
+        // 根节点按Enter，相当于添加子节点
+        actionCommand('AddChild', node._key);
+      } else if (editorRef && editorRef.current) {
         const valuePart2 = getTextAfterCursor(editorRef.current);
         if (valuePart2) {
           // 如果光标后有文字，则分割成两段文字同时生成2条节点
@@ -139,20 +149,35 @@ Props) => {
       }
     } else if (event.key === 'Tab') {
       event.preventDefault();
-      const value = event.currentTarget.innerText.replace(/[\r\n]/g, '');
-      if (value) {
-        actionCommand('AddChild', node._key);
-      } else {
-        // 空白结点按Tab，将当前结点转换为哥哥结点的最后一个子结点。
-        actionCommand('ToBrotherChild', node._key);
-      }
+      // const value = event.currentTarget.innerText.replace(/[\r\n]/g, '');
+      // if (editorRef && editorRef.current && value) {
+      //   const textAfterCursor = getTextAfterCursor(editorRef.current);
+      //   if (!textAfterCursor) {
+      //     actionCommand('AddChild', node._key);
+      //   } else {
+      //     actionCommand('ToBrotherChild', node._key);
+      //   }
+      // } else {
+      //   // 空白结点按Tab，将当前结点转换为哥哥结点的最后一个子结点。
+      //   actionCommand('ToBrotherChild', node._key);
+      // }
+      actionCommand('ToBrotherChild', node._key);
     } else if (event.key === 'Backspace' && !node.sortList.length) {
       const value = event.currentTarget.innerText.replace(/[\r\n]/g, '');
       if (!value) {
+        // 按后退删除文字，当没有文字时，触发删除节点
         deletable = true;
         actionCommand(event.key, node._key);
       } else {
-        deletable = false;
+        // 有文字
+        const head = isCursorHead();
+        if (head) {
+          // 在头部按后退
+          deletable = true;
+          actionCommand('BackspaceInHead', node._key);
+        } else {
+          deletable = false;
+        }
       }
     } else if (event.key === 'ArrowUp') {
       event.preventDefault();

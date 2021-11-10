@@ -463,7 +463,7 @@ function deleteNode(nodeMap: NodeMap, selectedId: string) {
   let brotherKeys = fatherNode.sortList;
   const index = brotherKeys.indexOf(selectedId);
   brotherKeys.splice(index, 1);
-  if (brotherKeys.length) {
+  if (brotherKeys.length && index > 0) {
     nextSelectNodeKey = brotherKeys[index - 1];
   } else {
     nextSelectNodeKey = fatherNode._key;
@@ -485,6 +485,26 @@ function deleteNode(nodeMap: NodeMap, selectedId: string) {
   return { nodes, nextSelectNodeKey };
 }
 
+// 转换为父亲的兄弟节点
+function toFatherBrother(nodeMap: NodeMap, nodeId: string) {
+  let nodes = { ...nodeMap };
+  const node = nodes[nodeId];
+  const father = nodes[node.father];
+  const grandFather = nodes[father.father];
+  const fatherIndex = grandFather.sortList.findIndex(
+    item => item === father._key
+  );
+  // 将节点插入到爷爷的sortlist中
+  grandFather.sortList.splice(fatherIndex + 1, 0, nodeId);
+  // 更改father
+  node.father = grandFather._key;
+  // 从父亲的sortlist中移除
+  const index = father.sortList.findIndex(item => item === node._key);
+  father.sortList.splice(index, 1);
+  return { nodes };
+}
+
+// 转换为兄弟的子节点
 function toBrotherChild(
   nodeMap: NodeMap,
   nodeIndex: number,
@@ -933,6 +953,12 @@ function moveCursor(type: 'up' | 'down', cnodes: Node[], nodeId: string) {
   }
 }
 
+function isCursorHead() {
+  if (!window.getSelection) return '';
+  const selection = window.getSelection();
+  return selection?.focusOffset === 0 ? true : false;
+}
+
 export {
   findNodeById,
   textWidth,
@@ -970,4 +996,6 @@ export {
   getTextAfterCursor,
   toBrotherChild,
   moveCursor,
+  isCursorHead,
+  toFatherBrother,
 };

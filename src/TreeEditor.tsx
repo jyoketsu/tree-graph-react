@@ -20,6 +20,7 @@ import {
   deleteNodeNote,
   toBrotherChild,
   moveCursor,
+  toFatherBrother,
 } from './services/util';
 import DragInfo from './interfaces/DragInfo';
 import EditorItem from './components/nodeItem/EditorItem';
@@ -50,8 +51,8 @@ interface HandleAddNext {
   (nodeKey: string, addedNode?: Node, value?: string): void;
 }
 
-interface SwitchNodeToBrotherChild {
-  (nodeIndex: number, nodeKey: string, brotherKey: string): void;
+interface TabAction {
+  (nodeKey: string, targetKey: string, targetPlaceIndex?: number): void;
 }
 
 export interface HandleClickMore {
@@ -77,7 +78,7 @@ export interface TreeEditorProps {
   handleAddNote?: HandleAddNote;
   handleChangeNote?: HandleChangeNote;
   handleDeleteNote?: HandleDeleteNote;
-  handleSwitchToBrotherChild?: SwitchNodeToBrotherChild;
+  handleTabAction?: TabAction;
   handleClickExpand?: Function;
   handleClickNode?: Function;
   handleClickIcon?: Function;
@@ -108,7 +109,7 @@ export const TreeEditor = React.forwardRef(
       handleAddNote,
       handleChangeNote,
       handleDeleteNote,
-      handleSwitchToBrotherChild,
+      handleTabAction,
       handleClickExpand,
       handleClickNode,
       handleClickIcon,
@@ -350,6 +351,37 @@ export const TreeEditor = React.forwardRef(
       }
     }
 
+    // 将儿子变为弟弟
+    function convertChildToBrother(nodeKey: string) {
+      const node = nodeMap[nodeKey];
+      if (!node) return;
+      const father = nodeMap[node.father];
+      if (!father) return;
+      const sortList = father.sortList;
+      if (!sortList.length) return;
+      if (father._key === startId) {
+        return;
+      }
+      const grandFather = nodeMap[father.father];
+      if (!grandFather.sortList.length) return;
+
+      const fatherIndex = grandFather.sortList.findIndex(
+        item => item === father._key
+      );
+
+      if (uncontrolled) {
+        const res = toFatherBrother(nodeMap, nodeKey);
+        if (handleTabAction) {
+          handleTabAction(nodeKey, grandFather._key, fatherIndex + 1);
+        }
+        setNodeMap(res.nodes);
+      } else {
+        if (handleTabAction) {
+          handleTabAction(nodeKey, grandFather._key, fatherIndex + 1);
+        }
+      }
+    }
+
     function switchNodeToBrotherChild(
       nodeIndex: number,
       nodeKey: string,
@@ -357,13 +389,13 @@ export const TreeEditor = React.forwardRef(
     ) {
       if (uncontrolled) {
         let res = toBrotherChild(nodeMap, nodeIndex, nodeKey, brotherKey);
-        if (handleSwitchToBrotherChild) {
-          handleSwitchToBrotherChild(nodeIndex, nodeKey, brotherKey);
+        if (handleTabAction) {
+          handleTabAction(nodeKey, brotherKey);
         }
         setNodeMap(res.nodes);
       } else {
-        if (handleSwitchToBrotherChild) {
-          handleSwitchToBrotherChild(nodeIndex, nodeKey, brotherKey);
+        if (handleTabAction) {
+          handleTabAction(nodeKey, brotherKey);
         }
       }
     }
@@ -450,6 +482,30 @@ export const TreeEditor = React.forwardRef(
       } else if (command === 'DeleteNote') {
         // 删除节点备注
         deleteNote(nodeKey);
+      } else if (command === 'up' || command === 'down') {
+        const nextNode = moveCursor(command, cnodes, nodeKey);
+        if (!nextNode) return;
+        setFocusedKey(nextNode._key);
+        if (handleClickNode) {
+          handleClickNode(nextNode);
+        }
+      } else if (command === 'ShiftTab') {
+        convertChildToBrother(nodeKey);
+      } else if (command === 'BackspaceInHead') {
+        const node = nodeMap[nodeKey];
+        if (!node) return;
+        const father = nodeMap[node.father];
+        if (!father) return;
+        const sortList = father.sortList;
+        if (!sortList.length) return;
+        const currentNodeIndex = sortList.findIndex(id => id === nodeKey);
+        if (currentNodeIndex === -1 || currentNodeIndex === 0) return;
+        const brother = nodeMap[sortList[currentNodeIndex - 1]];
+        if (!brother) return;
+        // 删除当前节点
+        deletenode(nodeKey);
+        // 更改哥哥节点名称
+        changeText(brother._key, brother.name + node.name);
       } else if (command === 'ToBrotherChild') {
         const node = nodeMap[nodeKey];
         if (!node) return;
@@ -462,13 +518,6 @@ export const TreeEditor = React.forwardRef(
         const brother = nodeMap[sortList[currentNodeIndex - 1]];
         if (!brother) return;
         switchNodeToBrotherChild(currentNodeIndex, nodeKey, brother._key);
-      } else if (command === 'up' || command === 'down') {
-        const nextNode = moveCursor(command, cnodes, nodeKey);
-        if (!nextNode) return;
-        setFocusedKey(nextNode._key);
-        if (handleClickNode) {
-          handleClickNode(nextNode);
-        }
       }
     }
 
