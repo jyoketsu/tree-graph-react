@@ -959,6 +959,26 @@ function isCursorHead() {
   return selection?.focusOffset === 0 ? true : false;
 }
 
+function isCursorTail(elment: HTMLDivElement) {
+  const cursorInTail = sessionStorage.getItem('cursorInTail');
+  if (cursorInTail === 'tail') {
+    return true;
+  }
+  if (!window.getSelection) return false;
+  const selection = window.getSelection();
+  if (selection) {
+    const range = selection.getRangeAt(0);
+    const cursorPosition = range.startOffset;
+    if (elment.innerText.length === cursorPosition) {
+      return true;
+    } else {
+      return false;
+    }
+  } else {
+    return false;
+  }
+}
+
 export {
   findNodeById,
   textWidth,
@@ -998,4 +1018,5 @@ export {
   moveCursor,
   isCursorHead,
   toFatherBrother,
+  isCursorTail,
 };

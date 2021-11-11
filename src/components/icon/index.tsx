@@ -9,6 +9,7 @@ import Attach from './Attach';
 import Collapse from './Collapse';
 import Collapsed from './Collapsed';
 import More from './More';
+import Preview from './Preview';
 
 const Icon = (props: IconProps) => {
   switch (props.name) {
@@ -30,6 +31,8 @@ const Icon = (props: IconProps) => {
       return <Collapsed {...props} />;
     case 'more':
       return <More {...props} />;
+    case 'preview':
+      return <Preview {...props} />;
     default:
       return null;
   }

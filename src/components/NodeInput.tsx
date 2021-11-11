@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import CNode from '../interfaces/CNode';
 import { ClickOutside } from '@jyoketsu/click-outside-react';
 import { nodeLocation, textWidthAll } from '../services/util';
+import { HandleFileChange } from '../Tree';
 
 interface Props {
   selectedId: string | null;
@@ -13,6 +14,7 @@ interface Props {
   avatarRadius: number;
   startId: string;
   handleChangeNodeText: Function;
+  handleFileChange?: HandleFileChange;
 }
 
 const NodeInput = ({
@@ -25,6 +27,7 @@ const NodeInput = ({
   avatarRadius,
   startId,
   handleChangeNodeText,
+  handleFileChange,
 }: Props) => {
   const inputRef = useRef<any>(null);
   const [value, setValue] = useState('');
@@ -39,6 +42,14 @@ const NodeInput = ({
   const handleClickoutside = () => {
     if (selectedId && inputRef && inputRef.current) {
       handleChangeNodeText(selectedId, inputRef.current.value);
+    }
+  };
+
+  const handlePaste = (event: React.ClipboardEvent) => {
+    if (event.clipboardData.files.length && handleFileChange && selectedId) {
+      event.preventDefault();
+      let files = event.clipboardData.files;
+      handleFileChange(selectedId, files);
     }
   };
 
@@ -117,6 +128,7 @@ const NodeInput = ({
           onMouseDown={(e: React.MouseEvent) => e.stopPropagation()}
           onMouseMove={(e: React.MouseEvent) => e.stopPropagation()}
           onContextMenu={(e: React.MouseEvent) => e.stopPropagation()}
+          onPaste={handlePaste}
         />
       ) : null}
     </ClickOutside>

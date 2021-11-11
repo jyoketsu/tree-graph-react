@@ -27,8 +27,9 @@ import {
   getNextSelect,
 } from './services/util';
 import MutilSelectedNodeKey from './interfaces/MutilSelectedNodeKey';
-import copy from 'copy-to-clipboard';
 import { HandleFileChange } from './Tree';
+
+const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 
 interface PasteFunc {
   (
@@ -238,6 +239,7 @@ export const Mind = React.forwardRef(
     const [pasteType, setPasteType] = useState<'copy' | 'cut' | null>(null);
 
     const [compId, setCompId] = useState('');
+    const [contentEditable, setContentEditable] = useState(true);
     const containerRef = useRef<HTMLDivElement>(null);
 
     // 暴露方法
@@ -320,6 +322,7 @@ export const Mind = React.forwardRef(
       if (disabled) {
         return;
       }
+      setContentEditable(false);
       clearTimeout(clickTimeId);
       clickTimeId = setTimeout(function() {
         setselectedId(node._key);
@@ -569,75 +572,26 @@ export const Mind = React.forwardRef(
       return { rootKey: startId, data: nodeMap };
     }
 
-    function handleCopy(event: React.ClipboardEvent) {
-      event.preventDefault();
-      copy(selectedId || '');
-      setPasteNodeKey(selectedId);
-      setPasteType('copy');
-    }
-
-    function handleCut(event: React.ClipboardEvent) {
-      // 剪切
-      if (selectedId) {
-        event.preventDefault();
-        // 根節點不允許剪切
-        if (selectedId === startId) {
-          setPasteNodeKey(null);
-          copy(selectedId || '');
-          setPasteType(null);
-          return;
-        }
-        setPasteNodeKey(selectedId);
-        copy(selectedId || '');
-        setPasteType('cut');
-      }
-    }
-
-    function handlePasteFile(event: React.ClipboardEvent) {
-      if (event.clipboardData.files.length && handleFileChange && selectedId) {
-        event.preventDefault();
-        let files = event.clipboardData.files;
-        handleFileChange(selectedId, files);
-      } else {
-        if (pasteType && pasteNodeKey && selectedId) {
-          if (UNCONTROLLED) {
-            const res = pasteNode(nodeMap, pasteNodeKey, pasteType, selectedId);
-            if (res) {
-              setNodeMap(res);
-              if (handleChange) {
-                handleChange();
-              }
-            }
-          } else if (handlePaste) {
-            handlePaste(pasteNodeKey, pasteType, selectedId);
-          }
-          setPasteNodeKey(null);
-          setPasteType(null);
-        }
-      }
-    }
-
     function handleKeyDown(event: KeyboardEvent) {
       if (disabled || disableShortcut || showInput || showNewInput) {
         return;
       }
+      event.preventDefault();
+
+      const commandKey = isMac ? event.metaKey : event.ctrlKey;
+
       switch (event.key) {
-        case 'Enter': {
-          event.preventDefault();
+        case 'Enter':
           addNext();
           break;
-        }
-        case 'Tab': {
-          event.preventDefault();
+        case 'Tab':
           addChild();
           break;
-        }
         case 'Delete':
         case 'Backspace': {
-          event.preventDefault();
           if (showDeleteConform) {
             const node = selectedId ? nodeMap[selectedId] : null;
-            if ((node && node.sortList.length) || selectedNodes.length > 1) {
+            if (node && node.sortList.length) {
               showDeleteConform();
             } else {
               deletenode();
@@ -647,8 +601,8 @@ export const Mind = React.forwardRef(
           }
           break;
         }
-        case 'ArrowUp': {
-          event.preventDefault();
+
+        case 'ArrowUp':
           if (event.shiftKey) {
             shiftUp();
           } else if (selectedId) {
@@ -658,9 +612,7 @@ export const Mind = React.forwardRef(
             }
           }
           break;
-        }
-        case 'ArrowDown': {
-          event.preventDefault();
+        case 'ArrowDown':
           if (event.shiftKey) {
             shiftDown();
           } else if (selectedId) {
@@ -670,10 +622,8 @@ export const Mind = React.forwardRef(
             }
           }
           break;
-        }
         case 'ArrowRight':
         case 'ArrowLeft': {
-          event.preventDefault();
           if (selectedId) {
             const res = changeMindSelect(selectedId, cnodes, event.key);
             if (res) {
@@ -682,25 +632,69 @@ export const Mind = React.forwardRef(
           }
           break;
         }
+        // 複製
+        case 'c':
+          if (commandKey && selectedId) {
+            setPasteNodeKey(selectedId);
+            setPasteType('copy');
+          }
+          break;
+        // 剪切
+        case 'x':
+          if (commandKey && selectedId) {
+            // 根節點不允許剪切
+            if (selectedId === startId) {
+              setPasteNodeKey(null);
+              setPasteType(null);
+              return;
+            }
+            setPasteNodeKey(selectedId);
+            setPasteType('cut');
+          }
+          break;
+        // 粘貼
+        case 'v':
+          if (commandKey && pasteType && pasteNodeKey && selectedId) {
+            if (UNCONTROLLED) {
+              const res = pasteNode(
+                nodeMap,
+                pasteNodeKey,
+                pasteType,
+                selectedId
+              );
+              if (res) {
+                setNodeMap(res);
+                if (handleChange) {
+                  handleChange();
+                }
+              }
+            } else if (handlePaste) {
+              handlePaste(pasteNodeKey, pasteType, selectedId);
+            }
+            setPasteNodeKey(null);
+            setPasteType(null);
+          }
+          break;
         default: {
-          // if (
-          //   selectedId &&
-          //   !showInput &&
-          //   event.key.length === 1 &&
-          //   /[a-zA-Z]+/.test(event.key)
-          // ) {
-          //   if (UNCONTROLLED) {
-          //     let nodes = changeNodeText(nodeMap, selectedId, '');
-          //     setNodeMap(nodes);
-          //     if (handleChange) {
-          //       handleChange();
-          //     }
-          //   }
-          //   if (handleChangeNodeText) {
-          //     handleChangeNodeText(selectedId, '');
-          //   }
-          //   setshowInput(true);
-          // }
+          if (
+            selectedId &&
+            !showInput &&
+            event.key.length === 1 &&
+            /[a-zA-Z]+/.test(event.key)
+          ) {
+            if (UNCONTROLLED) {
+              let nodes = changeNodeText(nodeMap, selectedId, '');
+              setNodeMap(nodes);
+              if (handleChange) {
+                handleChange();
+              }
+            }
+            if (handleChangeNodeText) {
+              handleChangeNodeText(selectedId, '');
+            }
+            setshowInput(true);
+          }
+          break;
         }
       }
     }
@@ -1053,15 +1047,14 @@ export const Mind = React.forwardRef(
         }}
         // className={styles.svgwrapper}
         tabIndex={-1}
+        contentEditable={contentEditable}
+        suppressContentEditableWarning={true}
         ref={containerRef}
         onKeyDown={(e: any) => handleKeyDown(e)}
         onMouseDown={handleFrameSelectionStart}
         onMouseMove={handleMoveNode}
         onMouseUp={handleDragEnd}
         onMouseLeave={handleDragLeave}
-        onCopy={handleCopy}
-        onCut={handleCut}
-        onPaste={handlePasteFile}
       >
         <svg
           className="tree-svg"
@@ -1224,15 +1217,23 @@ export const Mind = React.forwardRef(
             </symbol>
             <symbol
               id="pack"
-              width="200"
-              height="200"
-              viewBox="0,0,1024,1024"
+              width="18"
+              height="16"
+              viewBox="0,0,18,16"
               preserveAspectRatio="xMinYMin meet"
             >
-              <path
-                d="M640 42.7H512V128h85.3v85.3H512v85.3h85.3V384H512v85.3h85.3v85.3H512v-85.3h-85.3V384H512v-85.3h-85.3v-85.3H512V128h-85.3V42.7h-256c-23.6 0-42.7 19.1-42.7 42.7v853.3c0 23.6 19.1 42.7 42.7 42.7h682.7c23.6 0 42.7-19.1 42.7-42.7v-640C796 198.7 740 142.6 640 42.7zM597.3 896H426.7V597.3h170.7V896zM640 298.7V128l170.7 170.7H640z"
-                fill="#8476EF"
-              ></path>
+              <g stroke="none" strokeWidth="1" fill="none" fillRule="evenodd">
+                <g transform="translate(0.000000, 0.000007)">
+                  <path
+                    d="M15.8396584,2.58289418 L8.61752011,2.58289418 L6.1696488,0.130509602 C6.08473826,0.0462875302 5.96976481,-0.000681000602 5.85012509,-4.4408921e-15 L2.25037734,-4.4408921e-15 C1.00777667,-4.4408921e-15 0.000477621947,1.007383 0.000477621947,2.24990718 L0.000477621947,13.0493034 C-0.024613059,14.2668134 0.941990125,15.2741125 2.15942362,15.2992032 L2.16034157,15.2992032 L15.8396584,15.2992032 C17.0570919,15.2746479 18.0240776,14.2677314 17.9995224,13.0502979 L17.9995224,13.0493034 L17.9995224,4.83279389 C18.0246131,3.6152839 17.0580099,2.60798486 15.8405764,2.58289418 L15.8396584,2.58289418 Z"
+                    fill="#7264C7"
+                  ></path>
+                  <path
+                    d="M5.02500122,3.90995406 C5.51319856,3.90995406 5.90898875,4.30566776 5.90898875,4.79386509 C5.90898875,5.13142591 5.71976385,5.42480743 5.44160487,5.57371884 L5.44109019,7.78495406 L12.4856515,7.78458737 C12.6301575,7.49311204 12.9307285,7.29272862 13.2780452,7.29272862 C13.7662426,7.29272862 14.1620328,7.68851881 14.1620328,8.17671615 C14.1620328,8.66491348 13.7662426,9.06070368 13.2780452,9.06070368 C12.9236883,9.06070368 12.6179914,8.85211427 12.4770572,8.5510087 L5.44109019,8.54995406 L5.44149123,10.9547212 C5.44149123,11.2319426 5.66707787,11.4575292 5.94429929,11.4575292 L12.4266114,11.4572917 C12.5306129,11.0848093 12.8724551,10.8115436 13.2780452,10.8115436 C13.7662426,10.8115436 14.1620328,11.2073338 14.1620328,11.6955312 C14.1620328,12.1837285 13.7662426,12.5795187 13.2780452,12.5795187 C12.987737,12.5795187 12.7300882,12.4395183 12.5689396,12.2233421 L5.94429929,12.222489 C5.24527904,12.222489 4.67653144,11.6537414 4.67653144,10.9547212 L4.67588826,5.60621629 C4.36134998,5.47082409 4.14109019,5.15805717 4.14109019,4.79386509 C4.14109019,4.30566776 4.53688038,3.90995406 5.02500122,3.90995406 Z"
+                    fill="#FFFFFF"
+                  ></path>
+                </g>
+              </g>
             </symbol>
             <symbol
               id="preview"
@@ -1415,6 +1416,7 @@ export const Mind = React.forwardRef(
                 hoverBorderColor={HOVER_BORDER_COLOR}
                 selectedBorderColor={SELECTED_BORDER_COLOR}
                 selectedBackgroundColor={SELECTED_BACKGROUND_COLOR}
+                handleFileChange={handleFileChange}
               />
             </g>
           ))}
@@ -1476,6 +1478,7 @@ export const Mind = React.forwardRef(
             showAvatar={SHOW_AVATAR}
             avatarRadius={avatarRadius}
             startId={startId}
+            handleFileChange={handleFileChange}
           />
         ) : null}
       </div>

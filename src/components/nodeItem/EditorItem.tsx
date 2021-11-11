@@ -4,6 +4,7 @@ import CNode from '../../interfaces/CNode';
 import {
   getTextAfterCursor,
   isCursorHead,
+  isCursorTail,
   moveCursorToEnd,
   textWidthAll,
 } from '../../services/util';
@@ -25,11 +26,14 @@ interface HandleClickAttachFunc {
 interface Props {
   node: CNode;
   themeColor: string;
+  backgroundColor: string;
   showIcon: boolean;
+  showPreviewButton: boolean;
   selectedAttachId: string;
   handleClickNode: Function;
   handleClickExpand: Function;
   clickMore: HandleClickMore;
+  clickPreview: Function;
   handleClickIcon: Function;
   handleClickDot: Function;
   handleChangeNodeText: Function;
@@ -49,11 +53,14 @@ interface Props {
 const EditorItem = ({
   node,
   themeColor,
+  backgroundColor,
   showIcon,
+  showPreviewButton,
   selectedAttachId,
   handleClickNode,
   handleClickExpand,
   clickMore,
+  clickPreview,
   handleClickIcon,
   handleClickDot,
   handleChangeNodeText,
@@ -127,6 +134,12 @@ Props) => {
       event.preventDefault();
       if (isRoot) return;
       actionCommand('ShiftTab', node._key);
+    } else if (event.shiftKey && event.key === 'ArrowUp') {
+      event.preventDefault();
+      actionCommand('shiftUp', node._key);
+    } else if (event.shiftKey && event.key === 'ArrowDown') {
+      event.preventDefault();
+      actionCommand('shiftDown', node._key);
     } else if (event.key === 'Enter') {
       event.preventDefault();
       if (isRoot) {
@@ -149,18 +162,6 @@ Props) => {
       }
     } else if (event.key === 'Tab') {
       event.preventDefault();
-      // const value = event.currentTarget.innerText.replace(/[\r\n]/g, '');
-      // if (editorRef && editorRef.current && value) {
-      //   const textAfterCursor = getTextAfterCursor(editorRef.current);
-      //   if (!textAfterCursor) {
-      //     actionCommand('AddChild', node._key);
-      //   } else {
-      //     actionCommand('ToBrotherChild', node._key);
-      //   }
-      // } else {
-      //   // 空白结点按Tab，将当前结点转换为哥哥结点的最后一个子结点。
-      //   actionCommand('ToBrotherChild', node._key);
-      // }
       actionCommand('ToBrotherChild', node._key);
     } else if (event.key === 'Backspace' && !node.sortList.length) {
       const value = event.currentTarget.innerText.replace(/[\r\n]/g, '');
@@ -185,7 +186,19 @@ Props) => {
     } else if (event.key === 'ArrowDown') {
       event.preventDefault();
       actionCommand('down', node._key);
-    } else if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+    } else if (event.key === 'ArrowLeft') {
+      sessionStorage.removeItem('cursorInTail');
+      const isHead = isCursorHead();
+      if (isHead) {
+        actionCommand('up', node._key);
+      }
+    } else if (event.key === 'ArrowRight') {
+      if (editorRef && editorRef.current) {
+        const isTail = isCursorTail(editorRef.current);
+        if (isTail) {
+          actionCommand('down', node._key);
+        }
+      }
       sessionStorage.removeItem('cursorInTail');
     } else {
       deletable = false;
@@ -381,70 +394,154 @@ Props) => {
         <div
           key={item}
           style={{
-            marginLeft: '3px',
+            marginLeft: '9px',
             width: '27px',
             flexShrink: 0,
             borderLeft: '1px solid #DEDEE1',
           }}
         ></div>
       ))}
-      <div style={{ display: 'flex', flexDirection: 'column', flex: 1 }}>
+      <div
+        style={{
+          display: 'flex',
+          flexDirection: 'column',
+          flex: 1,
+          flexShrink: 0,
+        }}
+      >
         <div
           style={{
             width: '100%',
             display: 'flex',
             fontSize: isRoot ? '34px' : '16px',
             color: isRoot ? '#16181a' : '#1d1d1f',
-            lineHeight: isRoot ? '48px' : '26px',
+            lineHeight: isRoot ? '48px' : '30px',
             fontWeight: isRoot ? 600 : 'normal',
           }}
         >
-          {/* 小圆点 */}
-          {!isRoot ? (
-            <div
-              draggable
-              style={{
-                height: '26px',
-                marginRight: '12px',
-                flexShrink: 0,
-                display: 'flex',
-                alignItems: 'center',
-              }}
-              onClick={e => {
-                e.stopPropagation();
-                handleClickDot(node);
-              }}
-            >
-              <svg width={8} height={8} viewBox={`0,0,${8},${8}`}>
-                <circle
-                  id="dot"
-                  cx={4}
-                  cy={4}
-                  r={4}
-                  fill="#D3D3D3"
-                  fillOpacity={1}
-                  cursor="pointer"
-                />
-              </svg>
-            </div>
-          ) : null}
+          <div
+            style={{
+              position: 'relative',
+              height: '30px',
+              display: 'flex',
+              alignItems: 'center',
+            }}
+          >
+            {!isRoot && hover ? (
+              <div
+                style={{
+                  position: 'absolute',
+                  width: '54px',
+                  left: '-54px',
+                  top: 0,
+                  height: '30px',
+                  display: 'flex',
+                  flexDirection: 'row-reverse',
+                  alignItems: 'center',
+                }}
+              >
+                <div onClick={handleClickMore} style={{ backgroundColor }}>
+                  <Icon
+                    width="18px"
+                    height="18px"
+                    name="more"
+                    fill="#b2b3b4"
+                    style={{ cursor: 'pointer' }}
+                  />
+                </div>
+                {showPreviewButton ? (
+                  <div
+                    style={{ backgroundColor }}
+                    onClick={() => clickPreview(node)}
+                  >
+                    <Icon
+                      width="18px"
+                      height="18px"
+                      name="preview"
+                      fill="#b2b3b4"
+                      style={{ cursor: 'pointer' }}
+                    />
+                  </div>
+                ) : null}
+                {/* 折叠按钮 */}
+                {node.sortList.length ? (
+                  <div
+                    onClick={e => {
+                      e.stopPropagation();
+                      handleClickExpand(node);
+                    }}
+                    style={{ backgroundColor }}
+                  >
+                    <Icon
+                      width="18px"
+                      height="18px"
+                      name={node.contract ? 'collapsed' : 'collapse'}
+                      fill="#b2b3b4"
+                      style={{ cursor: 'pointer' }}
+                    />
+                  </div>
+                ) : null}
+              </div>
+            ) : null}
+            {/* 小圆点 */}
+            {!isRoot ? (
+              <div
+                draggable
+                style={{
+                  position: 'relative',
+                  height: '30px',
+                  flexShrink: 0,
+                  display: 'flex',
+                  alignItems: 'center',
+                  marginRight: '8px',
+                }}
+                onClick={e => {
+                  e.stopPropagation();
+                  handleClickDot(node);
+                }}
+              >
+                <svg width={18} height={18} viewBox={`0,0,${18},${18}`}>
+                  {node.contract ? (
+                    <circle
+                      id="dot-hover"
+                      cx={9}
+                      cy={9}
+                      r={9}
+                      fill="#dddfe2"
+                      cursor="pointer"
+                      fillOpacity={1}
+                    />
+                  ) : null}
+                  <circle
+                    id="dot"
+                    cx={9}
+                    cy={9}
+                    r={4}
+                    fill="#66666D"
+                    fillOpacity={1}
+                    cursor="pointer"
+                  />
+                </svg>
+              </div>
+            ) : null}
 
-          {/* 圖標 */}
-          {showIcon && node.icon && !isRoot ? (
-            <div
-              style={{
-                width: '22px',
-                height: '22px',
-                backgroundImage: `url("${node.icon}")`,
-                backgroundPosition: 'center',
-                backgroundSize: 'contain',
-                backgroundRepeat: 'no-repeat',
-                marginRight: '4px',
-                flexShrink: 0,
-              }}
-              onClick={() => handleClickIcon(node)}
-            ></div>
-          ) : null}
+            {/* 圖標 */}
+            {showIcon && node.icon && !isRoot ? (
+              <div
+                style={{
+                  width: '22px',
+                  height: '22px',
+                  backgroundImage: `url("${node.icon}")`,
+                  backgroundPosition: 'center',
+                  backgroundSize: 'contain',
+                  backgroundRepeat: 'no-repeat',
+                  flexShrink: 0,
+                  marginRight: '5px',
+                }}
+                onClick={() => handleClickIcon(node)}
+              ></div>
+            ) : null}
+          </div>
 
           {/* 文字 */}
           <div
@@ -482,7 +579,7 @@ Props) => {
         </div>
         <div
           style={{
-            marginLeft: '3.3px',
+            marginLeft: '9px',
             paddingLeft: '16px',
             borderLeft: '1px solid #DEDEE1',
           }}
@@ -520,45 +617,6 @@ Props) => {
           </div>
         </div>
       </div>
-      {!isRoot && hover ? (
-        <div
-          style={{
-            position: 'absolute',
-            left: 0,
-            top: 0,
-            height: '26px',
-            display: 'flex',
-            alignItems: 'center',
-          }}
-        >
-          {/* 折叠按钮 */}
-          {node.sortList.length ? (
-            <div
-              onClick={e => {
-                e.stopPropagation();
-                handleClickExpand(node);
-              }}
-            >
-              <Icon
-                width="18px"
-                height="18px"
-                name={node.contract ? 'collapsed' : 'collapse'}
-                fill="#b2b3b4"
-                style={{ cursor: 'pointer' }}
-              />
-            </div>
-          ) : null}
-          <div onClick={handleClickMore}>
-            <Icon
-              width="18px"
-              height="18px"
-              name="more"
-              fill="#b2b3b4"
-              style={{ cursor: 'pointer' }}
-            />
-          </div>
-        </div>
-      ) : null}
     </div>
   );
 };

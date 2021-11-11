@@ -252,18 +252,21 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 
 ## operate
 
-| 操作                | 按键             |
-| ------------------- | ---------------- |
-| 编辑节点名          | DoubleClick      |
-| 新增子节点          | Tab              |
-| 新增兄弟节点        | Enter            |
-| 删除节点            | Delete           |
-| 向上移动节点        | shift + ↑        |
-| 向下移动节点        | shift + ↓        |
-| 複制节点            | Command/Ctrl + C |
-| 剪切节点            | Command/Ctrl + X |
-| 粘贴节点            | Command/Ctrl + V |
-| 保存树（file 模式） | Command/Ctrl + S |
+| 操作                   | 按键             |
+| ---------------------- | ---------------- |
+| 编辑节点名             | DoubleClick      |
+| 新增子节点             | Tab              |
+| 新增兄弟节点           | Enter            |
+| 删除节点               | Delete           |
+| 移动选中节点           | 方向键           |
+| 向上移动节点           | shift + ↑        |
+| 向下移动节点           | shift + ↓        |
+| 複制节点               | Command/Ctrl + C |
+| 剪切节点               | Command/Ctrl + X |
+| 粘贴节点               | Command/Ctrl + V |
+| 保存树（file 模式）    | Command/Ctrl + S |
+| 添加备注（TreeEditor） | Shift + Enter    |
+| 往左缩进（TreeEditor） | Shift + Tab      |
 
 <br/>
 

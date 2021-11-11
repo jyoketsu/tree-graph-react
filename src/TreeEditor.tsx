@@ -10,7 +10,7 @@ import {
   addNextNode,
   addChildNode,
   deleteNode,
-  // changeSortList,
+  changeSortList,
   // pasteNode,
   dragSort,
   guid,
@@ -64,7 +64,9 @@ export interface TreeEditorProps {
   nodes: NodeMap;
   // 根节点id
   startId: string;
+  disabled?: boolean;
   themeColor?: string;
+  backgroundColor?: string;
   cutColor?: string;
   // 默认focused的节点
   defaultFocusedId?: string;
@@ -73,6 +75,7 @@ export interface TreeEditorProps {
   //  非受控模式
   uncontrolled?: boolean;
   showIcon?: boolean;
+  showPreviewButton?: boolean;
   handlePasteFiles: HandlePasteFile;
   handleDeleteAttach: HandleDeleteAttach;
   handleAddNote?: HandleAddNote;
@@ -91,6 +94,7 @@ export interface TreeEditorProps {
   handlePaste?: Function;
   handleDrag?: Function;
   handleClickMoreButton?: HandleClickMore;
+  handleClickPreviewButton?: Function;
   ref?: any;
   collapseMode?: boolean;
 }
@@ -99,11 +103,14 @@ export const TreeEditor = React.forwardRef(
     {
       nodes,
       startId,
+      disabled,
       themeColor = '#1CA8B3',
+      backgroundColor = '#F5F5F5',
       defaultFocusedId,
       defaultNoteFocusedNodeId,
       uncontrolled = true,
       showIcon = true,
+      showPreviewButton = true,
       handlePasteFiles,
       handleDeleteAttach,
       handleAddNote,
@@ -118,10 +125,11 @@ export const TreeEditor = React.forwardRef(
       handleAddNext,
       handleAddChild,
       handleDeleteNode,
-      // handleShiftUpDown,
+      handleShiftUpDown,
       // handlePaste,
       handleDrag,
       handleClickMoreButton,
+      handleClickPreviewButton,
       collapseMode,
     }: TreeEditorProps,
     ref
@@ -204,6 +212,9 @@ export const TreeEditor = React.forwardRef(
 
     // 单击节点
     function clickNode(node: CNode) {
+      if (disabled) {
+        return;
+      }
       if (handleClickNode) {
         handleClickNode(node);
       }
@@ -401,33 +412,35 @@ export const TreeEditor = React.forwardRef(
     }
 
     // 節點上移
-    // function shiftUp(nodeKey: string) {
-    //   const res = changeSortList(nodeMap, nodeKey, 'up');
+    function shiftUp(nodeKey: string) {
+      const res = changeSortList(nodeMap, nodeKey, 'up');
 
-    //   if (res) {
-    //     if (uncontrolled) {
-    //       setNodeMap(res.nodes);
-    //     } else {
-    //       if (handleShiftUpDown) {
-    //         handleShiftUpDown(nodeKey, res.brotherKeys, 'up');
-    //       }
-    //     }
-    //   }
-    // }
+      if (res) {
+        if (uncontrolled) {
+          setNodeMap(res.nodes);
+          setFocusedKey(nodeKey);
+        } else {
+          if (handleShiftUpDown) {
+            handleShiftUpDown(nodeKey, res.brotherKeys, 'up');
+          }
+        }
+      }
+    }
 
     // 節點下移
-    // function shiftDown(nodeKey: string) {
-    //   const res = changeSortList(nodeMap, nodeKey, 'down');
-    //   if (res) {
-    //     if (uncontrolled) {
-    //       setNodeMap(res.nodes);
-    //     } else {
-    //       if (handleShiftUpDown) {
-    //         handleShiftUpDown(nodeKey, res.brotherKeys, 'down');
-    //       }
-    //     }
-    //   }
-    // }
+    function shiftDown(nodeKey: string) {
+      const res = changeSortList(nodeMap, nodeKey, 'down');
+      if (res) {
+        if (uncontrolled) {
+          setNodeMap(res.nodes);
+          setFocusedKey(nodeKey);
+        } else {
+          if (handleShiftUpDown) {
+            handleShiftUpDown(nodeKey, res.brotherKeys, 'down');
+          }
+        }
+      }
+    }
 
     function saveNodes() {
       return nodeMap;
@@ -467,6 +480,9 @@ export const TreeEditor = React.forwardRef(
     }
 
     function actionCommand(command: string, nodeKey: string, value?: string) {
+      if (disabled) {
+        return;
+      }
       if (command === 'AddNext') {
         // 添加弟弟节点
         addNext(nodeKey, value);
@@ -491,6 +507,10 @@ export const TreeEditor = React.forwardRef(
         }
       } else if (command === 'ShiftTab') {
         convertChildToBrother(nodeKey);
+      } else if (command === 'shiftUp') {
+        shiftUp(nodeKey);
+      } else if (command === 'shiftDown') {
+        shiftDown(nodeKey);
       } else if (command === 'BackspaceInHead') {
         const node = nodeMap[nodeKey];
         if (!node) return;
@@ -526,6 +546,11 @@ export const TreeEditor = React.forwardRef(
         handleClickMoreButton(node, el);
       }
     }
+    function handleClickPreview(node: CNode) {
+      if (handleClickPreviewButton) {
+        handleClickPreviewButton(node);
+      }
+    }
 
     return (
       <div
@@ -534,8 +559,9 @@ export const TreeEditor = React.forwardRef(
           position: 'relative',
           width: '100%',
           boxSizing: 'border-box',
+          padding: '15px 0',
+          backgroundColor: backgroundColor,
         }}
-        // onKeyDown={(e: any) => handleKeyDown(e)}
       >
         {/* <Title
           node={
@@ -548,7 +574,9 @@ export const TreeEditor = React.forwardRef(
             key={`${index}_${node._key}`}
             node={node}
             themeColor={themeColor}
+            backgroundColor={backgroundColor}
             showIcon={showIcon}
+            showPreviewButton={showPreviewButton}
             focusedKey={focusedKey}
             noteFocusedKey={noteFocusedKey}
             selectedAttachId={selectedAttachId}
@@ -564,6 +592,7 @@ export const TreeEditor = React.forwardRef(
             handleChangeNote={changeNote}
             handleDeleteAttach={handleDeleteAttach}
             clickMore={handleClickMore}
+            clickPreview={handleClickPreview}
             compId={compId}
             isRoot={index === 0 ? true : false}
             collapseMode={collapseMode}
