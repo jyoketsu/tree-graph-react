@@ -4,6 +4,8 @@ import { ClickOutside } from '@jyoketsu/click-outside-react';
 import { nodeLocation, textWidthAll } from '../services/util';
 import { HandleFileChange } from '../Tree';
 
+let composing = false;
+
 interface Props {
   selectedId: string | null;
   nodeList: CNode[];
@@ -34,6 +36,9 @@ const NodeInput = ({
   const [selected, setSelected] = useState<CNode | null>(null);
 
   function handleCommit(e: React.KeyboardEvent) {
+    if (composing) {
+      return;
+    }
     if ((e.key === 'Enter' || e.key === 'Tab') && selected) {
       handleChangeNodeText(selected._key, value.replaceAll("'", ''));
     }
@@ -51,6 +56,14 @@ const NodeInput = ({
       let files = event.clipboardData.files;
       handleFileChange(selectedId, files);
     }
+  };
+
+  const handleCompositionStart = () => {
+    composing = true;
+  };
+
+  const handleCompositionEnd = () => {
+    composing = false;
   };
 
   useEffect(() => {
@@ -124,6 +137,8 @@ const NodeInput = ({
           placeholder="请输入名称"
           value={value}
           onChange={e => setValue(e.target.value)}
+          onCompositionStart={handleCompositionStart}
+          onCompositionEnd={handleCompositionEnd}
           onKeyDown={handleCommit}
           onMouseDown={(e: React.MouseEvent) => e.stopPropagation()}
           onMouseMove={(e: React.MouseEvent) => e.stopPropagation()}

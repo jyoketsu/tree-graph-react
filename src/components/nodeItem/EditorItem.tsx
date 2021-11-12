@@ -14,6 +14,7 @@ import AttachItem from './AttachItem';
 
 // 为了在删除节点后失去焦点不触发更改节点名
 let deletable = false;
+let composing = false;
 
 interface ActionCommand {
   (command: string, nodeKey: string, value?: string): void;
@@ -120,6 +121,9 @@ Props) => {
   }
 
   function keyDown(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (composing) {
+      return;
+    }
     if (event.shiftKey && event.key === 'Enter') {
       // shift+enter 添加节点备注
       event.preventDefault();
@@ -554,6 +558,8 @@ Props) => {
             onBlur={saveText}
             onKeyDown={keyDown}
             onPaste={handlePaste}
+            onCompositionStart={() => (composing = true)}
+            onCompositionEnd={() => (composing = false)}
           >
             {nameLinkArr.length ? (
               <span>

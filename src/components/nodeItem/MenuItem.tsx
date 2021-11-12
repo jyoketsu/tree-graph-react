@@ -3,6 +3,8 @@ import CNode from '../../interfaces/CNode';
 import { ClickOutside } from '@jyoketsu/click-outside-react';
 import { textWidthAll } from '../../services/util';
 
+let composing = false;
+
 interface Props {
   node: CNode;
   startId: string;
@@ -89,6 +91,9 @@ const TreeNode = ({
   }
 
   function handleCommit(event: KeyboardEvent) {
+    if (composing) {
+      return;
+    }
     if (event.key === 'Enter' && selected) {
       handleChangeNodeText(selected, value);
     }
@@ -333,6 +338,8 @@ const TreeNode = ({
             onBlur={() => handleChangeNodeText(selected, value)}
             onMouseDown={(e: React.MouseEvent) => e.stopPropagation()}
             onContextMenu={(e: React.MouseEvent) => e.stopPropagation()}
+            onCompositionStart={() => (composing = true)}
+            onCompositionEnd={() => (composing = false)}
           />
         </ClickOutside>
       ) : nameLinkArr.length ? (
