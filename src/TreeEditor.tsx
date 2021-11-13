@@ -21,12 +21,17 @@ import {
   toBrotherChild,
   moveCursor,
   toFatherBrother,
+  cursorIndex,
 } from './services/util';
 import DragInfo from './interfaces/DragInfo';
 import EditorItem from './components/nodeItem/EditorItem';
+import AddItem from './components/nodeItem/AddItem';
 
 const indent = 30;
 // const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
+
+let quickCommandIndex: undefined | number;
+
 export interface HandlePasteFile {
   (nodeKey: string, files: FileList): void;
 }
@@ -59,6 +64,10 @@ export interface HandleClickMore {
   (node: CNode, targetEl: HTMLElement): void;
 }
 
+interface HandleCommandChange {
+  (nodeKey: string, command: string, value: string, addMode?: boolean): void;
+}
+
 export interface TreeEditorProps {
   // 节点
   nodes: NodeMap;
@@ -76,6 +85,9 @@ export interface TreeEditorProps {
   uncontrolled?: boolean;
   showIcon?: boolean;
   showPreviewButton?: boolean;
+  quickCommandKey?: string;
+  quickCommands?: string[];
+  handleCommandChanged?: HandleCommandChange;
   handlePasteFiles: HandlePasteFile;
   handleDeleteAttach: HandleDeleteAttach;
   handleAddNote?: HandleAddNote;
@@ -94,6 +106,7 @@ export interface TreeEditorProps {
   handlePaste?: Function;
   handleDrag?: Function;
   handleClickMoreButton?: HandleClickMore;
+  handleClickAddButton?: HandleClickMore;
   handleClickPreviewButton?: Function;
   ref?: any;
   collapseMode?: boolean;
@@ -111,6 +124,9 @@ export const TreeEditor = React.forwardRef(
       uncontrolled = true,
       showIcon = true,
       showPreviewButton = true,
+      quickCommandKey,
+      quickCommands = [],
+      handleCommandChanged,
       handlePasteFiles,
       handleDeleteAttach,
       handleAddNote,
@@ -129,6 +145,7 @@ export const TreeEditor = React.forwardRef(
       // handlePaste,
       handleDrag,
       handleClickMoreButton,
+      handleClickAddButton,
       handleClickPreviewButton,
       collapseMode,
     }: TreeEditorProps,
@@ -205,6 +222,10 @@ export const TreeEditor = React.forwardRef(
       }
       setFocusedKey(defaultFocusedId);
     }, [defaultFocusedId]);
+
+    useEffect(() => {
+      quickCommandIndex = undefined;
+    }, [focusedKey]);
 
     useEffect(() => {
       setNoteFocusedKey(defaultNoteFocusedNodeId);
@@ -325,18 +346,18 @@ export const TreeEditor = React.forwardRef(
     }
 
     // 添加子节点
-    function addChild(nodeKey: string) {
+    function addChild(nodeKey: string, value?: string) {
       if (uncontrolled) {
-        const res = addChildNode(nodeMap, nodeKey);
+        const res = addChildNode(nodeMap, nodeKey, value);
         if (handleAddChild) {
-          handleAddChild(nodeKey, res.addedNode);
+          handleAddChild(nodeKey, res.addedNode, value);
         }
         setFocusedKey(res.addedNode._key);
         setExpandedNodeKey(nodeKey);
         setNodeMap(res.nodes);
       } else {
         if (handleAddChild) {
-          handleAddChild(nodeKey);
+          handleAddChild(nodeKey, undefined, value);
         }
       }
     }
@@ -478,8 +499,20 @@ export const TreeEditor = React.forwardRef(
         handleClickDot(node);
       }
     }
-
-    function actionCommand(command: string, nodeKey: string, value?: string) {
+    /**
+     * 动作指令
+     * @param command
+     * @param nodeKey
+     * @param value
+     * @param addMode 是否是最后一行的新增
+     * @returns
+     */
+    function actionCommand(
+      command: string,
+      nodeKey: string,
+      value?: string,
+      addMode?: boolean
+    ) {
       if (disabled) {
         return;
       }
@@ -488,8 +521,8 @@ export const TreeEditor = React.forwardRef(
         addNext(nodeKey, value);
       } else if (command === 'AddChild') {
         // 添加子节点
-        addChild(nodeKey);
-      } else if (command === 'Backspace') {
+        addChild(nodeKey, value);
+      } else if (command === 'DeleteNode') {
         // 删除节点
         deletenode(nodeKey);
       } else if (command === 'AddNote') {
@@ -538,7 +571,34 @@ export const TreeEditor = React.forwardRef(
         const brother = nodeMap[sortList[currentNodeIndex - 1]];
         if (!brother) return;
         switchNodeToBrotherChild(currentNodeIndex, nodeKey, brother._key);
+      } else if (command === quickCommandKey && handleCommandChanged) {
+        quickCommandIndex = cursorIndex();
+        handleCommandChanged(nodeKey, 'open', value || '', addMode);
+      } else if (
+        quickCommandIndex !== undefined &&
+        value &&
+        handleCommandChanged
+      ) {
+        const cusorIndex = cursorIndex();
+        if (!cusorIndex) return;
+        const command = value.substring(quickCommandIndex, cusorIndex);
+        if (isCommandAvaliable(command)) {
+          handleCommandChanged(nodeKey, command, value, addMode);
+        } else {
+          quickCommandIndex = undefined;
+          handleCommandChanged(nodeKey, 'close', value, addMode);
+        }
       }
+    }
+
+    function isCommandAvaliable(command: string) {
+      for (let index = 0; index < quickCommands.length; index++) {
+        const quickCommand = quickCommands[index];
+        if (quickCommand.includes(command)) {
+          return true;
+        }
+      }
+      return false;
     }
 
     function handleClickMore(node: CNode, el: HTMLElement) {
@@ -546,6 +606,13 @@ export const TreeEditor = React.forwardRef(
         handleClickMoreButton(node, el);
       }
     }
+
+    function handleClickAdd(node: CNode, el: HTMLElement) {
+      if (handleClickAddButton) {
+        handleClickAddButton(node, el);
+      }
+    }
+
     function handleClickPreview(node: CNode) {
       if (handleClickPreviewButton) {
         handleClickPreviewButton(node);
@@ -605,6 +672,14 @@ export const TreeEditor = React.forwardRef(
             }
           />
         ))}
+        {cnodes[cnodes.length - 1] ? (
+          <AddItem
+            lastNode={cnodes[cnodes.length - 1]}
+            isRoot={cnodes.length === 1 ? true : false}
+            clickAdd={handleClickAdd}
+            actionCommand={actionCommand}
+          />
+        ) : null}
       </div>
     );
   }

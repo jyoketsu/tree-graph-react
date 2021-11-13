@@ -11,6 +11,10 @@
   content: '无标题';
   color: #d3d3d3;
 }
+.t-editor.add-editor:empty:before {
+  content: "输入文字或者'/'选择";
+  color: #d3d3d3;
+}
 .t-editor.item-note {
   display: -webkit-box;
   overflow: hidden;

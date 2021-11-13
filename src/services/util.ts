@@ -378,11 +378,11 @@ export const getAncestor = (
   return ancestorList;
 };
 
-function addChildNode(nodeMap: NodeMap, selectedId: string) {
+function addChildNode(nodeMap: NodeMap, selectedId: string, value?: string) {
   let nodes = { ...nodeMap };
   const childNode: Node = {
     _key: guid(8, 16),
-    name: '',
+    name: value || '',
     father: selectedId,
     sortList: [],
     checked: false,
@@ -979,6 +979,12 @@ function isCursorTail(elment: HTMLDivElement) {
   }
 }
 
+function cursorIndex() {
+  if (!window.getSelection) return;
+  const selection = window.getSelection();
+  return selection?.focusOffset;
+}
+
 export {
   findNodeById,
   textWidth,
@@ -1019,4 +1025,5 @@ export {
   isCursorHead,
   toFatherBrother,
   isCursorTail,
+  cursorIndex,
 };

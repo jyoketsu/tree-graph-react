@@ -208,6 +208,8 @@ export const Default = Template.bind({});
 Default.args = {
   nodes: nodes,
   startId: '001',
+  quickCommandKey: '/',
+  quickCommands: ['fswd', 'fsht', 'fsnt', 'fsmd'],
   handlePasteFiles: (nodeKey: string, files: FileList) => {
     console.log('---handlePasteFiles---', nodeKey, files);
   },
@@ -222,5 +224,16 @@ Default.args = {
   },
   handleClickMoreButton: (node: CNode, targetEl: HTMLElement) => {
     console.log('---handleClickMoreButton---', node, targetEl);
+  },
+  handleClickAddButton: (node: CNode, targetEl: HTMLElement) => {
+    console.log('---handleClickAddButton---', node, targetEl);
+  },
+  handleCommandChanged: (
+    nodeKey: CNode,
+    command: string,
+    value: string,
+    addMode: boolean
+  ) => {
+    console.log('---handleCommandChanged---', nodeKey, command, value, addMode);
   },
 };

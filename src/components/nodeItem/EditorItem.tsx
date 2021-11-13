@@ -172,7 +172,7 @@ Props) => {
       if (!value) {
         // 按后退删除文字，当没有文字时，触发删除节点
         deletable = true;
-        actionCommand(event.key, node._key);
+        actionCommand('DeleteNode', node._key);
       } else {
         // 有文字
         const head = isCursorHead();
@@ -206,6 +206,16 @@ Props) => {
       sessionStorage.removeItem('cursorInTail');
     } else {
       deletable = false;
+    }
+  }
+
+  function keyUp(event: React.KeyboardEvent<HTMLDivElement>) {
+    if (composing) {
+      return;
+    }
+    if (editorRef && editorRef.current) {
+      const value = editorRef.current.innerText.replace(/[\r\n]/g, '');
+      actionCommand(event.key, node._key, value);
     }
   }
 
@@ -282,8 +292,12 @@ Props) => {
     }
   }
 
-  function handleClickMore(event: React.MouseEvent<HTMLDivElement>) {
-    clickMore(node, event.currentTarget);
+  function handleClickMore() {
+    // event: React.MouseEvent<HTMLDivElement>
+    // clickMore(node, event.currentTarget);
+    if (editorRef && editorRef.current) {
+      clickMore(node, editorRef.current);
+    }
   }
 
   const urlReg = /((\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)/g;
@@ -557,6 +571,7 @@ Props) => {
             ref={editorRef}
             onBlur={saveText}
             onKeyDown={keyDown}
+            onKeyUp={keyUp}
             onPaste={handlePaste}
             onCompositionStart={() => (composing = true)}
             onCompositionEnd={() => (composing = false)}
