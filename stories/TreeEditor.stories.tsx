@@ -219,9 +219,9 @@ Default.args = {
   handleDeleteAttach: (nodeKey: string, index: number) => {
     console.log('---handleDeleteAttach---', nodeKey, index);
   },
-  handleClickNode: (node: CNode) => {
-    console.log('---handleClickNode---', node);
-  },
+  // handleClickNode: (node: CNode) => {
+  //   console.log('---handleClickNode---', node);
+  // },
   handleClickMoreButton: (node: CNode, targetEl: HTMLElement) => {
     console.log('---handleClickMoreButton---', node, targetEl);
   },

@@ -18,11 +18,7 @@ interface Props {
   actionCommand: ActionCommand;
 }
 const AddItem = ({ lastNode, isRoot, clickAdd, actionCommand }: Props) => {
-  const isDragging = sessionStorage.getItem('isDragging');
   const editorRef = useRef<HTMLDivElement>(null);
-  const noteEditorRef = useRef<HTMLDivElement>(null);
-  const [dragStarted, setDragStarted] = useState(false);
-  const [isDragOver, setIsDragOver] = useState(false);
   const [hover, sethover] = useState(false);
   const [value, setvalue] = useState('');
   const indentCount = lastNode.x / 30;
@@ -49,6 +45,7 @@ const AddItem = ({ lastNode, isRoot, clickAdd, actionCommand }: Props) => {
 
   function keyDown(event: React.KeyboardEvent) {
     if (composing || !value) {
+      event.preventDefault();
       return;
     }
     if (event.key === 'Enter') {

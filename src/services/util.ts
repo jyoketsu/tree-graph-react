@@ -979,7 +979,7 @@ function isCursorTail(elment: HTMLDivElement) {
   }
 }
 
-function cursorIndex() {
+function getCursorIndex() {
   if (!window.getSelection) return;
   const selection = window.getSelection();
   return selection?.focusOffset;
@@ -1025,5 +1025,5 @@ export {
   isCursorHead,
   toFatherBrother,
   isCursorTail,
-  cursorIndex,
+  getCursorIndex,
 };

@@ -21,7 +21,7 @@ import {
   toBrotherChild,
   moveCursor,
   toFatherBrother,
-  cursorIndex,
+  getCursorIndex,
 } from './services/util';
 import DragInfo from './interfaces/DragInfo';
 import EditorItem from './components/nodeItem/EditorItem';
@@ -572,17 +572,20 @@ export const TreeEditor = React.forwardRef(
         if (!brother) return;
         switchNodeToBrotherChild(currentNodeIndex, nodeKey, brother._key);
       } else if (command === quickCommandKey && handleCommandChanged) {
-        quickCommandIndex = cursorIndex();
+        quickCommandIndex = getCursorIndex();
         handleCommandChanged(nodeKey, 'open', value || '', addMode);
       } else if (
         quickCommandIndex !== undefined &&
         value &&
         handleCommandChanged
       ) {
-        const cusorIndex = cursorIndex();
+        const cusorIndex = getCursorIndex();
         if (!cusorIndex) return;
         const command = value.substring(quickCommandIndex, cusorIndex);
-        if (isCommandAvaliable(command)) {
+        if (typeof cusorIndex === 'number' && cusorIndex < quickCommandIndex) {
+          quickCommandIndex = undefined;
+          handleCommandChanged(nodeKey, 'close', value, addMode);
+        } else if (isCommandAvaliable(command)) {
           handleCommandChanged(nodeKey, command, value, addMode);
         } else {
           quickCommandIndex = undefined;

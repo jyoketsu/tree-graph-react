@@ -292,12 +292,11 @@ Props) => {
     }
   }
 
-  function handleClickMore() {
-    // event: React.MouseEvent<HTMLDivElement>
-    // clickMore(node, event.currentTarget);
-    if (editorRef && editorRef.current) {
-      clickMore(node, editorRef.current);
-    }
+  function handleClickMore(event: React.MouseEvent<HTMLDivElement>) {
+    clickMore(node, event.currentTarget);
+    // if (editorRef && editorRef.current) {
+    //   clickMore(node, editorRef.current);
+    // }
   }
 
   const urlReg = /((\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)/g;
@@ -445,7 +444,7 @@ Props) => {
               alignItems: 'center',
             }}
           >
-            {!isRoot && hover ? (
+            {!isRoot ? (
               <div
                 style={{
                   position: 'absolute',
@@ -458,7 +457,10 @@ Props) => {
                   alignItems: 'center',
                 }}
               >
-                <div onClick={handleClickMore} style={{ backgroundColor }}>
+                <div
+                  onClick={handleClickMore}
+                  style={{ backgroundColor, opacity: hover ? 1 : 0 }}
+                >
                   <Icon
                     width="18px"
                     height="18px"
@@ -469,7 +471,7 @@ Props) => {
                 </div>
                 {showPreviewButton ? (
                   <div
-                    style={{ backgroundColor }}
+                    style={{ backgroundColor, opacity: hover ? 1 : 0 }}
                     onClick={() => clickPreview(node)}
                   >
                     <Icon
@@ -488,7 +490,7 @@ Props) => {
                       e.stopPropagation();
                       handleClickExpand(node);
                     }}
-                    style={{ backgroundColor }}
+                    style={{ backgroundColor, opacity: hover ? 1 : 0 }}
                   >
                     <Icon
                       width="18px"
