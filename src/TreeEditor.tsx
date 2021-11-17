@@ -22,6 +22,7 @@ import {
   moveCursor,
   toFatherBrother,
   getCursorIndex,
+  isMobile,
 } from './services/util';
 import DragInfo from './interfaces/DragInfo';
 import EditorItem from './components/nodeItem/EditorItem';
@@ -29,6 +30,7 @@ import AddItem from './components/nodeItem/AddItem';
 
 const indent = 30;
 // const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
+const mobile = isMobile();
 
 let quickCommandIndex: undefined | number;
 
@@ -271,6 +273,9 @@ export const TreeEditor = React.forwardRef(
 
     // 节点改名
     function changeText(nodeId: string, text: string) {
+      if (disabled) {
+        return;
+      }
       if (uncontrolled) {
         let nodes = changeNodeText(nodeMap, nodeId, text);
         setNodeMap(nodes);
@@ -665,6 +670,7 @@ export const TreeEditor = React.forwardRef(
             clickPreview={handleClickPreview}
             compId={compId}
             isRoot={index === 0 ? true : false}
+            isMobile={mobile}
             collapseMode={collapseMode}
             collapseModeCollapsed={
               collapseMode
@@ -673,9 +679,10 @@ export const TreeEditor = React.forwardRef(
                   : true
                 : undefined
             }
+            disabled={disabled}
           />
         ))}
-        {cnodes[cnodes.length - 1] ? (
+        {!disabled && cnodes[cnodes.length - 1] ? (
           <AddItem
             lastNode={cnodes[cnodes.length - 1]}
             isRoot={cnodes.length === 1 ? true : false}

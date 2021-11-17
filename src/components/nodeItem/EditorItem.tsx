@@ -46,10 +46,12 @@ interface Props {
   handleDeleteAttach: HandleDeleteAttach;
   compId: string;
   isRoot: boolean;
+  isMobile: boolean;
   focusedKey?: string;
   noteFocusedKey?: string;
   collapseMode?: boolean;
   collapseModeCollapsed?: boolean;
+  disabled?: boolean;
 }
 const EditorItem = ({
   node,
@@ -73,8 +75,10 @@ const EditorItem = ({
   handleDeleteAttach,
   compId,
   isRoot,
+  isMobile,
   focusedKey,
   noteFocusedKey,
+  disabled,
 }: // collapseMode,
 // collapseModeCollapsed,
 Props) => {
@@ -444,6 +448,7 @@ Props) => {
               alignItems: 'center',
             }}
           >
+            {/* 左侧操作按钮 */}
             {!isRoot ? (
               <div
                 style={{
@@ -457,18 +462,20 @@ Props) => {
                   alignItems: 'center',
                 }}
               >
-                <div
-                  onClick={handleClickMore}
-                  style={{ backgroundColor, opacity: hover ? 1 : 0 }}
-                >
-                  <Icon
-                    width="18px"
-                    height="18px"
-                    name="more"
-                    fill="#b2b3b4"
-                    style={{ cursor: 'pointer' }}
-                  />
-                </div>
+                {!disabled ? (
+                  <div
+                    onClick={handleClickMore}
+                    style={{ backgroundColor, opacity: hover ? 1 : 0 }}
+                  >
+                    <Icon
+                      width="18px"
+                      height="18px"
+                      name="more"
+                      fill="#b2b3b4"
+                      style={{ cursor: 'pointer' }}
+                    />
+                  </div>
+                ) : null}
                 {showPreviewButton ? (
                   <div
                     style={{ backgroundColor, opacity: hover ? 1 : 0 }}
@@ -484,7 +491,7 @@ Props) => {
                   </div>
                 ) : null}
                 {/* 折叠按钮 */}
-                {node.sortList.length ? (
+                {node.sortList.length && !isMobile ? (
                   <div
                     onClick={e => {
                       e.stopPropagation();
@@ -566,7 +573,7 @@ Props) => {
           {/* 文字 */}
           <div
             className="t-editor node-editor"
-            contentEditable="true"
+            contentEditable={disabled ? false : true}
             spellCheck="true"
             autoCapitalize="off"
             suppressContentEditableWarning={true}
@@ -622,7 +629,7 @@ Props) => {
           ))}
           <div
             className="t-editor item-note"
-            contentEditable="true"
+            contentEditable={disabled ? false : true}
             spellCheck="true"
             autoCapitalize="off"
             suppressContentEditableWarning={true}
@@ -640,6 +647,38 @@ Props) => {
           </div>
         </div>
       </div>
+      {/* 右侧操作按钮 */}
+      {!isRoot && isMobile ? (
+        <div
+          style={{
+            position: 'absolute',
+            width: '54px',
+            right: '-18px',
+            top: 0,
+            height: '30px',
+            display: 'flex',
+            alignItems: 'center',
+          }}
+        >
+          {/* 折叠按钮 */}
+          {node.sortList.length ? (
+            <div
+              onClick={e => {
+                e.stopPropagation();
+                handleClickExpand(node);
+              }}
+            >
+              <Icon
+                width="26px"
+                height="26px"
+                name={node.contract ? 'collapsed' : 'collapse'}
+                fill="#b2b3b4"
+                style={{ cursor: 'pointer' }}
+              />
+            </div>
+          ) : null}
+        </div>
+      ) : null}
     </div>
   );
 };
