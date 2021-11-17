@@ -76,6 +76,7 @@ export interface TreeEditorProps {
   // 根节点id
   startId: string;
   disabled?: boolean;
+  readonly?: boolean;
   themeColor?: string;
   backgroundColor?: string;
   cutColor?: string;
@@ -119,6 +120,7 @@ export const TreeEditor = React.forwardRef(
       nodes,
       startId,
       disabled,
+      readonly,
       themeColor = '#1CA8B3',
       backgroundColor = '#F5F5F5',
       defaultFocusedId,
@@ -235,9 +237,6 @@ export const TreeEditor = React.forwardRef(
 
     // 单击节点
     function clickNode(node: CNode) {
-      if (disabled) {
-        return;
-      }
       if (handleClickNode) {
         handleClickNode(node);
       }
@@ -273,9 +272,6 @@ export const TreeEditor = React.forwardRef(
 
     // 节点改名
     function changeText(nodeId: string, text: string) {
-      if (disabled) {
-        return;
-      }
       if (uncontrolled) {
         let nodes = changeNodeText(nodeMap, nodeId, text);
         setNodeMap(nodes);
@@ -679,10 +675,10 @@ export const TreeEditor = React.forwardRef(
                   : true
                 : undefined
             }
-            disabled={disabled}
+            readonly={readonly}
           />
         ))}
-        {!disabled && cnodes[cnodes.length - 1] ? (
+        {!readonly && cnodes[cnodes.length - 1] ? (
           <AddItem
             lastNode={cnodes[cnodes.length - 1]}
             isRoot={cnodes.length === 1 ? true : false}

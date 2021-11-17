@@ -51,7 +51,7 @@ interface Props {
   noteFocusedKey?: string;
   collapseMode?: boolean;
   collapseModeCollapsed?: boolean;
-  disabled?: boolean;
+  readonly?: boolean;
 }
 const EditorItem = ({
   node,
@@ -78,7 +78,7 @@ const EditorItem = ({
   isMobile,
   focusedKey,
   noteFocusedKey,
-  disabled,
+  readonly,
 }: // collapseMode,
 // collapseModeCollapsed,
 Props) => {
@@ -462,7 +462,7 @@ Props) => {
                   alignItems: 'center',
                 }}
               >
-                {!disabled ? (
+                {!readonly ? (
                   <div
                     onClick={handleClickMore}
                     style={{ backgroundColor, opacity: hover ? 1 : 0 }}
@@ -573,7 +573,7 @@ Props) => {
           {/* 文字 */}
           <div
             className="t-editor node-editor"
-            contentEditable={disabled ? false : true}
+            contentEditable={readonly ? false : true}
             spellCheck="true"
             autoCapitalize="off"
             suppressContentEditableWarning={true}
@@ -629,7 +629,7 @@ Props) => {
           ))}
           <div
             className="t-editor item-note"
-            contentEditable={disabled ? false : true}
+            contentEditable={readonly ? false : true}
             spellCheck="true"
             autoCapitalize="off"
             suppressContentEditableWarning={true}
