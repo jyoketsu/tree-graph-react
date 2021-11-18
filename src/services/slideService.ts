@@ -31,7 +31,8 @@ export default function getSlideList(
       }
     }
     // 如果该节点为根节点或者有图片附件的非叶子节点，则单独有一张幻灯片
-    if (node._key === startId || (imageList.length && node.sortList.length)) {
+    // if (node._key === startId || (imageList.length && node.sortList.length)) {
+    if (node._key === startId || imageList.length) {
       slideList.push({
         title: node.name,
         paths: ancestor,
