@@ -89,6 +89,16 @@ Props) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [hover, sethover] = useState(false);
   const indentCount = node.x / 30;
+  let fontSize = 16;
+  if (isRoot) {
+    fontSize = 34;
+  } else if (readonly) {
+    if (indentCount === 0) {
+      fontSize = 24;
+    } else if (indentCount === 1) {
+      fontSize = 18;
+    }
+  }
 
   useEffect(() => {
     if (focusedKey === node._key && editorRef && editorRef.current) {
@@ -374,21 +384,12 @@ Props) => {
     }
   }
 
-  // let collapsed;
-  // if (collapseMode) {
-  //   collapsed = collapseModeCollapsed;
-  // } else {
-  //   collapsed = node.contract;
-  // }
-
   return (
     <div
       style={{
         display: 'flex',
         position: 'relative',
         width: '100%',
-        // paddingLeft: `${node.x - (node._key === startId ? indent : 0)}px`,
-        // paddingLeft: `${node.x + 35}px`,
         paddingLeft: '35px',
         paddingRight: '35px',
         boxSizing: 'border-box',
@@ -397,6 +398,7 @@ Props) => {
         borderWidth:
           isDragging && isDragOver ? '0 0 2px 0' : isDragOver ? '2px' : '0',
         opacity: dragStarted ? 0.8 : 1,
+        overflow: 'hidden',
       }}
       onClick={(e: React.MouseEvent) => {
         e.stopPropagation();
@@ -418,7 +420,7 @@ Props) => {
             marginLeft: '9px',
             width: '27px',
             flexShrink: 0,
-            borderLeft: '1px solid #DEDEE1',
+            borderLeft: !readonly ? '1px solid #DEDEE1' : 'unset',
           }}
         ></div>
       ))}
@@ -434,16 +436,16 @@ Props) => {
           style={{
             width: '100%',
             display: 'flex',
-            fontSize: isRoot ? '34px' : '16px',
+            fontSize: `${fontSize}px`,
+            lineHeight: `${fontSize * 2}px`,
             color: isRoot ? '#16181a' : '#1d1d1f',
-            lineHeight: isRoot ? '48px' : '30px',
             fontWeight: isRoot ? 600 : 'normal',
           }}
         >
           <div
             style={{
               position: 'relative',
-              height: '30px',
+              height: `${fontSize * 2}px`,
               display: 'flex',
               alignItems: 'center',
             }}
@@ -456,7 +458,7 @@ Props) => {
                   width: '54px',
                   left: '-54px',
                   top: 0,
-                  height: '30px',
+                  height: `${fontSize * 2}px`,
                   display: 'flex',
                   flexDirection: 'row-reverse',
                   alignItems: 'center',
@@ -511,12 +513,12 @@ Props) => {
               </div>
             ) : null}
             {/* 小圆点 */}
-            {!isRoot ? (
+            {!isRoot && !readonly ? (
               <div
                 draggable
                 style={{
                   position: 'relative',
-                  height: '30px',
+                  height: `${fontSize * 2}px`,
                   flexShrink: 0,
                   display: 'flex',
                   alignItems: 'center',
@@ -628,7 +630,7 @@ Props) => {
             />
           ))}
           <div
-            className="t-editor item-note"
+            className={`t-editor item-note ${readonly ? 'readonly' : ''}`}
             contentEditable={readonly ? false : true}
             spellCheck="true"
             autoCapitalize="off"

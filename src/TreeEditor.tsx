@@ -634,12 +634,6 @@ export const TreeEditor = React.forwardRef(
           backgroundColor: backgroundColor,
         }}
       >
-        {/* <Title
-          node={
-            nodeMap && startId && nodeMap[startId] ? nodeMap[startId] : null
-          }
-          handleChangeNodeText={changeText}
-        /> */}
         {cnodes.map((node, index) => (
           <EditorItem
             key={`${index}_${node._key}`}

@@ -27,3 +27,7 @@
   overflow: visible;
   -webkit-line-clamp: initial;
 }
+.t-editor.item-note.readonly {
+  overflow: visible;
+  -webkit-line-clamp: initial;
+}

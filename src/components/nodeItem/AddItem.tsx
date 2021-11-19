@@ -21,6 +21,7 @@ const AddItem = ({ lastNode, isRoot, clickAdd, actionCommand }: Props) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const [hover, sethover] = useState(false);
   const [value, setvalue] = useState('');
+  const [focused, setFocused] = useState(false);
   const indentCount = lastNode.x / 30;
 
   useEffect(() => {
@@ -32,6 +33,7 @@ const AddItem = ({ lastNode, isRoot, clickAdd, actionCommand }: Props) => {
   }, [lastNode]);
 
   function addNode(e: React.FocusEvent<HTMLDivElement>) {
+    setFocused(false);
     if (!nodeAddable) return;
     // 值（去除了换行符）
     const value = e.target.innerText.replace(/[\r\n]/g, '');
@@ -44,12 +46,13 @@ const AddItem = ({ lastNode, isRoot, clickAdd, actionCommand }: Props) => {
   }
 
   function keyDown(event: React.KeyboardEvent) {
-    if (composing || !value) {
+    if (composing) {
       event.preventDefault();
       return;
     }
     if (event.key === 'Enter') {
       event.preventDefault();
+      if (!value) return;
       nodeAddable = false;
       if (isRoot) {
         actionCommand('AddChild', lastNode._key, value);
@@ -58,6 +61,7 @@ const AddItem = ({ lastNode, isRoot, clickAdd, actionCommand }: Props) => {
       }
     } else if (event.key === 'Tab') {
       event.preventDefault();
+      if (!value) return;
       nodeAddable = false;
       actionCommand('AddChild', lastNode._key, value);
     }
@@ -110,7 +114,7 @@ const AddItem = ({ lastNode, isRoot, clickAdd, actionCommand }: Props) => {
         paddingLeft: '35px',
         paddingRight: '35px',
         boxSizing: 'border-box',
-        opacity: hover ? 1 : 0,
+        opacity: focused || hover ? 1 : 0,
       }}
       onMouseEnter={() => sethover(true)}
       onMouseLeave={() => sethover(false)}
@@ -192,6 +196,7 @@ const AddItem = ({ lastNode, isRoot, clickAdd, actionCommand }: Props) => {
             onKeyUp={keyUp}
             onInput={handleInput}
             onPaste={handlePaste}
+            onClick={() => setFocused(true)}
             onBlur={addNode}
             onCompositionStart={() => (composing = true)}
             onCompositionEnd={() => {
