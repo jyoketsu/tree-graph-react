@@ -6,6 +6,8 @@ export default interface Node {
   father: string;
   sortList: string[];
   type?: string;
+  fileType?: string;
+  linkType?: string;
   shorted?: string;
   // 是否收起子节点
   contract?: boolean;

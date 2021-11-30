@@ -69,6 +69,18 @@ export const Slides = ({
     setSlideList(slideList);
   }, [nodes, startId]);
 
+  function prevPage() {
+    if (currentPage - 1 >= 0) {
+      setCurrentPage(prevPage => prevPage - 1);
+    }
+  }
+
+  function nextPage() {
+    if (currentPage + 1 < slideList.length) {
+      setCurrentPage(prevPage => prevPage + 1);
+    }
+  }
+
   function handleKeyDown(event: React.KeyboardEvent) {
     event.preventDefault();
     if (playMode) {
@@ -76,14 +88,10 @@ export const Slides = ({
     }
     switch (event.key) {
       case 'ArrowDown':
-        if (currentPage + 1 < slideList.length) {
-          setCurrentPage(prevPage => prevPage + 1);
-        }
+        nextPage();
         break;
       case 'ArrowUp':
-        if (currentPage - 1 >= 0) {
-          setCurrentPage(prevPage => prevPage - 1);
-        }
+        prevPage();
         break;
       default:
         break;
@@ -202,6 +210,7 @@ export const Slides = ({
         </div>
         <div
           style={{
+            position: 'relative',
             width: '100%',
             height: '100%',
             boxSizing: 'border-box',
@@ -224,6 +233,24 @@ export const Slides = ({
               />
             </div>
           ) : null}
+          <div
+            style={{
+              width: '12vh',
+              position: 'absolute',
+              right: '2vh',
+              bottom: '2vh',
+              display: 'flex',
+              justifyContent: 'space-between',
+              zIndex: 999,
+            }}
+          >
+            <div style={{ cursor: 'pointer' }} onClick={prevPage}>
+              <Icon name="prev" fill={themeColor} width="5vh" height="5vh" />
+            </div>
+            <div style={{ cursor: 'pointer' }} onClick={nextPage}>
+              <Icon name="next" fill={themeColor} width="5vh" height="5vh" />
+            </div>
+          </div>
         </div>
       </div>
       {playMode ? (

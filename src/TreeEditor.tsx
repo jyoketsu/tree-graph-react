@@ -70,6 +70,10 @@ interface HandleCommandChange {
   (nodeKey: string, command: string, value: string, addMode?: boolean): void;
 }
 
+export interface HandleClickUpload {
+  (nodeKey: string, el: HTMLElement): void;
+}
+
 export interface TreeEditorProps {
   // 节点
   nodes: NodeMap;
@@ -111,6 +115,7 @@ export interface TreeEditorProps {
   handleClickMoreButton?: HandleClickMore;
   handleClickAddButton?: HandleClickMore;
   handleClickPreviewButton?: Function;
+  handleClickUpload?: HandleClickUpload;
   ref?: any;
   collapseMode?: boolean;
 }
@@ -151,6 +156,7 @@ export const TreeEditor = React.forwardRef(
       handleClickMoreButton,
       handleClickAddButton,
       handleClickPreviewButton,
+      handleClickUpload,
       collapseMode,
     }: TreeEditorProps,
     ref
@@ -623,6 +629,12 @@ export const TreeEditor = React.forwardRef(
       }
     }
 
+    function clickUpload(nodeKey: string, el: HTMLElement) {
+      if (handleClickUpload) {
+        handleClickUpload(nodeKey, el);
+      }
+    }
+
     return (
       <div
         className="menu-wrapper"
@@ -670,6 +682,7 @@ export const TreeEditor = React.forwardRef(
                 : undefined
             }
             readonly={readonly}
+            handleClickUpload={clickUpload}
           />
         ))}
         {!readonly && cnodes[cnodes.length - 1] ? (

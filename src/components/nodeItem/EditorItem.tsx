@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { HandleClickMore, HandleDeleteAttach } from '../..';
+import { HandleClickMore, HandleClickUpload, HandleDeleteAttach } from '../..';
 import CNode from '../../interfaces/CNode';
 import {
   getTextAfterCursor,
@@ -11,6 +11,9 @@ import {
 import { HandleChangeNote, HandlePasteFile } from '../../TreeEditor';
 import Icon from '../icon';
 import AttachItem from './AttachItem';
+import ClickToUpload from './ClickToUpload';
+import FileViewer from './FileViewer';
+import LinkViewer from './LinkViewer';
 
 // 为了在删除节点后失去焦点不触发更改节点名
 let deletable = false;
@@ -44,6 +47,7 @@ interface Props {
   handlePasteFiles: HandlePasteFile;
   handleChangeNote: HandleChangeNote;
   handleDeleteAttach: HandleDeleteAttach;
+  handleClickUpload: HandleClickUpload;
   compId: string;
   isRoot: boolean;
   isMobile: boolean;
@@ -73,6 +77,7 @@ const EditorItem = ({
   handlePasteFiles,
   handleChangeNote,
   handleDeleteAttach,
+  handleClickUpload,
   compId,
   isRoot,
   isMobile,
@@ -181,7 +186,7 @@ Props) => {
     } else if (event.key === 'Tab') {
       event.preventDefault();
       actionCommand('ToBrotherChild', node._key);
-    } else if (event.key === 'Backspace' && !node.sortList.length) {
+    } else if (event.key === 'Backspace') {
       const value = event.currentTarget.innerText.replace(/[\r\n]/g, '');
       if (!value) {
         // 按后退删除文字，当没有文字时，触发删除节点
@@ -574,6 +579,7 @@ Props) => {
 
           {/* 文字 */}
           <div
+            id={`node-${node._key}`}
             className="t-editor node-editor"
             contentEditable={readonly ? false : true}
             spellCheck="true"
@@ -609,6 +615,44 @@ Props) => {
             )}
           </div>
         </div>
+        {/* 如果是文件类型的节点且url未设定 */}
+        {(node.type === 'file' || node.type === 'link') && !node.url ? (
+          <div
+            style={{
+              marginLeft: '9px',
+              paddingLeft: '16px',
+            }}
+          >
+            <ClickToUpload
+              nodeKey={node._key}
+              type={node.type}
+              handleClickUpload={handleClickUpload}
+            />
+          </div>
+        ) : null}
+        {/* 文件类节点预览 */}
+        {node.type === 'file' && node.fileType && node.url ? (
+          <div
+            style={{
+              marginLeft: '9px',
+              paddingLeft: '16px',
+            }}
+          >
+            <FileViewer fileType={node.fileType} url={node.url} />
+          </div>
+        ) : null}
+        {/* 链接类型节点预览 */}
+        {node.type === 'link' && node.linkType && node.url ? (
+          <div
+            style={{
+              marginLeft: '9px',
+              paddingLeft: '16px',
+            }}
+          >
+            <LinkViewer linkType={node.linkType} url={node.url} />
+          </div>
+        ) : null}
+        {/* 附件 */}
         <div
           style={{
             marginLeft: '9px',

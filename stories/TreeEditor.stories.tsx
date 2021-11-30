@@ -120,63 +120,53 @@ const nodes = {
     hour: 0.1,
     limitDay: 1610726400000,
     note:
-      '改编自十日草辅漫画原作的TV动画《国王排名》（王様ランキング）公布了第一弹PV，该作将于10月开播。动画由WIT STUDIO负责制作，八田洋介担任监督，MAYUKO负责音乐；参演声优有日向未南、村濑步、 梶裕贵、佐藤利奈等。片头曲为King Gnu的《BOY》。',
+      '这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注',
   },
   '010': {
     _key: '010',
-    name: '4月計劃',
+    name: '文件类节点',
     father: '003',
-    sortList: [],
-
+    sortList: ['016', '017', '018', '019'],
     checked: true,
-
     hour: 0.1,
     limitDay: 1610726400000,
   },
   '011': {
     _key: '011',
-    name: '5月計劃',
+    name: '链接类节点',
     father: '003',
     sortList: ['012', '013', '014'],
     contract: false,
-
     checked: true,
-
     hour: 0.1,
     limitDay: 1610726400000,
   },
   '012': {
     _key: '012',
-    name: '原型、界面設計',
+    name: 'B站',
+    type: 'link',
+    url:
+      'https://player.bilibili.com/player.html?aid=1149538&bvid=BV1Ex411T7Li&cid=1677748&page=1',
+    linkType: 'bilibili',
     father: '011',
     sortList: [],
-
-    checked: true,
-
-    hour: 0.1,
-    limitDay: 1610726400000,
   },
   '013': {
     _key: '013',
-    name: '開發',
+    name: '网易云',
+    type: 'link',
+    url:
+      'https://music.163.com/outchain/player?type=2&id=1472480890&auto=1&height=66',
+    linkType: 'wangyiyun',
     father: '011',
     sortList: [],
-
-    checked: true,
-
-    hour: 0.1,
-    limitDay: 1610726400000,
   },
   '014': {
     _key: '014',
     name: '測試',
     father: '011',
     sortList: [],
-
-    checked: true,
-
-    hour: 0.1,
-    limitDay: 1610726400000,
+    type: 'link',
   },
   '015': {
     _key: '015',
@@ -186,6 +176,40 @@ const nodes = {
     checked: true,
     hour: 0.1,
     limitDay: 1610726400000,
+  },
+  '016': {
+    _key: '016',
+    name: '图片无链接',
+    type: 'file',
+    father: '010',
+    sortList: [],
+  },
+  '017': {
+    _key: '017',
+    name: '图片',
+    type: 'file',
+    fileType: 'image/*',
+    url: 'https://z3.ax1x.com/2021/11/30/oleOVU.jpg',
+    father: '010',
+    sortList: [],
+  },
+  '018': {
+    _key: '018',
+    name: '音频',
+    type: 'file',
+    fileType: 'audio/*',
+    url: 'https://cdn-icare.qingtime.cn/4F20E2E3.flac',
+    father: '010',
+    sortList: [],
+  },
+  '019': {
+    _key: '019',
+    name: '视频',
+    type: 'file',
+    fileType: 'video/*',
+    url: 'https://cdn-icare.qingtime.cn/5B2C436C.mp4',
+    father: '010',
+    sortList: [],
   },
 };
 
