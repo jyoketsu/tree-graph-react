@@ -16,7 +16,8 @@ export default function calculate(
   avatarRadius: number,
   rootZoomRatio: number,
   secondZoomRatio: number,
-  inputNodeKey?: string
+  inputNodeKey?: string,
+  showChildNum?: boolean
 ) {
   nodes = JSON.parse(JSON.stringify(nodes));
   // 根节点
@@ -27,6 +28,7 @@ export default function calculate(
     showIcon,
     showAvatar,
     avatarRadius,
+    showChildNum || false,
     undefined,
     inputNodeKey
   );
@@ -146,6 +148,7 @@ export default function calculate(
       showIcon,
       showAvatar,
       avatarRadius,
+      showChildNum || false,
       undefined,
       inputNodeKey
     );

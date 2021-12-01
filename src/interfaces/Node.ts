@@ -32,6 +32,7 @@ export default interface Node {
   attach?: Attach[];
   // 备注
   note?: string;
+  childNum?: number;
   // 以下为计算属性
   x?: number;
   y?: number;

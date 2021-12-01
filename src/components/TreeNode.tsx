@@ -272,7 +272,8 @@ Props) => {
       BLOCK_HEIGHT,
       showIcon,
       showAvatar,
-      avatarRadius
+      avatarRadius,
+      showChildNum
     );
   }
 
@@ -286,6 +287,8 @@ Props) => {
     }
   }
 
+  const childNumLocationRes =
+    showChildNum && node.childNum ? location(node, 'childNum') : null;
   const textLocationRes = location(node, 'text');
   const circleLocationRes = location(node, 'avatar');
   const checkLocationRes = location(node, 'checkbox');
@@ -323,7 +326,6 @@ Props) => {
         }
       }
     }
-    console.log('---arr1---', arr1);
     let marginLeft = 0;
     let count = 0;
     if (arr1 && arr1.length) {
@@ -497,7 +499,28 @@ Props) => {
           ...nodeRectStyle,
         }}
       />
-
+      {showChildNum && node.childNum ? (
+        <g>
+          <circle
+            cx={(childNumLocationRes?.x || 0) + 11}
+            cy={childNumLocationRes?.y || 0}
+            r="11"
+            fill={backgroundColor}
+            style={{ filter: 'brightness(0.86)' }}
+          />
+          <text
+            x={(childNumLocationRes?.x || 0) + 11}
+            y={(childNumLocationRes?.y || 0) + 1}
+            alignmentBaseline="middle"
+            textAnchor="middle"
+            fontSize={node.childNum > 999 ? 10 : 12}
+            fill={node._key === startId ? '#FFF' : node.color || color}
+            style={{ userSelect: 'none' }}
+          >
+            {node.childNum > 999 ? '999+' : node.childNum}
+          </text>
+        </g>
+      ) : null}
       {node.isPack ? (
         <use
           key="pack"
@@ -794,43 +817,6 @@ Props) => {
               : 'leftBottom'
           }
         />
-      ) : null}
-
-      {showChildNum && !hover && node.childNum ? (
-        <g>
-          <circle
-            cx={
-              !bottomOptions
-                ? node.x + node.width + 2 + 15
-                : node.x + node.width - 15
-            }
-            cy={
-              !bottomOptions
-                ? node.y + BLOCK_HEIGHT / 2 + 1
-                : node.y + BLOCK_HEIGHT + 2 + 15
-            }
-            r="15"
-            fill={backgroundColor}
-          />
-          <text
-            x={
-              !bottomOptions
-                ? node.x + node.width + 2 + 15
-                : node.x + node.width - 15
-            }
-            y={
-              !bottomOptions
-                ? node.y + BLOCK_HEIGHT / 2 + 2
-                : node.y + BLOCK_HEIGHT + 3 + 15
-            }
-            alignmentBaseline="middle"
-            textAnchor="middle"
-            fontSize={node.childNum > 999 ? 12 : 14}
-            fill={node._key === startId ? '#FFF' : node.color || color}
-          >
-            {node.childNum > 999 ? '999+' : node.childNum}
-          </text>
-        </g>
       ) : null}
 
       {/* <div

@@ -395,7 +395,7 @@ Props) => {
         display: 'flex',
         position: 'relative',
         width: '100%',
-        paddingLeft: '35px',
+        paddingLeft: isMobile ? '35px' : '55px',
         paddingRight: '35px',
         boxSizing: 'border-box',
         borderStyle: 'solid',
@@ -456,67 +456,65 @@ Props) => {
             }}
           >
             {/* 左侧操作按钮 */}
-            {!isRoot ? (
-              <div
-                style={{
-                  position: 'absolute',
-                  width: '54px',
-                  left: '-54px',
-                  top: 0,
-                  height: `${fontSize * 2}px`,
-                  display: 'flex',
-                  flexDirection: 'row-reverse',
-                  alignItems: 'center',
-                }}
-              >
-                {!readonly ? (
-                  <div
-                    onClick={handleClickMore}
-                    style={{ backgroundColor, opacity: hover ? 1 : 0 }}
-                  >
-                    <Icon
-                      width="18px"
-                      height="18px"
-                      name="more"
-                      fill="#b2b3b4"
-                      style={{ cursor: 'pointer' }}
-                    />
-                  </div>
-                ) : null}
-                {showPreviewButton ? (
-                  <div
-                    style={{ backgroundColor, opacity: hover ? 1 : 0 }}
-                    onClick={() => clickPreview(node)}
-                  >
-                    <Icon
-                      width="18px"
-                      height="18px"
-                      name="preview"
-                      fill="#b2b3b4"
-                      style={{ cursor: 'pointer' }}
-                    />
-                  </div>
-                ) : null}
-                {/* 折叠按钮 */}
-                {node.sortList.length && !isMobile ? (
-                  <div
-                    onClick={e => {
-                      e.stopPropagation();
-                      handleClickExpand(node);
-                    }}
-                    style={{ backgroundColor, opacity: hover ? 1 : 0 }}
-                  >
-                    <Icon
-                      width="18px"
-                      height="18px"
-                      name={node.contract ? 'collapsed' : 'collapse'}
-                      fill="#b2b3b4"
-                      style={{ cursor: 'pointer' }}
-                    />
-                  </div>
-                ) : null}
-              </div>
-            ) : null}
+            <div
+              style={{
+                position: 'absolute',
+                width: '54px',
+                left: '-54px',
+                top: 0,
+                height: `${fontSize * 2}px`,
+                display: 'flex',
+                flexDirection: 'row-reverse',
+                alignItems: 'center',
+              }}
+            >
+              {!readonly && !isRoot ? (
+                <div
+                  onClick={handleClickMore}
+                  style={{ backgroundColor, opacity: hover ? 1 : 0 }}
+                >
+                  <Icon
+                    width="18px"
+                    height="18px"
+                    name="more"
+                    fill="#b2b3b4"
+                    style={{ cursor: 'pointer' }}
+                  />
+                </div>
+              ) : null}
+              {showPreviewButton && !isRoot ? (
+                <div
+                  style={{ backgroundColor, opacity: hover ? 1 : 0 }}
+                  onClick={() => clickPreview(node)}
+                >
+                  <Icon
+                    width="18px"
+                    height="18px"
+                    name="preview"
+                    fill="#b2b3b4"
+                    style={{ cursor: 'pointer' }}
+                  />
+                </div>
+              ) : null}
+              {/* 折叠按钮 */}
+              {node.sortList.length && !isMobile ? (
+                <div
+                  onClick={e => {
+                    e.stopPropagation();
+                    handleClickExpand(node);
+                  }}
+                  style={{ backgroundColor, opacity: hover ? 1 : 0 }}
+                >
+                  <Icon
+                    width={isRoot ? '28px' : '18px'}
+                    height={isRoot ? '28px' : '18px'}
+                    name={node.contract ? 'collapsed' : 'collapse'}
+                    fill="#b2b3b4"
+                    style={{ cursor: 'pointer' }}
+                  />
+                </div>
+              ) : null}
+            </div>
             {/* 小圆点 */}
             {!isRoot && !readonly ? (
               <div
@@ -694,14 +692,14 @@ Props) => {
         </div>
       </div>
       {/* 右侧操作按钮 */}
-      {!isRoot && isMobile ? (
+      {isMobile ? (
         <div
           style={{
             position: 'absolute',
             width: '54px',
             right: '-18px',
             top: 0,
-            height: '30px',
+            height: isRoot ? '68px' : '30px',
             display: 'flex',
             alignItems: 'center',
           }}

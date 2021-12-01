@@ -134,6 +134,7 @@ function getNodeWidth(
   showIcon: boolean,
   showAvatar: boolean,
   avatarRadius: number,
+  showChildNum: boolean,
   padding?: number,
   inputNodeKey?: string
 ) {
@@ -156,7 +157,8 @@ function getNodeWidth(
     node,
     showIcon,
     showAvatar,
-    avatarRadius
+    avatarRadius,
+    showChildNum
   );
 
   return (
@@ -173,7 +175,8 @@ function getExtInfoWidth(
   node: Node,
   showIcon: boolean,
   showAvatar: boolean,
-  avatarRadius: number
+  avatarRadius: number,
+  showChildNum: boolean
 ) {
   const packWidth = node.isPack ? 22 : 0;
   const favoriteWidth = node.hasCollect ? 22 : 0;
@@ -181,6 +184,7 @@ function getExtInfoWidth(
   const avatarWidth = showAvatar && node.avatarUri ? avatarRadius * 2 : 0;
   const checkboxWidth = node.showCheckbox ? 18 : 0;
   const statusWidth = node.showStatus ? 22 : 0;
+  const showChildNumWidth = showChildNum && node.childNum ? 22 : 0;
   const temp = [
     packWidth,
     favoriteWidth,
@@ -188,6 +192,7 @@ function getExtInfoWidth(
     avatarWidth,
     checkboxWidth,
     statusWidth,
+    showChildNumWidth,
   ];
   let count = 0;
   for (let index = 0; index < temp.length; index++) {
@@ -205,6 +210,7 @@ function getExtInfoWidth(
     avatarWidth +
     checkboxWidth +
     statusWidth +
+    showChildNumWidth +
     marginWidth
   );
 }
@@ -216,18 +222,28 @@ function nodeLocation(
   showIcon: boolean,
   showAvatar: boolean,
   avatarRadius: number,
+  showChildNum: boolean,
   paddingLeft?: number
 ) {
   const startX = paddingLeft || 5;
   switch (type) {
-    case 'pack':
+    case 'childNum':
       return {
         x: node.x + startX,
+        y: node.y + BLOCK_HEIGHT / 2,
+      };
+    case 'pack':
+      return {
+        x: node.x + startX + (showChildNum && node.childNum ? 22 + 2 : 0),
         y: node.y + (BLOCK_HEIGHT - 22) / 2,
       };
     case 'favorite':
       return {
-        x: node.x + startX + (node.isPack ? 22 + 2 : 0),
+        x:
+          node.x +
+          startX +
+          (showChildNum && node.childNum ? 22 + 2 : 0) +
+          (node.isPack ? 22 + 2 : 0),
         y: node.y + (BLOCK_HEIGHT - 22) / 2,
       };
     case 'icon':
@@ -235,6 +251,7 @@ function nodeLocation(
         x:
           node.x +
           startX +
+          (showChildNum && node.childNum ? 22 + 2 : 0) +
           (node.isPack ? 22 + 2 : 0) +
           (node.hasCollect ? 22 + 2 : 0),
         y: node.y + (BLOCK_HEIGHT - 22) / 2,
@@ -244,6 +261,7 @@ function nodeLocation(
         x:
           node.x +
           startX +
+          (showChildNum && node.childNum ? 22 + 2 : 0) +
           (node.isPack ? 22 + 2 : 0) +
           (node.hasCollect ? 22 + 2 : 0) +
           (showIcon && node.icon ? 22 + 2 : 0),
@@ -254,6 +272,7 @@ function nodeLocation(
         x:
           node.x +
           startX +
+          (showChildNum && node.childNum ? 22 + 2 : 0) +
           (node.isPack ? 22 + 2 : 0) +
           (node.hasCollect ? 22 + 2 : 0) +
           (showIcon && node.icon ? 22 + 2 : 0) +
@@ -265,6 +284,7 @@ function nodeLocation(
         x:
           node.x +
           startX +
+          (showChildNum && node.childNum ? 22 + 2 : 0) +
           (node.isPack ? 22 + 2 : 0) +
           (node.hasCollect ? 22 + 2 : 0) +
           (showIcon && node.icon ? 22 + 2 : 0) +
@@ -277,7 +297,8 @@ function nodeLocation(
         node,
         showIcon,
         showAvatar,
-        avatarRadius
+        avatarRadius,
+        showChildNum
       );
       return {
         x: node.x + startX + extWidth + (extWidth ? 2 : 0),

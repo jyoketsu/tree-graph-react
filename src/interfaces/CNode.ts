@@ -10,5 +10,4 @@ export default interface CNode extends Node {
   dots?: any[];
   rightDots?: any[];
   leftDots?: any[];
-  childNum?: number;
 }

@@ -286,7 +286,8 @@ export const Mind = React.forwardRef(
         avatarRadius,
         rootZoomRatio,
         secondZoomRatio,
-        showInput && selectedId ? selectedId : undefined
+        showInput && selectedId ? selectedId : undefined,
+        showChildNum
       );
 
       if (cal) {

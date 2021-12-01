@@ -28,7 +28,9 @@ export default function FileViewer({ fileType, url }: Props) {
 }
 
 function ImageViewer({ url }: { url: string }) {
-  return <img alt="图片预览" src={url} width="100%" />;
+  return (
+    <img alt="图片预览" src={url} width="100%" style={{ maxWidth: '540px' }} />
+  );
 }
 
 function MusicPlayer({ url }: { url: string }) {
@@ -41,5 +43,7 @@ function MusicPlayer({ url }: { url: string }) {
 }
 
 function VideoPlayer({ url }: { url: string }) {
-  return <video src={url} controls width="100%" />;
+  return (
+    <video src={url} controls width="100%" style={{ maxWidth: '540px' }} />
+  );
 }

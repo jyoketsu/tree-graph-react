@@ -22,7 +22,8 @@ export default function calculate(
   collapseMode?: boolean,
   expandedNodeKey?: string | null,
   inputNodeKey?: string,
-  hideRoot?: boolean
+  hideRoot?: boolean,
+  showChildNum?: boolean
 ) {
   nodes = JSON.parse(JSON.stringify(nodes));
   const start_x = startX || 15;
@@ -39,6 +40,7 @@ export default function calculate(
     showIcon,
     showAvatar,
     avatarRadius,
+    showChildNum || false,
     undefined,
     inputNodeKey
   );
@@ -162,6 +164,7 @@ export default function calculate(
         showIcon,
         showAvatar,
         avatarRadius,
+        showChildNum || false,
         undefined,
         inputNodeKey
       );
