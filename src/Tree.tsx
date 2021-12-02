@@ -1520,6 +1520,7 @@ export const Tree = React.forwardRef(
               movedNodeY={movedNodeY}
               dragInfo={dragInfo}
               mutilMode={selectedNodes.length > 1 ? true : false}
+              showChildNum={showChildNum}
             />
           ) : null}
           {frameSelectionStarted ? (
@@ -1564,6 +1565,7 @@ export const Tree = React.forwardRef(
             showAvatar={SHOW_AVATAR}
             startId={startId}
             handleFileChange={handleFileChange}
+            showChildNum={showChildNum}
           />
         ) : null}
 

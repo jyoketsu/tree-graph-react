@@ -1436,6 +1436,7 @@ export const Mind = React.forwardRef(
               movedNodeY={movedNodeY}
               dragInfo={dragInfo}
               mutilMode={selectedNodes.length > 1 ? true : false}
+              showChildNum={showChildNum}
             />
           ) : null}
           {frameSelectionStarted ? (
@@ -1480,6 +1481,7 @@ export const Mind = React.forwardRef(
             avatarRadius={avatarRadius}
             startId={startId}
             handleFileChange={handleFileChange}
+            showChildNum={showChildNum}
           />
         ) : null}
       </div>

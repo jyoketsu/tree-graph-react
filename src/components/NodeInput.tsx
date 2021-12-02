@@ -9,6 +9,7 @@ let composing = false;
 interface Props {
   selectedId: string | null;
   nodeList: CNode[];
+  showChildNum: boolean;
   BLOCK_HEIGHT?: number;
   FONT_SIZE?: number;
   showIcon: boolean;
@@ -22,6 +23,7 @@ interface Props {
 const NodeInput = ({
   selectedId,
   nodeList,
+  showChildNum,
   BLOCK_HEIGHT,
   FONT_SIZE,
   showIcon,
@@ -90,7 +92,8 @@ const NodeInput = ({
       BLOCK_HEIGHT || 30,
       showIcon,
       showAvatar,
-      avatarRadius
+      avatarRadius,
+      showChildNum
     );
     if (selected.toLeft && !selected.name) {
       // left = textX ? textX.x + 85 : selected.x + 85;

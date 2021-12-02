@@ -5,6 +5,7 @@ import {
   getTextAfterCursor,
   isCursorHead,
   isCursorTail,
+  mouseDirection,
   moveCursorToEnd,
   textWidthAll,
 } from '../../services/util';
@@ -27,8 +28,18 @@ interface HandleClickAttachFunc {
   (attachId: string): void;
 }
 
+interface HandleSetSelectionStart {
+  (node: CNode | null): void;
+}
+
+interface HandleSetSelectionNodes {
+  (nodes: string[]): void;
+}
+
 interface Props {
   node: CNode;
+  frameSelectionStartedNode: CNode | null;
+  selectionNodeKeys: string[];
   themeColor: string;
   backgroundColor: string;
   showIcon: boolean;
@@ -48,6 +59,8 @@ interface Props {
   handleChangeNote: HandleChangeNote;
   handleDeleteAttach: HandleDeleteAttach;
   handleClickUpload: HandleClickUpload;
+  handleSetSelectionStart: HandleSetSelectionStart;
+  handleSetSelectionNodes: HandleSetSelectionNodes;
   compId: string;
   isRoot: boolean;
   isMobile: boolean;
@@ -59,6 +72,8 @@ interface Props {
 }
 const EditorItem = ({
   node,
+  frameSelectionStartedNode,
+  selectionNodeKeys,
   themeColor,
   backgroundColor,
   showIcon,
@@ -78,6 +93,8 @@ const EditorItem = ({
   handleChangeNote,
   handleDeleteAttach,
   handleClickUpload,
+  handleSetSelectionStart,
+  handleSetSelectionNodes,
   compId,
   isRoot,
   isMobile,
@@ -87,6 +104,7 @@ const EditorItem = ({
 }: // collapseMode,
 // collapseModeCollapsed,
 Props) => {
+  const inSelection = selectionNodeKeys.includes(node._key);
   const isDragging = sessionStorage.getItem('isDragging');
   const editorRef = useRef<HTMLDivElement>(null);
   const noteEditorRef = useRef<HTMLDivElement>(null);
@@ -318,6 +336,48 @@ Props) => {
     // }
   }
 
+  function handleMouseEnter(e: React.MouseEvent) {
+    sethover(true);
+    if (frameSelectionStartedNode) {
+      const res = mouseDirection(e.currentTarget, e.nativeEvent);
+      const nodes = [...selectionNodeKeys];
+      if (!nodes.includes(frameSelectionStartedNode._key)) {
+        nodes.unshift(frameSelectionStartedNode._key);
+      }
+      if (
+        (node.y < frameSelectionStartedNode.y && res === 'bottom') ||
+        (node.y > frameSelectionStartedNode.y && res === 'top')
+      ) {
+        handleSetSelectionNodes([...nodes, node._key]);
+      }
+    }
+  }
+
+  function handleMouseLeave(e: React.MouseEvent) {
+    sethover(false);
+    if (frameSelectionStartedNode) {
+      const res = mouseDirection(e.currentTarget, e.nativeEvent);
+      if (
+        (node.y < frameSelectionStartedNode.y && res === 'bottom') ||
+        (node.y > frameSelectionStartedNode.y && res === 'top')
+      ) {
+        const nodes = [...selectionNodeKeys];
+        const index = nodes.findIndex(item => item === node._key);
+        nodes.splice(index, 1);
+        handleSetSelectionNodes(nodes);
+      }
+    }
+  }
+
+  function handleMouseDown() {
+    handleSetSelectionNodes([]);
+    handleSetSelectionStart(node);
+  }
+
+  function handleMouseUp() {
+    handleSetSelectionStart(null);
+  }
+
   const urlReg = /((\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)/g;
   let nameLinkArr = [];
   if (urlReg.test(node.name)) {
@@ -415,8 +475,10 @@ Props) => {
       onDragLeave={handleDragLeave}
       onDrop={handleDropNode}
       onDragEnd={handleDragEnd}
-      onMouseEnter={() => sethover(true)}
-      onMouseLeave={() => sethover(false)}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
     >
       {Array.from(new Array(indentCount).keys()).map(item => (
         <div
@@ -435,6 +497,7 @@ Props) => {
           flexDirection: 'column',
           flex: 1,
           flexShrink: 0,
+          backgroundColor: inSelection ? '#B1D3FA' : 'unset',
         }}
       >
         <div

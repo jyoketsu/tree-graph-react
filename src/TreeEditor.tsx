@@ -180,6 +180,12 @@ export const TreeEditor = React.forwardRef(
       defaultNoteFocusedNodeId
     );
     const [selectedAttachId, setSelectedAttachId] = useState('');
+    // 是否开始框选
+    const [
+      frameSelectionStartedNode,
+      setFrameSelectionStartedNode,
+    ] = useState<CNode | null>(null);
+    const [selectionNodeKeys, setSelectionNodeKeys] = useState<string[]>([]);
 
     // 暴露方法
     useImperativeHandle(ref, () => ({
@@ -650,6 +656,8 @@ export const TreeEditor = React.forwardRef(
           <EditorItem
             key={`${index}_${node._key}`}
             node={node}
+            frameSelectionStartedNode={frameSelectionStartedNode}
+            selectionNodeKeys={selectionNodeKeys}
             themeColor={themeColor}
             backgroundColor={backgroundColor}
             showIcon={showIcon}
@@ -683,6 +691,8 @@ export const TreeEditor = React.forwardRef(
             }
             readonly={readonly}
             handleClickUpload={clickUpload}
+            handleSetSelectionStart={node => setFrameSelectionStartedNode(node)}
+            handleSetSelectionNodes={nodeKeys => setSelectionNodeKeys(nodeKeys)}
           />
         ))}
         {!readonly && cnodes[cnodes.length - 1] ? (
