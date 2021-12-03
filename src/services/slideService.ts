@@ -43,7 +43,12 @@ export default function getSlideList(
     const childrenIds = node.sortList;
 
     // 如果节点为文档，则获取文档地址，且单独有一张幻灯片
-    if (node.type === 'doc' || node.type === 'file') {
+    if (
+      node.type === 'doc' ||
+      node.type === 'file' ||
+      node.type === 'flexNode' ||
+      (node.type === 'link' && node.linkType)
+    ) {
       const url = getNodeUrlFunc(node);
       if (url) {
         slideList.push({
@@ -51,6 +56,8 @@ export default function getSlideList(
           paths: ancestor,
           url,
           icon: node.icon,
+          type: node.type,
+          linkType: node.linkType,
         });
       }
     } else {

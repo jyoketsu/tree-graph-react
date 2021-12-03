@@ -28,8 +28,29 @@ export default function Slide({
         ...style,
       }}
     >
-      {slide.url && slide.type !== 'link' && !thumbnailMode ? (
-        <Webview uri={slide.url} />
+      {slide.url && !thumbnailMode ? (
+        slide.type === 'link' && slide.linkType ? (
+          <div
+            style={{
+              width: '100%',
+              height: '100%',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <iframe
+              src={slide.url}
+              scrolling="no"
+              frameBorder="0"
+              allowFullScreen
+              width={slide.linkType === 'wangyiyun' ? '360px' : width}
+              height={slide.linkType === 'wangyiyun' ? '85px' : height}
+            ></iframe>
+          </div>
+        ) : (
+          <Webview uri={slide.url} />
+        )
       ) : (
         <Title slide={slide} active={active} thumbnailMode={thumbnailMode} />
       )}

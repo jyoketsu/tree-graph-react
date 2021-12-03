@@ -1,6 +1,7 @@
 import React from 'react';
 import { Slides, SlideProps } from '../src';
 import { Meta, Story } from '@storybook/react';
+import CNode from '../src/interfaces/CNode';
 
 const nodes = {
   '001': {
@@ -123,7 +124,7 @@ const nodes = {
     name: '阶段壹',
     father: '002',
     contract: false,
-    sortList: ['008', '009'],
+    sortList: ['008', '009', '016'],
 
     checked: false,
 
@@ -144,7 +145,7 @@ const nodes = {
   },
   '008': {
     _key: '008',
-    name: '备份json文件',
+    name: 'psnine.com',
     father: '006',
     sortList: [],
     type: 'link',
@@ -231,6 +232,16 @@ const nodes = {
     hour: 0.1,
     limitDay: 1610726400000,
   },
+  '016': {
+    _key: '016',
+    name: 'JOJO的奇妙冒险 石之海 片头曲',
+    father: '006',
+    sortList: [],
+    type: 'link',
+    linkType: 'bilibili',
+    url:
+      'https://player.bilibili.com/player.html?aid=464470996&bvid=BV16L411M7ck&cid=450926275&page=1&high_quality=1',
+  },
 };
 
 const meta: Meta = {
@@ -263,7 +274,7 @@ export const Default = Template.bind({});
 Default.args = {
   nodes: nodes,
   startId: '001',
-  getNodeUrl: () => {
-    return 'https://psnine.com/';
+  getNodeUrl: (node: CNode) => {
+    return node.url;
   },
 };

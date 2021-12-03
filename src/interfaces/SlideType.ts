@@ -7,6 +7,7 @@ export default interface SlideType {
   imageList?: Attach[];
   url?: string;
   type?: string;
+  linkType?: string;
   icon?: string;
 }
 

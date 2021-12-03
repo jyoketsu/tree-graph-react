@@ -2,7 +2,7 @@
   "name": "tree-graph-react",
   "author": "xujie <jyoketsu@gmail.com>",
   "description": "Tree graph for React / React树状思维导图组件",
-  "version": "1.3.7",
+  "version": "1.3.8",
   "license": "MIT",
   "repository": {
     "type": "git",
