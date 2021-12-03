@@ -38,6 +38,10 @@ interface HandleSetSelectionNodes {
   (nodes: string[]): void;
 }
 
+interface CheckFunc {
+  (node: CNode, event: MouseEvent): void;
+}
+
 interface Props {
   node: CNode;
   frameSelectionStartedNode: CNode | null;
@@ -63,6 +67,9 @@ interface Props {
   handleClickUpload: HandleClickUpload;
   handleSetSelectionStart: HandleSetSelectionStart;
   handleSetSelectionNodes: HandleSetSelectionNodes;
+  handleCheck: CheckFunc;
+  handleClickAvatar: Function;
+  handleClickStatus: Function;
   compId: string;
   isRoot: boolean;
   isMobile: boolean;
@@ -97,6 +104,9 @@ const EditorItem = ({
   handleClickUpload,
   handleSetSelectionStart,
   handleSetSelectionNodes,
+  handleCheck,
+  handleClickAvatar,
+  handleClickStatus,
   compId,
   isRoot,
   isMobile,
@@ -649,6 +659,38 @@ Props) => {
                 onClick={() => handleClickIcon(node)}
               ></div>
             ) : null}
+            {/* 头像 */}
+            {node.avatarUri ? (
+              <div
+                style={{
+                  width: '22px',
+                  height: '22px',
+                  borderRadius: '11px',
+                  backgroundImage: `url("${node.avatarUri}")`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  marginRight: '2px',
+                }}
+                onClick={(event: React.MouseEvent) =>
+                  handleClickAvatar(node, event)
+                }
+              ></div>
+            ) : null}
+            {/* checkbox */}
+            {node.showCheckbox ? (
+              <CheckBox
+                checked={node.checked}
+                onClick={(event: any) => handleCheck(node, event)}
+              />
+            ) : null}
+            {node.showStatus ? (
+              <Status
+                task={node}
+                onClick={(event: React.MouseEvent) =>
+                  handleClickStatus(node, event)
+                }
+              />
+            ) : null}
           </div>
 
           {/* 文字 */}
@@ -803,4 +845,122 @@ Props) => {
     </div>
   );
 };
+
+interface CheckBoxProps {
+  checked?: boolean;
+  onClick: React.MouseEventHandler;
+}
+
+function CheckBox({ checked, onClick }: CheckBoxProps) {
+  return checked ? (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0,0,18,18"
+      preserveAspectRatio="xMinYMin meet"
+      style={{ marginRight: '2px' }}
+      onClick={onClick}
+    >
+      <circle cx="9" cy="9" r="9" fill="rgb(85, 85, 85)" />
+      <path d="M 4 9 L 8 13 L 14 5" stroke="#fff" strokeWidth="1.6" />
+    </svg>
+  ) : (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0,0,18,18"
+      preserveAspectRatio="xMinYMin meet"
+      style={{ marginRight: '5px' }}
+      onClick={onClick}
+    >
+      <circle cx="9" cy="9" r="9" fill="rgb(216, 216, 216)" stroke="#000000" />
+    </svg>
+  );
+}
+
+interface StatusProps {
+  task: CNode;
+  onClick: React.MouseEventHandler;
+}
+function Status({ task, onClick }: StatusProps) {
+  const now = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
+  let limitDayNum: number | string = task.limitDay
+    ? task.limitDay - now > 0
+      ? Math.floor((task.limitDay - now) / 86400000)
+      : Math.ceil((task.limitDay - now) / 86400000) - 1
+    : 0;
+  return (
+    <div
+      style={{
+        width: '20px',
+        height: '20px',
+        textAlign: 'center',
+        position: 'relative',
+        overflow: 'hidden',
+        cursor: 'pointer',
+        flexShrink: 0,
+        userSelect: 'none',
+        color: '#FFF',
+        marginRight: '2px',
+        backgroundColor: task.checked
+          ? '#b6b7b7'
+          : limitDayNum > 0
+          ? limitDayNum === 1
+            ? '#FFB11B'
+            : '#505050'
+          : limitDayNum < 0
+          ? '#E16B8C'
+          : '#505050',
+      }}
+      onClick={onClick}
+    >
+      <div
+        style={{
+          width: 0,
+          height: 0,
+          borderWidth: '18px',
+          borderStyle: 'solid',
+          position: 'absolute',
+          top: '0px',
+          right: '-18px',
+          borderColor: '#35A6F8 transparent transparent',
+        }}
+      ></div>
+      <span
+        style={{
+          width: '15px',
+          display: 'inline-block',
+          textSizeAdjust: 'none',
+          fontSize: '12px',
+          transform: 'scale(0.67)',
+          lineHeight: '8px',
+          position: 'absolute',
+          right: 0,
+          top: '1px',
+        }}
+      >
+        {task.hour || '-'}
+      </span>
+      <span
+        style={{
+          display: 'inline-block',
+          textSizeAdjust: 'none',
+          fontSize: '12px',
+          transform: 'scale(0.83,0.83)',
+          width: '15px',
+          lineHeight: '10px',
+          position: 'absolute',
+          left: '2px',
+          bottom: '1px',
+        }}
+      >
+        {limitDayNum
+          ? Math.abs(limitDayNum) <= 99
+            ? Math.abs(limitDayNum)
+            : '99+'
+          : '∞'}
+      </span>
+    </div>
+  );
+}
 export default EditorItem;

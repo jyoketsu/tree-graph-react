@@ -11,11 +11,8 @@ const nodes = {
     sortList: ['002', '003', '004', '005'],
     contract: false,
     disabled: true,
-    avatarUri: 'https://psnine.com/Upload/game/11387.png',
     icon: 'https://cdn-icare.qingtime.cn/rooter.svg',
-
     checked: true,
-
     hour: 0.1,
     limitDay: new Date(new Date().setHours(0, 0, 0, 0)).getTime(),
   },
@@ -28,8 +25,11 @@ const nodes = {
     checked: true,
     disabled: true,
     hour: 0.1,
+    avatarUri: 'https://psnine.com/Upload/game/11387.png',
     limitDay: new Date(new Date().setHours(0, 0, 0, 0)).getTime(),
     icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
+    showCheckbox: true,
+    showStatus: true,
   },
   '003': {
     _key: '003',
@@ -260,4 +260,8 @@ Default.args = {
   ) => {
     console.log('---handleCommandChanged---', nodeKey, command, value, addMode);
   },
+  handleClickAvatar: (node: any) =>
+    console.log('---handleClickAvatar---', node),
+  handleClickStatus: (node: any, element: any) =>
+    console.log('---handleClickStatus---', node, element),
 };

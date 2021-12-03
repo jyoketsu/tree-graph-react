@@ -161,6 +161,9 @@ export const MobileTree = React.forwardRef(
     // nodeMap发生改变，根据nodeMap计算渲染所需数据
     useEffect(() => {
       console.log('根据nodeMap计算渲染所需数据');
+      if (!nodeMap[startId]) {
+        return;
+      }
       const cal = calculate(
         nodeMap,
         startId,

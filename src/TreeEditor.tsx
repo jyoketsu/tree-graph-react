@@ -23,6 +23,7 @@ import {
   toFatherBrother,
   getCursorIndex,
   isMobile,
+  checkNode,
 } from './services/util';
 import DragInfo from './interfaces/DragInfo';
 import EditorItem from './components/nodeItem/EditorItem';
@@ -74,6 +75,10 @@ export interface HandleClickUpload {
   (nodeKey: string, el: HTMLElement): void;
 }
 
+interface NodeClickFunc {
+  (node: CNode, targetEl: HTMLElement): void;
+}
+
 export interface TreeEditorProps {
   // 节点
   nodes: NodeMap;
@@ -116,6 +121,9 @@ export interface TreeEditorProps {
   handleClickAddButton?: HandleClickMore;
   handleClickPreviewButton?: Function;
   handleClickUpload?: HandleClickUpload;
+  handleCheck?: Function;
+  handleClickAvatar?: NodeClickFunc;
+  handleClickStatus?: NodeClickFunc;
   ref?: any;
   collapseMode?: boolean;
 }
@@ -157,6 +165,9 @@ export const TreeEditor = React.forwardRef(
       handleClickAddButton,
       handleClickPreviewButton,
       handleClickUpload,
+      handleCheck,
+      handleClickAvatar,
+      handleClickStatus,
       collapseMode,
     }: TreeEditorProps,
     ref
@@ -207,6 +218,9 @@ export const TreeEditor = React.forwardRef(
     // nodeMap发生改变，根据nodeMap计算渲染所需数据
     useEffect(() => {
       console.log('根据nodeMap计算渲染所需数据');
+      if (!nodeMap[startId]) {
+        return;
+      }
       const nodes = calculate(
         nodeMap,
         startId,
@@ -677,6 +691,41 @@ export const TreeEditor = React.forwardRef(
       }
     }
 
+    // check节点
+    function check(node: CNode, e: MouseEvent) {
+      if (disabled) {
+        return;
+      }
+      e.stopPropagation();
+      if (uncontrolled) {
+        let nodes = checkNode(nodeMap, node._key);
+        setNodeMap(nodes);
+      }
+      if (handleCheck) {
+        handleCheck(node);
+      }
+    }
+
+    function clickAvatar(
+      node: CNode,
+      event: React.MouseEvent<HTMLButtonElement>
+    ) {
+      if (handleClickAvatar) {
+        event.stopPropagation();
+        handleClickAvatar(node, event.currentTarget);
+      }
+    }
+
+    function clickStatus(
+      node: CNode,
+      event: React.MouseEvent<HTMLButtonElement>
+    ) {
+      if (handleClickStatus) {
+        event.stopPropagation();
+        handleClickStatus(node, event.currentTarget);
+      }
+    }
+
     return (
       <div
         className="menu-wrapper"
@@ -729,6 +778,9 @@ export const TreeEditor = React.forwardRef(
             handleClickUpload={clickUpload}
             handleSetSelectionStart={node => setFrameSelectionStartedNode(node)}
             handleSetSelectionNodes={nodeKeys => setSelectionNodeKeys(nodeKeys)}
+            handleCheck={check}
+            handleClickAvatar={clickAvatar}
+            handleClickStatus={clickStatus}
           />
         ))}
         {!readonly && cnodes[cnodes.length - 1] ? (
