@@ -584,6 +584,42 @@ export const TreeEditor = React.forwardRef(
         const brother = nodeMap[sortList[currentNodeIndex - 1]];
         if (!brother) return;
         switchNodeToBrotherChild(currentNodeIndex, nodeKey, brother._key);
+      } else if (command === 'selectAll') {
+        const keys = cnodes.map(node => node._key);
+        setSelectionNodeKeys(keys);
+      } else if (command === 'copy-selection') {
+        let nodes = [];
+        let minX;
+        for (let index = 0; index < selectionNodeKeys.length; index++) {
+          const key = selectionNodeKeys[index];
+          const node = cnodes.find(node => node._key === key);
+          if (node) {
+            nodes.push(node);
+            if (minX === undefined || node.x < minX) {
+              minX = node.x;
+            }
+          }
+        }
+        nodes.sort((a, b) => a.y - b.y);
+        let str = '';
+        const rootKey = cnodes[0]._key;
+        for (let index = 0; index < nodes.length; index++) {
+          const element = nodes[index];
+          const indentCount = (element.x - (minX || 0)) / 30;
+          let indent = '';
+          for (let index = 0; index < indentCount; index++) {
+            indent += '  ';
+          }
+          str += `${indent}${element._key === rootKey ? '' : '・ '}${
+            element.name
+          }\n`;
+        }
+        if (navigator.clipboard) {
+          // clipboard api 复制
+          navigator.clipboard.writeText(str);
+        } else {
+          alert('无法复制！请升级浏览器！');
+        }
       } else if (command === quickCommandKey && handleCommandChanged) {
         quickCommandIndex = getCursorIndex();
         handleCommandChanged(nodeKey, 'open', value || '', addMode);

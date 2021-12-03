@@ -16,6 +16,8 @@ import ClickToUpload from './ClickToUpload';
 import FileViewer from './FileViewer';
 import LinkViewer from './LinkViewer';
 
+const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
+
 // 为了在删除节点后失去焦点不触发更改节点名
 let deletable = false;
 let composing = false;
@@ -161,7 +163,11 @@ Props) => {
     if (composing) {
       return;
     }
-    if (event.shiftKey && event.key === 'Enter') {
+    const commandKey = isMac ? event.metaKey : event.ctrlKey;
+    if (commandKey && event.key === 'a' && selectionNodeKeys.length) {
+      event.preventDefault();
+      actionCommand('selectAll', node._key);
+    } else if (event.shiftKey && event.key === 'Enter') {
       // shift+enter 添加节点备注
       event.preventDefault();
       if (node.note !== undefined) {
@@ -326,6 +332,13 @@ Props) => {
       event.preventDefault();
       let files = event.clipboardData.files;
       handlePasteFiles(node._key, files);
+    }
+  }
+
+  function handleCopy(event: React.ClipboardEvent) {
+    if (selectionNodeKeys.length) {
+      event.preventDefault();
+      actionCommand('copy-selection', node._key);
     }
   }
 
@@ -650,6 +663,7 @@ Props) => {
             onBlur={saveText}
             onKeyDown={keyDown}
             onKeyUp={keyUp}
+            onCopy={handleCopy}
             onPaste={handlePaste}
             onCompositionStart={() => (composing = true)}
             onCompositionEnd={() => (composing = false)}
