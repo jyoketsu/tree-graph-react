@@ -11,6 +11,8 @@ import Collapsed from './Collapsed';
 import More from './More';
 import Preview from './Preview';
 import Plus from './Plus';
+import Pack from './Pack';
+import Fav from './Fav';
 
 const Icon = (props: IconProps) => {
   switch (props.name) {
@@ -36,6 +38,10 @@ const Icon = (props: IconProps) => {
       return <Preview {...props} />;
     case 'plus':
       return <Plus {...props} />;
+    case 'pack':
+      return <Pack {...props} />;
+    case 'fav':
+      return <Fav {...props} />;
     default:
       return null;
   }

@@ -31,3 +31,9 @@
   overflow: visible;
   -webkit-line-clamp: initial;
 }
+.normal-link {
+  background-color: #fff;
+}
+.normal-link:hover {
+  background-color: #eeecec;
+}

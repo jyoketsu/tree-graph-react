@@ -20,8 +20,9 @@ export default function ClickToUpload({
         padding: '13px 10px',
         cursor: 'pointer',
         userSelect: 'none',
+        boxSizing: 'border-box',
       }}
-      onClick={e => handleClickUpload(nodeKey, e.currentTarget)}
+      onClick={(e) => handleClickUpload(nodeKey, e.currentTarget)}
     >
       {type === 'file' ? '点击添加文件' : '点击输入链接地址'}
     </div>

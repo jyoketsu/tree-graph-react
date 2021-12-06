@@ -112,6 +112,7 @@ export interface TreeEditorProps {
   handleClickDot?: Function;
   handleChangeNodeText?: Function;
   handleAddNext?: HandleAddNext;
+  handleAddPrevious?: HandleAddNext;
   handleAddChild?: Function;
   handleDeleteNode?: Function;
   handleShiftUpDown?: Function;
@@ -156,6 +157,7 @@ export const TreeEditor = React.forwardRef(
       handleClickDot,
       handleChangeNodeText,
       handleAddNext,
+      handleAddPrevious,
       handleAddChild,
       handleDeleteNode,
       handleShiftUpDown,
@@ -192,10 +194,8 @@ export const TreeEditor = React.forwardRef(
     );
     const [selectedAttachId, setSelectedAttachId] = useState('');
     // 是否开始框选
-    const [
-      frameSelectionStartedNode,
-      setFrameSelectionStartedNode,
-    ] = useState<CNode | null>(null);
+    const [frameSelectionStartedNode, setFrameSelectionStartedNode] =
+      useState<CNode | null>(null);
     const [selectionNodeKeys, setSelectionNodeKeys] = useState<string[]>([]);
 
     // 暴露方法
@@ -221,6 +221,7 @@ export const TreeEditor = React.forwardRef(
       if (!nodeMap[startId]) {
         return;
       }
+      setFrameSelectionStartedNode(null);
       const nodes = calculate(
         nodeMap,
         startId,
@@ -336,6 +337,23 @@ export const TreeEditor = React.forwardRef(
         }
       }
     }
+    function addPrevious(nodeKey: string, value?: string) {
+      if (nodeKey === startId) {
+        return alert('根节点无法添加兄弟节点！');
+      }
+      if (uncontrolled) {
+        const res = addNextNode(nodeMap, nodeKey, value, true);
+        if (handleAddPrevious) {
+          handleAddPrevious(nodeKey, res.addedNode, value);
+        }
+        setFocusedKey(res.addedNode._key);
+        setNodeMap(res.nodes);
+      } else {
+        if (handleAddPrevious) {
+          handleAddPrevious(nodeKey, undefined, value);
+        }
+      }
+    }
 
     // 添加节点备注
     function addNote(nodeKey: string) {
@@ -425,7 +443,7 @@ export const TreeEditor = React.forwardRef(
       if (!grandFather.sortList.length) return;
 
       const fatherIndex = grandFather.sortList.findIndex(
-        item => item === father._key
+        (item) => item === father._key
       );
 
       if (uncontrolled) {
@@ -546,6 +564,8 @@ export const TreeEditor = React.forwardRef(
       if (command === 'AddNext') {
         // 添加弟弟节点
         addNext(nodeKey, value);
+      } else if (command === 'AddPrevious') {
+        addPrevious(nodeKey, value);
       } else if (command === 'AddChild') {
         // 添加子节点
         addChild(nodeKey, value);
@@ -578,7 +598,7 @@ export const TreeEditor = React.forwardRef(
         if (!father) return;
         const sortList = father.sortList;
         if (!sortList.length) return;
-        const currentNodeIndex = sortList.findIndex(id => id === nodeKey);
+        const currentNodeIndex = sortList.findIndex((id) => id === nodeKey);
         if (currentNodeIndex === -1 || currentNodeIndex === 0) return;
         const brother = nodeMap[sortList[currentNodeIndex - 1]];
         if (!brother) return;
@@ -593,20 +613,20 @@ export const TreeEditor = React.forwardRef(
         if (!father) return;
         const sortList = father.sortList;
         if (!sortList.length) return;
-        const currentNodeIndex = sortList.findIndex(id => id === nodeKey);
+        const currentNodeIndex = sortList.findIndex((id) => id === nodeKey);
         if (currentNodeIndex === -1 || currentNodeIndex === 0) return;
         const brother = nodeMap[sortList[currentNodeIndex - 1]];
         if (!brother) return;
         switchNodeToBrotherChild(currentNodeIndex, nodeKey, brother._key);
       } else if (command === 'selectAll') {
-        const keys = cnodes.map(node => node._key);
+        const keys = cnodes.map((node) => node._key);
         setSelectionNodeKeys(keys);
       } else if (command === 'copy-selection') {
         let nodes = [];
         let minX;
         for (let index = 0; index < selectionNodeKeys.length; index++) {
           const key = selectionNodeKeys[index];
-          const node = cnodes.find(node => node._key === key);
+          const node = cnodes.find((node) => node._key === key);
           if (node) {
             nodes.push(node);
             if (minX === undefined || node.x < minX) {
@@ -635,6 +655,7 @@ export const TreeEditor = React.forwardRef(
           alert('无法复制！请升级浏览器！');
         }
       } else if (command === quickCommandKey && handleCommandChanged) {
+        setFrameSelectionStartedNode(null);
         quickCommandIndex = getCursorIndex();
         handleCommandChanged(nodeKey, 'open', value || '', addMode);
       } else if (
@@ -757,7 +778,7 @@ export const TreeEditor = React.forwardRef(
             handleDrop={handleDrop}
             handleClickDot={clickDot}
             actionCommand={actionCommand}
-            handleClickAttach={attachId => setSelectedAttachId(attachId)}
+            handleClickAttach={(attachId) => setSelectedAttachId(attachId)}
             handlePasteFiles={handlePasteFiles}
             handleChangeNote={changeNote}
             handleDeleteAttach={handleDeleteAttach}
@@ -776,8 +797,12 @@ export const TreeEditor = React.forwardRef(
             }
             readonly={readonly}
             handleClickUpload={clickUpload}
-            handleSetSelectionStart={node => setFrameSelectionStartedNode(node)}
-            handleSetSelectionNodes={nodeKeys => setSelectionNodeKeys(nodeKeys)}
+            handleSetSelectionStart={(node) =>
+              setFrameSelectionStartedNode(node)
+            }
+            handleSetSelectionNodes={(nodeKeys) =>
+              setSelectionNodeKeys(nodeKeys)
+            }
             handleCheck={check}
             handleClickAvatar={clickAvatar}
             handleClickStatus={clickStatus}

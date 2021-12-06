@@ -30,18 +30,19 @@ const nodes = {
     icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
     showCheckbox: true,
     showStatus: true,
+    hasCollect: true,
+    isPack: true,
   },
   '003': {
     _key: '003',
     name: '項目狀態',
     father: '001',
     sortList: ['010', '011'],
-    childNum: 100,
     checked: false,
-
     hour: 0.1,
     limitDay: 1610726400000,
     icon: 'https://cdn-icare.qingtime.cn/favFolder.svg',
+    childNum: 1000,
   },
   '004': {
     _key: '004',
@@ -119,8 +120,7 @@ const nodes = {
     checked: false,
     hour: 0.1,
     limitDay: 1610726400000,
-    note:
-      '这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注',
+    note: '这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注这个是备注',
   },
   '010': {
     _key: '010',
@@ -135,7 +135,7 @@ const nodes = {
     _key: '011',
     name: '链接类节点',
     father: '003',
-    sortList: ['012', '013', '014'],
+    sortList: ['012', '013', '014', '020'],
     contract: false,
     checked: true,
     hour: 0.1,
@@ -145,8 +145,7 @@ const nodes = {
     _key: '012',
     name: 'B站',
     type: 'link',
-    url:
-      'https://player.bilibili.com/player.html?aid=1149538&bvid=BV1Ex411T7Li&cid=1677748&page=1',
+    url: 'https://player.bilibili.com/player.html?aid=1149538&bvid=BV1Ex411T7Li&cid=1677748&page=1',
     linkType: 'bilibili',
     father: '011',
     sortList: [],
@@ -155,15 +154,14 @@ const nodes = {
     _key: '013',
     name: '网易云',
     type: 'link',
-    url:
-      'https://music.163.com/outchain/player?type=2&id=1472480890&auto=1&height=66',
+    url: 'https://music.163.com/outchain/player?type=2&id=1472480890&auto=1&height=66',
     linkType: 'wangyiyun',
     father: '011',
     sortList: [],
   },
   '014': {
     _key: '014',
-    name: '測試',
+    name: '链接未填写网址',
     father: '011',
     sortList: [],
     type: 'link',
@@ -208,7 +206,16 @@ const nodes = {
     type: 'file',
     fileType: 'video/*',
     url: 'https://cdn-icare.qingtime.cn/5B2C436C.mp4',
-    father: '010',
+    father: '011',
+    sortList: [],
+  },
+  '020': {
+    _key: '020',
+    type: 'link',
+    name: '「jyoketsu3」的PSN主页',
+    note: '提供全中文的PSN帐号查询、奖杯列表、奖杯攻略、游戏新闻、会免优惠信息查询、PSN排行榜、约战、奖杯卡制作等服务',
+    url: 'https://psnine.com',
+    icon: 'https://psnine.com/View/aimage/p9.png',
     sortList: [],
   },
 };
@@ -223,7 +230,7 @@ const meta: Meta = {
 
 export default meta;
 
-const Template: Story<TreeEditorProps> = args => {
+const Template: Story<TreeEditorProps> = (args) => {
   return <TreeEditor {...args} />;
 };
 

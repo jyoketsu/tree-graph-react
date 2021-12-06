@@ -9,9 +9,8 @@ function findNodeById(nodes: CNode[], id: string) {
 
 // 生成标识符
 function guid(len: number, radix: number) {
-  var chars = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split(
-    ''
-  );
+  var chars =
+    '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'.split('');
   var uuid = [],
     i;
   radix = radix || chars.length;
@@ -367,7 +366,7 @@ export const getNextSelect = (node: Node, nodeMap: NodeMap) => {
   if (father) {
     const sortList = father.sortList;
     if (sortList.length > 1) {
-      const index = sortList.findIndex(key => key === node._key);
+      const index = sortList.findIndex((key) => key === node._key);
       if (index > 0) {
         return sortList[index - 1];
       } else {
@@ -420,7 +419,12 @@ function addChildNode(nodeMap: NodeMap, selectedId: string, value?: string) {
 }
 
 // 向后新增同辈节点
-function addNextNode(nodeMap: NodeMap, selectedId: string, value?: string) {
+function addNextNode(
+  nodeMap: NodeMap,
+  selectedId: string,
+  value?: string,
+  isPrevious?: boolean
+) {
   let nodes = { ...nodeMap };
   let selectedNode = nodes[selectedId];
   let fatherNode = nodes[selectedNode.father];
@@ -434,7 +438,13 @@ function addNextNode(nodeMap: NodeMap, selectedId: string, value?: string) {
     limitDay: 0,
   };
   let brotherKeys = fatherNode.sortList;
-  brotherKeys.splice(brotherKeys.indexOf(selectedId) + 1, 0, nextNode._key);
+  brotherKeys.splice(
+    isPrevious
+      ? brotherKeys.indexOf(selectedId)
+      : brotherKeys.indexOf(selectedId) + 1,
+    0,
+    nextNode._key
+  );
   fatherNode.sortList = brotherKeys;
   nodes[nextNode._key] = nextNode;
   return {
@@ -513,14 +523,14 @@ function toFatherBrother(nodeMap: NodeMap, nodeId: string) {
   const father = nodes[node.father];
   const grandFather = nodes[father.father];
   const fatherIndex = grandFather.sortList.findIndex(
-    item => item === father._key
+    (item) => item === father._key
   );
   // 将节点插入到爷爷的sortlist中
   grandFather.sortList.splice(fatherIndex + 1, 0, nodeId);
   // 更改father
   node.father = grandFather._key;
   // 从父亲的sortlist中移除
-  const index = father.sortList.findIndex(item => item === node._key);
+  const index = father.sortList.findIndex((item) => item === node._key);
   father.sortList.splice(index, 1);
   return { nodes };
 }
@@ -834,7 +844,7 @@ function changeSelect(
   direction: 'ArrowUp' | 'ArrowRight' | 'ArrowDown' | 'ArrowLeft'
 ) {
   let nodes = [...cnodes];
-  const target = nodes.find(node => node._key === selectedId);
+  const target = nodes.find((node) => node._key === selectedId);
   if (!target || !target.x || !target.y) {
     return;
   }
@@ -885,7 +895,7 @@ function changeMindSelect(
   direction: 'ArrowUp' | 'ArrowRight' | 'ArrowDown' | 'ArrowLeft'
 ) {
   let nodes = [...cnodes];
-  const target = nodes.find(node => node._key === selectedId);
+  const target = nodes.find((node) => node._key === selectedId);
   if (!target || !target.x || !target.y || !target.width) {
     return;
   }
@@ -963,7 +973,7 @@ function getTextAfterCursor(elment: HTMLDivElement) {
 }
 
 function moveCursor(type: 'up' | 'down', cnodes: Node[], nodeId: string) {
-  const index = cnodes.findIndex(item => item._key === nodeId);
+  const index = cnodes.findIndex((item) => item._key === nodeId);
   if (index === -1) return;
   if (type === 'up') {
     if (index === 0) return;
@@ -1007,7 +1017,8 @@ function getCursorIndex() {
 }
 
 function isMobile() {
-  let regex_match = /(nokia|iphone|android|motorola|^mot-|softbank|foma|docomo|kddi|up.browser|up.link|htc|dopod|blazer|netfront|helio|hosin|huawei|novarra|CoolPad|webos|techfaith|palmsource|blackberry|alcatel|amoi|ktouch|nexian|samsung|^sam-|s[cg]h|^lge|ericsson|philips|sagem|wellcom|bunjalloo|maui|symbian|smartphone|midp|wap|phone|windows ce|iemobile|^spice|^bird|^zte-|longcos|pantech|gionee|^sie-|portalmmm|jigs browser|hiptop|^benq|haier|^lct|operas*mobi|opera*mini|320x320|240x320|176x220|Mobile)/i;
+  let regex_match =
+    /(nokia|iphone|android|motorola|^mot-|softbank|foma|docomo|kddi|up.browser|up.link|htc|dopod|blazer|netfront|helio|hosin|huawei|novarra|CoolPad|webos|techfaith|palmsource|blackberry|alcatel|amoi|ktouch|nexian|samsung|^sam-|s[cg]h|^lge|ericsson|philips|sagem|wellcom|bunjalloo|maui|symbian|smartphone|midp|wap|phone|windows ce|iemobile|^spice|^bird|^zte-|longcos|pantech|gionee|^sie-|portalmmm|jigs browser|hiptop|^benq|haier|^lct|operas*mobi|opera*mini|320x320|240x320|176x220|Mobile)/i;
   let u = navigator.userAgent;
   if (null == u) {
     return true;

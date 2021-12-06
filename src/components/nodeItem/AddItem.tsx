@@ -111,7 +111,7 @@ const AddItem = ({ lastNode, isRoot, clickAdd, actionCommand }: Props) => {
         display: 'flex',
         position: 'relative',
         width: '100%',
-        paddingLeft: '35px',
+        paddingLeft: '55px',
         paddingRight: '35px',
         boxSizing: 'border-box',
         opacity: focused || hover ? 1 : 0,
@@ -119,7 +119,7 @@ const AddItem = ({ lastNode, isRoot, clickAdd, actionCommand }: Props) => {
       onMouseEnter={() => sethover(true)}
       onMouseLeave={() => sethover(false)}
     >
-      {Array.from(new Array(indentCount).keys()).map(item => (
+      {Array.from(new Array(indentCount).keys()).map((item) => (
         <div
           key={item}
           style={{

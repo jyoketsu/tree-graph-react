@@ -124,6 +124,8 @@ Props) => {
   const [isDragOver, setIsDragOver] = useState(false);
   const [hover, sethover] = useState(false);
   const indentCount = node.x / 30;
+  const isNormalLink = node.type === 'link' && node.url;
+
   let fontSize = 16;
   if (isRoot) {
     fontSize = 34;
@@ -203,16 +205,23 @@ Props) => {
         // 根节点按Enter，相当于添加子节点
         actionCommand('AddChild', node._key);
       } else if (editorRef && editorRef.current) {
-        const valuePart2 = getTextAfterCursor(editorRef.current);
-        if (valuePart2) {
-          // 如果光标后有文字，则分割成两段文字同时生成2条节点
-          const value = editorRef.current.innerText.replace(/[\r\n]/g, '');
-          const valuePart1 = value.replace(valuePart2, '');
-          editorRef.current.innerText = valuePart1;
-          handleChangeNodeText(node._key, valuePart1);
-          actionCommand('AddNext', node._key, valuePart2);
+        const inHead = isCursorHead();
+        // 光标在头部
+        if (inHead) {
+          // todo
+          actionCommand('AddPrevious', node._key);
         } else {
-          actionCommand('AddNext', node._key);
+          const valuePart2 = getTextAfterCursor(editorRef.current);
+          if (valuePart2) {
+            // 如果光标后有文字，则分割成两段文字同时生成2条节点
+            const value = editorRef.current.innerText.replace(/[\r\n]/g, '');
+            const valuePart1 = value.replace(valuePart2, '');
+            editorRef.current.innerText = valuePart1;
+            handleChangeNodeText(node._key, valuePart1);
+            actionCommand('AddNext', node._key, valuePart2);
+          } else {
+            actionCommand('AddNext', node._key);
+          }
         }
       } else {
         actionCommand('AddNext', node._key);
@@ -385,7 +394,7 @@ Props) => {
         (node.y > frameSelectionStartedNode.y && res === 'top')
       ) {
         const nodes = [...selectionNodeKeys];
-        const index = nodes.findIndex(item => item === node._key);
+        const index = nodes.findIndex((item) => item === node._key);
         nodes.splice(index, 1);
         handleSetSelectionNodes(nodes);
       }
@@ -401,7 +410,8 @@ Props) => {
     handleSetSelectionStart(null);
   }
 
-  const urlReg = /((\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)/g;
+  const urlReg =
+    /((\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)/g;
   let nameLinkArr = [];
   if (urlReg.test(node.name)) {
     let arr1: string[] = [];
@@ -487,6 +497,7 @@ Props) => {
           isDragging && isDragOver ? '0 0 2px 0' : isDragOver ? '2px' : '0',
         opacity: dragStarted ? 0.8 : 1,
         overflow: 'hidden',
+        margin: isNormalLink ? '15px 0' : 'unset',
       }}
       onClick={(e: React.MouseEvent) => {
         e.stopPropagation();
@@ -503,7 +514,7 @@ Props) => {
       onMouseDown={handleMouseDown}
       onMouseUp={handleMouseUp}
     >
-      {Array.from(new Array(indentCount).keys()).map(item => (
+      {Array.from(new Array(indentCount).keys()).map((item) => (
         <div
           key={item}
           style={{
@@ -528,7 +539,7 @@ Props) => {
             width: '100%',
             display: 'flex',
             fontSize: `${fontSize}px`,
-            lineHeight: `${fontSize * 2}px`,
+            lineHeight: isNormalLink ? 'unset' : `${fontSize * 2}px`,
             color: isRoot ? '#16181a' : '#1d1d1f',
             fontWeight: isRoot ? 600 : 'normal',
           }}
@@ -585,7 +596,7 @@ Props) => {
               {/* 折叠按钮 */}
               {node.sortList.length && !isMobile ? (
                 <div
-                  onClick={e => {
+                  onClick={(e) => {
                     e.stopPropagation();
                     handleClickExpand(node);
                   }}
@@ -613,7 +624,7 @@ Props) => {
                   alignItems: 'center',
                   marginRight: '8px',
                 }}
-                onClick={e => {
+                onClick={(e) => {
                   e.stopPropagation();
                   handleClickDot(node);
                 }}
@@ -643,8 +654,15 @@ Props) => {
               </div>
             ) : null}
 
+            {node.childNum ? <ChildNum num={node.childNum} /> : null}
+            {node.isPack ? (
+              <Icon name="pack" style={{ marginRight: '2px' }} />
+            ) : null}
+            {node.hasCollect ? (
+              <Icon name="fav" style={{ marginRight: '2px' }} />
+            ) : null}
             {/* 圖標 */}
-            {showIcon && node.icon && !isRoot ? (
+            {showIcon && node.icon && !isRoot && !isNormalLink ? (
               <div
                 style={{
                   width: '22px',
@@ -654,7 +672,7 @@ Props) => {
                   backgroundSize: 'contain',
                   backgroundRepeat: 'no-repeat',
                   flexShrink: 0,
-                  marginRight: '5px',
+                  marginRight: '2px',
                 }}
                 onClick={() => handleClickIcon(node)}
               ></div>
@@ -694,43 +712,54 @@ Props) => {
           </div>
 
           {/* 文字 */}
-          <div
-            id={`node-${node._key}`}
-            className="t-editor node-editor"
-            contentEditable={readonly ? false : true}
-            spellCheck="true"
-            autoCapitalize="off"
-            suppressContentEditableWarning={true}
-            ref={editorRef}
-            onBlur={saveText}
-            onKeyDown={keyDown}
-            onKeyUp={keyUp}
-            onCopy={handleCopy}
-            onPaste={handlePaste}
-            onCompositionStart={() => (composing = true)}
-            onCompositionEnd={() => (composing = false)}
-          >
-            {nameLinkArr.length ? (
-              <span>
-                {nameLinkArr.map((name, index) => (
-                  <span
-                    key={index}
-                    style={{
-                      textDecoration:
-                        name.type === 'link' ? 'underline' : 'unset',
-                      cursor: name.type === 'link' ? 'pointer' : 'text',
-                      color: name.type === 'link' ? themeColor : 'inherit',
-                    }}
-                    onClick={() => handleClickLink(name.type, name.text)}
-                  >
-                    {name.text || ''}
-                  </span>
-                ))}
-              </span>
-            ) : (
-              node.name
-            )}
-          </div>
+          {!isNormalLink ? (
+            <div
+              id={`node-${node._key}`}
+              className="t-editor node-editor"
+              contentEditable={readonly ? false : true}
+              spellCheck="true"
+              autoCapitalize="off"
+              suppressContentEditableWarning={true}
+              ref={editorRef}
+              onBlur={saveText}
+              onKeyDown={keyDown}
+              onKeyUp={keyUp}
+              onCopy={handleCopy}
+              onPaste={handlePaste}
+              onCompositionStart={() => (composing = true)}
+              onCompositionEnd={() => (composing = false)}
+            >
+              {nameLinkArr.length ? (
+                <span>
+                  {nameLinkArr.map((name, index) => (
+                    <span
+                      key={index}
+                      style={{
+                        textDecoration:
+                          name.type === 'link' ? 'underline' : 'unset',
+                        cursor: name.type === 'link' ? 'pointer' : 'text',
+                        color: name.type === 'link' ? themeColor : 'inherit',
+                      }}
+                      onClick={() => handleClickLink(name.type, name.text)}
+                    >
+                      {name.text || ''}
+                    </span>
+                  ))}
+                </span>
+              ) : (
+                node.name
+              )}
+            </div>
+          ) : (
+            <LinkViewer
+              linkType={node.linkType}
+              url={node.url || ''}
+              name={node.name}
+              note={node.note}
+              icon={node.icon}
+              onClick={() => clickPreview(node)}
+            />
+          )}
         </div>
         {/* 如果是文件类型的节点且url未设定 */}
         {(node.type === 'file' || node.type === 'link') && !node.url ? (
@@ -758,57 +787,48 @@ Props) => {
             <FileViewer fileType={node.fileType} url={node.url} />
           </div>
         ) : null}
-        {/* 链接类型节点预览 */}
-        {node.type === 'link' && node.linkType && node.url ? (
+        {/* 附件 */}
+        {!isNormalLink ? (
           <div
             style={{
               marginLeft: '9px',
               paddingLeft: '16px',
+              borderLeft: '1px solid #DEDEE1',
             }}
           >
-            <LinkViewer linkType={node.linkType} url={node.url} />
+            {(node.attach || []).map((attach, index) => (
+              <AttachItem
+                key={`${node._key}-${index}-${attach.name}`}
+                id={`${node._key}-${index}-${attach.name}`}
+                attachIndex={index}
+                nodeKey={node._key}
+                attach={attach}
+                selectedAttachId={selectedAttachId}
+                themeColor={themeColor}
+                handleClick={handleClickAttach}
+                handleDeleteAttach={handleDeleteAttach}
+              />
+            ))}
+            <div
+              className={`t-editor item-note ${readonly ? 'readonly' : ''}`}
+              contentEditable={readonly ? false : true}
+              spellCheck="true"
+              autoCapitalize="off"
+              suppressContentEditableWarning={true}
+              style={{
+                fontSize: '14px',
+                color: '#797B7C',
+                lineHeight: node.note !== undefined ? '22px' : 0,
+              }}
+              ref={noteEditorRef}
+              onBlur={saveNote}
+              onKeyDown={noteKeyDown}
+              onPaste={handlePaste}
+            >
+              {node.note}
+            </div>
           </div>
         ) : null}
-        {/* 附件 */}
-        <div
-          style={{
-            marginLeft: '9px',
-            paddingLeft: '16px',
-            borderLeft: '1px solid #DEDEE1',
-          }}
-        >
-          {(node.attach || []).map((attach, index) => (
-            <AttachItem
-              key={`${node._key}-${index}-${attach.name}`}
-              id={`${node._key}-${index}-${attach.name}`}
-              attachIndex={index}
-              nodeKey={node._key}
-              attach={attach}
-              selectedAttachId={selectedAttachId}
-              themeColor={themeColor}
-              handleClick={handleClickAttach}
-              handleDeleteAttach={handleDeleteAttach}
-            />
-          ))}
-          <div
-            className={`t-editor item-note ${readonly ? 'readonly' : ''}`}
-            contentEditable={readonly ? false : true}
-            spellCheck="true"
-            autoCapitalize="off"
-            suppressContentEditableWarning={true}
-            style={{
-              fontSize: '14px',
-              color: '#797B7C',
-              lineHeight: node.note !== undefined ? '22px' : 0,
-            }}
-            ref={noteEditorRef}
-            onBlur={saveNote}
-            onKeyDown={noteKeyDown}
-            onPaste={handlePaste}
-          >
-            {node.note}
-          </div>
-        </div>
       </div>
       {/* 右侧操作按钮 */}
       {isMobile ? (
@@ -826,7 +846,7 @@ Props) => {
           {/* 折叠按钮 */}
           {node.sortList.length ? (
             <div
-              onClick={e => {
+              onClick={(e) => {
                 e.stopPropagation();
                 handleClickExpand(node);
               }}
@@ -854,26 +874,33 @@ interface CheckBoxProps {
 function CheckBox({ checked, onClick }: CheckBoxProps) {
   return checked ? (
     <svg
-      width="18"
-      height="18"
-      viewBox="0,0,18,18"
+      width="22"
+      height="22"
+      viewBox="0,0,22,22"
       preserveAspectRatio="xMinYMin meet"
       style={{ marginRight: '2px' }}
       onClick={onClick}
     >
-      <circle cx="9" cy="9" r="9" fill="rgb(85, 85, 85)" />
-      <path d="M 4 9 L 8 13 L 14 5" stroke="#fff" strokeWidth="1.6" />
+      <circle cx="11" cy="11" r="11" fill="rgb(85, 85, 85)" />
+      <path d="M 6 11 L 10 15 L 16 7" stroke="#fff" strokeWidth="1.6" />
     </svg>
   ) : (
     <svg
-      width="18"
-      height="18"
-      viewBox="0,0,18,18"
+      width="22"
+      height="22"
+      viewBox="0,0,22,22"
       preserveAspectRatio="xMinYMin meet"
-      style={{ marginRight: '5px' }}
+      style={{ marginRight: '2px' }}
       onClick={onClick}
     >
-      <circle cx="9" cy="9" r="9" fill="rgb(216, 216, 216)" stroke="#000000" />
+      <circle
+        cx="11"
+        cy="11"
+        r="10"
+        fill="rgb(216, 216, 216)"
+        stroke="#A9A9A9"
+        strokeWidth="1"
+      />
     </svg>
   );
 }
@@ -960,6 +987,32 @@ function Status({ task, onClick }: StatusProps) {
             : '99+'
           : '∞'}
       </span>
+    </div>
+  );
+}
+
+function ChildNum({ num }: { num: number }) {
+  return (
+    <div
+      style={{
+        width: '22px',
+        height: '22px',
+        borderRadius: '11px',
+        backgroundColor: '#E8E8E8',
+        display: 'flex',
+        justifyContent: 'center',
+        alignItems: 'center',
+        marginRight: '2px',
+      }}
+    >
+      <div
+        style={{
+          fontSize: '12px',
+          transform: num > 999 ? 'scale(0.833333)' : 'unset',
+        }}
+      >
+        {num > 999 ? '999+' : num}
+      </div>
     </div>
   );
 }
