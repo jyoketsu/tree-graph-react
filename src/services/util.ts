@@ -1032,6 +1032,7 @@ function isMobile() {
   }
 }
 
+// 鼠标方向
 function mouseDirection(element: Element, e: MouseEvent) {
   const dirs = ['top', 'right', 'bottom', 'left'];
   // 表示左上角和右下角及中心点坐标
@@ -1077,6 +1078,21 @@ function mouseDirection(element: Element, e: MouseEvent) {
     return y > y0 ? dirs[0] : dirs[2];
   }
 }
+// 获取元素在屏幕中的位置
+function getElPosition(el: HTMLElement) {
+  let element: HTMLElement | null = el;
+  let x = 0;
+  let y = 0;
+  while (element !== document.body && element) {
+    x += element.offsetLeft;
+    y += element.offsetTop;
+    element = element.offsetParent as HTMLElement;
+  }
+  //计算想对位置
+  x += window.screenLeft + document.body.clientLeft;
+  y += window.screenTop + document.body.clientTop;
+  return { x, y };
+}
 
 export {
   findNodeById,
@@ -1121,4 +1137,5 @@ export {
   getCursorIndex,
   isMobile,
   mouseDirection,
+  getElPosition,
 };

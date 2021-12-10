@@ -13,6 +13,7 @@ export default function ClickToUpload({
 }: Props) {
   return (
     <div
+      id={`click-to-upload-${nodeKey}`}
       style={{
         width: '100%',
         backgroundColor: '#EEECEC',

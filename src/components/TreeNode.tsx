@@ -241,7 +241,7 @@ Props) => {
     // 选中的节点
     if (
       selected === node._key ||
-      selectedNodes.findIndex(item => item._key === node._key) !== -1
+      selectedNodes.findIndex((item) => item._key === node._key) !== -1
     ) {
       return 'selected';
     } else if (
@@ -305,7 +305,8 @@ Props) => {
     ? '#CB1B45'
     : selectedBackgroundColor;
 
-  const urlReg = /((\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)/g;
+  const urlReg =
+    /((\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)/g;
   let nameLinkArr = [];
   if (urlReg.test(node.name)) {
     let arr1: string[] = [];
@@ -449,6 +450,7 @@ Props) => {
 
   return node.x && node.y ? (
     <g
+      id={`tree-node-${node._key}`}
       onClick={() => handleClickNode(node)}
       onDoubleClick={() => handleDbClickNode(node)}
       // onMouseDown={(e: React.MouseEvent) => handleDragStart(node, e)}

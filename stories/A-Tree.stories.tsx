@@ -9,8 +9,7 @@ const nodes = {
     father: '',
     sortList: ['002', '003', '004', '005'],
     contract: false,
-    icon:
-      'https://static-resource.np.community.playstation.net/avatar/SCEI/I0078.png',
+    icon: 'https://static-resource.np.community.playstation.net/avatar/SCEI/I0078.png',
     checked: true,
     hour: 0.1,
     showCheckbox: true,
@@ -21,8 +20,7 @@ const nodes = {
   },
   '002': {
     _key: '002',
-    name:
-      '链接地址是http://www.jyoketsu.com?key=123和psnine.com/gene还有playstation.com',
+    name: '链接地址是http://www.jyoketsu.com?key=123和psnine.com/gene还有playstation.com',
     father: '001',
     sortList: ['006', '007'],
     contract: false,
@@ -182,8 +180,7 @@ const nodes = {
   },
   '015': {
     _key: '015',
-    name:
-      '還原數據還原數據還原數據還原數據還原數據還原數據還原數據還原數據還原數據',
+    name: '還原數據還原數據還原數據還原數據還原數據還原數據還原數據還原數據還原數據',
     father: '009',
     sortList: [],
 
@@ -372,7 +369,7 @@ const meta: Meta = {
 
 export default meta;
 
-const Template: Story<TreeProps> = args => {
+const Template: Story<TreeProps> = (args) => {
   const treeRef = useRef(null);
   return (
     <div>
@@ -417,6 +414,7 @@ MultiCol.args = {
   // pathWidth: 3,
   // pathColor: '#535953',
   // fontWeight: 800,
+  quickCommandKey: '/',
   handleClickNode: (node: any) => console.log('---handleClickNode---', node),
   handleClickDot: (node: any) => console.log('---handleClickDot---', node),
   handleClickMoreButton: (node: any, element: any) =>
@@ -443,6 +441,7 @@ MultiCol.args = {
   handleChange: () => console.log('---handleChange---'),
   handleFileChange: (nodeKey: string, files: FileList) =>
     console.log('---handleFileChange---', nodeKey, files),
+  handleQuickCommandOpen: () => console.log('---handleQuickCommandOpen---'),
 };
 
 export const MultiColDark = Template.bind({});

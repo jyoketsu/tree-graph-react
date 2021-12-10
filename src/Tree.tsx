@@ -49,6 +49,10 @@ export interface HandleFileChange {
   (nodeKey: string, files: FileList): void;
 }
 
+interface HandleQuickCommandOpen {
+  (): void;
+}
+
 export interface TreeProps {
   // 节点
   nodes: NodeMap;
@@ -102,6 +106,7 @@ export interface TreeProps {
   hoverBorderColor?: string;
   selectedBorderColor?: string;
   selectedBackgroundColor?: string;
+  quickCommandKey?: string;
   handleClickExpand?: Function;
   handleCheck?: Function;
   handleClickAvatar?: NodeClickFunc;
@@ -127,6 +132,7 @@ export interface TreeProps {
   showDeleteConform?: Function;
   handleMutiSelect?: MutiSelectFunc;
   handleFileChange?: HandleFileChange;
+  handleQuickCommandOpen?: HandleQuickCommandOpen;
   ref?: any;
 }
 
@@ -170,6 +176,7 @@ export const Tree = React.forwardRef(
       hoverBorderColor,
       selectedBorderColor,
       selectedBackgroundColor,
+      quickCommandKey,
       handleClickExpand,
       handleCheck,
       handleClickAvatar,
@@ -195,6 +202,7 @@ export const Tree = React.forwardRef(
       showDeleteConform,
       handleMutiSelect,
       handleFileChange,
+      handleQuickCommandOpen,
     }: TreeProps,
     ref
   ) => {
@@ -263,15 +271,15 @@ export const Tree = React.forwardRef(
       saveNodes,
       addNext,
       addChild,
-      rename: function() {
+      rename: function () {
         if (selectedId) {
           setshowInput(true);
         }
       },
-      renameById: function(id: string, text: string) {
+      renameById: function (id: string, text: string) {
         changeText(id, text);
       },
-      getSelectedId: function() {
+      getSelectedId: function () {
         return selectedId;
       },
       // closeOptions: function() {
@@ -456,7 +464,7 @@ export const Tree = React.forwardRef(
         return;
       }
       clearTimeout(clickTimeId);
-      clickTimeId = setTimeout(function() {
+      clickTimeId = setTimeout(function () {
         setselectedId(node._key);
         setSelectedNodes([]);
         if (handleClickNode) {
@@ -712,120 +720,126 @@ export const Tree = React.forwardRef(
 
       const commandKey = isMac ? event.metaKey : event.ctrlKey;
 
-      switch (event.key) {
-        case 'Enter':
-          addNext();
-          break;
-        case 'Tab':
-          addChild();
-          break;
-        case 'Delete':
-        case 'Backspace': {
-          if (showDeleteConform) {
-            const node = selectedId ? nodeMap[selectedId] : null;
-            if ((node && node.sortList.length) || selectedNodes.length > 1) {
-              showDeleteConform();
+      if (quickCommandKey && event.key === quickCommandKey) {
+        if (handleQuickCommandOpen && selectedId) {
+          handleQuickCommandOpen();
+        }
+      } else {
+        switch (event.key) {
+          case 'Enter':
+            addNext();
+            break;
+          case 'Tab':
+            addChild();
+            break;
+          case 'Delete':
+          case 'Backspace': {
+            if (showDeleteConform) {
+              const node = selectedId ? nodeMap[selectedId] : null;
+              if ((node && node.sortList.length) || selectedNodes.length > 1) {
+                showDeleteConform();
+              } else {
+                deletenode();
+              }
             } else {
               deletenode();
             }
-          } else {
-            deletenode();
+            break;
           }
-          break;
-        }
-        case 'ArrowUp':
-          if (event.shiftKey) {
-            shiftUp();
-          } else if (selectedId) {
-            const res = changeSelect(selectedId, cnodes, event.key);
-            if (res) {
-              handleSelectedNodeChanged(res);
+          case 'ArrowUp':
+            if (event.shiftKey) {
+              shiftUp();
+            } else if (selectedId) {
+              const res = changeSelect(selectedId, cnodes, event.key);
+              if (res) {
+                handleSelectedNodeChanged(res);
+              }
             }
-          }
-          break;
-        case 'ArrowDown':
-          if (event.shiftKey) {
-            shiftDown();
-          } else if (selectedId) {
-            const res = changeSelect(selectedId, cnodes, event.key);
-            if (res) {
-              handleSelectedNodeChanged(res);
+            break;
+          case 'ArrowDown':
+            if (event.shiftKey) {
+              shiftDown();
+            } else if (selectedId) {
+              const res = changeSelect(selectedId, cnodes, event.key);
+              if (res) {
+                handleSelectedNodeChanged(res);
+              }
             }
-          }
-          break;
-        case 'ArrowRight':
-        case 'ArrowLeft': {
-          if (selectedId) {
-            const res = changeSelect(selectedId, cnodes, event.key);
-            if (res) {
-              handleSelectedNodeChanged(res);
+            break;
+          case 'ArrowRight':
+          case 'ArrowLeft': {
+            if (selectedId) {
+              const res = changeSelect(selectedId, cnodes, event.key);
+              if (res) {
+                handleSelectedNodeChanged(res);
+              }
             }
+            break;
           }
-          break;
-        }
-        // 複製
-        case 'c':
-          if (commandKey && selectedId) {
-            setPasteNodeKey(selectedId);
-            setPasteType('copy');
-          }
-          break;
-        // 剪切
-        case 'x':
-          if (commandKey && selectedId) {
-            // 根節點不允許剪切
-            if (selectedId === startId) {
+          // 複製
+          case 'c':
+            if (commandKey && selectedId) {
+              setPasteNodeKey(selectedId);
+              setPasteType('copy');
+            }
+            break;
+          // 剪切
+          case 'x':
+            if (commandKey && selectedId) {
+              // 根節點不允許剪切
+              if (selectedId === startId) {
+                setPasteNodeKey(null);
+                setPasteType(null);
+                return;
+              }
+              setPasteNodeKey(selectedId);
+              setPasteType('cut');
+            }
+            break;
+          // 粘貼
+          case 'v':
+            if (commandKey && pasteType && pasteNodeKey && selectedId) {
+              if (UNCONTROLLED) {
+                const res = pasteNode(
+                  nodeMap,
+                  pasteNodeKey,
+                  pasteType,
+                  selectedId
+                );
+                if (res) {
+                  setNodeMap(res);
+                  if (handleChange) {
+                    handleChange();
+                  }
+                }
+              } else if (handlePaste) {
+                handlePaste(pasteNodeKey, pasteType, selectedId);
+              }
               setPasteNodeKey(null);
               setPasteType(null);
-              return;
             }
-            setPasteNodeKey(selectedId);
-            setPasteType('cut');
-          }
-          break;
-        // 粘貼
-        case 'v':
-          if (commandKey && pasteType && pasteNodeKey && selectedId) {
-            if (UNCONTROLLED) {
-              const res = pasteNode(
-                nodeMap,
-                pasteNodeKey,
-                pasteType,
-                selectedId
-              );
-              if (res) {
-                setNodeMap(res);
+            break;
+          default: {
+            if (
+              selectedId &&
+              !showInput &&
+              event.key.length === 1 &&
+              /[a-zA-Z]+/.test(event.key)
+            ) {
+              if (UNCONTROLLED) {
+                let nodes = changeNodeText(nodeMap, selectedId, '');
+                setNodeMap(nodes);
                 if (handleChange) {
                   handleChange();
                 }
               }
-            } else if (handlePaste) {
-              handlePaste(pasteNodeKey, pasteType, selectedId);
-            }
-            setPasteNodeKey(null);
-            setPasteType(null);
-          }
-          break;
-        default: {
-          if (
-            selectedId &&
-            !showInput &&
-            event.key.length === 1 &&
-            /[a-zA-Z]+/.test(event.key)
-          ) {
-            if (UNCONTROLLED) {
-              let nodes = changeNodeText(nodeMap, selectedId, '');
-              setNodeMap(nodes);
-              if (handleChange) {
-                handleChange();
+              if (handleChangeNodeText) {
+                handleChangeNodeText(selectedId, '');
               }
+              setshowInput(true);
             }
-            if (handleChangeNodeText) {
-              handleChangeNodeText(selectedId, '');
-            }
-            setshowInput(true);
+            break;
           }
-          break;
         }
       }
     }
@@ -840,7 +854,7 @@ export const Tree = React.forwardRef(
       event: React.MouseEvent<HTMLButtonElement>
     ) {
       if (handleClickMoreButton) {
-        const selectedKeys = selectedNodes.map(item => item._key);
+        const selectedKeys = selectedNodes.map((item) => item._key);
         if (selectedKeys.length && selectedKeys.includes(node._key)) {
           event.stopPropagation();
         }
@@ -910,7 +924,7 @@ export const Tree = React.forwardRef(
       // 如果框选了多个节点，而拖拽的节点不在其中的话，则取消框选
       if (selectedNodes.length) {
         const index = selectedNodes.findIndex(
-          element => node._key === element._key
+          (element) => node._key === element._key
         );
         if (index === -1) {
           setSelectedNodes([]);
@@ -1012,8 +1026,8 @@ export const Tree = React.forwardRef(
           const stepX = movedNodeX / fps;
           const stepY = movedNodeY / fps;
           const interval = setInterval(() => {
-            setMovedNodeX(movedNodeX => movedNodeX - stepX);
-            setMovedNodeY(movedNodeY => movedNodeY - stepY);
+            setMovedNodeX((movedNodeX) => movedNodeX - stepX);
+            setMovedNodeY((movedNodeY) => movedNodeY - stepY);
           }, Math.floor(animeTime / fps));
 
           setTimeout(() => {
