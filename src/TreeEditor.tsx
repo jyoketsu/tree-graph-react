@@ -346,7 +346,7 @@ export const TreeEditor = React.forwardRef(
         if (handleAddPrevious) {
           handleAddPrevious(nodeKey, res.addedNode, value);
         }
-        setFocusedKey(res.addedNode._key);
+        setFocusedKey(nodeKey);
         setNodeMap(res.nodes);
       } else {
         if (handleAddPrevious) {

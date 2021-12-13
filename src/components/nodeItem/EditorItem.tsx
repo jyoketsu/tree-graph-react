@@ -217,8 +217,8 @@ Props) => {
             const value = editorRef.current.innerText.replace(/[\r\n]/g, '');
             const valuePart1 = value.replace(valuePart2, '');
             editorRef.current.innerText = valuePart1;
-            handleChangeNodeText(node._key, valuePart1);
-            actionCommand('AddNext', node._key, valuePart2);
+            handleChangeNodeText(node._key, valuePart2);
+            actionCommand('AddPrevious', node._key, valuePart1);
           } else {
             actionCommand('AddNext', node._key);
           }
