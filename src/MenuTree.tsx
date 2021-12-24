@@ -74,6 +74,7 @@ export interface MenuProps {
   handleDrag?: Function;
   ref?: any;
   collapseMode?: boolean;
+  draggable?: boolean;
 }
 export const MenuTree = React.forwardRef(
   (
@@ -112,6 +113,7 @@ export const MenuTree = React.forwardRef(
       handlePaste,
       handleDrag,
       collapseMode,
+      draggable = true,
     }: MenuProps,
     ref
   ) => {
@@ -153,12 +155,12 @@ export const MenuTree = React.forwardRef(
       saveNodes,
       addNext,
       addChild,
-      rename: function() {
+      rename: function () {
         if (selectedId) {
           setshowInput(true);
         }
       },
-      clearSelect: function() {
+      clearSelect: function () {
         setselectedId(null);
       },
     }));
@@ -223,7 +225,7 @@ export const MenuTree = React.forwardRef(
     // 单击节点
     function clickNode(node: CNode) {
       clearTimeout(clickTimeId);
-      clickTimeId = setTimeout(function() {
+      clickTimeId = setTimeout(function () {
         setselectedId(node._key);
         if (handleClickNode) {
           handleClickNode(node);
@@ -562,6 +564,7 @@ export const MenuTree = React.forwardRef(
                   : true
                 : undefined
             }
+            draggable={draggable}
           />
         ))}
       </div>

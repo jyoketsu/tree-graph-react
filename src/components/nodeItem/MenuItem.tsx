@@ -35,6 +35,7 @@ interface Props {
   compId: string;
   collapseMode?: boolean;
   collapseModeCollapsed?: boolean;
+  draggable: boolean;
 }
 const TreeNode = ({
   node,
@@ -65,6 +66,7 @@ const TreeNode = ({
   compId,
   collapseMode,
   collapseModeCollapsed,
+  draggable,
 }: Props) => {
   const width = 12;
   const containerRef = useRef<HTMLDivElement>(null);
@@ -158,7 +160,8 @@ const TreeNode = ({
 
   const nodeRectClassName = rectClassName(node);
 
-  const urlReg = /((\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)/g;
+  const urlReg =
+    /((\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)/g;
   let nameLinkArr = [];
   if (urlReg.test(node.name)) {
     let arr1: string[] = [];
@@ -238,6 +241,8 @@ const TreeNode = ({
 
   return node.x && node.y ? (
     <div
+      id={`menu-item-${node._key}`}
+      className="menu-item"
       onClick={(e: React.MouseEvent) => {
         e.stopPropagation();
         handleClickNode(node);
@@ -268,7 +273,13 @@ const TreeNode = ({
         borderColor: dragLineColor,
         borderWidth: isDragOver ? (isDragIn ? '3px' : '0 0 2px 0') : 0,
       }}
-      draggable={showInput || disabled || node.disabled ? false : true}
+      draggable={
+        draggable
+          ? showInput || disabled || node.disabled
+            ? false
+            : true
+          : false
+      }
       onDragStart={handleDragStart}
       onDragOver={handleDragOver}
       onDragLeave={handleDragLeave}
@@ -288,14 +299,16 @@ const TreeNode = ({
             <svg width={width} height={width} viewBox={`0,0,${width},${width}`}>
               {collapsed ? (
                 <path
-                  d={`M ${width / 4} ${0} L ${width / 4 + width / 2} ${width /
-                    2} L ${width / 4} ${width} Z`}
+                  d={`M ${width / 4} ${0} L ${width / 4 + width / 2} ${
+                    width / 2
+                  } L ${width / 4} ${width} Z`}
                   fill={hover ? hoverColor : color}
                 ></path>
               ) : (
                 <path
-                  d={`M 0 ${width / 4} H ${width} L ${width / 2} ${width / 4 +
-                    width / 2} Z`}
+                  d={`M 0 ${width / 4} H ${width} L ${width / 2} ${
+                    width / 4 + width / 2
+                  } Z`}
                   fill={hover ? hoverColor : color}
                 ></path>
               )}
@@ -333,7 +346,7 @@ const TreeNode = ({
               border: '1px solid #000000',
               outline: 'none',
             }}
-            onChange={e => setValue(e.target.value)}
+            onChange={(e) => setValue(e.target.value)}
             onKeyDown={(e: any) => handleCommit(e)}
             onBlur={() => handleChangeNodeText(selected, value)}
             onMouseDown={(e: React.MouseEvent) => e.stopPropagation()}
