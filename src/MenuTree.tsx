@@ -75,6 +75,7 @@ export interface MenuProps {
   ref?: any;
   collapseMode?: boolean;
   draggable?: boolean;
+  storageData?: string[];
 }
 export const MenuTree = React.forwardRef(
   (
@@ -114,6 +115,7 @@ export const MenuTree = React.forwardRef(
       handleDrag,
       collapseMode,
       draggable = true,
+      storageData,
     }: MenuProps,
     ref
   ) => {
@@ -565,6 +567,7 @@ export const MenuTree = React.forwardRef(
                 : undefined
             }
             draggable={draggable}
+            storageData={storageData}
           />
         ))}
       </div>

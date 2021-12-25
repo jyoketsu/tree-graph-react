@@ -36,6 +36,7 @@ interface Props {
   collapseMode?: boolean;
   collapseModeCollapsed?: boolean;
   draggable: boolean;
+  storageData?: string[];
 }
 const TreeNode = ({
   node,
@@ -67,6 +68,7 @@ const TreeNode = ({
   collapseMode,
   collapseModeCollapsed,
   draggable,
+  storageData,
 }: Props) => {
   const width = 12;
   const containerRef = useRef<HTMLDivElement>(null);
@@ -239,6 +241,17 @@ const TreeNode = ({
     collapsed = node.contract;
   }
 
+  let storagedData;
+  if (storageData) {
+    let temp: Object = {};
+    for (let index = 0; index < storageData.length; index++) {
+      const fieldName = storageData[index];
+      // @ts-ignore
+      temp[fieldName] = node[fieldName];
+    }
+    storagedData = JSON.stringify(temp);
+  }
+
   return node.x && node.y ? (
     <div
       id={`menu-item-${node._key}`}
@@ -286,6 +299,7 @@ const TreeNode = ({
       onDrop={handleDropNode}
       onDragEnd={handleDragEnd}
       ref={containerRef}
+      data-detail={storagedData}
     >
       <div
         style={{

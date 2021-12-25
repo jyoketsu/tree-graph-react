@@ -20,8 +20,7 @@ const nodes = {
   },
   '002': {
     _key: '002',
-    name:
-      '链接地址是http://jyoketsu.com和http://psnine.com/psnid/jyoketsu3还有playstation.com',
+    name: '链接地址是http://jyoketsu.com和http://psnine.com/psnid/jyoketsu3还有playstation.com',
     father: '001',
     sortList: ['006', '007'],
     contract: false,
@@ -187,7 +186,7 @@ const meta: Meta = {
 
 export default meta;
 
-const Template: Story<MenuProps> = args => {
+const Template: Story<MenuProps> = (args) => {
   const treeRef = useRef(null);
   return (
     <div style={{ width: '350px' }}>
@@ -205,4 +204,5 @@ Default.args = {
   handleClickMoreButton: (node: any) =>
     console.log('---handleClickMoreButton---', node),
   handleClickIcon: (node: any) => console.log('---handleClickIcon---', node),
+  storageData: ['name', 'icon'],
 };
