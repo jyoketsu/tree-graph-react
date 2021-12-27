@@ -205,4 +205,5 @@ Default.args = {
     console.log('---handleClickMoreButton---', node),
   handleClickIcon: (node: any) => console.log('---handleClickIcon---', node),
   storageData: ['name', 'icon'],
+  defaultSelectedId: '001',
 };

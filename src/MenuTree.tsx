@@ -219,7 +219,7 @@ export const MenuTree = React.forwardRef(
       if (defaultSelectedId) {
         setselectedId(defaultSelectedId);
         if (nodeMap && nodeMap[defaultSelectedId]) {
-          setExpandedNodeKey(nodeMap[defaultSelectedId].father);
+          setExpandedNodeKey(defaultSelectedId);
         }
       }
     }, [defaultSelectedId]);
