@@ -1583,6 +1583,8 @@ export const Tree = React.forwardRef(
             startId={startId}
             handleFileChange={handleFileChange}
             showChildNum={showChildNum}
+            quickCommandKey={quickCommandKey}
+            handleQuickCommandOpen={handleQuickCommandOpen}
           />
         ) : null}
 

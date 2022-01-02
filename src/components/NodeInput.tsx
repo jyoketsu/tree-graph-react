@@ -6,6 +6,10 @@ import { HandleFileChange } from '../Tree';
 
 let composing = false;
 
+interface HandleQuickCommandOpen {
+  (): void;
+}
+
 interface Props {
   selectedId: string | null;
   nodeList: CNode[];
@@ -16,8 +20,10 @@ interface Props {
   showAvatar: boolean;
   avatarRadius: number;
   startId: string;
+  quickCommandKey?: string;
   handleChangeNodeText: Function;
   handleFileChange?: HandleFileChange;
+  handleQuickCommandOpen?: HandleQuickCommandOpen;
 }
 
 const NodeInput = ({
@@ -30,8 +36,10 @@ const NodeInput = ({
   showAvatar,
   avatarRadius,
   startId,
+  quickCommandKey,
   handleChangeNodeText,
   handleFileChange,
+  handleQuickCommandOpen,
 }: Props) => {
   const inputRef = useRef<any>(null);
   const [value, setValue] = useState('');
@@ -41,6 +49,12 @@ const NodeInput = ({
     if (composing) {
       return;
     }
+    if (quickCommandKey && e.key === quickCommandKey) {
+      if (handleQuickCommandOpen && selectedId) {
+        handleQuickCommandOpen();
+      }
+    }
+
     if ((e.key === 'Enter' || e.key === 'Tab') && selected) {
       handleChangeNodeText(selected._key, value.replaceAll("'", ''));
     }
@@ -139,7 +153,7 @@ const NodeInput = ({
           autoFocus={true}
           placeholder="请输入名称"
           value={value}
-          onChange={e => setValue(e.target.value)}
+          onChange={(e) => setValue(e.target.value)}
           onCompositionStart={handleCompositionStart}
           onCompositionEnd={handleCompositionEnd}
           onKeyDown={handleCommit}
