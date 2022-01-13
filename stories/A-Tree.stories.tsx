@@ -442,6 +442,7 @@ MultiCol.args = {
   handleFileChange: (nodeKey: string, files: FileList) =>
     console.log('---handleFileChange---', nodeKey, files),
   handleQuickCommandOpen: () => console.log('---handleQuickCommandOpen---'),
+  handlePasteText: (text: string) => console.log('---handlePasteText---', text),
 };
 
 export const MultiColDark = Template.bind({});

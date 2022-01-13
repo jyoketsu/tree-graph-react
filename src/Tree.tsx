@@ -53,6 +53,10 @@ interface HandleQuickCommandOpen {
   (): void;
 }
 
+interface HandlePasteText {
+  (text: string): void;
+}
+
 export interface TreeProps {
   // 节点
   nodes: NodeMap;
@@ -133,6 +137,7 @@ export interface TreeProps {
   handleMutiSelect?: MutiSelectFunc;
   handleFileChange?: HandleFileChange;
   handleQuickCommandOpen?: HandleQuickCommandOpen;
+  handlePasteText?: HandlePasteText;
   ref?: any;
 }
 
@@ -203,6 +208,7 @@ export const Tree = React.forwardRef(
       handleMutiSelect,
       handleFileChange,
       handleQuickCommandOpen,
+      handlePasteText,
     }: TreeProps,
     ref
   ) => {
@@ -712,7 +718,7 @@ export const Tree = React.forwardRef(
       return { rootKey: startId, data: nodeMap };
     }
 
-    function handleKeyDown(event: KeyboardEvent) {
+    async function handleKeyDown(event: KeyboardEvent) {
       if (disabled || disableShortcut || showInput || showNewInput) {
         return;
       }
@@ -797,7 +803,7 @@ export const Tree = React.forwardRef(
             }
             break;
           // 粘貼
-          case 'v':
+          case 'v': {
             if (commandKey && pasteType && pasteNodeKey && selectedId) {
               if (UNCONTROLLED) {
                 const res = pasteNode(
@@ -817,8 +823,15 @@ export const Tree = React.forwardRef(
               }
               setPasteNodeKey(null);
               setPasteType(null);
+            } else if (handlePasteText) {
+              // 如果用户复制了文字，则将文字黏贴为节点
+              const text = await navigator.clipboard.readText();
+              if (text) {
+                handlePasteText(text);
+              }
             }
             break;
+          }
           default: {
             if (
               selectedId &&

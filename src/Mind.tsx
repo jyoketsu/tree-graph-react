@@ -51,6 +51,10 @@ interface HandleQuickCommandOpen {
   (): void;
 }
 
+interface HandlePasteText {
+  (text: string): void;
+}
+
 export interface MindProps {
   // 节点
   nodes: NodeMap;
@@ -127,6 +131,7 @@ export interface MindProps {
   handleMutiSelect?: MutiSelectFunc;
   handleFileChange?: HandleFileChange;
   handleQuickCommandOpen?: HandleQuickCommandOpen;
+  handlePasteText?: HandlePasteText;
   ref?: any;
 }
 
@@ -192,6 +197,7 @@ export const Mind = React.forwardRef(
       handleMutiSelect,
       handleFileChange,
       handleQuickCommandOpen,
+      handlePasteText,
     }: MindProps,
     ref
   ) => {
@@ -584,7 +590,7 @@ export const Mind = React.forwardRef(
       return { rootKey: startId, data: nodeMap };
     }
 
-    function handleKeyDown(event: KeyboardEvent) {
+    async function handleKeyDown(event: KeyboardEvent) {
       if (disabled || disableShortcut || showInput || showNewInput) {
         return;
       }
@@ -690,6 +696,12 @@ export const Mind = React.forwardRef(
               }
               setPasteNodeKey(null);
               setPasteType(null);
+            } else if (handlePasteText) {
+              // 如果用户复制了文字，则将文字黏贴为节点
+              const text = await navigator.clipboard.readText();
+              if (text) {
+                handlePasteText(text);
+              }
             }
             break;
           default: {
