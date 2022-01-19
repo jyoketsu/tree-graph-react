@@ -552,6 +552,8 @@ Props) => {
           width="22"
           height="22"
           xlinkHref={node.icon}
+          style={{ cursor: 'pointer' }}
+          onClick={handleClickPreview}
         />
       ) : null}
       {/* 头像/图片 */}

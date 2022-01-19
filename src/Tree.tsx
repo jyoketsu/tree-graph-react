@@ -30,6 +30,8 @@ import MutilSelectedNodeKey from './interfaces/MutilSelectedNodeKey';
 
 const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 
+let spaceKeyDown = false;
+
 interface PasteFunc {
   (
     pasteNodeKey: string,
@@ -718,7 +720,16 @@ export const Tree = React.forwardRef(
       return { rootKey: startId, data: nodeMap };
     }
 
+    const handleKeyUp = (event: React.KeyboardEvent) => {
+      if (event.key === ' ') {
+        spaceKeyDown = false;
+      }
+    };
+
     async function handleKeyDown(event: KeyboardEvent) {
+      if (event.key === ' ' && !spaceKeyDown) {
+        spaceKeyDown = true;
+      }
       if (disabled || disableShortcut || showInput || showNewInput) {
         return;
       }
@@ -894,7 +905,7 @@ export const Tree = React.forwardRef(
     }
 
     function handleFrameSelectionStart(e: React.MouseEvent) {
-      if (e.nativeEvent.which === 1) {
+      if (e.nativeEvent.which === 1 && !spaceKeyDown) {
         e.stopPropagation();
         setFrameSelectionStarted(true);
         setClickX(e.nativeEvent.offsetX);
@@ -1132,6 +1143,7 @@ export const Tree = React.forwardRef(
         suppressContentEditableWarning={true}
         ref={containerRef}
         onKeyDown={(e: any) => handleKeyDown(e)}
+        onKeyUp={handleKeyUp}
         onMouseDown={handleFrameSelectionStart}
         onMouseMove={handleMoveNode}
         onMouseUp={handleDragEnd}
