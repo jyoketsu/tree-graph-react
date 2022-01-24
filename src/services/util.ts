@@ -99,6 +99,10 @@ function textWidthAll(fontSize: number, text: string) {
   document.body.appendChild(ele);
   const width = ele.offsetWidth;
   document.body.removeChild(ele);
+  if (text === ' ') {
+    // <span> </span>：span空格width为0，所以手动返回一个数值
+    return fontSize / 2;
+  }
   return width;
 }
 

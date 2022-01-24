@@ -151,7 +151,7 @@ const MobileItem = ({
 
   const nodeRectClassName = rectClassName(node);
 
-  const urlReg = /((\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)/g;
+  const urlReg = /((\w{1,}\.+)+(com|cn|org|net|info|me)\/*[\w\/\?=&%]*)|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info|me)\/*[\w\/\?=&%]*)|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info|me)\/*[\w\/\?=&%]*)/g;
   let nameLinkArr = [];
   if (urlReg.test(node.name)) {
     let arr1: string[] = [];
@@ -319,7 +319,7 @@ const MobileItem = ({
         <ClickOutside onClickOutside={handleClickoutside}>
           <input
             autoFocus={true}
-            placeholder="请输入名称"
+            placeholder="未命名"
             value={value}
             style={{
               boxSizing: 'border-box',

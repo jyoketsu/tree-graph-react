@@ -40,6 +40,8 @@ export const Slides = ({
   const [playMode, setPlayMode] = useState(false);
   const [paperColor, setpaperColor] = useState(bright ? '#FFF' : '#434343');
   const [color, setcolor] = useState(bright ? '#434343' : '#FFF');
+  const [hoverPrev, setHoverPrev] = useState(false);
+  const [hoverNext, setHoverNext] = useState(false);
 
   useEffect(() => {
     if (containerRef?.current) {
@@ -71,13 +73,13 @@ export const Slides = ({
 
   function prevPage() {
     if (currentPage - 1 >= 0) {
-      setCurrentPage(prevPage => prevPage - 1);
+      setCurrentPage((prevPage) => prevPage - 1);
     }
   }
 
   function nextPage() {
     if (currentPage + 1 < slideList.length) {
-      setCurrentPage(prevPage => prevPage + 1);
+      setCurrentPage((prevPage) => prevPage + 1);
     }
   }
 
@@ -233,24 +235,42 @@ export const Slides = ({
               />
             </div>
           ) : null}
-          <div
-            style={{
-              width: '12vh',
-              position: 'absolute',
-              right: '2vh',
-              bottom: '2vh',
-              display: 'flex',
-              justifyContent: 'space-between',
-              zIndex: 999,
-            }}
-          >
-            <div style={{ cursor: 'pointer' }} onClick={prevPage}>
-              <Icon name="prev" fill={themeColor} width="5vh" height="5vh" />
+          {!playMode ? (
+            <div
+              style={{
+                width: '12vh',
+                position: 'absolute',
+                right: '50px',
+                bottom: '40px',
+                display: 'flex',
+                justifyContent: 'space-between',
+                zIndex: 999,
+              }}
+            >
+              <div
+                style={{
+                  cursor: 'pointer',
+                  filter: hoverPrev ? 'unset' : 'opacity(0.5)',
+                }}
+                onClick={prevPage}
+                onMouseEnter={() => setHoverPrev(true)}
+                onMouseLeave={() => setHoverPrev(false)}
+              >
+                <Icon name="prev" fill={color} width="5vh" height="5vh" />
+              </div>
+              <div
+                style={{
+                  cursor: 'pointer',
+                  filter: hoverNext ? 'unset' : 'opacity(0.5)',
+                }}
+                onClick={nextPage}
+                onMouseEnter={() => setHoverNext(true)}
+                onMouseLeave={() => setHoverNext(false)}
+              >
+                <Icon name="next" fill={color} width="5vh" height="5vh" />
+              </div>
             </div>
-            <div style={{ cursor: 'pointer' }} onClick={nextPage}>
-              <Icon name="next" fill={themeColor} width="5vh" height="5vh" />
-            </div>
-          </div>
+          ) : null}
         </div>
       </div>
       {playMode ? (
@@ -258,7 +278,7 @@ export const Slides = ({
           slideList={slideList}
           currentPage={currentPage}
           changePage={(pageNumber: number) => setCurrentPage(pageNumber)}
-          themeColor={themeColor}
+          color={color}
           style={{ backgroundColor: paperColor, color }}
         />
       ) : null}
@@ -289,7 +309,8 @@ function SlidePreview({
         width: '200px',
         height: '180px',
         overflow: 'hidden',
-        border: `1px solid ${isActive ? themeColor : borderColor}`,
+        border: `2px solid ${isActive ? themeColor : borderColor}`,
+        boxShadow: isActive ? 'rgb(0 0 0 / 10%) 6px 6px 4px 0' : 'unset',
         flexShrink: 0,
         margin: '5px 0',
       }}

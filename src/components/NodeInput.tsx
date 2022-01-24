@@ -49,7 +49,7 @@ const NodeInput = ({
     if (composing) {
       return;
     }
-    if (quickCommandKey && e.key === quickCommandKey) {
+    if (!value && quickCommandKey && e.key === quickCommandKey) {
       if (handleQuickCommandOpen && selectedId) {
         handleQuickCommandOpen();
       }
@@ -151,7 +151,7 @@ const NodeInput = ({
           }}
           ref={inputRef}
           autoFocus={true}
-          placeholder="请输入名称"
+          placeholder="未命名"
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onCompositionStart={handleCompositionStart}

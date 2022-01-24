@@ -306,7 +306,7 @@ Props) => {
     : selectedBackgroundColor;
 
   const urlReg =
-    /((\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%]*)/g;
+    /((\w{1,}\.+)+(com|cn|org|net|info|me)\/*[\w\/\?=&%]*)|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info|me)\/*[\w\/\?=&%]*)|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info|me)\/*[\w\/\?=&%]*)/g;
   let nameLinkArr = [];
   if (urlReg.test(node.name)) {
     let arr1: string[] = [];
@@ -582,7 +582,6 @@ Props) => {
           />
         </g>
       ) : null}
-
       {/* 勾选框 */}
       {node.showCheckbox ? (
         <use
@@ -593,7 +592,6 @@ Props) => {
           onClick={(event: any) => handleCheck(node, event)}
         />
       ) : null}
-
       {/* 任务状态 */}
       {node.showStatus ? (
         <g
@@ -739,7 +737,6 @@ Props) => {
           {node.shorted || node.name || ''}
         </text>
       )}
-
       {true ? (
         // || nodeOptionsOpened
         <g
@@ -805,7 +802,6 @@ Props) => {
           position={node.toLeft ? 'right' : 'left'}
         />
       ) : null}
-
       {hover || selected === node._key || node.contract ? (
         <Expand
           node={node}
@@ -822,7 +818,6 @@ Props) => {
           }
         />
       ) : null}
-
       {/* <div
         style={{
           width: `${node.width}px`,

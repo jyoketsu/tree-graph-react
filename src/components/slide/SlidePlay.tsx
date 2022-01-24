@@ -11,7 +11,7 @@ interface Props {
   slideList: SlideType[];
   currentPage: number;
   changePage: ChangePageFunc;
-  themeColor: string;
+  color: string;
   style?: React.CSSProperties;
 }
 
@@ -21,7 +21,7 @@ export default function SlidePlay({
   slideList,
   currentPage,
   changePage,
-  themeColor,
+  color,
   style,
 }: Props) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -29,6 +29,8 @@ export default function SlidePlay({
   const [slideHeight, setSlideHeight] = useState(0);
   const [translateX, setTranslateX] = useState(0);
   const [transition, setTransition] = useState(false);
+  const [hoverPrev, setHoverPrev] = useState(false);
+  const [hoverNext, setHoverNext] = useState(false);
 
   useEffect(() => {
     if (
@@ -133,11 +135,27 @@ export default function SlidePlay({
           zIndex: 999,
         }}
       >
-        <div style={{ cursor: 'pointer' }} onClick={prevPage}>
-          <Icon name="prev" fill={themeColor} width="5vh" height="5vh" />
+        <div
+          style={{
+            cursor: 'pointer',
+            filter: hoverPrev ? 'unset' : 'opacity(0.5)',
+          }}
+          onClick={prevPage}
+          onMouseEnter={() => setHoverPrev(true)}
+          onMouseLeave={() => setHoverPrev(false)}
+        >
+          <Icon name="prev" fill={color} width="5vh" height="5vh" />
         </div>
-        <div style={{ cursor: 'pointer' }} onClick={nextPage}>
-          <Icon name="next" fill={themeColor} width="5vh" height="5vh" />
+        <div
+          style={{
+            cursor: 'pointer',
+            filter: hoverNext ? 'unset' : 'opacity(0.5)',
+          }}
+          onClick={nextPage}
+          onMouseEnter={() => setHoverNext(true)}
+          onMouseLeave={() => setHoverNext(false)}
+        >
+          <Icon name="next" fill={color} width="5vh" height="5vh" />
         </div>
       </div>
     </div>
