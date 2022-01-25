@@ -50,7 +50,7 @@ interface NodeClickFunc {
 }
 
 interface HandleQuickCommandOpen {
-  (): void;
+  (nodeEl: HTMLElement): void;
 }
 
 interface HandlePasteText {
@@ -612,7 +612,10 @@ export const Mind = React.forwardRef(
 
       if (quickCommandKey && event.key === quickCommandKey) {
         if (handleQuickCommandOpen && selectedId) {
-          handleQuickCommandOpen();
+          const el = document.getElementById(`tree-node-${selectedId}`);
+          if (el) {
+            handleQuickCommandOpen(el);
+          }
         }
       } else {
         switch (event.key) {

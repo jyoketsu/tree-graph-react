@@ -7,7 +7,7 @@ import { HandleFileChange } from '../Tree';
 let composing = false;
 
 interface HandleQuickCommandOpen {
-  (): void;
+  (nodeEl: HTMLElement): void;
 }
 
 interface Props {
@@ -49,9 +49,12 @@ const NodeInput = ({
     if (composing) {
       return;
     }
-    if (!value && quickCommandKey && e.key === quickCommandKey) {
-      if (handleQuickCommandOpen && selectedId) {
-        handleQuickCommandOpen();
+    if (quickCommandKey && e.key === quickCommandKey) {
+      if (handleQuickCommandOpen && selectedId && !value) {
+        const el = document.getElementById(`tree-node-${selectedId}`);
+        if (el) {
+          return handleQuickCommandOpen(el);
+        }
       }
     }
 

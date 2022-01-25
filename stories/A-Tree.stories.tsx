@@ -441,7 +441,8 @@ MultiCol.args = {
   handleChange: () => console.log('---handleChange---'),
   handleFileChange: (nodeKey: string, files: FileList) =>
     console.log('---handleFileChange---', nodeKey, files),
-  handleQuickCommandOpen: () => console.log('---handleQuickCommandOpen---'),
+  handleQuickCommandOpen: (el: any) =>
+    console.log('---handleQuickCommandOpen---', el),
   handlePasteText: (text: string) => console.log('---handlePasteText---', text),
 };
 

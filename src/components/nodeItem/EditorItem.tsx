@@ -35,7 +35,7 @@ interface HandleSetSelectionStart {
 }
 
 interface HandleSetSelectionNodes {
-  (nodes: string[]): void;
+  (nodes: string[], lastAddedNode?: CNode): void;
 }
 
 interface CheckFunc {
@@ -125,6 +125,7 @@ Props) => {
   const [hover, sethover] = useState(false);
   const indentCount = node.x / 30;
   const isNormalLink = node.type === 'link' && node.url;
+  const bkColor = inSelection ? '#B1D3FA' : backgroundColor;
 
   let fontSize = 16;
   if (isRoot) {
@@ -371,6 +372,12 @@ Props) => {
   function handleMouseEnter(e: React.MouseEvent) {
     sethover(true);
     if (frameSelectionStartedNode) {
+      // 获取选中
+      const selection = window.getSelection();
+      // 清除选中
+      if (selection) {
+        selection.removeAllRanges();
+      }
       const res = mouseDirection(e.currentTarget, e.nativeEvent);
       const nodes = [...selectionNodeKeys];
       if (!nodes.includes(frameSelectionStartedNode._key)) {
@@ -380,7 +387,7 @@ Props) => {
         (node.y < frameSelectionStartedNode.y && res === 'bottom') ||
         (node.y > frameSelectionStartedNode.y && res === 'top')
       ) {
-        handleSetSelectionNodes([...nodes, node._key]);
+        handleSetSelectionNodes([...nodes, node._key], node);
       }
     }
   }
@@ -493,6 +500,8 @@ Props) => {
         boxSizing: 'border-box',
         borderStyle: 'solid',
         borderColor: themeColor,
+        backgroundColor: bkColor,
+        transition: 'background-color 0.2s ease-in-out',
         borderWidth:
           isDragging && isDragOver ? '0 0 2px 0' : isDragOver ? '2px' : '0',
         opacity: dragStarted ? 0.8 : 1,
@@ -531,7 +540,6 @@ Props) => {
           flexDirection: 'column',
           flex: 1,
           flexShrink: 0,
-          backgroundColor: inSelection ? '#B1D3FA' : 'unset',
         }}
       >
         <div
@@ -568,7 +576,10 @@ Props) => {
               {!readonly && !isRoot ? (
                 <div
                   onClick={handleClickMore}
-                  style={{ backgroundColor, opacity: hover ? 1 : 0 }}
+                  style={{
+                    backgroundColor: bkColor,
+                    opacity: hover && !inSelection ? 1 : 0,
+                  }}
                 >
                   <Icon
                     width="18px"
@@ -581,7 +592,10 @@ Props) => {
               ) : null}
               {showPreviewButton && !isRoot ? (
                 <div
-                  style={{ backgroundColor, opacity: hover ? 1 : 0 }}
+                  style={{
+                    backgroundColor: bkColor,
+                    opacity: hover && !inSelection ? 1 : 0,
+                  }}
                   onClick={() => clickPreview(node)}
                 >
                   <Icon
@@ -600,7 +614,10 @@ Props) => {
                     e.stopPropagation();
                     handleClickExpand(node);
                   }}
-                  style={{ backgroundColor, opacity: hover ? 1 : 0 }}
+                  style={{
+                    backgroundColor: bkColor,
+                    opacity: hover && !inSelection ? 1 : 0,
+                  }}
                 >
                   <Icon
                     width={isRoot ? '28px' : '18px'}

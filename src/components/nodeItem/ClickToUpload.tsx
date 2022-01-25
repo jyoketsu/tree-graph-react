@@ -15,7 +15,7 @@ export default function ClickToUpload({
     <div
       id={`click-to-upload-${nodeKey}`}
       style={{
-        width: '100%',
+        width: '98%',
         backgroundColor: '#EEECEC',
         color: '#8c8282',
         padding: '13px 10px',

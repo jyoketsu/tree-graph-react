@@ -271,4 +271,6 @@ Default.args = {
     console.log('---handleClickAvatar---', node),
   handleClickStatus: (node: any, element: any) =>
     console.log('---handleClickStatus---', node, element),
+  handleMutiSelect: (nodes) => console.log('---handleMutiSelect---', nodes),
+  showDeleteConform: () => console.log('---showDeleteConform---'),
 };

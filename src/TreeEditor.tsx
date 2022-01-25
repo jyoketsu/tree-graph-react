@@ -79,6 +79,10 @@ interface NodeClickFunc {
   (node: CNode, targetEl: HTMLElement): void;
 }
 
+interface MutiSelectFunc {
+  (selectedNodes: Node[]): void;
+}
+
 export interface TreeEditorProps {
   // 节点
   nodes: NodeMap;
@@ -125,6 +129,8 @@ export interface TreeEditorProps {
   handleCheck?: Function;
   handleClickAvatar?: NodeClickFunc;
   handleClickStatus?: NodeClickFunc;
+  handleMutiSelect?: MutiSelectFunc;
+  showDeleteConform?: Function;
   ref?: any;
   collapseMode?: boolean;
 }
@@ -170,6 +176,8 @@ export const TreeEditor = React.forwardRef(
       handleCheck,
       handleClickAvatar,
       handleClickStatus,
+      handleMutiSelect,
+      showDeleteConform,
       collapseMode,
     }: TreeEditorProps,
     ref
@@ -261,6 +269,24 @@ export const TreeEditor = React.forwardRef(
     useEffect(() => {
       setNoteFocusedKey(defaultNoteFocusedNodeId);
     }, [defaultNoteFocusedNodeId]);
+
+    useEffect(() => {
+      if (
+        !frameSelectionStartedNode &&
+        selectionNodeKeys.length &&
+        handleMutiSelect
+      ) {
+        let nodes = [];
+        for (let index = 0; index < selectionNodeKeys.length; index++) {
+          const key = selectionNodeKeys[index];
+          const node = nodeMap[key];
+          if (node) {
+            nodes.push(node);
+          }
+        }
+        handleMutiSelect(nodes);
+      }
+    }, [frameSelectionStartedNode, selectionNodeKeys, nodeMap]);
 
     // 单击节点
     function clickNode(node: CNode) {
@@ -747,6 +773,16 @@ export const TreeEditor = React.forwardRef(
       }
     }
 
+    function handleKeyDown(event: React.KeyboardEvent) {
+      if (
+        (event.key === 'Delete' || event.key === 'Backspace') &&
+        selectionNodeKeys.length &&
+        showDeleteConform
+      ) {
+        showDeleteConform();
+      }
+    }
+
     return (
       <div
         className="menu-wrapper"
@@ -757,6 +793,7 @@ export const TreeEditor = React.forwardRef(
           padding: '15px 0',
           backgroundColor: backgroundColor,
         }}
+        onKeyDown={handleKeyDown}
       >
         {cnodes.map((node, index) => (
           <EditorItem
@@ -800,9 +837,30 @@ export const TreeEditor = React.forwardRef(
             handleSetSelectionStart={(node) =>
               setFrameSelectionStartedNode(node)
             }
-            handleSetSelectionNodes={(nodeKeys) =>
-              setSelectionNodeKeys(nodeKeys)
-            }
+            handleSetSelectionNodes={(nodeKeys, lastAddedNode) => {
+              if (lastAddedNode && frameSelectionStartedNode) {
+                let selectedKeys: string[] = [];
+                for (let index = 0; index < cnodes.length; index++) {
+                  const node = cnodes[index];
+                  if (
+                    frameSelectionStartedNode.y < lastAddedNode.y &&
+                    node.y >= frameSelectionStartedNode.y &&
+                    node.y <= lastAddedNode.y
+                  ) {
+                    selectedKeys.push(node._key);
+                  } else if (
+                    frameSelectionStartedNode.y > lastAddedNode.y &&
+                    node.y <= frameSelectionStartedNode.y &&
+                    node.y >= lastAddedNode.y
+                  ) {
+                    selectedKeys.push(node._key);
+                  }
+                }
+                setSelectionNodeKeys(selectedKeys);
+              } else {
+                setSelectionNodeKeys(nodeKeys);
+              }
+            }}
             handleCheck={check}
             handleClickAvatar={clickAvatar}
             handleClickStatus={clickStatus}
