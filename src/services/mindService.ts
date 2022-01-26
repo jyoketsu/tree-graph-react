@@ -53,6 +53,9 @@ export default function calculate(
 
       for (let index = 0; index < rightStarts.length; index++) {
         let node = rightStarts[index];
+        if (!node) {
+          break;
+        }
         y1 = location(nodes, node, x1, y1);
         if (index + 1 !== rightStarts.length) {
           y1 += ITEM_HEIGHT * secondZoomRatio;
@@ -64,6 +67,9 @@ export default function calculate(
 
       for (let index = 0; index < leftStarts.length; index++) {
         let node = leftStarts[index];
+        if (!node) {
+          break;
+        }
         y2 = location(nodes, node, x2, y2, true);
         if (index + 1 !== leftStarts.length) {
           y2 += ITEM_HEIGHT * secondZoomRatio;
@@ -192,6 +198,9 @@ export default function calculate(
       // 遍历子节点
       for (let index = 0; index < childrenIds.length; index++) {
         const element = nodes[childrenIds[index]];
+        if (!element) {
+          break;
+        }
         childY = location(nodes, element, childX, childY, toLeft);
         node.dots.push(element.y);
         if (index + 1 !== childrenIds.length) {

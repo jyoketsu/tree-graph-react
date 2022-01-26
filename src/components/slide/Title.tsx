@@ -22,6 +22,7 @@ export default function Title({ slide, active, thumbnailMode }: props) {
         display: 'flex',
         justifyContent: 'center',
         fontWeight: 500,
+        overflow: 'hidden',
       }}
     >
       <div
