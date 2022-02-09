@@ -5,7 +5,7 @@ import { Meta, Story } from '@storybook/react';
 const nodes = {
   '001': {
     _key: '001',
-    name: '項目管理test',
+    name: '項目管理test!',
     father: '',
     sortList: ['002', '003', '004', '005'],
     contract: false,
