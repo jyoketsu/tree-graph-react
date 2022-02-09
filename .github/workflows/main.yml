@@ -42,12 +42,9 @@ jobs:
           CI: true
 
       - name: Publish
-        run: npm publish
+        run: yarn publish
         env:
-          NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-          token: ${{ secrets.NPM_TOKEN }}
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
 
       - name: Build storybook
         run: yarn build-storybook
