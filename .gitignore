@@ -5,3 +5,4 @@ node_modules
 .VSCodeCounter
 dist
 storybook-static
+coverage
