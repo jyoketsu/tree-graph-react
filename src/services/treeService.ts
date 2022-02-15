@@ -188,7 +188,9 @@ export default function calculate(
         second_end_x = node.x + nodeWidth / 2;
       }
 
-      if (collapseMode) {
+      if (node._key === startId) {
+        collapsed = false;
+      } else if (collapseMode) {
         if (expandedNodeKey && ancestorList.includes(node._key)) {
           collapsed = node.contract;
         } else {

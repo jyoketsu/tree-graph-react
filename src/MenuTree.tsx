@@ -75,7 +75,9 @@ export interface MenuProps {
   ref?: any;
   collapseMode?: boolean;
   draggable?: boolean;
+  // data-detail
   storageData?: string[];
+  hideRoot?: boolean;
 }
 export const MenuTree = React.forwardRef(
   (
@@ -116,6 +118,7 @@ export const MenuTree = React.forwardRef(
       collapseMode,
       draggable = true,
       storageData,
+      hideRoot,
     }: MenuProps,
     ref
   ) => {
@@ -199,7 +202,9 @@ export const MenuTree = React.forwardRef(
         undefined,
         undefined,
         collapseMode,
-        expandedNodeKey
+        expandedNodeKey,
+        undefined,
+        hideRoot
       );
 
       if (cal) {
