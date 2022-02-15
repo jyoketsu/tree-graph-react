@@ -78,6 +78,7 @@ export interface MenuProps {
   // data-detail
   storageData?: string[];
   hideRoot?: boolean;
+  paddingLeft?: number;
 }
 export const MenuTree = React.forwardRef(
   (
@@ -97,7 +98,7 @@ export const MenuTree = React.forwardRef(
       itemHeight,
       blockHeight,
       fontSize,
-      indent,
+      indent = 18,
       disableShortcut,
       disabled,
       showMoreButton,
@@ -119,6 +120,7 @@ export const MenuTree = React.forwardRef(
       draggable = true,
       storageData,
       hideRoot,
+      paddingLeft = 0,
     }: MenuProps,
     ref
   ) => {
@@ -127,7 +129,6 @@ export const MenuTree = React.forwardRef(
     const ITEM_HEIGHT = itemHeight || 32;
     const BLOCK_HEIGHT = blockHeight || 30;
     const FONT_SIZE = fontSize || 14;
-    const INDENT = indent || 18;
     // const AVATAR_WIDTH = avatarWidth || 22;
     // const CHECK_BOX_WIDTH = checkBoxWidth || 18;
     const UNCONTROLLED = uncontrolled === undefined ? true : uncontrolled;
@@ -191,14 +192,14 @@ export const MenuTree = React.forwardRef(
         true,
         ITEM_HEIGHT,
         BLOCK_HEIGHT,
-        INDENT,
+        indent,
         FONT_SIZE,
         SHOW_ICON,
         false,
         11,
         1,
         1,
-        undefined,
+        paddingLeft + indent,
         undefined,
         undefined,
         collapseMode,
@@ -537,7 +538,7 @@ export const MenuTree = React.forwardRef(
           <MenuItem
             key={`${index}_${node._key}`}
             startId={startId}
-            indent={INDENT}
+            indent={indent}
             node={node}
             BLOCK_HEIGHT={BLOCK_HEIGHT}
             FONT_SIZE={FONT_SIZE}

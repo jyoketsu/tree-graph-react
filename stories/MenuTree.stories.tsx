@@ -206,4 +206,6 @@ Default.args = {
   handleClickIcon: (node: any) => console.log('---handleClickIcon---', node),
   storageData: ['name', 'icon'],
   defaultSelectedId: '001',
+  // hideRoot: true,
+  paddingLeft: 14,
 };

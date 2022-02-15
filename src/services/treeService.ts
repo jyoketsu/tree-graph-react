@@ -188,7 +188,7 @@ export default function calculate(
         second_end_x = node.x + nodeWidth / 2;
       }
 
-      if (node._key === startId) {
+      if (hideRoot && node._key === startId) {
         collapsed = false;
       } else if (collapseMode) {
         if (expandedNodeKey && ancestorList.includes(node._key)) {
