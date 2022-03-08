@@ -35,9 +35,11 @@ export interface MenuProps {
   dragLineColor?: string;
   // 字体颜色
   color?: string;
+  collapseButtonColor?: string;
   // 选中的字体颜色
   selectedColor?: string;
   hoverColor?: string;
+  hoverCollapseButtonColor?: string;
   hoverBackgroundColor?: string;
   cutColor?: string;
   // 选中节点id
@@ -79,6 +81,8 @@ export interface MenuProps {
   storageData?: string[];
   hideRoot?: boolean;
   paddingLeft?: number;
+  leafShowCollapseButton?: boolean;
+  tools?: (nodeKey: string) => React.ReactNode;
 }
 export const MenuTree = React.forwardRef(
   (
@@ -89,8 +93,10 @@ export const MenuTree = React.forwardRef(
       selectedBackgroundColor,
       dragLineColor,
       color,
+      collapseButtonColor,
       selectedColor,
       hoverColor,
+      hoverCollapseButtonColor,
       hoverBackgroundColor = '#4d4d4d',
       cutColor,
       defaultSelectedId,
@@ -121,6 +127,8 @@ export const MenuTree = React.forwardRef(
       storageData,
       hideRoot,
       paddingLeft = 0,
+      leafShowCollapseButton = true,
+      tools,
     }: MenuProps,
     ref
   ) => {
@@ -545,8 +553,10 @@ export const MenuTree = React.forwardRef(
             selectedBackgroundColor={selectedBackgroundColor || '#00CDD3'}
             dragLineColor={dragLineColor || '#00CDD3'}
             color={color || '#CDD0D2'}
+            collapseButtonColor={collapseButtonColor}
             selectedColor={selectedColor || '#FFF'}
             hoverColor={hoverColor || '#FFF'}
+            hoverCollapseButtonColor={hoverCollapseButtonColor}
             hoverBackgroundColor={hoverBackgroundColor}
             selected={selectedId}
             showIcon={SHOW_ICON}
@@ -574,6 +584,8 @@ export const MenuTree = React.forwardRef(
             }
             draggable={draggable}
             storageData={storageData}
+            leafShowCollapseButton={leafShowCollapseButton}
+            tools={tools}
           />
         ))}
       </div>

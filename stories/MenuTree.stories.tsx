@@ -190,7 +190,8 @@ const Template: Story<MenuProps> = (args) => {
   const treeRef = useRef(null);
   return (
     <div style={{ width: '350px' }}>
-      <MenuTree {...args} />
+      {/* <button onClick={() => treeRef.current.rename()}>重命名</button> */}
+      <MenuTree ref={treeRef} {...args} />
     </div>
   );
 };
@@ -208,4 +209,14 @@ Default.args = {
   defaultSelectedId: '001',
   // hideRoot: true,
   paddingLeft: 14,
+  // tools: (nodeKey: string) => (
+  //   <div
+  //     onClick={(e) => {
+  //       e.stopPropagation();
+  //       alert(nodeKey);
+  //     }}
+  //   >
+  //     {nodeKey}
+  //   </div>
+  // ),
 };

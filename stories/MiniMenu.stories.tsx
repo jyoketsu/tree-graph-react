@@ -42,8 +42,7 @@ const nodes = {
     father: '001',
     sortList: [],
     checked: false,
-    icon:
-      'https://cdn-icare.qingtime.cn/编组 27.png0.1111110010000101001011000001011011011010110100111111607668436820?v=1607668438818',
+    icon: 'https://cdn-icare.qingtime.cn/编组 27.png0.1111110010000101001011000001011011011010110100111111607668436820?v=1607668438818',
     hour: 0.1,
     limitDay: 1610726400000,
   },
@@ -216,7 +215,7 @@ const meta: Meta = {
 
 export default meta;
 
-const Template: Story<MiniMenuProps> = args => {
+const Template: Story<MiniMenuProps> = (args) => {
   const treeRef = useRef(null);
   return (
     <div>
@@ -236,4 +235,14 @@ Default.args = {
     console.log('---handleClickExpand---', node),
   // handleMouseEnter: () => console.log('---handleMouseEnter---'),
   // handleMouseLeave: () => console.log('---handleMouseLeave---'),
+  // tools: (nodeKey: string) => (
+  //   <div
+  //     onClick={(e) => {
+  //       e.stopPropagation();
+  //       alert(nodeKey);
+  //     }}
+  //   >
+  //     {nodeKey}
+  //   </div>
+  // ),
 };

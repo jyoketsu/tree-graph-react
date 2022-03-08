@@ -46,6 +46,7 @@ export interface MiniMenuProps {
   handleMouseEnter?: Function;
   handleMouseLeave?: Function;
   handleCrossCompDrag?: Function;
+  tools?: (nodeKey: string) => React.ReactNode;
 }
 
 export const MiniMenu = ({
@@ -74,6 +75,7 @@ export const MiniMenu = ({
   handleMouseEnter,
   handleMouseLeave,
   handleCrossCompDrag,
+  tools,
 }: MiniMenuProps) => {
   const WIDTH = width || 48;
   const ITEM_HEIGHT = itemHeight || 48;
@@ -152,6 +154,7 @@ export const MiniMenu = ({
               borderRadius={borderRadius}
               compId={compId}
               // selectedId={firstLevelId}
+              tools={tools}
             />
           ) : null
         )}
@@ -166,6 +169,7 @@ interface ItemProps {
   columnSpacing: number | undefined;
   borderRadius?: number;
   compId: string;
+  tools?: (nodeKey: string) => React.ReactNode;
 }
 const MenuItem = ({
   node,
@@ -173,6 +177,7 @@ const MenuItem = ({
   columnSpacing,
   borderRadius,
   compId,
+  tools,
 }: ItemProps) => {
   const configProps = useContext(ThemeContext);
   const [hover, setHover] = useState(false);
@@ -281,6 +286,8 @@ const MenuItem = ({
           {node.name || ''}
         </span>
       ) : null}
+      <div style={{ flex: 1 }}></div>
+      {!firstLevel && tools && hover ? tools(node._key) : null}
       {!firstLevel && node && node.sortList.length ? (
         <div
           style={{ position: 'absolute', right: '3px' }}
@@ -289,8 +296,9 @@ const MenuItem = ({
           <svg width="12px" height="12px" viewBox="0 0 12 12" version="1.1">
             <g>
               <path
-                d={`M ${12 / 4} 0 L ${12 / 4 + 12 / 2} ${12 / 2} L ${12 /
-                  4} ${12} Z`}
+                d={`M ${12 / 4} 0 L ${12 / 4 + 12 / 2} ${12 / 2} L ${
+                  12 / 4
+                } ${12} Z`}
                 fill={hover ? '#FFF' : color}
               ></path>
             </g>
@@ -325,6 +333,7 @@ const MenuItem = ({
                     columnSpacing={columnSpacing}
                     borderRadius={borderRadius}
                     compId={compId}
+                    tools={tools}
                   />
                 ) : null
               )}

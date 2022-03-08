@@ -33,10 +33,14 @@ interface Props {
   handleDrop: Function;
   pasteNodeKey: string | null;
   compId: string;
+  leafShowCollapseButton: boolean;
   collapseMode?: boolean;
   collapseModeCollapsed?: boolean;
   draggable: boolean;
   storageData?: string[];
+  collapseButtonColor?: string;
+  hoverCollapseButtonColor?: string;
+  tools?: (nodeKey: string) => React.ReactNode;
 }
 const TreeNode = ({
   node,
@@ -65,10 +69,14 @@ const TreeNode = ({
   handleDrop,
   pasteNodeKey,
   compId,
+  leafShowCollapseButton,
   collapseMode,
   collapseModeCollapsed,
   draggable,
   storageData,
+  collapseButtonColor = color,
+  hoverCollapseButtonColor = hoverColor,
+  tools,
 }: Props) => {
   const width = 12;
   const containerRef = useRef<HTMLDivElement>(null);
@@ -308,27 +316,27 @@ const TreeNode = ({
         }}
       >
         {/* 折疊按鈕 */}
-        {/* {node.sortList && node.sortList.length ? ( */}
-        <div onClick={handleClick}>
-          <svg width={width} height={width} viewBox={`0,0,${width},${width}`}>
-            {collapsed ? (
-              <path
-                d={`M ${width / 4} ${0} L ${width / 4 + width / 2} ${
-                  width / 2
-                } L ${width / 4} ${width} Z`}
-                fill={hover ? hoverColor : color}
-              ></path>
-            ) : (
-              <path
-                d={`M 0 ${width / 4} H ${width} L ${width / 2} ${
-                  width / 4 + width / 2
-                } Z`}
-                fill={hover ? hoverColor : color}
-              ></path>
-            )}
-          </svg>
-        </div>
-        {/* ) : null} */}
+        {(node.sortList && node.sortList.length) || leafShowCollapseButton ? (
+          <div onClick={handleClick}>
+            <svg width={width} height={width} viewBox={`0,0,${width},${width}`}>
+              {collapsed ? (
+                <path
+                  d={`M ${width / 4} ${0} L ${width / 4 + width / 2} ${
+                    width / 2
+                  } L ${width / 4} ${width} Z`}
+                  fill={hover ? hoverCollapseButtonColor : collapseButtonColor}
+                ></path>
+              ) : (
+                <path
+                  d={`M 0 ${width / 4} H ${width} L ${width / 2} ${
+                    width / 4 + width / 2
+                  } Z`}
+                  fill={hover ? hoverCollapseButtonColor : collapseButtonColor}
+                ></path>
+              )}
+            </svg>
+          </div>
+        ) : null}
       </div>
 
       {/* 圖標 */}
@@ -447,6 +455,7 @@ const TreeNode = ({
       )}
 
       <div style={{ flex: 1 }}></div>
+      {tools && hover ? tools(node._key) : null}
       {showMoreButton ? (
         <div
           onClick={handleClickMore}
