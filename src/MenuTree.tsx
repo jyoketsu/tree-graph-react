@@ -81,7 +81,6 @@ export interface MenuProps {
   storageData?: string[];
   hideRoot?: boolean;
   paddingLeft?: number;
-  leafShowCollapseButton?: boolean;
   tools?: (nodeKey: string) => React.ReactNode;
 }
 export const MenuTree = React.forwardRef(
@@ -127,7 +126,6 @@ export const MenuTree = React.forwardRef(
       storageData,
       hideRoot,
       paddingLeft = 0,
-      leafShowCollapseButton = true,
       tools,
     }: MenuProps,
     ref
@@ -584,7 +582,6 @@ export const MenuTree = React.forwardRef(
             }
             draggable={draggable}
             storageData={storageData}
-            leafShowCollapseButton={leafShowCollapseButton}
             tools={tools}
           />
         ))}

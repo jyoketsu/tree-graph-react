@@ -468,9 +468,6 @@ export const Tree = React.forwardRef(
 
     // 单击节点
     function clickNode(node: CNode) {
-      if (disabled) {
-        return;
-      }
       clearTimeout(clickTimeId);
       clickTimeId = setTimeout(function () {
         setselectedId(node._key);

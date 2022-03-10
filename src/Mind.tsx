@@ -255,7 +255,6 @@ export const Mind = React.forwardRef(
     const [pasteType, setPasteType] = useState<'copy' | 'cut' | null>(null);
 
     const [compId, setCompId] = useState('');
-    const [contentEditable, setContentEditable] = useState(true);
     const containerRef = useRef<HTMLDivElement>(null);
 
     // 暴露方法
@@ -339,10 +338,6 @@ export const Mind = React.forwardRef(
 
     // 单击节点
     function clickNode(node: CNode) {
-      if (disabled) {
-        return;
-      }
-      setContentEditable(false);
       clearTimeout(clickTimeId);
       clickTimeId = setTimeout(function () {
         setselectedId(node._key);
@@ -1092,7 +1087,6 @@ export const Mind = React.forwardRef(
         }}
         // className={styles.svgwrapper}
         tabIndex={-1}
-        contentEditable={contentEditable}
         suppressContentEditableWarning={true}
         ref={containerRef}
         onKeyDown={(e: any) => handleKeyDown(e)}

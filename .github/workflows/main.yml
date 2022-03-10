@@ -42,11 +42,6 @@ jobs:
         env:
           CI: true
 
-      - name: Publish
-        run: yarn publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-
       - name: Build storybook
         run: yarn build-storybook
         env:
@@ -57,3 +52,18 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./storybook-static
+
+     - name: Publish to npm
+        run: yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+
+      - name: Use Node 12
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12.x
+          registry-url: https://npm.pkg.github.com/
+      - name: Publish to GitHub Packages
+      - run: yarn publish
+        env:
+          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}

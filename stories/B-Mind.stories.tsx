@@ -404,6 +404,7 @@ MultiCol.args = {
   showCheckbox: true,
   showStatus: true,
   showChildNum: true,
+  // disabled: true,
   handleClickDot: (node: any) => console.log('---handleClickDot---', node),
   handleClickMoreButton: (node: any, clientX: number, clientY: number) =>
     console.log('---handleClickMoreButton---', node, clientX, clientY),

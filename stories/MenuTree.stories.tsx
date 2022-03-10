@@ -29,6 +29,7 @@ const nodes = {
     hour: 0.1,
     limitDay: new Date(new Date().setHours(0, 0, 0, 0)).getTime(),
     icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
+    type: 'link',
   },
   '003': {
     _key: '003',

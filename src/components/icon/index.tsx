@@ -13,6 +13,8 @@ import Preview from './Preview';
 import Plus from './Plus';
 import Pack from './Pack';
 import Fav from './Fav';
+import LineCollapse from './LineCollapse';
+import Dot from './Dot';
 
 const Icon = (props: IconProps) => {
   switch (props.name) {
@@ -42,6 +44,10 @@ const Icon = (props: IconProps) => {
       return <Pack {...props} />;
     case 'fav':
       return <Fav {...props} />;
+    case 'lineCollapse':
+      return <LineCollapse {...props} />;
+    case 'dot':
+      return <Dot {...props} />;
     default:
       return null;
   }

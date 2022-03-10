@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import CNode from '../../interfaces/CNode';
 import { ClickOutside } from '@jyoketsu/click-outside-react';
 import { textWidthAll } from '../../services/util';
+import Icon from '../icon';
 
 let composing = false;
 
@@ -33,7 +34,6 @@ interface Props {
   handleDrop: Function;
   pasteNodeKey: string | null;
   compId: string;
-  leafShowCollapseButton: boolean;
   collapseMode?: boolean;
   collapseModeCollapsed?: boolean;
   draggable: boolean;
@@ -69,7 +69,6 @@ const TreeNode = ({
   handleDrop,
   pasteNodeKey,
   compId,
-  leafShowCollapseButton,
   collapseMode,
   collapseModeCollapsed,
   draggable,
@@ -78,7 +77,7 @@ const TreeNode = ({
   hoverCollapseButtonColor = hoverColor,
   tools,
 }: Props) => {
-  const width = 12;
+  const width = 20;
   const containerRef = useRef<HTMLDivElement>(null);
   const [hover, sethover] = useState(false);
   const [value, setValue] = useState(node.name);
@@ -316,32 +315,46 @@ const TreeNode = ({
         }}
       >
         {/* 折疊按鈕 */}
-        {(node.sortList && node.sortList.length) || leafShowCollapseButton ? (
-          <div onClick={handleClick}>
-            <svg width={width} height={width} viewBox={`0,0,${width},${width}`}>
-              {collapsed ? (
-                <path
-                  d={`M ${width / 4} ${0} L ${width / 4 + width / 2} ${
-                    width / 2
-                  } L ${width / 4} ${width} Z`}
-                  fill={hover ? hoverCollapseButtonColor : collapseButtonColor}
-                ></path>
-              ) : (
-                <path
-                  d={`M 0 ${width / 4} H ${width} L ${width / 2} ${
-                    width / 4 + width / 2
-                  } Z`}
-                  fill={hover ? hoverCollapseButtonColor : collapseButtonColor}
-                ></path>
-              )}
-            </svg>
+        {node.sortList && node.sortList.length ? (
+          <div
+            onClick={handleClick}
+            style={{
+              transform: collapsed ? 'unset' : 'rotate(90deg)',
+              transition: 'transform 0.3s',
+              WebkitTransform: 'transform 0.3s',
+              lineHeight: '100%',
+            }}
+          >
+            <Icon
+              name="lineCollapse"
+              width={width}
+              height={width}
+              fill={hover ? hoverCollapseButtonColor : collapseButtonColor}
+            />
           </div>
-        ) : null}
+        ) : (
+          <div
+            style={{
+              width: width,
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+            }}
+          >
+            <Icon
+              name="dot"
+              width={10}
+              height={10}
+              fill={hover ? hoverCollapseButtonColor : collapseButtonColor}
+            />
+          </div>
+        )}
       </div>
 
       {/* 圖標 */}
       {showIcon && node.icon ? (
         <div
+          className={`menu-item-icon-${node.type || 'node'}`}
           style={{
             width: '22px',
             height: '22px',
