@@ -53,7 +53,7 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_dir: ./storybook-static
 
-     - name: Publish to npm
+      - name: Publish to npm
         run: yarn publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
