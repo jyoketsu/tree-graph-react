@@ -474,19 +474,20 @@ const TreeNode = ({
           onClick={handleClickMore}
           style={{
             opacity: hover && !dragStarted ? 1 : 0,
+            height: '100%',
+            display: 'flex',
+            alignItems: 'center',
           }}
         >
           <svg
             viewBox="0 0 1024 1024"
             version="1.1"
             xmlns="http://www.w3.org/2000/svg"
-            p-id="3163"
             width={BLOCK_HEIGHT}
             height={BLOCK_HEIGHT - 8}
           >
             <path
               d="M426.666667 512a85.333333 85.333333 0 1 1 170.709333 0.042667A85.333333 85.333333 0 0 1 426.666667 512z m0 298.666667a85.333333 85.333333 0 1 1 170.709333 0.042666A85.333333 85.333333 0 0 1 426.666667 810.666667z m0-597.333334a85.333333 85.333333 0 1 1 170.709333 0.042667A85.333333 85.333333 0 0 1 426.666667 213.333333z"
-              p-id="3164"
               fill={
                 nodeRectClassName === 'selected' ? selectedColor : hoverColor
               }
