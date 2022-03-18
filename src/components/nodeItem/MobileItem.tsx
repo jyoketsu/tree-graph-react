@@ -1,7 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import CNode from '../../interfaces/CNode';
 import { ClickOutside } from '@jyoketsu/click-outside-react';
-import { textWidthAll } from '../../services/util';
+import { isEmoji, textWidthAll } from '../../services/util';
 
 let composing = false;
 
@@ -73,6 +73,8 @@ const MobileItem = ({
   const [dragStarted, setDragStarted] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
   const [isDragIn, setIsDragIn] = useState(false);
+
+  const iconIsEmoji = useMemo(() => isEmoji(node.icon), [node.icon]);
 
   function rectClassName(node: CNode) {
     // 选中的节点
@@ -151,7 +153,8 @@ const MobileItem = ({
 
   const nodeRectClassName = rectClassName(node);
 
-  const urlReg = /((\w{1,}\.+)+(com|cn|org|net|info|me)\/*[\w\/\?=&%]*)|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info|me)\/*[\w\/\?=&%]*)|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info|me)\/*[\w\/\?=&%]*)/g;
+  const urlReg =
+    /((\w{1,}\.+)+(com|cn|org|net|info|me)\/*[\w\/\?=&%]*)|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info|me)\/*[\w\/\?=&%]*)|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info|me)\/*[\w\/\?=&%]*)/g;
   let nameLinkArr = [];
   if (urlReg.test(node.name)) {
     let arr1: string[] = [];
@@ -279,7 +282,7 @@ const MobileItem = ({
       ></div>
       <div
         style={{ marginRight: '12px', flexShrink: 0 }}
-        onClick={e => {
+        onClick={(e) => {
           e.stopPropagation();
           handleClickDot(node);
         }}
@@ -299,19 +302,31 @@ const MobileItem = ({
 
       {/* 圖標 */}
       {showIcon && node.icon ? (
-        <div
-          style={{
-            width: '22px',
-            height: '22px',
-            backgroundImage: `url("${node.icon}")`,
-            backgroundPosition: 'center',
-            backgroundSize: 'contain',
-            backgroundRepeat: 'no-repeat',
-            marginRight: '4px',
-            flexShrink: 0,
-          }}
-          onClick={() => handleClickIcon(node)}
-        ></div>
+        iconIsEmoji ? (
+          <div
+            style={{
+              width: '22px',
+              height: '22px',
+              lineHeight: '22px',
+            }}
+          >
+            {node.icon}
+          </div>
+        ) : (
+          <div
+            style={{
+              width: '22px',
+              height: '22px',
+              backgroundImage: `url("${node.icon}")`,
+              backgroundPosition: 'center',
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+              marginRight: '4px',
+              flexShrink: 0,
+            }}
+            onClick={() => handleClickIcon(node)}
+          ></div>
+        )
       ) : null}
 
       {/* 文字 */}
@@ -326,7 +341,7 @@ const MobileItem = ({
               border: '1px solid #000000',
               outline: 'none',
             }}
-            onChange={e => setValue(e.target.value)}
+            onChange={(e) => setValue(e.target.value)}
             onKeyDown={(e: any) => handleCommit(e)}
             onBlur={() => handleChangeNodeText(selected, value)}
             onMouseDown={(e: React.MouseEvent) => e.stopPropagation()}
@@ -422,14 +437,16 @@ const MobileItem = ({
           <svg width={width} height={width} viewBox={`0,0,${width},${width}`}>
             {collapsed ? (
               <path
-                d={`M ${width / 4} ${0} L ${width / 4 + width / 2} ${width /
-                  2} L ${width / 4} ${width} Z`}
+                d={`M ${width / 4} ${0} L ${width / 4 + width / 2} ${
+                  width / 2
+                } L ${width / 4} ${width} Z`}
                 fill={hover ? hoverColor : color}
               ></path>
             ) : (
               <path
-                d={`M 0 ${width / 4} H ${width} L ${width / 2} ${width / 4 +
-                  width / 2} Z`}
+                d={`M 0 ${width / 4} H ${width} L ${width / 2} ${
+                  width / 4 + width / 2
+                } Z`}
                 fill={hover ? hoverColor : color}
               ></path>
             )}

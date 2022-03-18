@@ -1097,6 +1097,13 @@ function getElPosition(el: HTMLElement) {
   y += window.screenTop + document.body.clientTop;
   return { x, y };
 }
+function isEmoji(str?: string) {
+  return str
+    ? /(\ud83c[\udf00-\udfff])|(\ud83d[\udc00-\ude4f\ude80-\udeff])|[\u2600-\u2B55]/g.test(
+        str
+      )
+    : false;
+}
 
 export {
   findNodeById,
@@ -1142,4 +1149,5 @@ export {
   isMobile,
   mouseDirection,
   getElPosition,
+  isEmoji,
 };

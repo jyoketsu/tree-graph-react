@@ -32,6 +32,10 @@ const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 
 let spaceKeyDown = false;
 
+// 拖拽节流
+let lastTime = 0;
+const gapTime = 34;
+
 interface PasteFunc {
   (
     pasteNodeKey: string,
@@ -973,43 +977,53 @@ export const Tree = React.forwardRef(
 
     function handleMoveNode(e: React.MouseEvent) {
       if (dragStarted) {
-        e.stopPropagation();
-        let movedX = 0;
-        let movedY = 0;
-        movedX = e.clientX - clickX;
-        movedY = e.clientY - clickY;
+        let time = new Date().getTime();
+        if (time - lastTime > gapTime || !lastTime) {
+          e.stopPropagation();
+          let movedX = 0;
+          let movedY = 0;
+          movedX = e.clientX - clickX;
+          movedY = e.clientY - clickY;
 
-        setMovedNodeX(movedNodeX + movedX);
-        setMovedNodeY(movedNodeY + movedY);
+          setMovedNodeX(movedNodeX + movedX);
+          setMovedNodeY(movedNodeY + movedY);
 
-        setClickX(e.clientX);
-        setClickY(e.clientY);
+          setClickX(e.clientX);
+          setClickY(e.clientY);
+
+          lastTime = time;
+        }
       }
       if (frameSelectionStarted) {
-        e.stopPropagation();
-        let movedX = 0;
-        let movedY = 0;
-        movedX = e.nativeEvent.offsetX - clickX;
-        movedY = e.nativeEvent.offsetY - clickY;
-        setselectionWidth(Math.abs(movedX));
-        setselectionHeight(Math.abs(movedY));
-        if (movedX >= 0 && movedY >= 0) {
-          setselectionX(clickX);
-          setselectionY(clickY);
-        } else if (movedX < 0 || movedY < 0) {
-          setselectionX(clickX + (movedX < 0 ? movedX : 0));
-          setselectionY(clickY + (movedY < 0 ? movedY : 0));
+        let time = new Date().getTime();
+        if (time - lastTime > gapTime || !lastTime) {
+          e.stopPropagation();
+          let movedX = 0;
+          let movedY = 0;
+          movedX = e.nativeEvent.offsetX - clickX;
+          movedY = e.nativeEvent.offsetY - clickY;
+          setselectionWidth(Math.abs(movedX));
+          setselectionHeight(Math.abs(movedY));
+          if (movedX >= 0 && movedY >= 0) {
+            setselectionX(clickX);
+            setselectionY(clickY);
+          } else if (movedX < 0 || movedY < 0) {
+            setselectionX(clickX + (movedX < 0 ? movedX : 0));
+            setselectionY(clickY + (movedY < 0 ? movedY : 0));
+          }
+          const selectionNodes = getNodesInSelection(
+            selectionX,
+            selectionY,
+            selectionWidth,
+            selectionHeight,
+            BLOCK_HEIGHT,
+            cnodes
+          );
+          setselectedId(null);
+          setSelectedNodes(selectionNodes);
+
+          lastTime = time;
         }
-        const selectionNodes = getNodesInSelection(
-          selectionX,
-          selectionY,
-          selectionWidth,
-          selectionHeight,
-          BLOCK_HEIGHT,
-          cnodes
-        );
-        setselectedId(null);
-        setSelectedNodes(selectionNodes);
       }
     }
 

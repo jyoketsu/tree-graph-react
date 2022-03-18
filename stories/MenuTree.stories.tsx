@@ -11,10 +11,9 @@ const nodes = {
     contract: false,
     disabled: true,
     avatarUri: 'https://psnine.com/Upload/game/11387.png',
-    icon: 'https://cdn-icare.qingtime.cn/rooter.svg',
-
+    // icon: 'https://cdn-icare.qingtime.cn/rooter.svg',
+    icon: '😀',
     checked: true,
-
     hour: 0.1,
     limitDay: new Date(new Date().setHours(0, 0, 0, 0)).getTime(),
   },

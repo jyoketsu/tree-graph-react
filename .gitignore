@@ -6,3 +6,4 @@ node_modules
 dist
 storybook-static
 coverage
+yarn.lock

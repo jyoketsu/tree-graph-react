@@ -24,7 +24,8 @@ const nodes = {
     checked: true,
     hour: 0.1,
     limitDay: new Date(new Date().setHours(0, 0, 0, 0)).getTime(),
-    icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
+    // icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
+    icon: '😀',
   },
   '003': {
     _key: '003',
@@ -63,7 +64,8 @@ const nodes = {
     father: '002',
     contract: false,
     sortList: ['008', '009'],
-    icon: 'https://cdn-icare.qingtime.cn/rooter.svg',
+    // icon: 'https://cdn-icare.qingtime.cn/rooter.svg',
+    icon: '😍',
     checked: false,
 
     hour: 0.1,

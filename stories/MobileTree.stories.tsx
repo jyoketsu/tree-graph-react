@@ -11,17 +11,15 @@ const nodes = {
     contract: false,
     disabled: true,
     avatarUri: 'https://psnine.com/Upload/game/11387.png',
-    icon: 'https://cdn-icare.qingtime.cn/rooter.svg',
-
+    // icon: 'https://cdn-icare.qingtime.cn/rooter.svg',
+    icon: '😍',
     checked: true,
-
     hour: 0.1,
     limitDay: new Date(new Date().setHours(0, 0, 0, 0)).getTime(),
   },
   '002': {
     _key: '002',
-    name:
-      '链接地址是http://jyoketsu.com和http://psnine.com/psnid/jyoketsu3还有playstation.com',
+    name: '链接地址是http://jyoketsu.com和http://psnine.com/psnid/jyoketsu3还有playstation.com',
     father: '001',
     sortList: ['006', '007'],
     contract: false,
@@ -187,7 +185,7 @@ const meta: Meta = {
 
 export default meta;
 
-const Template: Story<MobileTreeProps> = args => {
+const Template: Story<MobileTreeProps> = (args) => {
   const treeRef = useRef(null);
   return (
     <div style={{ width: '350px' }}>

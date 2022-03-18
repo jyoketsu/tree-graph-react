@@ -1,7 +1,7 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useMemo } from 'react';
 import CNode from '../../interfaces/CNode';
 import { ClickOutside } from '@jyoketsu/click-outside-react';
-import { textWidthAll } from '../../services/util';
+import { isEmoji, textWidthAll } from '../../services/util';
 import Icon from '../icon';
 
 let composing = false;
@@ -84,6 +84,8 @@ const TreeNode = ({
   const [dragStarted, setDragStarted] = useState(false);
   const [isDragOver, setIsDragOver] = useState(false);
   const [isDragIn, setIsDragIn] = useState(false);
+
+  const iconIsEmoji = useMemo(() => isEmoji(node.icon), [node.icon]);
 
   function rectClassName(node: CNode) {
     // 选中的节点
@@ -353,20 +355,31 @@ const TreeNode = ({
 
       {/* 圖標 */}
       {showIcon && node.icon ? (
-        <div
-          className={`menu-item-icon-${node.type || 'node'}`}
-          style={{
-            width: '22px',
-            height: '22px',
-            backgroundImage: `url("${node.icon}")`,
-            backgroundPosition: 'center',
-            backgroundSize: 'contain',
-            backgroundRepeat: 'no-repeat',
-            marginRight: '4px',
-            flexShrink: 0,
-          }}
-          onClick={() => handleClickIcon(node)}
-        ></div>
+        iconIsEmoji ? (
+          <div
+            style={{
+              width: '22px',
+              height: '22px',
+            }}
+          >
+            {node.icon}
+          </div>
+        ) : (
+          <div
+            className={`menu-item-icon-${node.type || 'node'}`}
+            style={{
+              width: '22px',
+              height: '22px',
+              backgroundImage: `url("${node.icon}")`,
+              backgroundPosition: 'center',
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+              marginRight: '4px',
+              flexShrink: 0,
+            }}
+            onClick={() => handleClickIcon(node)}
+          ></div>
+        )
       ) : null}
 
       {/* 文字 */}

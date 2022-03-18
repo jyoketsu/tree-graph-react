@@ -1,10 +1,11 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { HandleClickMore, HandleClickUpload, HandleDeleteAttach } from '../..';
 import CNode from '../../interfaces/CNode';
 import {
   getTextAfterCursor,
   isCursorHead,
   isCursorTail,
+  isEmoji,
   mouseDirection,
   moveCursorToEnd,
   textWidthAll,
@@ -126,6 +127,8 @@ Props) => {
   const indentCount = node.x / 30;
   const isNormalLink = node.type === 'link' && node.url;
   const bkColor = inSelection ? '#B1D3FA' : backgroundColor;
+
+  const iconIsEmoji = useMemo(() => isEmoji(node.icon), [node.icon]);
 
   let fontSize = 16;
   if (isRoot) {
@@ -680,19 +683,31 @@ Props) => {
             ) : null}
             {/* 圖標 */}
             {showIcon && node.icon && !isRoot && !isNormalLink ? (
-              <div
-                style={{
-                  width: '22px',
-                  height: '22px',
-                  backgroundImage: `url("${node.icon}")`,
-                  backgroundPosition: 'center',
-                  backgroundSize: 'contain',
-                  backgroundRepeat: 'no-repeat',
-                  flexShrink: 0,
-                  marginRight: '2px',
-                }}
-                onClick={() => handleClickIcon(node)}
-              ></div>
+              iconIsEmoji ? (
+                <div
+                  style={{
+                    width: '22px',
+                    height: '22px',
+                    lineHeight: '22px',
+                  }}
+                >
+                  {node.icon}
+                </div>
+              ) : (
+                <div
+                  style={{
+                    width: '22px',
+                    height: '22px',
+                    backgroundImage: `url("${node.icon}")`,
+                    backgroundPosition: 'center',
+                    backgroundSize: 'contain',
+                    backgroundRepeat: 'no-repeat',
+                    flexShrink: 0,
+                    marginRight: '2px',
+                  }}
+                  onClick={() => handleClickIcon(node)}
+                ></div>
+              )
             ) : null}
             {/* 头像 */}
             {node.avatarUri ? (

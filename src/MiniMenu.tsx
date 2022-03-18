@@ -1,7 +1,7 @@
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useMemo } from 'react';
 import NodeMap from './interfaces/NodeMap';
 import Node from './interfaces/Node';
-import { guid } from './services/util';
+import { guid, isEmoji } from './services/util';
 
 interface IContextProps {
   nodes: NodeMap;
@@ -188,6 +188,8 @@ const MenuItem = ({
   const backgroundColor = configProps.backgroundColor;
   const color = configProps.color;
 
+  const iconIsEmoji = useMemo(() => isEmoji(node.icon), [node.icon]);
+
   function handleClick(e: React.MouseEvent) {
     e.stopPropagation();
     if (configProps.handleClickNode) {
@@ -257,18 +259,30 @@ const MenuItem = ({
     >
       {/* 圖標 */}
       {node.icon ? (
-        <i
-          style={{
-            width: '22px',
-            height: '22px',
-            backgroundImage: `url("${node.icon}")`,
-            backgroundPosition: 'center',
-            backgroundSize: 'contain',
-            backgroundRepeat: 'no-repeat',
-            marginRight: firstLevel ? 0 : '8px',
-            flexShrink: 0,
-          }}
-        ></i>
+        iconIsEmoji ? (
+          <div
+            style={{
+              marginRight: firstLevel ? 0 : '8px',
+              marginLeft: '-2px',
+              fontSize: '18px',
+            }}
+          >
+            {node.icon}
+          </div>
+        ) : (
+          <i
+            style={{
+              width: '22px',
+              height: '22px',
+              backgroundImage: `url("${node.icon}")`,
+              backgroundPosition: 'center',
+              backgroundSize: 'contain',
+              backgroundRepeat: 'no-repeat',
+              marginRight: firstLevel ? 0 : '8px',
+              flexShrink: 0,
+            }}
+          ></i>
+        )
       ) : // 如果沒有圖標，顯示name首個字符
       firstLevel ? (
         <div>{node.name.substring(0, 1)}</div>

@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import Node from '../interfaces/Node';
 import CNode from '../interfaces/CNode';
 import Dot from '../components/Dot';
 import Expand from '../components/Expand';
 import DragInfo from '../interfaces/DragInfo';
-import { nodeLocation, textWidthAll } from '../services/util';
+import { isEmoji, nodeLocation, textWidthAll } from '../services/util';
 import { HandleFileChange } from '..';
 
 interface CheckFunc {
@@ -126,6 +126,8 @@ Props) => {
   const [hoverPreview, setHoverPreview] = useState(false);
   const [hoverAdd, setHoverAdd] = useState(false);
   const [hoverMore, setHoverMore] = useState(false);
+
+  const iconIsEmoji = useMemo(() => isEmoji(node.icon), [node.icon]);
 
   let limitDayNum = node.limitDay
     ? node.limitDay - now > 0
@@ -545,16 +547,27 @@ Props) => {
       ) : null}
       {/* 图标 */}
       {showIcon && node.icon ? (
-        <image
-          key="avatar-image"
-          x={iconLocationRes?.x}
-          y={iconLocationRes?.y}
-          width="22"
-          height="22"
-          xlinkHref={node.icon}
-          style={{ cursor: 'pointer' }}
-          onClick={handleClickPreview}
-        />
+        iconIsEmoji ? (
+          <text
+            x={iconLocationRes?.x}
+            y={textLocationRes?.y}
+            dominantBaseline="middle"
+            fontSize="18px"
+          >
+            {node.icon}
+          </text>
+        ) : (
+          <image
+            key="avatar-image"
+            x={iconLocationRes?.x}
+            y={iconLocationRes?.y}
+            width="22"
+            height="22"
+            xlinkHref={node.icon}
+            style={{ cursor: 'pointer' }}
+            onClick={handleClickPreview}
+          />
+        )
       ) : null}
       {/* 头像/图片 */}
       {showAvatar && node.avatarUri ? (

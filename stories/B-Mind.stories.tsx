@@ -32,7 +32,8 @@ const nodes = {
     limitDay: 1610812800111,
     // disabled: true,
     avatarUri: 'https://psnine.com/Upload/game/10992.png',
-    icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
+    // icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
+    icon: '😀',
     dotIcon: 'https://cdn-icare.qingtime.cn/shareOut1.svg?v=1604893936765',
   },
   '003': {
