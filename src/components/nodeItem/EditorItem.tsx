@@ -9,6 +9,7 @@ import {
   mouseDirection,
   moveCursorToEnd,
   textWidthAll,
+  urlReg,
 } from '../../services/util';
 import { HandleChangeNote, HandlePasteFile } from '../../TreeEditor';
 import Icon from '../icon';
@@ -420,8 +421,6 @@ Props) => {
     handleSetSelectionStart(null);
   }
 
-  const urlReg =
-    /((\w{1,}\.+)+(com|cn|org|net|info|me)\/*[\w\/\?=&%]*)|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info|me)\/*[\w\/\?=&%]*)|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info|me)\/*[\w\/\?=&%]*)/g;
   let nameLinkArr = [];
   if (urlReg.test(node.name)) {
     let arr1: string[] = [];

@@ -4,7 +4,7 @@ import CNode from '../interfaces/CNode';
 import Dot from '../components/Dot';
 import Expand from '../components/Expand';
 import DragInfo from '../interfaces/DragInfo';
-import { isEmoji, nodeLocation, textWidthAll } from '../services/util';
+import { isEmoji, nodeLocation, textWidthAll, urlReg } from '../services/util';
 import { HandleFileChange } from '..';
 
 interface CheckFunc {
@@ -307,8 +307,6 @@ Props) => {
     ? '#CB1B45'
     : selectedBackgroundColor;
 
-  const urlReg =
-    /((\w{1,}\.+)+(com|cn|org|net|info|me)\/*[\w\/\?=&%]*)|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info|me)\/*[\w\/\?=&%]*)|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info|me)\/*[\w\/\?=&%]*)/g;
   let nameLinkArr = [];
   if (urlReg.test(node.name)) {
     let arr1: string[] = [];
@@ -550,7 +548,7 @@ Props) => {
         iconIsEmoji ? (
           <text
             x={iconLocationRes?.x}
-            y={textLocationRes?.y}
+            y={iconLocationRes?.emojiY}
             dominantBaseline="middle"
             fontSize="18px"
           >

@@ -258,6 +258,7 @@ function nodeLocation(
           (node.isPack ? 22 + 2 : 0) +
           (node.hasCollect ? 22 + 2 : 0),
         y: node.y + (BLOCK_HEIGHT - 22) / 2,
+        emojiY: node.y + BLOCK_HEIGHT / 2 + 2,
       };
     case 'avatar':
       return {
@@ -1105,6 +1106,9 @@ function isEmoji(str?: string) {
     : false;
 }
 
+const urlReg =
+  /((\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%.]*)|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%.]*)|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info)\/*[\w\/\?=&%.]*)/g;
+
 export {
   findNodeById,
   textWidth,
@@ -1150,4 +1154,5 @@ export {
   mouseDirection,
   getElPosition,
   isEmoji,
+  urlReg,
 };

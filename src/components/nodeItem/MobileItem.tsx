@@ -1,7 +1,7 @@
 import React, { useState, useRef, useMemo } from 'react';
 import CNode from '../../interfaces/CNode';
 import { ClickOutside } from '@jyoketsu/click-outside-react';
-import { isEmoji, textWidthAll } from '../../services/util';
+import { isEmoji, textWidthAll, urlReg } from '../../services/util';
 
 let composing = false;
 
@@ -153,8 +153,6 @@ const MobileItem = ({
 
   const nodeRectClassName = rectClassName(node);
 
-  const urlReg =
-    /((\w{1,}\.+)+(com|cn|org|net|info|me)\/*[\w\/\?=&%]*)|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info|me)\/*[\w\/\?=&%]*)|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info|me)\/*[\w\/\?=&%]*)/g;
   let nameLinkArr = [];
   if (urlReg.test(node.name)) {
     let arr1: string[] = [];

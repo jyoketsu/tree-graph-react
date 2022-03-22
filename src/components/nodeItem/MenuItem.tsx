@@ -1,7 +1,7 @@
 import React, { useState, useRef, useMemo } from 'react';
 import CNode from '../../interfaces/CNode';
 import { ClickOutside } from '@jyoketsu/click-outside-react';
-import { isEmoji, textWidthAll } from '../../services/util';
+import { isEmoji, textWidthAll, urlReg } from '../../services/util';
 import Icon from '../icon';
 
 let composing = false;
@@ -171,8 +171,6 @@ const TreeNode = ({
 
   const nodeRectClassName = rectClassName(node);
 
-  const urlReg =
-    /((\w{1,}\.+)+(com|cn|org|net|info|me)\/*[\w\/\?=&%]*)|(http:\/\/(\w{1,}\.+)+(com|cn|org|net|info|me)\/*[\w\/\?=&%]*)|(https:\/\/(\w{1,}\.+)+(com|cn|org|net|info|me)\/*[\w\/\?=&%]*)/g;
   let nameLinkArr = [];
   if (urlReg.test(node.name)) {
     let arr1: string[] = [];
@@ -360,6 +358,7 @@ const TreeNode = ({
             style={{
               width: '22px',
               height: '22px',
+              lineHeight: '22px',
             }}
           >
             {node.icon}

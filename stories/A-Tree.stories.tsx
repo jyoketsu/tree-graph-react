@@ -10,7 +10,6 @@ const nodes = {
     sortList: ['002', '003', '004', '005'],
     contract: false,
     icon: 'https://static-resource.np.community.playstation.net/avatar/SCEI/I0078.png',
-    // icon: '😀',
     checked: true,
     hour: 0.1,
     showCheckbox: true,
@@ -105,7 +104,7 @@ const nodes = {
     name: '備份json文件',
     father: '006',
     sortList: [],
-
+    icon: '😀',
     checked: false,
 
     hour: 0.1,
