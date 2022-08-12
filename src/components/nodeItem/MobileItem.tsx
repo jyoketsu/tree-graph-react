@@ -1,7 +1,7 @@
 import React, { useState, useRef, useMemo } from 'react';
 import CNode from '../../interfaces/CNode';
-import { ClickOutside } from '@jyoketsu/click-outside-react';
 import { isEmoji, textWidthAll, urlReg } from '../../services/util';
+import { ClickOutside } from '../common/ClickOutside';
 
 let composing = false;
 

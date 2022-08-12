@@ -2,7 +2,7 @@
   "name": "tree-graph-react",
   "author": "xujie <jyoketsu@gmail.com>",
   "description": "Tree graph for React / React树状思维导图组件",
-  "version": "1.6.1",
+  "version": "1.6.5",
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -41,7 +41,6 @@
     "singleQuote": true,
     "trailingComma": "es5"
   },
-  "module": "dist/treegraph.esm.js",
   "devDependencies": {
     "@babel/core": "^7.14.6",
     "@size-limit/preset-small-lib": "^5.0.1",
@@ -75,7 +74,6 @@
     "mind"
   ],
   "dependencies": {
-    "@jyoketsu/click-outside-react": "^0.1.2",
     "react-tooltip": "^4.2.21",
     "screenfull": "^5.1.0"
   }

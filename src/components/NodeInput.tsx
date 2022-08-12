@@ -1,8 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import CNode from '../interfaces/CNode';
-import { ClickOutside } from '@jyoketsu/click-outside-react';
 import { nodeLocation, textWidthAll } from '../services/util';
 import { HandleFileChange } from '../Tree';
+import { ClickOutside } from './common/ClickOutside';
 
 let composing = false;
 

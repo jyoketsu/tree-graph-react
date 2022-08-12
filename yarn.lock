@@ -1988,11 +1988,6 @@
     "@jridgewell/resolve-uri" "^3.0.3"
     "@jridgewell/sourcemap-codec" "^1.4.10"
 
-"@jyoketsu/click-outside-react@^0.1.2":
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/@jyoketsu/click-outside-react/-/click-outside-react-0.1.2.tgz#005e69c65affccf0e0d2e08090a351560631a5b1"
-  integrity sha512-5S2NUY4drd3mhd+lqP8Tl4WRHxSi2e9fJAPCc0cCKwXb6GhY7o/T5kWZFNexCHEujz8OLbVbPOIyMmjB7pnYQA==
-
 "@mdx-js/loader@^1.6.22":
   version "1.6.22"
   resolved "https://registry.yarnpkg.com/@mdx-js/loader/-/loader-1.6.22.tgz#d9e8fe7f8185ff13c9c8639c048b123e30d322c4"
