@@ -7,3 +7,5 @@ export * from './Calculate';
 export * from './MobileTree';
 export * from './Slides';
 export * from './TreeEditor';
+export * from './interfaces/Node';
+export * from './interfaces/NodeMap';
