@@ -129,11 +129,11 @@ const TreeNode = ({
     // }
   }
 
-  function handleDropNode() {
+  function handleDropNode(event: React.DragEvent) {
     setIsDragOver(false);
     sessionStorage.setItem('dropNodeId', node._key);
     sessionStorage.setItem('placement', isDragIn ? 'in' : 'down');
-    handleDrop();
+    handleDrop(event);
     sessionStorage.removeItem('cross-comp-drag');
     sessionStorage.removeItem('cross-drag-compId');
   }

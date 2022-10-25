@@ -73,7 +73,11 @@ export interface MenuProps {
   handleClickMoreButton?: NodeClickFunc;
   handleShiftUpDown?: Function;
   handlePaste?: Function;
-  handleDrag?: Function;
+  handleDrag?: (
+    dragId: string,
+    dragInfo: DragInfo,
+    event: React.DragEvent
+  ) => void;
   ref?: any;
   collapseMode?: boolean;
   draggable?: boolean;
@@ -499,7 +503,7 @@ export const MenuTree = React.forwardRef(
       }
     }
 
-    function handleDrop() {
+    function handleDrop(event: React.DragEvent) {
       const dragNodeId = sessionStorage.getItem('dragNodeId');
       const dropNodeId = sessionStorage.getItem('dropNodeId');
       const placement = sessionStorage.getItem('placement');
@@ -523,7 +527,7 @@ export const MenuTree = React.forwardRef(
           setNodeMap(res);
         }
       } else if (handleDrag) {
-        handleDrag(dragNodeId, dragInfo);
+        handleDrag(dragNodeId, dragInfo, event);
       }
     }
 
