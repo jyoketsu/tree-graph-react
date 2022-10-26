@@ -507,11 +507,11 @@ export const MenuTree = React.forwardRef(
       const dragNodeId = sessionStorage.getItem('dragNodeId');
       const dropNodeId = sessionStorage.getItem('dropNodeId');
       const placement = sessionStorage.getItem('placement');
-      if (!dragNodeId || !dropNodeId) {
+      if (!dropNodeId) {
         return;
       }
       const dragInfo: DragInfo = {
-        dragNodeId: dragNodeId,
+        dragNodeId: dragNodeId || '',
         dropNodeId: dropNodeId,
         placement: placement as 'up' | 'down' | 'in',
       };
@@ -519,7 +519,7 @@ export const MenuTree = React.forwardRef(
       if (UNCONTROLLED) {
         const res = dragSort(
           nodeMap,
-          dragNodeId,
+          dragNodeId || '',
           dropNodeId,
           dragInfo.placement
         );
@@ -527,7 +527,7 @@ export const MenuTree = React.forwardRef(
           setNodeMap(res);
         }
       } else if (handleDrag) {
-        handleDrag(dragNodeId, dragInfo, event);
+        handleDrag(dragNodeId || '', dragInfo, event);
       }
     }
 
