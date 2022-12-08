@@ -1,6 +1,7 @@
 import React, { useRef } from 'react';
 import { MenuTree, MenuProps } from '../src';
 import { Meta, Story } from '@storybook/react';
+import CNode from '../src/interfaces/CNode';
 
 const nodes = {
   '001': {
@@ -219,4 +220,6 @@ Default.args = {
   //     {nodeKey}
   //   </div>
   // ),
+  // startAdornment: (node: CNode) => <div>{node.name}</div>,
+  // customActionButtons: () => <div>action</div>,
 };

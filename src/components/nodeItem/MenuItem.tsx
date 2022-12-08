@@ -1,4 +1,4 @@
-import React, { useState, useRef, useMemo } from 'react';
+import React, { useState, useRef, useMemo, ReactNode } from 'react';
 import CNode from '../../interfaces/CNode';
 import { isEmoji, textWidthAll, urlReg } from '../../services/util';
 import { ClickOutside } from '../common/ClickOutside';
@@ -31,6 +31,7 @@ interface Props {
   clickMore: Function;
   showInput: boolean;
   handleChangeNodeText: Function;
+  handleDrag?: (node: CNode, event: React.DragEvent) => void;
   handleDrop: Function;
   pasteNodeKey: string | null;
   compId: string;
@@ -38,9 +39,16 @@ interface Props {
   collapseModeCollapsed?: boolean;
   draggable: boolean;
   storageData?: string[];
-  collapseButtonColor?: string;
-  hoverCollapseButtonColor?: string;
-  tools?: (nodeKey: string) => React.ReactNode;
+  startAdornment?: (
+    node: CNode,
+    selected: boolean,
+    hover: boolean
+  ) => ReactNode;
+  customActionButtons?: (
+    node: CNode,
+    selected: boolean,
+    hover: boolean
+  ) => ReactNode;
 }
 const TreeNode = ({
   node,
@@ -66,6 +74,7 @@ const TreeNode = ({
   clickMore,
   showInput,
   handleChangeNodeText,
+  handleDrag,
   handleDrop,
   pasteNodeKey,
   compId,
@@ -73,9 +82,8 @@ const TreeNode = ({
   collapseModeCollapsed,
   draggable,
   storageData,
-  collapseButtonColor = color,
-  hoverCollapseButtonColor = hoverColor,
-  tools,
+  startAdornment,
+  customActionButtons,
 }: Props) => {
   const width = 20;
   const containerRef = useRef<HTMLDivElement>(null);
@@ -127,6 +135,9 @@ const TreeNode = ({
     // if (!editable) {
     //   dispatch(setCopyInfo(null, node._key, node.name, nodeKey));
     // }
+    if (handleDrag) {
+      handleDrag(node, e);
+    }
   }
 
   function handleDropNode(event: React.DragEvent) {
@@ -329,7 +340,15 @@ const TreeNode = ({
               name="lineCollapse"
               width={width}
               height={width}
-              fill={hover ? hoverCollapseButtonColor : collapseButtonColor}
+              fill={
+                pasteNodeKey === node._key
+                  ? cutColor
+                  : nodeRectClassName === 'selected'
+                  ? selectedColor
+                  : hover
+                  ? hoverColor
+                  : color
+              }
             />
           </div>
         ) : (
@@ -345,11 +364,27 @@ const TreeNode = ({
               name="dot"
               width={10}
               height={10}
-              fill={hover ? hoverCollapseButtonColor : collapseButtonColor}
+              fill={
+                pasteNodeKey === node._key
+                  ? cutColor
+                  : nodeRectClassName === 'selected'
+                  ? selectedColor
+                  : hover
+                  ? hoverColor
+                  : color
+              }
             />
           </div>
         )}
       </div>
+
+      {startAdornment
+        ? startAdornment(
+            node,
+            nodeRectClassName === 'selected' ? true : false,
+            hover
+          )
+        : null}
 
       {/* 圖標 */}
       {showIcon && node.icon ? (
@@ -480,7 +515,13 @@ const TreeNode = ({
       )}
 
       <div style={{ flex: 1 }}></div>
-      {tools && hover ? tools(node._key) : null}
+      {customActionButtons && hover
+        ? customActionButtons(
+            node,
+            nodeRectClassName === 'selected' ? true : false,
+            hover
+          )
+        : null}
       {showMoreButton ? (
         <div
           onClick={handleClickMore}
