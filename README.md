@@ -10,6 +10,16 @@
 
 ```
 
+## Dev
+```bash
+yarn start
+yarn storybook
+
+## ps storybook必须在node16下运行
+nvm install 16 --lts
+nvm use 16
+```
+
 ## [live demo](https://jyoketsu.github.io/tree-graph-react/)
 
 ## Installation
