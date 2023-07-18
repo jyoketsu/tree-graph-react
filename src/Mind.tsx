@@ -1020,9 +1020,18 @@ export const Mind = React.forwardRef(
     function childVPath(node: CNode, y1: number, y2: number) {
       const diff = INDENT - 8;
       const HlineWidth = diff - radius;
-      const startBlockHeight =
-        node.father === startId ? BLOCK_HEIGHT * secondZoomRatio : BLOCK_HEIGHT;
-      const endBlockHeight = BLOCK_HEIGHT;
+
+      let startBlockHeight = BLOCK_HEIGHT;
+      if (node._key === startId) {
+        startBlockHeight = BLOCK_HEIGHT * rootZoomRatio;
+      } else if (node.father === startId) {
+        startBlockHeight = BLOCK_HEIGHT * secondZoomRatio;
+      }
+
+      let endBlockHeight = BLOCK_HEIGHT;
+      if (node._key === startId) {
+        endBlockHeight = BLOCK_HEIGHT * secondZoomRatio;
+      }
 
       const startX = !node.toLeft ? node.x + node.width : node.x;
       const startY = node.y + startBlockHeight / 2;
@@ -1044,14 +1053,23 @@ export const Mind = React.forwardRef(
 
     // 每个子节点前的横线
     function path(node: CNode, dotY: any) {
-      const startBlockHeight =
-        node.father === startId ? BLOCK_HEIGHT * secondZoomRatio : BLOCK_HEIGHT;
-      const endBlockHeight = BLOCK_HEIGHT;
+      let startBlockHeight = BLOCK_HEIGHT;
+      if (node._key === startId) {
+        startBlockHeight = BLOCK_HEIGHT * rootZoomRatio;
+      } else if (node.father === startId) {
+        startBlockHeight = BLOCK_HEIGHT * secondZoomRatio;
+      }
+
+      let endBlockHeight = BLOCK_HEIGHT;
+      if (node._key === startId) {
+        endBlockHeight = BLOCK_HEIGHT * secondZoomRatio;
+      }
+
       const nodeMiddleY = node.y + startBlockHeight / 2;
 
       const endX = !node.toLeft
-        ? node.x + node.width + INDENT - 8
-        : node.x - INDENT + 8;
+        ? node.x + node.width + INDENT - radius
+        : node.x - INDENT + radius;
       const endY = dotY + endBlockHeight / 2;
       const startX = !node.toLeft ? endX - radius : endX + radius;
 
@@ -1069,7 +1087,12 @@ export const Mind = React.forwardRef(
 
       const M = `M ${startX} ${startY}`;
       const Q = `Q ${x1} ${y1},${endX} ${endY}`;
-      return `${M} ${Q}`;
+      let H = '';
+      // 根节点与其子节点的间隔为2INDENT，所以再加一段横线
+      if (node._key === startId) {
+        H = `H ${endX + INDENT}`;
+      }
+      return `${M} ${Q} ${H}`;
     }
 
     function rootPath(node: CNode, dotY: any, isLeft?: boolean) {
@@ -1349,7 +1372,10 @@ export const Mind = React.forwardRef(
               className={`node-group-${node._key}`}
             >
               <g>
-                {node.dots && node.x && node.y && node._key !== startId
+                {node.dots &&
+                node.x &&
+                node.y &&
+                (node._key !== startId || singleColumn)
                   ? node.dots.map((dotY, index) => (
                       <path
                         key={index}
@@ -1361,7 +1387,7 @@ export const Mind = React.forwardRef(
                     ))
                   : null}
               </g>
-              {node._key === startId ? (
+              {node._key === startId && !singleColumn ? (
                 <g>
                   {node.leftDots
                     ? node.leftDots.map((dotY, index) => (

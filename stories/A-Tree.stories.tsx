@@ -17,6 +17,10 @@ const nodes = {
     limitDay: new Date(new Date()).getTime(),
     // disabled: true,
     childNum: 1000,
+    // imageUrl:
+    //   'https://image.api.playstation.com/trophy/np/NPWR12518_00_009C1232E900005FE409857E926767DFE9CAC7F371/CCDC60CADE4B3970C348FEFDE0094BA95C0A802F.PNG',
+    // imageWidth: 320,
+    // imageHeight: 176,
   },
   '002': {
     _key: '002',
@@ -37,6 +41,10 @@ const nodes = {
     icon: '😀',
     dotIcon: 'https://cdn-icare.qingtime.cn/shareOut1.svg?v=1604893936765',
     childNum: 1000,
+    imageUrl:
+      'https://image.api.playstation.com/trophy/np/NPWR12518_00_009C1232E900005FE409857E926767DFE9CAC7F371/CCDC60CADE4B3970C348FEFDE0094BA95C0A802F.PNG',
+    imageWidth: 320,
+    imageHeight: 176,
   },
   '003': {
     _key: '003',
@@ -81,9 +89,7 @@ const nodes = {
     father: '002',
     contract: false,
     sortList: ['008', '009'],
-
     checked: false,
-
     hour: 0.1,
     limitDay: 1610726400000,
     childNum: 22,
@@ -95,7 +101,6 @@ const nodes = {
     sortList: [],
     color: '#8D742A',
     checked: false,
-
     hour: 0.1,
     limitDay: 1610726400000,
   },
@@ -144,15 +149,20 @@ const nodes = {
     hour: 0.1,
     limitDay: 1610726400000,
     childNum: 3,
+    imageUrl: 'https://psnine.com/Upload/game/11882.png',
+    imageWidth: 100,
+    imageHeight: 100,
   },
   '012': {
     _key: '012',
     name: '原型、界面設計',
     father: '011',
     sortList: [],
-
     checked: true,
-
+    imageUrl:
+      'https://image.api.playstation.com/trophy/np/NPWR06418_00_00152378687F66194A957179F8D1FA81A759297BDC/70A10BD8B6A5C767F2E6973E0DACB11D93B7C06D.PNG',
+    imageWidth: 320,
+    imageHeight: 176,
     hour: 0.1,
     limitDay: 1610726400000,
   },
@@ -164,7 +174,6 @@ const nodes = {
     color: '#fff',
     backgroundColor: '#66BAB7',
     checked: true,
-
     hour: 0.1,
     limitDay: 1610726400000,
   },
@@ -173,9 +182,7 @@ const nodes = {
     name: '#md請輸入正文',
     father: '011',
     sortList: [],
-
     checked: true,
-
     hour: 0.1,
     limitDay: 1610726400000,
   },
@@ -184,9 +191,7 @@ const nodes = {
     name: '還原數據還原數據還原數據還原數據還原數據還原數據還原數據還原數據還原數據',
     father: '009',
     sortList: [],
-
     checked: true,
-
     hour: 0.1,
     limitDay: 1610726400000,
   },
@@ -199,11 +204,8 @@ const nodes2 = {
     father: '',
     sortList: ['002', '003', '004', '005'],
     contract: false,
-
     avatarUri: 'https://psnine.com/Upload/game/11387.png',
-
     checked: true,
-
     hour: 0.1,
     limitDay: new Date(new Date().setHours(0, 0, 0, 0)).getTime(),
   },
@@ -258,11 +260,12 @@ const nodes2 = {
     father: '002',
     contract: false,
     sortList: ['008', '009'],
-
     checked: false,
-
     hour: 0.1,
     limitDay: 1610726400000,
+    imageUrl: 'https://psnine.com/Upload/game/11882.png',
+    imageWidth: 100,
+    imageHeight: 100,
   },
   '007': {
     _key: '007',
@@ -280,9 +283,7 @@ const nodes2 = {
     name: '備份json文件',
     father: '006',
     sortList: [],
-
     checked: false,
-
     hour: 0.1,
     limitDay: 1610726400000,
   },

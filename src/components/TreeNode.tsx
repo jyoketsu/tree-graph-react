@@ -126,6 +126,10 @@ Props) => {
   const [hoverPreview, setHoverPreview] = useState(false);
   const [hoverAdd, setHoverAdd] = useState(false);
   const [hoverMore, setHoverMore] = useState(false);
+  const rectHeight =
+    node.imageUrl && node.imageWidth && node.imageHeight
+      ? BLOCK_HEIGHT + node.imageHeight + 15 / 2
+      : BLOCK_HEIGHT;
 
   const iconIsEmoji = useMemo(() => isEmoji(node.icon), [node.icon]);
 
@@ -478,7 +482,7 @@ Props) => {
         x={node.x}
         y={node.y}
         width={node.name ? node.width + totalButtonWidth : 100}
-        height={BLOCK_HEIGHT}
+        height={rectHeight}
         fillOpacity={0}
       />
       {/* 顯式外框 */}
@@ -489,7 +493,7 @@ Props) => {
         rx={4}
         ry={4}
         width={node.width}
-        height={BLOCK_HEIGHT}
+        height={rectHeight}
         // filter={
         //   nodeRectClassName !== 'selected' &&
         //   node.father === startId &&
@@ -748,6 +752,19 @@ Props) => {
           {node.shorted || node.name || ''}
         </text>
       )}
+      {/* 图片 */}
+      {node.imageUrl && node.imageWidth && node.imageHeight ? (
+        <image
+          key="avatar-image"
+          x={node?.x + 15 / 2}
+          y={(node?.y || 0) + BLOCK_HEIGHT}
+          width={node.imageWidth}
+          height={node.imageHeight}
+          xlinkHref={node.imageUrl}
+          // style={{ cursor: 'pointer' }}
+          // onClick={handleClickPreview}
+        />
+      ) : null}
       {true ? (
         // || nodeOptionsOpened
         <g

@@ -73,7 +73,7 @@ export default function calculate(
       for (let index = 0; index < secondLevel.length; index++) {
         const element = secondLevel[index];
 
-        const diffY =
+        let diffY =
           ITEM_HEIGHT - BLOCK_HEIGHT * rootZoomRatio > 40
             ? ITEM_HEIGHT
             : BLOCK_HEIGHT * rootZoomRatio + 40;
@@ -146,6 +146,11 @@ export default function calculate(
     let childX = x;
     let childY = y;
     let lastChildY = y;
+    // 节点有图片的情况
+    if (node.imageUrl && node.imageHeight) {
+      childY += node.imageHeight + 15 / 2;
+      lastChildY += node.imageHeight + 15 / 2;
+    }
     let collapsed;
     const childrenIds = node.sortList || [];
 
@@ -212,26 +217,36 @@ export default function calculate(
           continue;
         }
 
-        const diffY =
-          index === 0
-            ? node._key === startId
-              ? ITEM_HEIGHT - BLOCK_HEIGHT * rootZoomRatio > 40
+        let diffY;
+        if (index === 0) {
+          if (node._key === startId) {
+            diffY =
+              ITEM_HEIGHT - BLOCK_HEIGHT * rootZoomRatio > 40
                 ? ITEM_HEIGHT
-                : BLOCK_HEIGHT * rootZoomRatio + 40
-              : node.father === startId
-              ? ITEM_HEIGHT - BLOCK_HEIGHT * secondZoomRatio > 8
+                : BLOCK_HEIGHT * rootZoomRatio + 40;
+          } else if (node.father === startId) {
+            diffY =
+              ITEM_HEIGHT - BLOCK_HEIGHT * secondZoomRatio > 8
                 ? ITEM_HEIGHT
-                : BLOCK_HEIGHT * rootZoomRatio + 8
-              : ITEM_HEIGHT
-            : element._key === startId
-            ? ITEM_HEIGHT - BLOCK_HEIGHT * rootZoomRatio > 40
-              ? ITEM_HEIGHT
-              : BLOCK_HEIGHT * rootZoomRatio + 40
-            : element.father === startId
-            ? ITEM_HEIGHT - BLOCK_HEIGHT * secondZoomRatio > 8
-              ? ITEM_HEIGHT
-              : BLOCK_HEIGHT * rootZoomRatio + 8
-            : ITEM_HEIGHT;
+                : BLOCK_HEIGHT * rootZoomRatio + 8;
+          } else {
+            diffY = ITEM_HEIGHT;
+          }
+        } else {
+          if (element._key === startId) {
+            diffY =
+              ITEM_HEIGHT - BLOCK_HEIGHT * rootZoomRatio > 40
+                ? ITEM_HEIGHT
+                : BLOCK_HEIGHT * rootZoomRatio + 40;
+          } else if (element.father === startId) {
+            diffY =
+              ITEM_HEIGHT - BLOCK_HEIGHT * secondZoomRatio > 8
+                ? ITEM_HEIGHT
+                : BLOCK_HEIGHT * rootZoomRatio + 8;
+          } else {
+            diffY = ITEM_HEIGHT;
+          }
+        }
 
         childY += diffY + 5;
         lastChildY += diffY + 5;

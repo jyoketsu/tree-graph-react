@@ -142,14 +142,6 @@ function getNodeWidth(
   inputNodeKey?: string
 ) {
   const str = node.shorted || node.name;
-  // let full = getFullAngleNum(str);
-  // const punctuation = getHalfAnglePunctuationNum(str);
-  // const alphabet = getAlphabetNum(str);
-  // const number = getNumberNum(str);
-  // if (!str.length) {
-  //   full = 1;
-  // }
-  // const width = textWidth(fontSize);
   let width = textWidthAll(fontSize, str);
   if (inputNodeKey === node._key && width < 100) {
     width = 100;
@@ -164,13 +156,16 @@ function getNodeWidth(
     showChildNum
   );
 
-  return (
-    // width.fullAngleWidth * full +
-    // width.halfAnglePunctuationWidth * punctuation +
-    // width.alphabetWidth * alphabet +
-    // width.numberWidth * number +
-    (width || 100) + paddingWidth + extInfoWidth
-  );
+  let totalWidth = (width || 100) + paddingWidth + extInfoWidth;
+  if (
+    node.imageUrl &&
+    node.imageWidth &&
+    node.imageWidth + paddingWidth > totalWidth
+  ) {
+    totalWidth = node.imageWidth + paddingWidth;
+  }
+
+  return totalWidth;
 }
 
 // 获取额外信息宽度
@@ -595,6 +590,22 @@ function changeNodeText(nodeMap: NodeMap, id: string, text: string) {
     text = '';
   }
   node.name = text;
+  return nodes;
+}
+
+function setNodeImg(
+  nodeMap: NodeMap,
+  id: string,
+  imageUrl: string,
+  imageWidth: number,
+  imageHeight: number
+) {
+  let nodes = { ...nodeMap };
+  let node = nodes[id];
+  if (!node) return nodes;
+  node.imageUrl = imageUrl;
+  node.imageWidth = imageWidth;
+  node.imageHeight = imageHeight;
   return nodes;
 }
 
@@ -1155,4 +1166,5 @@ export {
   getElPosition,
   isEmoji,
   urlReg,
+  setNodeImg,
 };

@@ -25,6 +25,7 @@ import {
   isDragValid,
   isMutilDragValid,
   getNextSelect,
+  setNodeImg,
 } from './services/util';
 import MutilSelectedNodeKey from './interfaces/MutilSelectedNodeKey';
 
@@ -567,6 +568,36 @@ export const Tree = React.forwardRef(
       }
     }
 
+    function changeNodeImage(
+      nodeId: string,
+      imageUrl: string,
+      imageWidth: number,
+      imageHeight: number
+    ) {
+      setshowInput(false);
+      setshowNewInput(false);
+
+      if (UNCONTROLLED) {
+        let nodes = setNodeImg(
+          nodeMap,
+          nodeId,
+          imageUrl,
+          imageWidth,
+          imageHeight
+        );
+        setNodeMap(nodes);
+        if (handleChange) {
+          handleChange();
+        }
+      }
+      // if (handleChangeNodeText) {
+      //   handleChangeNodeText(nodeId, text);
+      // }
+      if (containerRef && containerRef.current) {
+        containerRef.current.focus();
+      }
+    }
+
     // 添加平级节点
     function addNext() {
       if (!selectedId) {
@@ -727,6 +758,38 @@ export const Tree = React.forwardRef(
       }
     };
 
+    function handleTreePaste(nodeId: string, files: FileList) {
+      if (UNCONTROLLED) {
+        if (files.length) {
+          const file = files[0];
+          if (file.type.startsWith('image/')) {
+            if (nodeId !== startId) {
+              const reader = new FileReader();
+              reader.onload = (event) => {
+                const base64String = event.target?.result;
+                if (base64String) {
+                  let img = new Image(); //手动创建一个Image对象
+                  img.src = base64String as string;
+                  img.onload = async () => {
+                    const height = 200 / (img.width / img.height);
+                    changeNodeImage(
+                      nodeId,
+                      base64String as string,
+                      200,
+                      height
+                    );
+                  };
+                }
+              };
+              reader.readAsDataURL(file);
+            }
+          }
+        }
+      } else if (handleFileChange) {
+        handleFileChange(nodeId, files);
+      }
+    }
+
     async function handleKeyDown(event: KeyboardEvent) {
       if (event.key === ' ' && !spaceKeyDown) {
         spaceKeyDown = true;
@@ -840,6 +903,9 @@ export const Tree = React.forwardRef(
               setPasteType(null);
             } else if (handlePasteText) {
               // 如果用户复制了文字，则将文字黏贴为节点
+              const read = await navigator.clipboard.read();
+              console.log('---read---', read);
+
               const text = await navigator.clipboard.readText();
               if (text) {
                 handlePasteText(text);
@@ -1156,6 +1222,7 @@ export const Tree = React.forwardRef(
         tabIndex={-1}
         suppressContentEditableWarning={true}
         ref={containerRef}
+        // onPaste={handleTreePaste}
         onKeyDown={(e: any) => handleKeyDown(e)}
         onKeyUp={handleKeyUp}
         onMouseDown={handleFrameSelectionStart}
@@ -1620,7 +1687,7 @@ export const Tree = React.forwardRef(
             showIcon={SHOW_ICON}
             showAvatar={SHOW_AVATAR}
             startId={startId}
-            handleFileChange={handleFileChange}
+            handleFileChange={handleTreePaste}
             showChildNum={showChildNum}
             quickCommandKey={quickCommandKey}
             handleQuickCommandOpen={handleQuickCommandOpen}

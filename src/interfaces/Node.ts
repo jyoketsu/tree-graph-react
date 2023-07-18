@@ -33,6 +33,10 @@ export default interface Node {
   // 备注
   note?: string;
   childNum?: number;
+  // 图片
+  imageUrl?: string;
+  imageWidth?: number;
+  imageHeight?: number;
   // 以下为计算属性
   x?: number;
   y?: number;

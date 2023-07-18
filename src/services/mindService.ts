@@ -235,6 +235,10 @@ export default function calculate(
     }
 
     nodeList.push(node as CNode);
+    // 节点有图片的情况;
+    if (node.imageUrl && node.imageHeight) {
+      childY += node.imageHeight + 15 / 2;
+    }
     return childY;
   }
 }

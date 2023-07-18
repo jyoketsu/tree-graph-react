@@ -1,7 +1,6 @@
 import React, { useRef } from 'react';
 import { Mind, MindProps } from '../src';
 import { Meta, Story } from '@storybook/react';
-import { ClickOutside } from '@jyoketsu/click-outside-react';
 
 const nodes = {
   '001': {
@@ -35,6 +34,10 @@ const nodes = {
     // icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
     icon: '😀',
     dotIcon: 'https://cdn-icare.qingtime.cn/shareOut1.svg?v=1604893936765',
+    imageUrl:
+      'https://image.api.playstation.com/trophy/np/NPWR12518_00_009C1232E900005FE409857E926767DFE9CAC7F371/CCDC60CADE4B3970C348FEFDE0094BA95C0A802F.PNG',
+    imageWidth: 320,
+    imageHeight: 176,
   },
   '003': {
     _key: '003',
@@ -80,11 +83,12 @@ const nodes = {
     father: '002',
     contract: false,
     sortList: ['008', '009'],
-
     checked: false,
-
     hour: 0.1,
     limitDay: 1610726400000,
+    imageUrl: 'https://psnine.com/Upload/game/11882.png',
+    imageWidth: 100,
+    imageHeight: 100,
   },
   '007': {
     hasCollect: true,
@@ -103,9 +107,7 @@ const nodes = {
     name: '備份json文件',
     father: '006',
     sortList: [],
-
     checked: false,
-
     hour: 0.1,
     limitDay: 1610726400000,
   },
@@ -114,9 +116,7 @@ const nodes = {
     name: '還原數據',
     father: '006',
     sortList: ['015'],
-
     checked: false,
-
     hour: 11,
     limitDay: 1610726400000,
   },
@@ -125,12 +125,15 @@ const nodes = {
     name: '4月計劃',
     father: '003',
     sortList: [],
-
     checked: false,
     showCheckbox: true,
     showStatus: true,
     hour: 0.1,
     limitDay: 1610726400000,
+    imageUrl:
+      'https://image.api.playstation.com/trophy/np/NPWR06418_00_00152378687F66194A957179F8D1FA81A759297BDC/70A10BD8B6A5C767F2E6973E0DACB11D93B7C06D.PNG',
+    imageWidth: 320,
+    imageHeight: 176,
   },
   '011': {
     _key: '011',
