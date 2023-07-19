@@ -277,64 +277,68 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 
 ## Props
 
-| Property                 | Description                                                      | Type     | Required | Default |
-| ------------------------ | ---------------------------------------------------------------- | -------- | -------- | ------- |
-| nodes                    | The nodes of the tree                                            | Object   | Yes      | -       |
-| uncontrolled             | Whether it is an uncontrolled component                          | Boolean  | No       | true    |
-| startId                  | The ID of the root node                                          | String   | Yes      | -       |
-| defaultSelectedId        | The ID of the initially selected node                            | String   | Yes      | -       |
-| ref                      | Reference to call internal methods of the component              | -        | No       | -       |
-| singleColumn             | Whether to display the tree in a single column                   | Boolean  | No       | false   |
-| itemHeight               | Height of the node element                                       | Number   | No       | 50      |
-| blockHeight              | Height of the node block                                         | Number   | No       | 30      |
-| fontSize                 | Font size of the nodes                                           | Number   | No       | 14      |
-| fontWeight               | Font weight of the nodes                                         | Number   | No       | -       |
-| indent                   | Indentation                                                      | Number   | No       | 25      |
-| columnSpacing            | Spacing between columns                                          | Number   | No       | 55      |
-| avatarWidth              | Width of the avatar                                              | Number   | No       | 22      |
-| pathWidth                | Width of the connecting lines                                    | Number   | No       | 1       |
-| avatarRadius             | Avatar border radius                                             | Number   | No       | 11      |
-| backgroundColor          | Background color                                                 | Number   | No       | unset   |
-| color                    | Font color                                                       | Number   | No       | #595959 |
-| hoverBorderColor         | Border color when hovering over a node                           | Number   | No       | #bed2fc |
-| selectedBorderColor      | Border color of the selected node                                | Number   | No       | #35a6f8 |
-| selectedBackgroundColor  | Background color of the selected node                            | Number   | No       | #e8e8e8 |
-| lineRadius               | Radius of the connecting lines                                   | Number   | No       | 4       |
-| checkBoxWidth            | Width of the checkbox                                            | Number   | No       | 18      |
-| disableShortcut          | Whether to disable keyboard shortcuts                            | Number   | No       | -       |
-| disabled                 | Whether the tree is read-only                                    | Number   | No       | -       |
-| showPreviewButton        | Whether to show the node preview button                          | boolean  | No       | -       |
-| showAddButton            | Whether to show the "add node" button                            | boolean  | No       | -       |
-| showMoreButton           | Whether to show the "more" button                                | boolean  | No       | -       |
-| moreButtonWidth          | Width of the node's action buttons                               | boolean  | No       | -       |
-| showIcon                 | Whether to show the icons                                        | boolean  | No       | true    |
-| showAvatar               | Whether to show the avatars                                      | Boolean  | -        |         |
-| avatarUri                | Avatar URL                                                       | String   | -        |         |
-| handleClickNode          | Click event for nodes (parameters: node)                         | Function | No       | -       |
-| handleDbClickNode        | Double click event for nodes (parameters: node)                  | Function | No       | -       |
-| handleClickExpand        | Click event for expand/collapse (parameters: node)               | Function | No       | -       |
-| handleCheck              | Click event for checkboxes (parameters: node)                    | Function | No       | -       |
-| handleClickAvatar        | Click event for avatars (parameters: node)                       | Function | No       | -       |
-| handleClickStatus        | Click event for status (parameters: node)                        | Function | No       | -       |
-| handleChangeNodeText     | Event for changing node name (parameters: nodeId, text)          | Function | No       | -       |
-| handleAddNext            | Event for adding a sibling node (parameters: selectedNode)       | Function | No       | -       |
-| handleAddChild           | Event for adding a child node (parameters: selectedNode)         | Function | No       | -       |
-| handleDeleteNode         | Event for deleting nodes (parameters: selectedId, selectedNodes) | Function | No       | -       |
-| handleClickPreviewButton | Click event for the preview button (parameters: clickNode)       | Function | No       | -       |
-| handleClickAddButton     | Click event for the "add node" button (parameters: clickNode)    | Function | No       | -       |
-| handleClickMoreButton    | Click event for the "more" button (parameters: clickNode)        | Function | No       | -       |
-| handleClickDot           | Click event for dots                                             | Function | No       | -       |
-| handleShiftUpDown        | Move node up/down (parameters: id, sortList, type)               | Function | No       | -       |
-| handleSave               | Save the tree                                                    | Function | No       | -       |
-| handleDrag               | Drag nodes (parameters: dragInfo)                                | Function | No       | -       |
-| handlePaste              | Copy nodes (parameters: pasteNodeKey, pasteType, targetNodeKey)  | Function | No       | -       |
-| hideHour                 | Hide task hours                                                  | boolean  | No       | -       |
-| dragEndFromOutside       | Drag nodes from outside the tree (parameters: node)              | Function | No       | -       |
-| handleMouseEnterAvatar   | Mouse enter event for avatars (parameters: node)                 | Function | No       | -       |
-| handleMouseLeaveAvatar   | Mouse leave event for avatars (parameters: node)                 | Function | No       | -       |
-| handleChange             | Tree data change event                                           | Function | No       | -       |
-| showDeleteConform        | Show delete confirmation (uncontrolled mode)                     | Function | No       | -       |
-| handleMutiSelect         | Multi-select nodes (parameters: selectedNodes)                   | Function | No       | -       |
+| Property                 | Description                                                                                | Type     | Required | Default |
+| ------------------------ | ------------------------------------------------------------------------------------------ | -------- | -------- | ------- |
+| nodes                    | The nodes of the tree                                                                      | Object   | Yes      | -       |
+| uncontrolled             | Whether it is an uncontrolled component                                                    | Boolean  | No       | true    |
+| startId                  | The ID of the root node                                                                    | String   | Yes      | -       |
+| defaultSelectedId        | The ID of the initially selected node                                                      | String   | Yes      | -       |
+| ref                      | Reference to call internal methods of the component                                        | -        | No       | -       |
+| singleColumn             | Whether to display the tree in a single column                                             | Boolean  | No       | false   |
+| itemHeight               | Height of the node element                                                                 | Number   | No       | 50      |
+| blockHeight              | Height of the node block                                                                   | Number   | No       | 30      |
+| fontSize                 | Font size of the nodes                                                                     | Number   | No       | 14      |
+| fontWeight               | Font weight of the nodes                                                                   | Number   | No       | -       |
+| indent                   | Indentation                                                                                | Number   | No       | 25      |
+| columnSpacing            | Spacing between columns                                                                    | Number   | No       | 55      |
+| avatarWidth              | Width of the avatar                                                                        | Number   | No       | 22      |
+| pathWidth                | Width of the connecting lines                                                              | Number   | No       | 1       |
+| avatarRadius             | Avatar border radius                                                                       | Number   | No       | 11      |
+| backgroundColor          | Background color                                                                           | Number   | No       | unset   |
+| color                    | Font color                                                                                 | Number   | No       | #595959 |
+| hoverBorderColor         | Border color when hovering over a node                                                     | Number   | No       | #bed2fc |
+| selectedBorderColor      | Border color of the selected node                                                          | Number   | No       | #35a6f8 |
+| selectedBackgroundColor  | Background color of the selected node                                                      | Number   | No       | #e8e8e8 |
+| lineRadius               | Radius of the connecting lines                                                             | Number   | No       | 4       |
+| checkBoxWidth            | Width of the checkbox                                                                      | Number   | No       | 18      |
+| disableShortcut          | Whether to disable keyboard shortcuts                                                      | Number   | No       | -       |
+| disabled                 | Whether the tree is read-only                                                              | Number   | No       | -       |
+| showPreviewButton        | Whether to show the node preview button                                                    | boolean  | No       | -       |
+| showAddButton            | Whether to show the "add node" button                                                      | boolean  | No       | -       |
+| showMoreButton           | Whether to show the "more" button                                                          | boolean  | No       | -       |
+| moreButtonWidth          | Width of the node's action buttons                                                         | boolean  | No       | -       |
+| showIcon                 | Whether to show the icons                                                                  | boolean  | No       | true    |
+| showAvatar               | Whether to show the avatars                                                                | Boolean  | -        |         |
+| avatarUri                | Avatar URL                                                                                 | String   | -        |         |
+| handleClickNode          | Click event for nodes (parameters: node)                                                   | Function | No       | -       |
+| handleDbClickNode        | Double click event for nodes (parameters: node)                                            | Function | No       | -       |
+| handleClickExpand        | Click event for expand/collapse (parameters: node)                                         | Function | No       | -       |
+| handleCheck              | Click event for checkboxes (parameters: node)                                              | Function | No       | -       |
+| handleClickAvatar        | Click event for avatars (parameters: node)                                                 | Function | No       | -       |
+| handleClickStatus        | Click event for status (parameters: node)                                                  | Function | No       | -       |
+| handleChangeNodeText     | Event for changing node name (parameters: nodeId, text)                                    | Function | No       | -       |
+| handleAddNext            | Event for adding a sibling node (parameters: selectedNode)                                 | Function | No       | -       |
+| handleAddChild           | Event for adding a child node (parameters: selectedNode)                                   | Function | No       | -       |
+| handleDeleteNode         | Event for deleting nodes (parameters: selectedId, selectedNodes)                           | Function | No       | -       |
+| handleClickPreviewButton | Click event for the preview button (parameters: clickNode)                                 | Function | No       | -       |
+| handleClickAddButton     | Click event for the "add node" button (parameters: clickNode)                              | Function | No       | -       |
+| handleClickMoreButton    | Click event for the "more" button (parameters: clickNode)                                  | Function | No       | -       |
+| handleClickDot           | Click event for dots                                                                       | Function | No       | -       |
+| handleShiftUpDown        | Move node up/down (parameters: id, sortList, type)                                         | Function | No       | -       |
+| handleSave               | Save the tree                                                                              | Function | No       | -       |
+| handleDrag               | Drag nodes (parameters: dragInfo)                                                          | Function | No       | -       |
+| handlePaste              | Copy nodes (parameters: pasteNodeKey, pasteType, targetNodeKey)                            | Function | No       | -       |
+| hideHour                 | Hide task hours                                                                            | boolean  | No       | -       |
+| dragEndFromOutside       | Drag nodes from outside the tree (parameters: node)                                        | Function | No       | -       |
+| handleMouseEnterAvatar   | Mouse enter event for avatars (parameters: node)                                           | Function | No       | -       |
+| handleMouseLeaveAvatar   | Mouse leave event for avatars (parameters: node)                                           | Function | No       | -       |
+| handleChange             | Tree data change event                                                                     | Function | No       | -       |
+| showDeleteConform        | Show delete confirmation (uncontrolled mode)                                               | Function | No       | -       |
+| handleMutiSelect         | Multi-select nodes (parameters: selectedNodes)                                             | Function | No       | -       |
+| handleFileChange         | To handle file changes (parameters: nodeKey: string, files: FileList)                      | Function | No       | -       |
+| handleQuickCommandOpen   | To handle the event after pressing the `quickCommandKey` (parameters: nodeEl: HTMLElement) | Function | No       | -       |
+| handlePasteText          | To handle the event after pasting text. (parameters: text: string)                         | Function | No       | -       |
+| handleContextMenu        | To handle the right-click event. (parameters: nodeKey: string, event: React.MouseEvent)    | Function | No       | -       |
 
 ```javascript
 interface DragInfo {

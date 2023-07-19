@@ -442,6 +442,8 @@ MultiCol.args = {
   handleQuickCommandOpen: (el: any) =>
     console.log('---handleQuickCommandOpen---', el),
   handlePasteText: (text: string) => console.log('---handlePasteText---', text),
+  handleContextMenu: (nodeKey: string, event: React.MouseEvent) =>
+    console.log('---handleContextMenu---', nodeKey, event),
 };
 
 export const MultiColDark = Template.bind({});

@@ -140,6 +140,7 @@ export interface MindProps {
   handleFileChange?: HandleFileChange;
   handleQuickCommandOpen?: HandleQuickCommandOpen;
   handlePasteText?: HandlePasteText;
+  handleContextMenu?: (nodeKey: string, event: React.MouseEvent) => void;
   ref?: any;
 }
 
@@ -206,6 +207,7 @@ export const Mind = React.forwardRef(
       handleFileChange,
       handleQuickCommandOpen,
       handlePasteText,
+      handleContextMenu,
     }: MindProps,
     ref
   ) => {
@@ -475,45 +477,47 @@ export const Mind = React.forwardRef(
     }
 
     // 添加平级节点
-    function addNext() {
-      if (!selectedId) {
+    function addNext(nodeKey?: string) {
+      const targetKey = nodeKey || selectedId;
+      if (!targetKey) {
         return;
       }
-      if (selectedId === startId) {
+      if (targetKey === startId) {
         return alert('根节点无法添加兄弟节点！');
       }
       // setShowOptionsNode(null);
       if (UNCONTROLLED) {
-        const res = addNextNode(nodeMap, selectedId);
+        const res = addNextNode(nodeMap, targetKey);
 
         if (handleAddNext) {
-          handleAddNext(selectedId, res.addedNode);
+          handleAddNext(targetKey, res.addedNode);
         }
 
         setselectedId(res.addedNode._key);
         setSelectedNodes([]);
         setNodeMap(res.nodes);
+        setshowInput(true);
         if (handleChange) {
           handleChange();
         }
-        setshowInput(true);
       } else {
         if (handleAddNext) {
-          handleAddNext(selectedId);
+          handleAddNext(targetKey);
         }
       }
     }
 
     // 添加子节点
-    function addChild() {
-      if (!selectedId) {
+    function addChild(nodeKey?: string) {
+      const targetKey = nodeKey || selectedId;
+      if (!targetKey) {
         return;
       }
       // setShowOptionsNode(null);
       if (UNCONTROLLED) {
-        const res = addChildNode(nodeMap, selectedId);
+        const res = addChildNode(nodeMap, targetKey);
         if (handleAddChild) {
-          handleAddChild(selectedId, res.addedNode);
+          handleAddChild(targetKey, res.addedNode);
         }
         setselectedId(res.addedNode._key);
         setSelectedNodes([]);
@@ -524,7 +528,7 @@ export const Mind = React.forwardRef(
         }
       } else {
         if (handleAddChild) {
-          handleAddChild(selectedId);
+          handleAddChild(targetKey);
         }
       }
     }
@@ -571,18 +575,19 @@ export const Mind = React.forwardRef(
     }
 
     // 删除节点
-    function deletenode() {
-      if (!selectedId && !selectedNodes.length) {
+    function deletenode(nodeKey?: string) {
+      const targetKey = nodeKey || selectedId;
+      if (!targetKey && !selectedNodes.length) {
         return;
       }
       if (UNCONTROLLED) {
         // 删除单个节点
-        if (!selectedNodes.length && selectedId) {
-          const node = nodeMap[selectedId];
+        if (!selectedNodes.length && targetKey) {
+          const node = nodeMap[targetKey];
           if (node.disabled) {
             return;
           }
-          if (selectedId === startId) {
+          if (targetKey === startId) {
             return alert('根节点不允许删除！');
           }
           const nextSelectId = getNextSelect(node, nodeMap);
@@ -591,7 +596,7 @@ export const Mind = React.forwardRef(
           } else {
             setselectedId(null);
           }
-          let res = deleteNode(nodeMap, selectedId);
+          let res = deleteNode(nodeMap, targetKey);
           setSelectedNodes([]);
           setNodeMap(res.nodes);
           if (handleChange) {
@@ -615,11 +620,11 @@ export const Mind = React.forwardRef(
         }
 
         if (handleDeleteNode) {
-          handleDeleteNode(selectedId, selectedNodes);
+          handleDeleteNode(targetKey, selectedNodes);
         }
       } else {
         if (handleDeleteNode) {
-          handleDeleteNode(selectedId, selectedNodes);
+          handleDeleteNode(targetKey, selectedNodes);
         }
       }
     }
@@ -1566,6 +1571,7 @@ export const Mind = React.forwardRef(
                 selectedBorderColor={SELECTED_BORDER_COLOR}
                 selectedBackgroundColor={SELECTED_BACKGROUND_COLOR}
                 handleFileChange={handleFileChange}
+                onContextMenu={handleContextMenu}
               />
             </g>
           ))}

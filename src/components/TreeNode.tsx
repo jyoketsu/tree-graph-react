@@ -65,6 +65,7 @@ interface Props {
   isMind?: boolean;
   fontWeight?: number;
   handleFileChange?: HandleFileChange;
+  onContextMenu?: (nodeKey: string, event: React.MouseEvent) => void;
 }
 
 // let timer: NodeJS.Timeout;
@@ -114,6 +115,7 @@ const TreeNode = ({
   hideHour,
   fontWeight,
   handleFileChange,
+  onContextMenu,
 }: // nodeOptionsOpened,
 Props) => {
   const [hover, sethover] = useState(false);
@@ -309,6 +311,13 @@ Props) => {
     }
   }
 
+  function handleContextMenu(event: React.MouseEvent) {
+    if (onContextMenu) {
+      event.preventDefault();
+      onContextMenu(node._key, event);
+    }
+  }
+
   // const childNumLocationRes =
   //   showChildNum && node.childNum ? location(node, 'childNum') : null;
   const textLocationRes = location(node, 'text');
@@ -490,6 +499,7 @@ Props) => {
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      onContextMenu={handleContextMenu}
       style={{ position: 'relative' }}
     >
       {/* 外框 */}
