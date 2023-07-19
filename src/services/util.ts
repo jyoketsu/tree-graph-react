@@ -593,19 +593,11 @@ function changeNodeText(nodeMap: NodeMap, id: string, text: string) {
   return nodes;
 }
 
-function setNodeImg(
-  nodeMap: NodeMap,
-  id: string,
-  imageUrl: string,
-  imageWidth: number,
-  imageHeight: number
-) {
+function updateNodeById(nodeMap: NodeMap, id: string, data: any) {
   let nodes = { ...nodeMap };
   let node = nodes[id];
   if (!node) return nodes;
-  node.imageUrl = imageUrl;
-  node.imageWidth = imageWidth;
-  node.imageHeight = imageHeight;
+  nodes[id] = { ...node, ...data };
   return nodes;
 }
 
@@ -689,7 +681,7 @@ function pasteNode(
     return nodeMap;
   } else if (pasteType === 'copy') {
     const suffix = guid(8, 16);
-    const newNode = copyNode(pasteNode, suffix);
+    const newNode = copyNode(pasteNode, suffix, targetNodeKey);
     // 將newNode的id添加到目標節點children中
     targetNode.sortList.push(newNode._key);
     return nodeMap;
@@ -697,9 +689,14 @@ function pasteNode(
     return null;
   }
 
-  function copyNode(node: Node, suffix: string) {
+  function copyNode(node: Node, suffix: string, targetNodeKey?: string) {
     let newNode = JSON.parse(JSON.stringify(node));
     newNode._key = `${newNode._key}-${suffix}`;
+    if (targetNodeKey) {
+      newNode.father = targetNodeKey;
+    } else {
+      newNode.father = `${newNode.father}-${suffix}`;
+    }
     const sortList = newNode.sortList;
     for (let index = 0; index < sortList.length; index++) {
       const childKey = sortList[index];
@@ -1094,6 +1091,7 @@ function mouseDirection(element: Element, e: MouseEvent) {
     return y > y0 ? dirs[0] : dirs[2];
   }
 }
+
 // 获取元素在屏幕中的位置
 function getElPosition(el: HTMLElement) {
   let element: HTMLElement | null = el;
@@ -1109,12 +1107,31 @@ function getElPosition(el: HTMLElement) {
   y += window.screenTop + document.body.clientTop;
   return { x, y };
 }
+
 function isEmoji(str?: string) {
   return str
     ? /(\ud83c[\udf00-\udfff])|(\ud83d[\udc00-\ude4f\ude80-\udeff])|[\u2600-\u2B55]/g.test(
         str
       )
     : false;
+}
+
+function countNodeDescendants(nodeMap: NodeMap, nodeId: string) {
+  let count = 0;
+  countNum(nodeId);
+
+  function countNum(nodeId: string) {
+    const node = nodeMap[nodeId];
+    if (node) {
+      const childKeys = node.sortList;
+      count += childKeys.length;
+      for (let index = 0; index < childKeys.length; index++) {
+        const childKey = childKeys[index];
+        countNum(childKey);
+      }
+    }
+  }
+  return count;
 }
 
 const urlReg =
@@ -1166,5 +1183,6 @@ export {
   getElPosition,
   isEmoji,
   urlReg,
-  setNodeImg,
+  updateNodeById,
+  countNodeDescendants,
 };

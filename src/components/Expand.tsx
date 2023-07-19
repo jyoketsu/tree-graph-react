@@ -5,10 +5,17 @@ interface Props {
   node: CNode;
   BLOCK_HEIGHT: number;
   position?: 'right' | 'left' | 'leftBottom' | 'bottomCenter';
+  showChildNum?: boolean;
   handleClickExpand: Function;
 }
 
-const Expand = ({ node, BLOCK_HEIGHT, position, handleClickExpand }: Props) => {
+const Expand = ({
+  node,
+  BLOCK_HEIGHT,
+  position,
+  showChildNum,
+  handleClickExpand,
+}: Props) => {
   function getX() {
     const pos = position || 'right';
     switch (pos) {
@@ -24,38 +31,69 @@ const Expand = ({ node, BLOCK_HEIGHT, position, handleClickExpand }: Props) => {
         return node.x;
     }
   }
-  function getY() {
+  function getY(radius: number) {
     const pos = position || 'right';
+    let y = 0;
     switch (pos) {
       case 'right':
       case 'left':
-        return node.y + BLOCK_HEIGHT / 2 - 5;
+        y = node.y + BLOCK_HEIGHT / 2 - radius;
+        break;
       case 'leftBottom':
       case 'bottomCenter':
-        return node.y + BLOCK_HEIGHT - 5;
+        y = node.y + BLOCK_HEIGHT - radius;
+        break;
       default:
-        return node.y + BLOCK_HEIGHT / 2 - 5;
+        y = node.y + BLOCK_HEIGHT / 2 - radius;
+        break;
     }
+    if (node.imageUrl && node.imageHeight && pos.includes('ottom')) {
+      y += node.imageHeight + 15 / 2;
+    }
+    return y;
   }
 
   return node.x && node.y && node.sortList && node.sortList.length ? (
     <g>
       {node.contract ? (
-        <use
-          className="dot-action"
-          key="expand"
-          href="#expand"
-          x={getX()}
-          y={getY()}
-          onClick={() => handleClickExpand(node)}
-        />
+        showChildNum ? (
+          <g>
+            <circle
+              cx={getX() + 1}
+              cy={getY(0)}
+              r={10}
+              fill="#F0F0F0"
+              stroke="#BFBFBF"
+              onClick={() => handleClickExpand(node)}
+            />
+            <text
+              x={getX() + 1}
+              y={getY(0) + 1}
+              alignmentBaseline="middle"
+              textAnchor="middle"
+              fontSize={(node.childNum || 0) > 999 ? 10 : 12}
+              style={{ pointerEvents: 'none' }}
+            >
+              {(node.childNum || 0) > 999 ? '999+' : node.childNum}
+            </text>
+          </g>
+        ) : (
+          <use
+            className="dot-action"
+            key="expand"
+            href="#expand"
+            x={getX()}
+            y={getY(5)}
+            onClick={() => handleClickExpand(node)}
+          />
+        )
       ) : (
         <use
           className="dot-action"
           key="contract"
           href="#contract"
           x={getX()}
-          y={getY()}
+          y={getY(5)}
           onClick={() => handleClickExpand(node)}
         />
       )}

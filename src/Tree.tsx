@@ -25,7 +25,8 @@ import {
   isDragValid,
   isMutilDragValid,
   getNextSelect,
-  setNodeImg,
+  updateNodeById,
+  countNodeDescendants,
 } from './services/util';
 import MutilSelectedNodeKey from './interfaces/MutilSelectedNodeKey';
 
@@ -284,6 +285,7 @@ export const Tree = React.forwardRef(
       saveNodes,
       addNext,
       addChild,
+      updateNodeById,
       rename: function () {
         if (selectedId) {
           setshowInput(true);
@@ -335,7 +337,7 @@ export const Tree = React.forwardRef(
         undefined,
         showInput && selectedId ? selectedId : undefined,
         undefined,
-        showChildNum
+        // showChildNum
       );
 
       if (cal) {
@@ -501,6 +503,12 @@ export const Tree = React.forwardRef(
     function handleExpand(node: CNode) {
       if (UNCONTROLLED) {
         let nodes = dot(nodeMap, node._key);
+        if (!node.contract) {
+          const count = countNodeDescendants(nodeMap, node._key);
+          nodes[node._key].childNum = count;
+        } else {
+          delete nodes[node._key].childNum;
+        }
         setNodeMap(nodes);
         if (handleChange) {
           handleChange();
@@ -578,13 +586,11 @@ export const Tree = React.forwardRef(
       setshowNewInput(false);
 
       if (UNCONTROLLED) {
-        let nodes = setNodeImg(
-          nodeMap,
-          nodeId,
+        const nodes = updateNodeById(nodeMap, nodeId, {
           imageUrl,
           imageWidth,
-          imageHeight
-        );
+          imageHeight,
+        });
         setNodeMap(nodes);
         if (handleChange) {
           handleChange();
@@ -757,38 +763,6 @@ export const Tree = React.forwardRef(
         spaceKeyDown = false;
       }
     };
-
-    function handleTreePaste(nodeId: string, files: FileList) {
-      if (UNCONTROLLED) {
-        if (files.length) {
-          const file = files[0];
-          if (file.type.startsWith('image/')) {
-            if (nodeId !== startId) {
-              const reader = new FileReader();
-              reader.onload = (event) => {
-                const base64String = event.target?.result;
-                if (base64String) {
-                  let img = new Image(); //手动创建一个Image对象
-                  img.src = base64String as string;
-                  img.onload = async () => {
-                    const height = 200 / (img.width / img.height);
-                    changeNodeImage(
-                      nodeId,
-                      base64String as string,
-                      200,
-                      height
-                    );
-                  };
-                }
-              };
-              reader.readAsDataURL(file);
-            }
-          }
-        }
-      } else if (handleFileChange) {
-        handleFileChange(nodeId, files);
-      }
-    }
 
     async function handleKeyDown(event: KeyboardEvent) {
       if (event.key === ' ' && !spaceKeyDown) {
@@ -1208,6 +1182,38 @@ export const Tree = React.forwardRef(
         setDragInfo({ ...dragInfo, ...param });
       } else {
         setDragInfo(param);
+      }
+    }
+
+    function handleTreePaste(nodeId: string, files: FileList) {
+      if (handleFileChange) {
+        handleFileChange(nodeId, files);
+      } else if (UNCONTROLLED) {
+        if (files.length) {
+          const file = files[0];
+          if (file.type.startsWith('image/')) {
+            if (nodeId !== startId) {
+              const reader = new FileReader();
+              reader.onload = (event) => {
+                const base64String = event.target?.result;
+                if (base64String) {
+                  let img = new Image(); //手动创建一个Image对象
+                  img.src = base64String as string;
+                  img.onload = async () => {
+                    const height = 200 / (img.width / img.height);
+                    changeNodeImage(
+                      nodeId,
+                      base64String as string,
+                      200,
+                      height
+                    );
+                  };
+                }
+              };
+              reader.readAsDataURL(file);
+            }
+          }
+        }
       }
     }
 

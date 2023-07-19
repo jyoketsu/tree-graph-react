@@ -16,7 +16,6 @@ const nodes = {
     showStatus: true,
     limitDay: new Date(new Date()).getTime(),
     // disabled: true,
-    childNum: 1000,
     // imageUrl:
     //   'https://image.api.playstation.com/trophy/np/NPWR12518_00_009C1232E900005FE409857E926767DFE9CAC7F371/CCDC60CADE4B3970C348FEFDE0094BA95C0A802F.PNG',
     // imageWidth: 320,
@@ -40,7 +39,6 @@ const nodes = {
     // icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
     icon: '😀',
     dotIcon: 'https://cdn-icare.qingtime.cn/shareOut1.svg?v=1604893936765',
-    childNum: 1000,
     imageUrl:
       'https://image.api.playstation.com/trophy/np/NPWR12518_00_009C1232E900005FE409857E926767DFE9CAC7F371/CCDC60CADE4B3970C348FEFDE0094BA95C0A802F.PNG',
     imageWidth: 320,
@@ -60,7 +58,6 @@ const nodes = {
     limitDay: 1616515200000,
     icon: 'https://cdn-icare.qingtime.cn/favFolder.svg',
     avatarUri: 'https://psnine.com/Upload/game/11333.png',
-    childNum: 1,
   },
   '004': {
     _key: '004',
@@ -92,7 +89,6 @@ const nodes = {
     checked: false,
     hour: 0.1,
     limitDay: 1610726400000,
-    childNum: 22,
   },
   '007': {
     _key: '007',
@@ -148,7 +144,6 @@ const nodes = {
     checked: true,
     hour: 0.1,
     limitDay: 1610726400000,
-    childNum: 3,
     imageUrl: 'https://psnine.com/Upload/game/11882.png',
     imageWidth: 100,
     imageHeight: 100,
@@ -376,7 +371,8 @@ const Template: Story<TreeProps> = (args) => {
   return (
     <div>
       <button
-        onClick={() => alert(JSON.stringify(treeRef.current.saveNodes()))}
+        // onClick={() => alert(JSON.stringify(treeRef.current.saveNodes()))}
+        onClick={() => console.log('---nodes---', treeRef.current.saveNodes())}
       >
         保存
       </button>
@@ -441,8 +437,8 @@ MultiCol.args = {
   handleMouseLeaveAvatar: (node: any) =>
     console.log('---handleMouseLeaveAvatar---', node),
   handleChange: () => console.log('---handleChange---'),
-  handleFileChange: (nodeKey: string, files: FileList) =>
-    console.log('---handleFileChange---', nodeKey, files),
+  // handleFileChange: (nodeKey: string, files: FileList) =>
+  //   console.log('---handleFileChange---', nodeKey, files),
   handleQuickCommandOpen: (el: any) =>
     console.log('---handleQuickCommandOpen---', el),
   handlePasteText: (text: string) => console.log('---handlePasteText---', text),

@@ -53,7 +53,6 @@ const nodes = {
     limitDay: 1616515200000,
     icon: 'https://cdn-icare.qingtime.cn/favFolder.svg',
     avatarUri: 'https://psnine.com/Upload/game/11333.png',
-    childNum: 100,
   },
   '004': {
     _key: '004',
@@ -145,7 +144,6 @@ const nodes = {
     checked: true,
     hour: 0.1,
     limitDay: 1610726400000,
-    childNum: 3,
   },
   '012': {
     _key: '012',
@@ -431,8 +429,8 @@ MultiCol.args = {
     console.log('---handleMouseEnterAvatar---', node),
   handleMouseLeaveAvatar: (node: any) =>
     console.log('---handleMouseLeaveAvatar---', node),
-  handleFileChange: (nodeKey: string, files: FileList) =>
-    console.log('---handleFileChange---', nodeKey, files),
+  // handleFileChange: (nodeKey: string, files: FileList) =>
+  //   console.log('---handleFileChange---', nodeKey, files),
   handlePasteText: (text: string) => console.log('---handlePasteText---', text),
 };
 
@@ -447,6 +445,7 @@ MultiColDark.args = {
   showPreviewButton: true,
   showAddButton: true,
   showMoreButton: true,
+  showChildNum: true,
 };
 
 export const SingleCol = Template.bind({});
@@ -454,4 +453,5 @@ SingleCol.args = {
   nodes: nodes,
   startId: '001',
   singleColumn: true,
+  showChildNum: true,
 };

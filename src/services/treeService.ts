@@ -23,7 +23,7 @@ export default function calculate(
   expandedNodeKey?: string | null,
   inputNodeKey?: string,
   hideRoot?: boolean,
-  showChildNum?: boolean
+  // showChildNum?: boolean
 ) {
   nodes = JSON.parse(JSON.stringify(nodes));
   const start_x = startX || 15;
@@ -40,7 +40,8 @@ export default function calculate(
     showIcon,
     showAvatar,
     avatarRadius,
-    showChildNum || false,
+    // showChildNum || false,
+    false,
     undefined,
     inputNodeKey
   );
@@ -169,7 +170,8 @@ export default function calculate(
         showIcon,
         showAvatar,
         avatarRadius,
-        showChildNum || false,
+        // showChildNum || false,
+        false,
         undefined,
         inputNodeKey
       );
@@ -251,11 +253,11 @@ export default function calculate(
         childY += diffY + 5;
         lastChildY += diffY + 5;
 
+        childY = location(nodes, element, childX, childY);
+
         if (childY > MAX_Y) {
           MAX_Y = childY;
         }
-
-        childY = location(nodes, element, childX, childY);
 
         // 非最后一个子节点
         if (index + 1 !== childrenIds.length) {

@@ -25,6 +25,8 @@ import {
   getValidSelectedNodes,
   isMutilDragValid,
   getNextSelect,
+  updateNodeById,
+  countNodeDescendants,
 } from './services/util';
 import MutilSelectedNodeKey from './interfaces/MutilSelectedNodeKey';
 import { HandleFileChange } from './Tree';
@@ -267,6 +269,7 @@ export const Mind = React.forwardRef(
       saveNodes,
       addNext,
       addChild,
+      updateNodeById,
       rename: function () {
         if (selectedId) {
           setshowInput(true);
@@ -308,8 +311,8 @@ export const Mind = React.forwardRef(
         avatarRadius,
         rootZoomRatio,
         secondZoomRatio,
-        showInput && selectedId ? selectedId : undefined,
-        showChildNum
+        showInput && selectedId ? selectedId : undefined
+        // showChildNum
       );
 
       if (cal) {
@@ -370,6 +373,12 @@ export const Mind = React.forwardRef(
     function handleExpand(node: CNode) {
       if (UNCONTROLLED) {
         let nodes = dot(nodeMap, node._key);
+        if (!node.contract) {
+          const count = countNodeDescendants(nodeMap, node._key);
+          nodes[node._key].childNum = count;
+        } else {
+          delete nodes[node._key].childNum;
+        }
         setNodeMap(nodes);
         if (handleChange) {
           handleChange();
@@ -432,6 +441,34 @@ export const Mind = React.forwardRef(
       if (handleChangeNodeText) {
         handleChangeNodeText(nodeId, text);
       }
+      if (containerRef && containerRef.current) {
+        containerRef.current.focus();
+      }
+    }
+
+    function changeNodeImage(
+      nodeId: string,
+      imageUrl: string,
+      imageWidth: number,
+      imageHeight: number
+    ) {
+      setshowInput(false);
+      setshowNewInput(false);
+
+      if (UNCONTROLLED) {
+        const nodes = updateNodeById(nodeMap, nodeId, {
+          imageUrl,
+          imageWidth,
+          imageHeight,
+        });
+        setNodeMap(nodes);
+        if (handleChange) {
+          handleChange();
+        }
+      }
+      // if (handleChangeNodeText) {
+      //   handleChangeNodeText(nodeId, text);
+      // }
       if (containerRef && containerRef.current) {
         containerRef.current.focus();
       }
@@ -1115,6 +1152,38 @@ export const Mind = React.forwardRef(
       return `${M} ${Q}`;
     }
 
+    function handleTreePaste(nodeId: string, files: FileList) {
+      if (handleFileChange) {
+        handleFileChange(nodeId, files);
+      } else if (UNCONTROLLED) {
+        if (files.length) {
+          const file = files[0];
+          if (file.type.startsWith('image/')) {
+            if (nodeId !== startId) {
+              const reader = new FileReader();
+              reader.onload = (event) => {
+                const base64String = event.target?.result;
+                if (base64String) {
+                  let img = new Image(); //手动创建一个Image对象
+                  img.src = base64String as string;
+                  img.onload = async () => {
+                    const height = 200 / (img.width / img.height);
+                    changeNodeImage(
+                      nodeId,
+                      base64String as string,
+                      200,
+                      height
+                    );
+                  };
+                }
+              };
+              reader.readAsDataURL(file);
+            }
+          }
+        }
+      }
+    }
+
     return (
       <div
         className="svg-wrapper"
@@ -1559,7 +1628,7 @@ export const Mind = React.forwardRef(
             showAvatar={SHOW_AVATAR}
             avatarRadius={avatarRadius}
             startId={startId}
-            handleFileChange={handleFileChange}
+            handleFileChange={handleTreePaste}
             showChildNum={showChildNum}
           />
         ) : null}

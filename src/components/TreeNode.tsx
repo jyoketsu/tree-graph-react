@@ -279,7 +279,7 @@ Props) => {
       showIcon,
       showAvatar,
       avatarRadius,
-      showChildNum
+      false
     );
   }
 
@@ -293,8 +293,24 @@ Props) => {
     }
   }
 
-  const childNumLocationRes =
-    showChildNum && node.childNum ? location(node, 'childNum') : null;
+  function handleClickImage(event: React.MouseEvent) {
+    event.stopPropagation();
+    if (node.imageUrl?.startsWith('data:image/')) {
+      const img = new window.Image();
+      img.src = node.imageUrl;
+      const newWin = window.open('');
+      if (newWin) {
+        newWin.document.write(img.outerHTML);
+        newWin.document.title = node.name;
+        newWin.document.close();
+      }
+    } else {
+      window.open(node.imageUrl, '_blank');
+    }
+  }
+
+  // const childNumLocationRes =
+  //   showChildNum && node.childNum ? location(node, 'childNum') : null;
   const textLocationRes = location(node, 'text');
   const circleLocationRes = location(node, 'avatar');
   const checkLocationRes = location(node, 'checkbox');
@@ -505,7 +521,7 @@ Props) => {
           ...nodeRectStyle,
         }}
       />
-      {showChildNum && node.childNum ? (
+      {/* {showChildNum && node.childNum ? (
         <g>
           <circle
             cx={(childNumLocationRes?.x || 0) + 11}
@@ -526,7 +542,7 @@ Props) => {
             {node.childNum > 999 ? '999+' : node.childNum}
           </text>
         </g>
-      ) : null}
+      ) : null} */}
       {node.isPack ? (
         <use
           key="pack"
@@ -761,8 +777,8 @@ Props) => {
           width={node.imageWidth}
           height={node.imageHeight}
           xlinkHref={node.imageUrl}
-          // style={{ cursor: 'pointer' }}
-          // onClick={handleClickPreview}
+          style={{ cursor: 'pointer' }}
+          onClick={handleClickImage}
         />
       ) : null}
       {true ? (
@@ -834,6 +850,7 @@ Props) => {
         <Expand
           node={node}
           BLOCK_HEIGHT={BLOCK_HEIGHT}
+          showChildNum={showChildNum}
           handleClickExpand={() => handleExpand(node)}
           position={
             bottomOptions
