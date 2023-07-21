@@ -25,8 +25,8 @@ import {
   isDragValid,
   isMutilDragValid,
   getNextSelect,
-  updateNodeById,
   countNodeDescendants,
+  updateNodeByKey,
 } from './services/util';
 import MutilSelectedNodeKey from './interfaces/MutilSelectedNodeKey';
 
@@ -54,7 +54,7 @@ interface NodeClickFunc {
   (node: CNode, targetEl: HTMLElement): void;
 }
 export interface HandleFileChange {
-  (nodeKey: string, files: FileList): void;
+  (nodeKey: string, nodeName: string, files: FileList): void;
 }
 
 interface HandleQuickCommandOpen {
@@ -147,6 +147,7 @@ export interface TreeProps {
   handleQuickCommandOpen?: HandleQuickCommandOpen;
   handlePasteText?: HandlePasteText;
   handleContextMenu?: (nodeKey: string, event: React.MouseEvent) => void;
+  handleClickNodeImage?: (url?: string) => void;
   ref?: any;
 }
 
@@ -219,6 +220,7 @@ export const Tree = React.forwardRef(
       handleQuickCommandOpen,
       handlePasteText,
       handleContextMenu,
+      handleClickNodeImage,
     }: TreeProps,
     ref
   ) => {
@@ -578,31 +580,16 @@ export const Tree = React.forwardRef(
       }
     }
 
-    function changeNodeImage(
-      nodeId: string,
-      imageUrl: string,
-      imageWidth: number,
-      imageHeight: number
-    ) {
+    function updateNodeById(nodeMap: NodeMap, id: string, data: any) {
       setshowInput(false);
       setshowNewInput(false);
-
-      if (UNCONTROLLED) {
-        const nodes = updateNodeById(nodeMap, nodeId, {
-          imageUrl,
-          imageWidth,
-          imageHeight,
-        });
-        setNodeMap(nodes);
-        if (handleChange) {
-          handleChange();
-        }
-      }
-      // if (handleChangeNodeText) {
-      //   handleChangeNodeText(nodeId, text);
-      // }
+      const nodes = updateNodeByKey(nodeMap, id, data);
+      setNodeMap(nodes);
       if (containerRef && containerRef.current) {
         containerRef.current.focus();
+      }
+      if (handleChange) {
+        handleChange();
       }
     }
 
@@ -882,9 +869,6 @@ export const Tree = React.forwardRef(
               setPasteType(null);
             } else if (handlePasteText) {
               // 如果用户复制了文字，则将文字黏贴为节点
-              const read = await navigator.clipboard.read();
-              console.log('---read---', read);
-
               const text = await navigator.clipboard.readText();
               if (text) {
                 handlePasteText(text);
@@ -1190,9 +1174,13 @@ export const Tree = React.forwardRef(
       }
     }
 
-    function handleTreePaste(nodeId: string, files: FileList) {
+    function handleTreePaste(
+      nodeId: string,
+      nodeName: string,
+      files: FileList
+    ) {
       if (handleFileChange) {
-        handleFileChange(nodeId, files);
+        handleFileChange(nodeId, nodeName, files);
       } else if (UNCONTROLLED) {
         if (files.length) {
           const file = files[0];
@@ -1206,12 +1194,12 @@ export const Tree = React.forwardRef(
                   img.src = base64String as string;
                   img.onload = async () => {
                     const height = 200 / (img.width / img.height);
-                    changeNodeImage(
-                      nodeId,
-                      base64String as string,
-                      200,
-                      height
-                    );
+                    updateNodeById(nodeMap, nodeId, {
+                      name: nodeName,
+                      imageUrl: base64String as string,
+                      imageWidth: 200,
+                      imageHeight: height,
+                    });
                   };
                 }
               };
@@ -1637,6 +1625,7 @@ export const Tree = React.forwardRef(
                 selectedBackgroundColor={SELECTED_BACKGROUND_COLOR}
                 handleFileChange={handleFileChange}
                 onContextMenu={handleContextMenu}
+                onClickNodeImage={handleClickNodeImage}
               />
             </g>
           ))}

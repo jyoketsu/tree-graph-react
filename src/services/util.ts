@@ -593,7 +593,7 @@ function changeNodeText(nodeMap: NodeMap, id: string, text: string) {
   return nodes;
 }
 
-function updateNodeById(nodeMap: NodeMap, id: string, data: any) {
+function updateNodeByKey(nodeMap: NodeMap, id: string, data: any) {
   let nodes = { ...nodeMap };
   let node = nodes[id];
   if (!node) return nodes;
@@ -1183,6 +1183,6 @@ export {
   getElPosition,
   isEmoji,
   urlReg,
-  updateNodeById,
+  updateNodeByKey,
   countNodeDescendants,
 };

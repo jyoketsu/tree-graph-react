@@ -444,6 +444,7 @@ MultiCol.args = {
   handlePasteText: (text: string) => console.log('---handlePasteText---', text),
   handleContextMenu: (nodeKey: string, event: React.MouseEvent) =>
     console.log('---handleContextMenu---', nodeKey, event),
+  // handleClickNodeImage: (url: string) => alert(url),
 };
 
 export const MultiColDark = Template.bind({});

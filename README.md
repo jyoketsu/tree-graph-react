@@ -335,10 +335,11 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | handleChange             | Tree data change event                                                                     | Function | No       | -       |
 | showDeleteConform        | Show delete confirmation (uncontrolled mode)                                               | Function | No       | -       |
 | handleMutiSelect         | Multi-select nodes (parameters: selectedNodes)                                             | Function | No       | -       |
-| handleFileChange         | To handle file changes (parameters: nodeKey: string, files: FileList)                      | Function | No       | -       |
+| handleFileChange         | To handle file changes (parameters: nodeKey: string,nodeName:string, files: FileList)      | Function | No       | -       |
 | handleQuickCommandOpen   | To handle the event after pressing the `quickCommandKey` (parameters: nodeEl: HTMLElement) | Function | No       | -       |
 | handlePasteText          | To handle the event after pasting text. (parameters: text: string)                         | Function | No       | -       |
 | handleContextMenu        | To handle the right-click event. (parameters: nodeKey: string, event: React.MouseEvent)    | Function | No       | -       |
+| handleClickNodeImage     | To handle click node image event. (parameters: url: string)                                | Function | No       | -       |
 
 ```javascript
 interface DragInfo {

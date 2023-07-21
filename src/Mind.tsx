@@ -25,7 +25,7 @@ import {
   getValidSelectedNodes,
   isMutilDragValid,
   getNextSelect,
-  updateNodeById,
+  updateNodeByKey,
   countNodeDescendants,
 } from './services/util';
 import MutilSelectedNodeKey from './interfaces/MutilSelectedNodeKey';
@@ -141,6 +141,7 @@ export interface MindProps {
   handleQuickCommandOpen?: HandleQuickCommandOpen;
   handlePasteText?: HandlePasteText;
   handleContextMenu?: (nodeKey: string, event: React.MouseEvent) => void;
+  handleClickNodeImage?: (url?: string) => void;
   ref?: any;
 }
 
@@ -208,6 +209,7 @@ export const Mind = React.forwardRef(
       handleQuickCommandOpen,
       handlePasteText,
       handleContextMenu,
+      handleClickNodeImage,
     }: MindProps,
     ref
   ) => {
@@ -448,31 +450,16 @@ export const Mind = React.forwardRef(
       }
     }
 
-    function changeNodeImage(
-      nodeId: string,
-      imageUrl: string,
-      imageWidth: number,
-      imageHeight: number
-    ) {
+    function updateNodeById(nodeMap: NodeMap, id: string, data: any) {
       setshowInput(false);
       setshowNewInput(false);
-
-      if (UNCONTROLLED) {
-        const nodes = updateNodeById(nodeMap, nodeId, {
-          imageUrl,
-          imageWidth,
-          imageHeight,
-        });
-        setNodeMap(nodes);
-        if (handleChange) {
-          handleChange();
-        }
-      }
-      // if (handleChangeNodeText) {
-      //   handleChangeNodeText(nodeId, text);
-      // }
+      const nodes = updateNodeByKey(nodeMap, id, data);
+      setNodeMap(nodes);
       if (containerRef && containerRef.current) {
         containerRef.current.focus();
+      }
+      if (handleChange) {
+        handleChange();
       }
     }
 
@@ -1157,9 +1144,13 @@ export const Mind = React.forwardRef(
       return `${M} ${Q}`;
     }
 
-    function handleTreePaste(nodeId: string, files: FileList) {
+    function handleTreePaste(
+      nodeId: string,
+      nodeName: string,
+      files: FileList
+    ) {
       if (handleFileChange) {
-        handleFileChange(nodeId, files);
+        handleFileChange(nodeId, nodeName, files);
       } else if (UNCONTROLLED) {
         if (files.length) {
           const file = files[0];
@@ -1173,12 +1164,12 @@ export const Mind = React.forwardRef(
                   img.src = base64String as string;
                   img.onload = async () => {
                     const height = 200 / (img.width / img.height);
-                    changeNodeImage(
-                      nodeId,
-                      base64String as string,
-                      200,
-                      height
-                    );
+                    updateNodeById(nodeMap, nodeId, {
+                      name: nodeName,
+                      imageUrl: base64String as string,
+                      imageWidth: 200,
+                      imageHeight: height,
+                    });
                   };
                 }
               };
@@ -1572,6 +1563,7 @@ export const Mind = React.forwardRef(
                 selectedBackgroundColor={SELECTED_BACKGROUND_COLOR}
                 handleFileChange={handleFileChange}
                 onContextMenu={handleContextMenu}
+                onClickNodeImage={handleClickNodeImage}
               />
             </g>
           ))}

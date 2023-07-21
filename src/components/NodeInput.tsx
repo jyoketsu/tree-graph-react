@@ -73,7 +73,7 @@ const NodeInput = ({
     if (event.clipboardData.files.length && handleFileChange && selectedId) {
       event.preventDefault();
       let files = event.clipboardData.files;
-      handleFileChange(selectedId, files);
+      handleFileChange(selectedId, value, files);
     }
   };
 

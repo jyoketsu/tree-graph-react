@@ -66,6 +66,7 @@ interface Props {
   fontWeight?: number;
   handleFileChange?: HandleFileChange;
   onContextMenu?: (nodeKey: string, event: React.MouseEvent) => void;
+  onClickNodeImage?: (url?: string) => void;
 }
 
 // let timer: NodeJS.Timeout;
@@ -116,6 +117,7 @@ const TreeNode = ({
   fontWeight,
   handleFileChange,
   onContextMenu,
+  onClickNodeImage,
 }: // nodeOptionsOpened,
 Props) => {
   const [hover, sethover] = useState(false);
@@ -236,7 +238,7 @@ Props) => {
     event.preventDefault();
     const files = event.dataTransfer.files;
     if (files.length && handleFileChange) {
-      handleFileChange(node._key, files);
+      handleFileChange(node._key, node.name, files);
     } else {
       setDragIn(false);
       if (dragEndFromOutside) {
@@ -297,17 +299,21 @@ Props) => {
 
   function handleClickImage(event: React.MouseEvent) {
     event.stopPropagation();
-    if (node.imageUrl?.startsWith('data:image/')) {
-      const img = new window.Image();
-      img.src = node.imageUrl;
-      const newWin = window.open('');
-      if (newWin) {
-        newWin.document.write(img.outerHTML);
-        newWin.document.title = node.name;
-        newWin.document.close();
-      }
+    if (onClickNodeImage) {
+      onClickNodeImage(node.imageUrl);
     } else {
-      window.open(node.imageUrl, '_blank');
+      if (node.imageUrl?.startsWith('data:image/')) {
+        const img = new window.Image();
+        img.src = node.imageUrl;
+        const newWin = window.open('');
+        if (newWin) {
+          newWin.document.write(img.outerHTML);
+          newWin.document.title = node.name;
+          newWin.document.close();
+        }
+      } else {
+        window.open(node.imageUrl, '_blank');
+      }
     }
   }
 
