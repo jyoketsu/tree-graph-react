@@ -22,10 +22,11 @@ export default function calculate(
   collapseMode?: boolean,
   expandedNodeKey?: string | null,
   inputNodeKey?: string,
-  hideRoot?: boolean,
+  hideRoot?: boolean
   // showChildNum?: boolean
 ) {
-  nodes = JSON.parse(JSON.stringify(nodes));
+  // nodes = JSON.parse(JSON.stringify(nodes));
+  nodes = { ...nodes };
   const start_x = startX || 15;
   const start_y = startY || 15;
   // 根节点

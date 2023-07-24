@@ -1,3 +1,4 @@
+import React from 'react';
 import Attach from './Attach';
 
 export default interface Node {
@@ -37,6 +38,15 @@ export default interface Node {
   imageUrl?: string;
   imageWidth?: number;
   imageHeight?: number;
+  // 自定义组件
+  customItem?: React.FC<{
+    x: number;
+    y: number;
+    nodeKey: string;
+  }>;
+  customItemWidth?: number;
+  customItemHeight?: number;
+  customItemContent?: any;
   // 以下为计算属性
   x?: number;
   y?: number;

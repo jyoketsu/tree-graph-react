@@ -88,6 +88,32 @@ const nodes = {
     imageUrl: 'https://psnine.com/Upload/game/11882.png',
     imageWidth: 100,
     imageHeight: 100,
+    customItem: ({ x, y, nodeKey }) => (
+      <svg
+        viewBox="0 0 1024 1024"
+        version="1.1"
+        width="18"
+        height="18"
+        x={x}
+        y={y}
+        onClick={() => alert(nodeKey)}
+      >
+        <path
+          d="M512 512m-448 0a448 448 0 1 0 896 0 448 448 0 1 0-896 0Z"
+          fill="#2196F3"
+        ></path>
+        <path
+          d="M469.333333 469.333333h85.333334v234.666667h-85.333334z"
+          fill="#FFFFFF"
+        ></path>
+        <path
+          d="M512 352m-53.333333 0a53.333333 53.333333 0 1 0 106.666666 0 53.333333 53.333333 0 1 0-106.666666 0Z"
+          fill="#FFFFFF"
+        ></path>
+      </svg>
+    ),
+    customItemWidth: 18,
+    customItemHeight: 18,
   },
   '007': {
     hasCollect: true,
@@ -371,7 +397,7 @@ const meta: Meta = {
 export default meta;
 
 const Template: Story<MindProps> = (args) => {
-  const treeRef = useRef(null);
+  const treeRef = useRef<any>(null);
   return (
     <div>
       <button

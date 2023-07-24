@@ -321,6 +321,7 @@ export const Tree = React.forwardRef(
       if (!nodeMap[startId]) {
         return;
       }
+
       const cal = calculate(
         nodeMap,
         startId,

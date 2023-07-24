@@ -16,10 +16,11 @@ export default function calculate(
   avatarRadius: number,
   rootZoomRatio: number,
   secondZoomRatio: number,
-  inputNodeKey?: string,
+  inputNodeKey?: string
   // showChildNum?: boolean
 ) {
-  nodes = JSON.parse(JSON.stringify(nodes));
+  // nodes = JSON.parse(JSON.stringify(nodes));
+  nodes = { ...nodes };
   // 根节点
   const root = nodes[startId];
   const rootWidth = getNodeWidth(

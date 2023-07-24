@@ -333,6 +333,7 @@ Props) => {
   const iconLocationRes = location(node, 'icon');
   const favoriteLocationRes = location(node, 'favorite');
   const packLocationRes = location(node, 'pack');
+  const customItemLocationRes = location(node, 'customItem');
 
   const nodeRectClassName = rectClassName(node);
 
@@ -708,6 +709,13 @@ Props) => {
             ) : null}
           </g>
         </g>
+      ) : null}
+      {node.customItem && node.customItemWidth && node.customItemHeight ? (
+        <node.customItem
+          x={customItemLocationRes?.x || 0}
+          y={customItemLocationRes?.y || 0}
+          nodeKey={node._key}
+        />
       ) : null}
 
       {/* 文字 */}

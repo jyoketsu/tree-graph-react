@@ -1,8 +1,9 @@
 import React, { useRef } from 'react';
 import { Tree, TreeProps } from '../src';
 import { Meta, Story } from '@storybook/react';
+import NodeMap from '../src/interfaces/NodeMap';
 
-const nodes = {
+const nodes: NodeMap = {
   '001': {
     _key: '001',
     name: '項目管理',
@@ -66,8 +67,6 @@ const nodes = {
     sortList: [],
     showStatus: true,
     checked: false,
-    limitDay: null,
-    hour: null,
   },
   '005': {
     _key: '005',
@@ -89,6 +88,21 @@ const nodes = {
     checked: false,
     hour: 0.1,
     limitDay: 1610726400000,
+    customItem: ({ x, y, nodeKey }) => (
+      <svg
+        viewBox="0 0 1024 1024"
+        version="1.1"
+        width="18"
+        height="18"
+        x={x}
+        y={y}
+        onClick={() => alert(nodeKey)}
+      >
+        <path d="M191.488 190.464q-26.624 0-45.056-18.432t-18.432-45.056 18.432-45.056 45.056-18.432l695.296 0q26.624 0 45.056 18.432t18.432 45.056-18.432 45.056-45.056 18.432l-695.296 0zM191.488 443.392q-26.624 0-45.056-18.432t-18.432-45.056 18.432-45.056 45.056-18.432l631.808 0q26.624 0 45.056 18.432t18.432 45.056-18.432 45.056-45.056 18.432l-631.808 0zM886.784 569.344q26.624 0 45.056 18.432t18.432 45.056-18.432 45.056-45.056 18.432l-695.296 0q-26.624 0-45.056-18.432t-18.432-45.056 18.432-45.056 45.056-18.432l695.296 0zM823.296 822.272q26.624 0 45.056 18.432t18.432 45.056-18.432 45.056-45.056 18.432l-631.808 0q-26.624 0-45.056-18.432t-18.432-45.056 18.432-45.056 45.056-18.432l631.808 0z"></path>
+      </svg>
+    ),
+    customItemWidth: 18,
+    customItemHeight: 18,
   },
   '007': {
     _key: '007',
@@ -367,7 +381,7 @@ const meta: Meta = {
 export default meta;
 
 const Template: Story<TreeProps> = (args) => {
-  const treeRef = useRef(null);
+  const treeRef = useRef<any>(null);
   return (
     <div>
       <button

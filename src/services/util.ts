@@ -183,6 +183,9 @@ function getExtInfoWidth(
   const checkboxWidth = node.showCheckbox ? 18 : 0;
   const statusWidth = node.showStatus ? 22 : 0;
   const showChildNumWidth = showChildNum && node.childNum ? 22 : 0;
+  const customItemWidth =
+    node.customItem && node.customItemWidth ? node.customItemWidth : 0;
+
   const temp = [
     packWidth,
     favoriteWidth,
@@ -191,6 +194,7 @@ function getExtInfoWidth(
     checkboxWidth,
     statusWidth,
     showChildNumWidth,
+    customItemWidth,
   ];
   let count = 0;
   for (let index = 0; index < temp.length; index++) {
@@ -209,6 +213,7 @@ function getExtInfoWidth(
     checkboxWidth +
     statusWidth +
     showChildNumWidth +
+    customItemWidth +
     marginWidth
   );
 }
@@ -290,6 +295,20 @@ function nodeLocation(
           (showAvatar && node.avatarUri ? avatarRadius * 2 + 2 : 0) +
           (node.showCheckbox ? 18 + 2 : 0),
         y: node.y + (BLOCK_HEIGHT - 22) / 2,
+      };
+    case 'customItem':
+      return {
+        x:
+          node.x +
+          startX +
+          (showChildNum && node.childNum ? 22 + 2 : 0) +
+          (node.isPack ? 22 + 2 : 0) +
+          (node.hasCollect ? 22 + 2 : 0) +
+          (showIcon && node.icon ? 22 + 2 : 0) +
+          (showAvatar && node.avatarUri ? avatarRadius * 2 + 2 : 0) +
+          (node.showCheckbox ? 18 + 2 : 0) +
+          (node.showStatus ? 22 + 2 : 0),
+        y: node.y + (BLOCK_HEIGHT - (node.customItemHeight || 0)) / 2,
       };
     case 'text':
       const extWidth = getExtInfoWidth(
