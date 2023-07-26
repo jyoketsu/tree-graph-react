@@ -2,6 +2,7 @@ import { getNodeWidth, getShortedStr, getAncestor } from './util';
 import Node from '../interfaces/Node';
 import CNode from '../interfaces/CNode';
 import NodeMap from '../interfaces/NodeMap';
+import _ from "lodash";
 
 export default function calculate(
   nodes: NodeMap,
@@ -26,7 +27,7 @@ export default function calculate(
   // showChildNum?: boolean
 ) {
   // nodes = JSON.parse(JSON.stringify(nodes));
-  nodes = { ...nodes };
+  nodes = _.cloneDeep(nodes);
   const start_x = startX || 15;
   const start_y = startY || 15;
   // 根节点
