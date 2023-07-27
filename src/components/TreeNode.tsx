@@ -333,7 +333,7 @@ Props) => {
   const iconLocationRes = location(node, 'icon');
   const favoriteLocationRes = location(node, 'favorite');
   const packLocationRes = location(node, 'pack');
-  const customItemLocationRes = location(node, 'customItem');
+  const startAdornmentLocationRes = location(node, 'startAdornment');
 
   const nodeRectClassName = rectClassName(node);
 
@@ -710,10 +710,12 @@ Props) => {
           </g>
         </g>
       ) : null}
-      {node.customItem && node.customItemWidth && node.customItemHeight ? (
-        <node.customItem
-          x={customItemLocationRes?.x || 0}
-          y={customItemLocationRes?.y || 0}
+      {node.startAdornment &&
+      node.startAdornmentWidth &&
+      node.startAdornmentHeight ? (
+        <node.startAdornment
+          x={startAdornmentLocationRes?.x || 0}
+          y={startAdornmentLocationRes?.y || 0}
           nodeKey={node._key}
         />
       ) : null}
@@ -792,6 +794,17 @@ Props) => {
           {node.shorted || node.name || ''}
         </text>
       )}
+
+      {/* endAdornment */}
+      {node.endAdornment &&
+      node.endAdornmentWidth &&
+      node.endAdornmentHeight ? (
+        <node.endAdornment
+          x={node.x + node.width - node.endAdornmentWidth - 5}
+          y={node.y + (BLOCK_HEIGHT - (node.endAdornmentHeight || 0)) / 2}
+          nodeKey={node._key}
+        />
+      ) : null}
       {/* 图片 */}
       {node.imageUrl && node.imageWidth && node.imageHeight ? (
         <image

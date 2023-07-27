@@ -138,16 +138,16 @@ function getNodeWidth(
   showAvatar: boolean,
   avatarRadius: number,
   showChildNum: boolean,
-  padding?: number,
   inputNodeKey?: string
 ) {
+  const padding = 5;
   const str = node.shorted || node.name;
   let width = textWidthAll(fontSize, str);
   if (inputNodeKey === node._key && width < 100) {
     width = 100;
   }
 
-  const paddingWidth = padding ? padding * 1.5 : 15;
+  const paddingWidth = padding * 2;
   const extInfoWidth = getExtInfoWidth(
     node,
     showIcon,
@@ -155,8 +155,13 @@ function getNodeWidth(
     avatarRadius,
     showChildNum
   );
+  const endAdornmentWidth =
+    node.endAdornmentWidth && node.endAdornmentWidth
+      ? node.endAdornmentWidth + 5
+      : 0;
 
-  let totalWidth = (width || 100) + paddingWidth + extInfoWidth;
+  let totalWidth =
+    (width || 100) + paddingWidth + extInfoWidth + endAdornmentWidth;
   if (
     node.imageUrl &&
     node.imageWidth &&
@@ -183,8 +188,10 @@ function getExtInfoWidth(
   const checkboxWidth = node.showCheckbox ? 18 : 0;
   const statusWidth = node.showStatus ? 22 : 0;
   const showChildNumWidth = showChildNum && node.childNum ? 22 : 0;
-  const customItemWidth =
-    node.customItem && node.customItemWidth ? node.customItemWidth : 0;
+  const startAdornmentWidth =
+    node.startAdornment && node.startAdornmentWidth
+      ? node.startAdornmentWidth
+      : 0;
 
   const temp = [
     packWidth,
@@ -194,7 +201,7 @@ function getExtInfoWidth(
     checkboxWidth,
     statusWidth,
     showChildNumWidth,
-    customItemWidth,
+    startAdornmentWidth,
   ];
   let count = 0;
   for (let index = 0; index < temp.length; index++) {
@@ -213,7 +220,7 @@ function getExtInfoWidth(
     checkboxWidth +
     statusWidth +
     showChildNumWidth +
-    customItemWidth +
+    startAdornmentWidth +
     marginWidth
   );
 }
@@ -225,10 +232,10 @@ function nodeLocation(
   showIcon: boolean,
   showAvatar: boolean,
   avatarRadius: number,
-  showChildNum: boolean,
-  paddingLeft?: number
+  showChildNum: boolean
 ) {
-  const startX = paddingLeft || 5;
+  const paddingLeft = 5;
+  const startX = paddingLeft;
   switch (type) {
     case 'childNum':
       return {
@@ -296,7 +303,7 @@ function nodeLocation(
           (node.showCheckbox ? 18 + 2 : 0),
         y: node.y + (BLOCK_HEIGHT - 22) / 2,
       };
-    case 'customItem':
+    case 'startAdornment':
       return {
         x:
           node.x +
@@ -308,7 +315,7 @@ function nodeLocation(
           (showAvatar && node.avatarUri ? avatarRadius * 2 + 2 : 0) +
           (node.showCheckbox ? 18 + 2 : 0) +
           (node.showStatus ? 22 + 2 : 0),
-        y: node.y + (BLOCK_HEIGHT - (node.customItemHeight || 0)) / 2,
+        y: node.y + (BLOCK_HEIGHT - (node.startAdornmentHeight || 0)) / 2,
       };
     case 'text':
       const extWidth = getExtInfoWidth(

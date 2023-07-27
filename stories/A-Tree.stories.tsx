@@ -88,7 +88,33 @@ const nodes: NodeMap = {
     checked: false,
     hour: 0.1,
     limitDay: 1610726400000,
-    customItem: ({ x, y, nodeKey }) => (
+    startAdornment: ({ x, y, nodeKey }) => (
+      <svg
+        viewBox="0 0 1024 1024"
+        version="1.1"
+        width="18"
+        height="18"
+        x={x}
+        y={y}
+        onClick={() => alert(nodeKey)}
+      >
+        <path
+          d="M512 512m-448 0a448 448 0 1 0 896 0 448 448 0 1 0-896 0Z"
+          fill="#2196F3"
+        ></path>
+        <path
+          d="M469.333333 469.333333h85.333334v234.666667h-85.333334z"
+          fill="#FFFFFF"
+        ></path>
+        <path
+          d="M512 352m-53.333333 0a53.333333 53.333333 0 1 0 106.666666 0 53.333333 53.333333 0 1 0-106.666666 0Z"
+          fill="#FFFFFF"
+        ></path>
+      </svg>
+    ),
+    startAdornmentWidth: 18,
+    startAdornmentHeight: 18,
+    endAdornment: ({ x, y, nodeKey }) => (
       <svg
         viewBox="0 0 1024 1024"
         version="1.1"
@@ -121,8 +147,8 @@ const nodes: NodeMap = {
         ></path>
       </svg>
     ),
-    customItemWidth: 18,
-    customItemHeight: 18,
+    endAdornmentWidth: 18,
+    endAdornmentHeight: 18,
   },
   '007': {
     _key: '007',
@@ -141,7 +167,6 @@ const nodes: NodeMap = {
     sortList: [],
     icon: '😀',
     checked: false,
-
     hour: 0.1,
     limitDay: 1610726400000,
   },
@@ -150,9 +175,7 @@ const nodes: NodeMap = {
     name: '還原數據',
     father: '006',
     sortList: ['015'],
-
     checked: false,
-
     hour: 11,
     limitDay: 1610726400000,
   },
@@ -161,7 +184,6 @@ const nodes: NodeMap = {
     name: '4月計劃',
     father: '003',
     sortList: [],
-
     checked: false,
     showCheckbox: true,
     showStatus: true,
@@ -244,9 +266,7 @@ const nodes2 = {
     father: '001',
     sortList: ['006', '007'],
     contract: false,
-
     checked: true,
-
     hour: 0.1,
     limitDay: new Date(new Date().setHours(0, 0, 0, 0)).getTime(),
   },
@@ -255,9 +275,7 @@ const nodes2 = {
     name: '項目狀態',
     father: '001',
     sortList: ['010', '011'],
-
     checked: false,
-
     hour: 0.1,
     limitDay: 1610726400000,
   },
@@ -266,9 +284,7 @@ const nodes2 = {
     name: '項目會議',
     father: '001',
     sortList: [],
-
     checked: false,
-
     hour: 0.1,
     limitDay: 1610726400000,
   },
@@ -277,9 +293,7 @@ const nodes2 = {
     name: '驗收',
     father: '001',
     sortList: [],
-
     checked: false,
-
     hour: 0.1,
     limitDay: 1610726400000,
   },
@@ -301,9 +315,7 @@ const nodes2 = {
     name: '階段二',
     father: '002',
     sortList: [],
-
     checked: false,
-
     hour: 0.1,
     limitDay: 1610726400000,
   },
@@ -321,9 +333,7 @@ const nodes2 = {
     name: '還原數據',
     father: '006',
     sortList: ['015'],
-
     checked: false,
-
     hour: 0.1,
     limitDay: 1610726400000,
   },
@@ -332,9 +342,7 @@ const nodes2 = {
     name: '4月計劃',
     father: '003',
     sortList: [],
-
     checked: true,
-
     hour: 0.1,
     limitDay: 1610726400000,
   },
@@ -344,9 +352,7 @@ const nodes2 = {
     father: '003',
     sortList: ['012', '013', '014'],
     contract: false,
-
     checked: true,
-
     hour: 0.1,
     limitDay: 1610726400000,
   },

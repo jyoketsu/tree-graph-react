@@ -70,11 +70,13 @@ const nodes = {
     name: '驗收',
     father: '001',
     sortList: [],
-
     checked: false,
-
     hour: 0.1,
     limitDay: 1610726400000,
+    imageUrl:
+      'https://image.api.playstation.com/trophy/np/NPWR12518_00_009C1232E900005FE409857E926767DFE9CAC7F371/CCDC60CADE4B3970C348FEFDE0094BA95C0A802F.PNG',
+    imageWidth: 320,
+    imageHeight: 176,
   },
   '006': {
     _key: '006',
@@ -88,7 +90,7 @@ const nodes = {
     imageUrl: 'https://psnine.com/Upload/game/11882.png',
     imageWidth: 100,
     imageHeight: 100,
-    customItem: ({ x, y, nodeKey }) => (
+    startAdornment: ({ x, y, nodeKey }) => (
       <svg
         viewBox="0 0 1024 1024"
         version="1.1"
@@ -112,8 +114,43 @@ const nodes = {
         ></path>
       </svg>
     ),
-    customItemWidth: 18,
-    customItemHeight: 18,
+    startAdornmentWidth: 18,
+    startAdornmentHeight: 18,
+    endAdornment: ({ x, y, nodeKey }) => (
+      <svg
+        viewBox="0 0 1024 1024"
+        version="1.1"
+        width="18"
+        height="18"
+        x={x}
+        y={y}
+        onClick={() => alert(nodeKey)}
+      >
+        <rect x={0} y={0} width="1024" height="1024" fillOpacity={0} />
+        <path
+          d="M886.624 297.376l-191.968-191.968c-2.944-2.944-6.432-5.312-10.336-6.912C680.48 96.864 676.288 96 672 96L224 96C171.072 96 128 139.072 128 192l0 640c0 52.928 43.072 96 96 96l576 0c52.928 0 96-43.072 96-96L896 320C896 311.52 892.64 303.36 886.624 297.376zM704 205.248 818.752 320 704 320 704 205.248zM800 864 224 864c-17.632 0-32-14.336-32-32L192 192c0-17.632 14.368-32 32-32l416 0 0 192c0 17.664 14.304 32 32 32l160 0 0 448C832 849.664 817.664 864 800 864z"
+          fill="#5D646F"
+          p-id="7882"
+        ></path>
+        <path
+          d="M288 352l192 0c17.664 0 32-14.336 32-32s-14.336-32-32-32L288 288c-17.664 0-32 14.336-32 32S270.336 352 288 352z"
+          fill="#5D646F"
+          p-id="7883"
+        ></path>
+        <path
+          d="M608 480 288 480c-17.664 0-32 14.336-32 32s14.336 32 32 32l320 0c17.696 0 32-14.336 32-32S625.696 480 608 480z"
+          fill="#5D646F"
+          p-id="7884"
+        ></path>
+        <path
+          d="M608 672 288 672c-17.664 0-32 14.304-32 32s14.336 32 32 32l320 0c17.696 0 32-14.304 32-32S625.696 672 608 672z"
+          fill="#5D646F"
+          p-id="7885"
+        ></path>
+      </svg>
+    ),
+    endAdornmentWidth: 18,
+    endAdornmentHeight: 18,
   },
   '007': {
     hasCollect: true,

@@ -32,7 +32,6 @@ export default function calculate(
     avatarRadius,
     // showChildNum || false,
     false,
-    undefined,
     inputNodeKey
   );
   root.width = rootWidth;
@@ -159,7 +158,6 @@ export default function calculate(
       avatarRadius,
       // showChildNum || false,
       false,
-      undefined,
       inputNodeKey
     );
     node.x = x;
@@ -242,6 +240,9 @@ export default function calculate(
     // 节点有图片的情况;
     if (node.imageUrl && node.imageHeight) {
       childY += node.imageHeight + 15 / 2;
+      if (childY > MAX_Y) {
+        MAX_Y = childY;
+      }
     }
     return childY;
   }

@@ -38,15 +38,24 @@ export default interface Node {
   imageUrl?: string;
   imageWidth?: number;
   imageHeight?: number;
-  // 自定义组件
-  customItem?: React.FC<{
+  // start adornment
+  startAdornment?: React.FC<{
     x: number;
     y: number;
     nodeKey: string;
   }>;
-  customItemWidth?: number;
-  customItemHeight?: number;
-  customItemContent?: any;
+  startAdornmentWidth?: number;
+  startAdornmentHeight?: number;
+  startAdornmentContent?: any;
+  // end adornment
+  endAdornment?: React.FC<{
+    x: number;
+    y: number;
+    nodeKey: string;
+  }>;
+  endAdornmentWidth?: number;
+  endAdornmentHeight?: number;
+  endAdornmentContent?: any;
   // 以下为计算属性
   x?: number;
   y?: number;
