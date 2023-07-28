@@ -1161,7 +1161,7 @@ function countNodeDescendants(nodeMap: NodeMap, nodeId: string) {
 }
 
 const urlReg =
-  /(([\w-]{1,}\.+)+(com|cn|org|net|info)(\/#\/)*\/*[\w\/\?=&%.]*)|(http:\/\/([\w-]{1,}\.+)+(com|cn|org|net|info)(\/#\/)*\/*[\w\/\?=&%.]*)|(https:\/\/([\w-]{1,}\.+)+(com|cn|org|net|info)(\/#\/)*\/*[\w\/\?=&%.]*)/g;
+  /(http:\/\/+\w+\.[\w\/|\-]{1,}(\.[\w\/|\-,.]{1,}){0,1})|(https:\/\/+\w+\.[\w\/|\-]{1,}(\.[\w\/|\-,.]{1,}){0,1})|(\w+\.[\w\/|\-]{1,}(\.[\w\/|\-,.]{1,}){0,1})/g;
 
 export {
   findNodeById,
