@@ -67,6 +67,7 @@ interface Props {
   handleFileChange?: HandleFileChange;
   onContextMenu?: (nodeKey: string, event: React.MouseEvent) => void;
   onClickNodeImage?: (url?: string) => void;
+  onResizeImage: (nodeKey: string, width: number) => void;
 }
 
 // let timer: NodeJS.Timeout;
@@ -118,6 +119,7 @@ const TreeNode = ({
   handleFileChange,
   onContextMenu,
   onClickNodeImage,
+  onResizeImage,
 }: // nodeOptionsOpened,
 Props) => {
   const [hover, sethover] = useState(false);
@@ -130,6 +132,7 @@ Props) => {
   const [hoverPreview, setHoverPreview] = useState(false);
   const [hoverAdd, setHoverAdd] = useState(false);
   const [hoverMore, setHoverMore] = useState(false);
+  const [hoverImage, setHoverImage] = useState(false);
   const rectHeight =
     node.imageUrl && node.imageWidth && node.imageHeight
       ? BLOCK_HEIGHT + node.imageHeight + 15 / 2
@@ -142,6 +145,11 @@ Props) => {
       ? Math.floor((node.limitDay - now) / 86400000)
       : Math.floor((node.limitDay - now) / 86400000) - 1
     : 0;
+
+  let lastX = 0;
+  const gapTime = 166.66;
+  let lastTime = 0;
+  let width = 0;
 
   function handleMouseEnter(e: React.MouseEvent) {
     const crossCompDragId = sessionStorage.getItem('cross-comp-drag');
@@ -322,6 +330,44 @@ Props) => {
       event.preventDefault();
       onContextMenu(node._key, event);
     }
+  }
+
+  function handleMouseEnterImage() {
+    setHoverImage(true);
+  }
+
+  function handleMouseLeaveImage() {
+    setHoverImage(false);
+  }
+
+  function handleStartResizeImage(e: React.MouseEvent) {
+    e.stopPropagation();
+    lastX = e.clientX;
+    width = node.imageWidth || 0;
+    window.addEventListener('mousemove', mouseMoveHandle);
+    window.addEventListener('mouseup', mouseUpHandle);
+  }
+
+  function mouseMoveHandle(e: MouseEvent) {
+    let time = new Date().getTime();
+    if (time - lastTime > gapTime || !lastTime) {
+      const diffX = e.clientX - lastX;
+      lastX = e.clientX;
+
+      // if (width.value + diffX > 100) {
+      //   width.value += diffX;
+      // }
+      if (width + diffX > 100) {
+        width += diffX;
+        onResizeImage(node._key, width);
+      }
+      lastTime = time;
+    }
+  }
+
+  function mouseUpHandle() {
+    window.removeEventListener('mousemove', mouseMoveHandle);
+    window.removeEventListener('mouseup', mouseUpHandle);
   }
 
   // const childNumLocationRes =
@@ -807,17 +853,56 @@ Props) => {
       ) : null}
       {/* 图片 */}
       {node.imageUrl && node.imageWidth && node.imageHeight ? (
-        <image
-          key="avatar-image"
-          x={node?.x + 15 / 2}
-          y={(node?.y || 0) + BLOCK_HEIGHT}
-          width={node.imageWidth}
-          height={node.imageHeight}
-          xlinkHref={node.imageUrl}
-          style={{ cursor: 'pointer' }}
-          onClick={handleClickImage}
-        />
+        <g
+          onMouseEnter={handleMouseEnterImage}
+          onMouseLeave={handleMouseLeaveImage}
+        >
+          <image
+            x={node?.x + 15 / 2}
+            y={(node?.y || 0) + BLOCK_HEIGHT}
+            width={node.imageWidth}
+            height={node.imageHeight}
+            xlinkHref={node.imageUrl}
+            style={{ cursor: 'pointer' }}
+            onClick={handleClickImage}
+          />
+          {hoverImage
+            ? [
+                <rect
+                  key="image-hover-rect"
+                  x={node?.x + 15 / 2}
+                  y={(node?.y || 0) + BLOCK_HEIGHT}
+                  width={node.imageWidth}
+                  height={node.imageHeight}
+                  stroke={selectedBorderColor}
+                  strokeWidth={2}
+                  fillOpacity={0}
+                />,
+                <rect
+                  key="image-rect"
+                  x={node?.x + 15 / 2}
+                  y={(node?.y || 0) + BLOCK_HEIGHT}
+                  width={node.imageWidth + 5}
+                  height={node.imageHeight + 5}
+                  fillOpacity={0}
+                />,
+                <rect
+                  key="drag-handle"
+                  x={node?.x + 15 / 2 + node.imageWidth}
+                  y={node.y + BLOCK_HEIGHT + node.imageHeight}
+                  width={5}
+                  height={5}
+                  stroke={selectedBorderColor}
+                  strokeWidth={2}
+                  fillOpacity={0}
+                  style={{ cursor: 'nwse-resize' }}
+                  onMouseDown={handleStartResizeImage}
+                />,
+              ]
+            : null}
+        </g>
       ) : null}
+
       {true ? (
         // || nodeOptionsOpened
         <g

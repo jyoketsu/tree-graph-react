@@ -148,6 +148,7 @@ export interface TreeProps {
   handlePasteText?: HandlePasteText;
   handleContextMenu?: (nodeKey: string, event: React.MouseEvent) => void;
   handleClickNodeImage?: (url?: string) => void;
+  handleResizeNodeImage?: (nodeKey: string, nodeWidth: number) => void;
   ref?: any;
 }
 
@@ -221,6 +222,7 @@ export const Tree = React.forwardRef(
       handlePasteText,
       handleContextMenu,
       handleClickNodeImage,
+      handleResizeNodeImage,
     }: TreeProps,
     ref
   ) => {
@@ -578,6 +580,24 @@ export const Tree = React.forwardRef(
       }
       if (containerRef && containerRef.current) {
         containerRef.current.focus();
+      }
+    }
+
+    function handleResizeImage(nodeId: string, width: number) {
+      if (UNCONTROLLED) {
+        let nodes = { ...nodeMap };
+        let node = nodes[nodeId];
+        if (!node || !node.imageWidth || !node.imageHeight) return;
+        const height = width / (node.imageWidth / node.imageHeight);
+        node.imageWidth = width;
+        node.imageHeight = height;
+        setNodeMap(nodes);
+        if (handleChange) {
+          handleChange();
+        }
+      }
+      if (handleResizeNodeImage) {
+        handleResizeNodeImage(nodeId, width);
       }
     }
 
@@ -1627,6 +1647,7 @@ export const Tree = React.forwardRef(
                 handleFileChange={handleFileChange}
                 onContextMenu={handleContextMenu}
                 onClickNodeImage={handleClickNodeImage}
+                onResizeImage={handleResizeImage}
               />
             </g>
           ))}

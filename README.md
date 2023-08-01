@@ -340,6 +340,7 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | handlePasteText          | To handle the event after pasting text. (parameters: text: string)                         | Function | No       | -       |
 | handleContextMenu        | To handle the right-click event. (parameters: nodeKey: string, event: React.MouseEvent)    | Function | No       | -       |
 | handleClickNodeImage     | To handle click node image event. (parameters: url: string)                                | Function | No       | -       |
+| handleResizeNodeImage    | To handle the node image resize. (parameters: nodeKey: string, nodeWidth: number)          | Function | No       | -       |
 
 ```javascript
 interface DragInfo {

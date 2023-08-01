@@ -142,6 +142,7 @@ export interface MindProps {
   handlePasteText?: HandlePasteText;
   handleContextMenu?: (nodeKey: string, event: React.MouseEvent) => void;
   handleClickNodeImage?: (url?: string) => void;
+  handleResizeNodeImage?: (nodeKey: string, nodeWidth: number) => void;
   ref?: any;
 }
 
@@ -210,6 +211,7 @@ export const Mind = React.forwardRef(
       handlePasteText,
       handleContextMenu,
       handleClickNodeImage,
+      handleResizeNodeImage,
     }: MindProps,
     ref
   ) => {
@@ -1180,6 +1182,24 @@ export const Mind = React.forwardRef(
       }
     }
 
+    function handleResizeImage(nodeId: string, width: number) {
+      if (UNCONTROLLED) {
+        let nodes = { ...nodeMap };
+        let node = nodes[nodeId];
+        if (!node || !node.imageWidth || !node.imageHeight) return;
+        const height = width / (node.imageWidth / node.imageHeight);
+        node.imageWidth = width;
+        node.imageHeight = height;
+        setNodeMap(nodes);
+        if (handleChange) {
+          handleChange();
+        }
+      }
+      if (handleResizeNodeImage) {
+        handleResizeNodeImage(nodeId, width);
+      }
+    }
+
     return (
       <div
         className="svg-wrapper"
@@ -1564,6 +1584,7 @@ export const Mind = React.forwardRef(
                 handleFileChange={handleFileChange}
                 onContextMenu={handleContextMenu}
                 onClickNodeImage={handleClickNodeImage}
+                onResizeImage={handleResizeImage}
               />
             </g>
           ))}

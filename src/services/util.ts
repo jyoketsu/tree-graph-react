@@ -167,7 +167,7 @@ function getNodeWidth(
     node.imageWidth &&
     node.imageWidth + paddingWidth > totalWidth
   ) {
-    totalWidth = node.imageWidth + paddingWidth;
+    totalWidth = node.imageWidth + padding + paddingWidth;
   }
 
   return totalWidth;
