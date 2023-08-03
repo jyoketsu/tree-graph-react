@@ -5,9 +5,11 @@ export default interface CNode extends Node {
   x: number;
   y: number;
   width: number;
+  height: number;
   last_child_y: number;
   toLeft?: boolean;
   dots?: any[];
   rightDots?: any[];
   leftDots?: any[];
+  texts?: string[];
 }

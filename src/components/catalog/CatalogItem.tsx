@@ -55,7 +55,7 @@ const CatalogItem = ({
         display: 'flex',
         alignItems: 'center',
         color: hover ? hoverColor : color,
-        fontFamily: "'Microsoft YaHei', sans-serif",
+        // fontFamily: "'Microsoft YaHei', sans-serif",
         userSelect: 'none',
         cursor: hover ? 'pointer' : 'default',
         paddingLeft: `${node.x - indent}px`,

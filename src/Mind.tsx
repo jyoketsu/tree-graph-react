@@ -74,10 +74,10 @@ export interface MindProps {
   uncontrolled?: boolean;
   // 是否单列
   singleColumn?: boolean;
-  // 节点元素高度
-  itemHeight?: number;
+  rowGap?: number;
   // 节点块高度
   blockHeight?: number;
+  textMaxWidth?: number;
   // 节点字体大小
   fontSize?: number;
   fontWeight?: number;
@@ -156,8 +156,9 @@ export const Mind = React.forwardRef(
       defaultSelectedId,
       uncontrolled,
       singleColumn,
-      itemHeight,
+      rowGap = 12,
       blockHeight,
+      textMaxWidth = 300,
       fontSize,
       fontWeight,
       indent,
@@ -219,7 +220,6 @@ export const Mind = React.forwardRef(
     const radius = 8;
     const rootZoomRatio = root_zoom_ratio || 1.8;
     const secondZoomRatio = second_zoom_ratio || 1.4;
-    const ITEM_HEIGHT = itemHeight || 38;
     const BLOCK_HEIGHT = blockHeight || 30;
     const FONT_SIZE = fontSize || 14;
     const INDENT = indent || 35;
@@ -308,10 +308,11 @@ export const Mind = React.forwardRef(
         nodeMap,
         startId,
         singleColumn,
-        ITEM_HEIGHT,
+        rowGap,
         BLOCK_HEIGHT,
         INDENT,
         FONT_SIZE,
+        textMaxWidth,
         SHOW_ICON,
         SHOW_AVATAR,
         avatarRadius,
@@ -1127,7 +1128,7 @@ export const Mind = React.forwardRef(
     }
 
     function rootPath(node: CNode, dotY: any, isLeft?: boolean) {
-      const startBlockHeight = BLOCK_HEIGHT * rootZoomRatio;
+      const startBlockHeight = node.height || BLOCK_HEIGHT * rootZoomRatio;
       const endBlockHeight = BLOCK_HEIGHT * secondZoomRatio;
       const startX = node.x + node.width / 2;
       // const middleY = node.y + startBlockHeight / 2;
@@ -1220,9 +1221,9 @@ export const Mind = React.forwardRef(
       >
         <svg
           className="tree-svg"
-          viewBox={`0 0 ${maxEnd + 100} ${maxY + ITEM_HEIGHT}`}
+          viewBox={`0 0 ${maxEnd + 100} ${maxY}`}
           width={maxEnd + 100}
-          height={maxY + ITEM_HEIGHT}
+          height={maxY}
           style={{ backgroundColor: BACKGROUND_COLOR }}
         >
           <defs>
@@ -1645,6 +1646,7 @@ export const Mind = React.forwardRef(
             }
             showIcon={SHOW_ICON}
             showAvatar={SHOW_AVATAR}
+            textMaxWidth={textMaxWidth}
             avatarRadius={avatarRadius}
             startId={startId}
             handleFileChange={handleTreePaste}

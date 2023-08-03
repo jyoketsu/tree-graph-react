@@ -80,6 +80,7 @@ export interface TreeProps {
   itemHeight?: number;
   // 节点块高度
   blockHeight?: number;
+  textMaxWidth?: number;
   // 节点字体大小
   fontSize?: number;
   fontWeight?: number;
@@ -164,6 +165,7 @@ export const Tree = React.forwardRef(
       singleColumn,
       itemHeight,
       blockHeight,
+      textMaxWidth = 300,
       fontSize,
       fontWeight,
       indent,
@@ -332,6 +334,7 @@ export const Tree = React.forwardRef(
         BLOCK_HEIGHT,
         INDENT,
         FONT_SIZE,
+        textMaxWidth,
         SHOW_ICON,
         SHOW_AVATAR,
         avatarRadius,
@@ -408,44 +411,27 @@ export const Tree = React.forwardRef(
     }
 
     // 根节点底部水平线
-    function rootHpaht(y: number) {
-      const diffY =
-        ITEM_HEIGHT - BLOCK_HEIGHT * rootZoomRatio > 40
-          ? ITEM_HEIGHT
-          : BLOCK_HEIGHT * rootZoomRatio + 40;
-      const itemY = y + diffY;
-      const blockY = y + BLOCK_HEIGHT * rootZoomRatio;
-      const middleY = itemY - (itemY - blockY) / 2;
-      const M = `M ${secondStartX ? secondStartX + RADIUS : 0} ${middleY}`;
+    function rootHpaht(height: number, y: number) {
+      const startY = y + height + ITEM_HEIGHT;
+      const M = `M ${secondStartX ? secondStartX + RADIUS : 0} ${startY}`;
       const H = `H ${secondEndX ? secondEndX - RADIUS : 0}`;
       return `${M} ${H}`;
     }
 
     // 根节点底部纵线
     function rootVpath(node: CNode) {
-      const diffY =
-        ITEM_HEIGHT - BLOCK_HEIGHT * rootZoomRatio > 40
-          ? ITEM_HEIGHT
-          : BLOCK_HEIGHT * rootZoomRatio + 40;
-      const itemY = node.y + diffY;
-      const blockY = node.y + BLOCK_HEIGHT * rootZoomRatio;
-      const middleY = itemY - (itemY - blockY) / 2;
-
-      const M = `M ${node.x + node.width / 2} ${blockY}`;
-      const V = `V ${middleY}`;
+      const startY = node.y + node.height;
+      const endY = startY + ITEM_HEIGHT;
+      const M = `M ${node.x + node.width / 2} ${startY}`;
+      const V = `V ${endY}`;
       return `${M} ${V}`;
     }
 
     // 第二层节点头部纵线（从下往上画）
     function rootBottomVpath(node: CNode) {
-      const diffY =
-        ITEM_HEIGHT - BLOCK_HEIGHT * rootZoomRatio > 40
-          ? ITEM_HEIGHT
-          : BLOCK_HEIGHT * rootZoomRatio + 40;
-
       const startX = node.x + node.width / 2;
       const startY = node.y;
-      const endY = node.y - (diffY - BLOCK_HEIGHT * rootZoomRatio) / 2;
+      const endY = startY - ITEM_HEIGHT;
 
       // 第二层的第一个节点
       if (node.x + node.width / 2 === secondStartX) {
@@ -1549,7 +1535,7 @@ export const Tree = React.forwardRef(
                   node.sortList.length &&
                   !node.contract ? (
                     <path
-                      d={rootHpaht(node.y)}
+                      d={rootHpaht(node.height, node.y)}
                       fill="none"
                       stroke={PATH_COLOR}
                       strokeWidth={PATH_WIDTH}
@@ -1709,6 +1695,7 @@ export const Tree = React.forwardRef(
             avatarRadius={avatarRadius}
             showIcon={SHOW_ICON}
             showAvatar={SHOW_AVATAR}
+            textMaxWidth={textMaxWidth}
             startId={startId}
             handleFileChange={handleTreePaste}
             showChildNum={showChildNum}

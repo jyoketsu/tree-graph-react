@@ -8,10 +8,11 @@ export default function calculate(
   nodes: NodeMap,
   startId: string,
   single: boolean | undefined,
-  ITEM_HEIGHT: number,
+  rowGap: number,
   BLOCK_HEIGHT: number,
   INDENT: number,
   FONT_SIZE: number,
+  textMaxWidth: number,
   showIcon: boolean,
   showAvatar: boolean,
   avatarRadius: number,
@@ -32,12 +33,18 @@ export default function calculate(
     avatarRadius,
     // showChildNum || false,
     false,
+    textMaxWidth,
     inputNodeKey
   );
   root.width = rootWidth;
+  let rootHeight = (root.texts?.length || 1) * BLOCK_HEIGHT * rootZoomRatio;
+  if (root.imageUrl && root.imageHeight) {
+    rootHeight += root.imageHeight + 15 / 2;
+  }
+  root.height = rootHeight;
 
   let MAX_X = rootWidth;
-  let MAX_Y = ITEM_HEIGHT;
+  let MAX_Y = BLOCK_HEIGHT * 2;
   let MAX_END = rootWidth * 1.5;
 
   let MIN_X = 85;
@@ -60,7 +67,7 @@ export default function calculate(
         }
         y1 = location(nodes, node, x1, y1);
         if (index + 1 !== rightStarts.length) {
-          y1 += ITEM_HEIGHT * secondZoomRatio;
+          y1 += rowGap * secondZoomRatio;
           if (y1 > MAX_Y) {
             MAX_Y = y1;
           }
@@ -74,7 +81,7 @@ export default function calculate(
         }
         y2 = location(nodes, node, x2, y2, true);
         if (index + 1 !== leftStarts.length) {
-          y2 += ITEM_HEIGHT * secondZoomRatio;
+          y2 += rowGap * secondZoomRatio;
           if (y2 > MAX_Y) {
             MAX_Y = y2;
           }
@@ -112,7 +119,7 @@ export default function calculate(
 
   return {
     max_x: MAX_X,
-    max_y: MAX_Y + ITEM_HEIGHT + 100,
+    max_y: MAX_Y + 100,
     max_end: MAX_END,
     nodes: nodeList,
   };
@@ -158,10 +165,25 @@ export default function calculate(
       avatarRadius,
       // showChildNum || false,
       false,
+      textMaxWidth,
       inputNodeKey
     );
+
+    let blockHeight = BLOCK_HEIGHT;
+    if (node._key === startId) {
+      blockHeight = BLOCK_HEIGHT * rootZoomRatio;
+    } else if (node.father === startId) {
+      blockHeight = BLOCK_HEIGHT * secondZoomRatio;
+    }
+
+    let nodeHeight = (node.texts?.length || 1) * blockHeight;
+    if (node.imageUrl && node.imageHeight) {
+      nodeHeight += node.imageHeight + 15 / 2;
+    }
+
     node.x = x;
     node.width = nodeWidth;
+    node.height = nodeHeight;
     if (toLeft) {
       node.toLeft = true;
       node.x = node.x - nodeWidth;
@@ -194,9 +216,17 @@ export default function calculate(
       }
     }
 
+    // if (node.texts && node.texts.length > 1) {
+    //   let blockHeight = BLOCK_HEIGHT;
+    //   if (node._key === startId) {
+    //     blockHeight = BLOCK_HEIGHT * rootZoomRatio;
+    //   } else if (node.father === startId) {
+    //     blockHeight = BLOCK_HEIGHT * secondZoomRatio;
+    //   }
+    //   childY += (node.texts.length - 1) * blockHeight;
+    // }
+
     if (!node.contract) {
-      const itemHeight =
-        node._key === startId ? ITEM_HEIGHT * secondZoomRatio : ITEM_HEIGHT;
       // 遍历子节点
       for (let index = 0; index < childrenIds.length; index++) {
         const element = nodes[childrenIds[index]];
@@ -206,13 +236,14 @@ export default function calculate(
         childY = location(nodes, element, childX, childY, toLeft);
         node.dots.push(element.y);
         if (index + 1 !== childrenIds.length) {
-          childY += itemHeight;
+          childY += rowGap;
           if (childY > MAX_Y) {
             MAX_Y = childY;
           }
         }
       }
     }
+
     if (!node.contract && childrenIds.length) {
       const firstChildY = nodes[childrenIds[0]].y;
       const lastChildY = nodes[childrenIds[childrenIds.length - 1]].y;
@@ -220,26 +251,39 @@ export default function calculate(
       const middleY =
         firstChildY && lastChildY
           ? (firstChildY + lastChildY) / 2
-          : (y + childY) / 2;
-      if (node.father === startId) {
-        node.y =
-          middleY + BLOCK_HEIGHT / 2 - (BLOCK_HEIGHT * secondZoomRatio) / 2;
-      } else if (node._key === startId) {
-        node.y =
-          middleY +
-          (BLOCK_HEIGHT * secondZoomRatio) / 2 -
-          (BLOCK_HEIGHT * rootZoomRatio) / 2;
-      } else {
-        node.y = middleY;
-      }
+          : (y + nodeHeight) / 2;
+      // if (node.father === startId) {
+      //   node.y =
+      //     middleY + BLOCK_HEIGHT / 2 - (BLOCK_HEIGHT * secondZoomRatio) / 2;
+      // } else if (node._key === startId) {
+      //   node.y =
+      //     middleY +
+      //     (BLOCK_HEIGHT * secondZoomRatio) / 2 -
+      //     (BLOCK_HEIGHT * rootZoomRatio) / 2;
+      // } else {
+      //   node.y = middleY;
+      // }
+      node.y = middleY;
     } else {
       node.y = (y + childY) / 2;
     }
 
     nodeList.push(node as CNode);
-    // 节点有图片的情况;
-    if (node.imageUrl && node.imageHeight) {
-      childY += node.imageHeight + 15 / 2;
+    // if (node.texts && node.texts.length > 1) {
+    //   childY += (node.texts.length - 1) * blockHeight;
+    //   if (childY > MAX_Y) {
+    //     MAX_Y = childY;
+    //   }
+    // }
+    // // 节点有图片的情况;
+    // if (node.imageUrl && node.imageHeight) {
+    //   childY += node.imageHeight + 15 / 2;
+    //   if (childY > MAX_Y) {
+    //     MAX_Y = childY;
+    //   }
+    // }
+    if (node.y + nodeHeight > childY) {
+      childY = node.y + nodeHeight;
       if (childY > MAX_Y) {
         MAX_Y = childY;
       }

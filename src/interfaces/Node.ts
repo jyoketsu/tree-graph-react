@@ -61,8 +61,10 @@ export default interface Node {
   y?: number;
   last_child_y?: number;
   width?: number;
+  height?: number;
   toLeft?: boolean;
   dots?: any[];
   rightDots?: any[];
   leftDots?: any[];
+  texts?: string[];
 }

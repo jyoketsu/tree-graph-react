@@ -289,7 +289,7 @@ const TreeNode = ({
         height: `${BLOCK_HEIGHT}px`,
         display: 'flex',
         alignItems: 'center',
-        fontFamily: "'Microsoft YaHei', sans-serif",
+        // fontFamily: "'Microsoft YaHei', sans-serif",
         userSelect: 'none',
         cursor: hover ? 'pointer' : 'default',
         paddingLeft: `${node.x - indent}px`,
@@ -441,7 +441,7 @@ const TreeNode = ({
         <span
           style={{
             fontSize: `${FONT_SIZE}px`,
-            fontFamily: "'Microsoft YaHei', sans-serif",
+            // fontFamily: "'Microsoft YaHei', sans-serif",
             overflow: 'hidden',
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',
@@ -493,7 +493,7 @@ const TreeNode = ({
         <span
           style={{
             fontSize: `${FONT_SIZE}px`,
-            fontFamily: "'Microsoft YaHei', sans-serif",
+            // fontFamily: "'Microsoft YaHei', sans-serif",
             overflow: 'hidden',
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',

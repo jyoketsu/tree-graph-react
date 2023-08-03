@@ -1,4 +1,4 @@
-import { getNodeWidth, getShortedStr, getAncestor } from './util';
+import { getNodeWidth, getAncestor } from './util';
 import Node from '../interfaces/Node';
 import CNode from '../interfaces/CNode';
 import NodeMap from '../interfaces/NodeMap';
@@ -12,6 +12,7 @@ export default function calculate(
   BLOCK_HEIGHT: number,
   INDENT: number,
   FONT_SIZE: number,
+  textMaxWidth: number,
   showIcon: boolean,
   showAvatar: boolean,
   avatarRadius: number,
@@ -44,6 +45,7 @@ export default function calculate(
     avatarRadius,
     // showChildNum || false,
     false,
+    textMaxWidth,
     inputNodeKey
   );
   root.width = rootWidth;
@@ -70,15 +72,18 @@ export default function calculate(
   // 多列视图
   if (!isSingle) {
     if (!root.contract) {
+      let rootHeight = (root.texts?.length || 1) * BLOCK_HEIGHT * rootZoomRatio;
+      if (root.imageUrl && root.imageHeight) {
+        rootHeight += root.imageHeight + 15 / 2;
+      }
+      root.height = rootHeight;
+
       const secondLevel = getStarts(nodes, root);
 
       for (let index = 0; index < secondLevel.length; index++) {
         const element = secondLevel[index];
 
-        let diffY =
-          ITEM_HEIGHT - BLOCK_HEIGHT * rootZoomRatio > 40
-            ? ITEM_HEIGHT
-            : BLOCK_HEIGHT * rootZoomRatio + 40;
+        let diffY = rootHeight + ITEM_HEIGHT * 2;
         if (index === 0) {
           SECOND_START_NODE_ID = element?._key;
           location(nodes, element, start_x, start_y + diffY);
@@ -148,19 +153,15 @@ export default function calculate(
     let childX = x;
     let childY = y;
     let lastChildY = y;
-    // 节点有图片的情况
-    if (node.imageUrl && node.imageHeight) {
-      childY += node.imageHeight + 15 / 2;
-      lastChildY += node.imageHeight + 15 / 2;
-    }
+
     let collapsed;
     const childrenIds = node.sortList || [];
 
     if (!(hideRoot && node._key === startId)) {
-      const shorted = getShortedStr(node.name);
-      if (shorted) {
-        node.shorted = shorted;
-      }
+      // const shorted = getShortedStr(node.name);
+      // if (shorted) {
+      //   node.shorted = shorted;
+      // }
       const nodeWidth = getNodeWidth(
         node,
         node._key === startId
@@ -173,6 +174,7 @@ export default function calculate(
         avatarRadius,
         // showChildNum || false,
         false,
+        textMaxWidth,
         inputNodeKey
       );
       node.x = x;
@@ -180,6 +182,22 @@ export default function calculate(
       node.width = nodeWidth;
 
       childX = childX + INDENT;
+
+      if (node.texts && node.texts.length > 1) {
+        let blockHeight = BLOCK_HEIGHT;
+        if (node._key === startId) {
+          blockHeight = BLOCK_HEIGHT * rootZoomRatio;
+        } else if (node.father === startId) {
+          blockHeight = BLOCK_HEIGHT * secondZoomRatio;
+        }
+        childY += (node.texts.length - 1) * blockHeight;
+        lastChildY += (node.texts.length - 1) * blockHeight;
+      }
+      // 节点有图片的情况
+      if (node.imageUrl && node.imageHeight) {
+        childY += node.imageHeight + 15 / 2;
+        lastChildY += node.imageHeight + 15 / 2;
+      }
 
       if (childX > MAX_X) {
         MAX_X = childX;

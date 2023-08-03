@@ -20,6 +20,7 @@ interface Props {
   showAvatar: boolean;
   avatarRadius: number;
   startId: string;
+  textMaxWidth: number;
   quickCommandKey?: string;
   handleChangeNodeText: Function;
   handleFileChange?: HandleFileChange;
@@ -36,6 +37,7 @@ const NodeInput = ({
   showAvatar,
   avatarRadius,
   startId,
+  textMaxWidth,
   quickCommandKey,
   handleChangeNodeText,
   handleFileChange,
@@ -100,9 +102,7 @@ const NodeInput = ({
   let top = 0;
   let inputWidth = 100;
   if (selected) {
-    const height = FONT_SIZE || 14;
-    const wrapperHeight = BLOCK_HEIGHT || 30;
-    top = selected.y + (wrapperHeight - height) / 2;
+    top = selected.y;
     const textX = nodeLocation(
       selected,
       'text',
@@ -119,18 +119,16 @@ const NodeInput = ({
       left = textX ? textX.x : selected.x;
       top = top;
     }
-    inputWidth = textWidthAll(
-      FONT_SIZE || 14,
-      selected.shorted || selected.name
-    );
+    inputWidth = selected.texts
+      ? textMaxWidth
+      : textWidthAll(FONT_SIZE || 14, selected.shorted || selected.name);
   }
 
   return (
     <ClickOutside onClickOutside={handleClickoutside}>
       {selected ? (
-        <input
+        <textarea
           className="node-input"
-          type="text"
           style={{
             boxSizing: 'border-box',
             // border: '1px solid #000000',
@@ -142,7 +140,6 @@ const NodeInput = ({
             position: 'absolute',
             width: `${inputWidth < 100 ? 100 : inputWidth}px`,
             // height: `${BLOCK_HEIGHT ? BLOCK_HEIGHT + 2 : 30}px`,
-            height: `${FONT_SIZE || 14}px`,
             fontSize: `${FONT_SIZE || 14}px`,
             top: `${top}px`,
             left: `${left}px`,
@@ -151,10 +148,13 @@ const NodeInput = ({
                 ? '#CB1B45'
                 : selected.backgroundColor || '#e8e8e8',
             color: selected._key === startId ? '#FFF' : selected.color,
+            resize: 'none',
+            lineHeight: `${BLOCK_HEIGHT}px`,
           }}
           ref={inputRef}
           autoFocus={true}
           placeholder="未命名"
+          rows={selected.texts?.length || 1}
           value={value}
           onChange={(e) => setValue(e.target.value)}
           onCompositionStart={handleCompositionStart}

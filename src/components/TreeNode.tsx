@@ -133,10 +133,13 @@ Props) => {
   const [hoverAdd, setHoverAdd] = useState(false);
   const [hoverMore, setHoverMore] = useState(false);
   const [hoverImage, setHoverImage] = useState(false);
+  const textHeight = node.texts
+    ? node.texts.length * BLOCK_HEIGHT
+    : BLOCK_HEIGHT;
   const rectHeight =
     node.imageUrl && node.imageWidth && node.imageHeight
-      ? BLOCK_HEIGHT + node.imageHeight + 15 / 2
-      : BLOCK_HEIGHT;
+      ? textHeight + node.imageHeight + 15 / 2
+      : textHeight;
 
   const iconIsEmoji = useMemo(() => isEmoji(node.icon), [node.icon]);
 
@@ -381,6 +384,27 @@ Props) => {
   const packLocationRes = location(node, 'pack');
   const startAdornmentLocationRes = location(node, 'startAdornment');
 
+  const singleRowLinks = useMemo(() => {
+    if (!node.texts && urlReg.test(node.name)) {
+      const name = node.name;
+      const matchList = name.match(urlReg);
+      if (!matchList) return;
+      const arr = name.replace(urlReg, '!@#').split(/(!@#)/);
+      let matchListIndex = 0;
+      let links = [];
+      for (let index = 0; index < arr.length; index++) {
+        const element = arr[index];
+        if (element === '!@#') {
+          links.push({ text: matchList[matchListIndex], type: 'link' });
+          matchListIndex++;
+        } else {
+          links.push({ text: element, type: 'text' });
+        }
+      }
+      return links;
+    }
+  }, [node.name]);
+
   const nodeRectClassName = rectClassName(node);
 
   const backgroundColor = node.backgroundColor
@@ -419,41 +443,11 @@ Props) => {
         }
         let type = urlReg.test(name) ? 'link' : 'text';
 
-        let shortedName = '';
-        if (node.shorted) {
-          for (let index = 0; index < name.length; index++) {
-            if (count < 28) {
-              const char = name[index];
-              // 全角
-              if (char.match(/[^\x00-\xff]/g)) {
-                count++;
-              } else {
-                count += 0.5;
-              }
-              shortedName += char;
-            } else {
-              break;
-            }
-          }
-          if (count >= 28) {
-            shortedName = `${shortedName}...`;
-          }
-        }
-        if (count >= 28) {
-          nameLinkArr.push({
-            text: name,
-            shortedName,
-            type,
-            marginLeft,
-          });
-          break;
-        } else {
-          nameLinkArr.push({
-            text: name,
-            type,
-            marginLeft,
-          });
-        }
+        nameLinkArr.push({
+          text: name,
+          type,
+          marginLeft,
+        });
       }
     }
   }
@@ -767,79 +761,57 @@ Props) => {
       ) : null}
 
       {/* 文字 */}
-      {nameLinkArr.length ? (
-        nameLinkArr.map((name, index) => (
-          <text
-            key={index}
-            className={`node-text ${selected === node._key ? 'selected' : ''}`}
-            x={textLocationRes ? textLocationRes.x + name.marginLeft : 0}
-            y={textLocationRes?.y}
-            dominantBaseline="middle"
-            fontSize={FONT_SIZE}
-            style={{
-              fill:
-                name.type === 'link'
-                  ? '#6495ED'
-                  : node.strikethrough
-                  ? '#999'
-                  : nodeRectClassName === 'selected' &&
-                    !node.color &&
-                    node._key !== startId
-                  ? '#000000'
-                  : node._key === startId
-                  ? '#FFF'
-                  : node.color
-                  ? node.color
-                  : normalTextColor,
-              fillOpacity: pasteNodeKey && pasteNodeKey === node._key ? 0.4 : 1,
-              fontFamily: "'Microsoft YaHei', sans-serif",
-              userSelect: 'none',
-              textDecoration: node.strikethrough ? 'line-through' : 'unset',
-              cursor: name.type === 'link' ? 'pointer' : 'auto',
-              fontWeight: fontWeight ? fontWeight : 'normal',
-            }}
-            onDragEnter={handleDragEnter}
-            onDragLeave={handleDragLeave}
-            onDragOver={handleDragOver}
-            onDrop={handleDragEnd}
-            onClick={() => handleClickLink(name.type, name.text)}
-          >
-            {name.shortedName || name.text}
-          </text>
-        ))
-      ) : (
-        <text
-          className={`node-text ${selected === node._key ? 'selected' : ''}`}
-          x={textLocationRes?.x}
-          y={textLocationRes?.y}
-          dominantBaseline="middle"
-          fontSize={FONT_SIZE}
-          style={{
-            fill: node.strikethrough
-              ? '#999'
-              : nodeRectClassName === 'selected' &&
-                !node.color &&
-                node._key !== startId
-              ? '#000000'
-              : node._key === startId
-              ? '#FFF'
-              : node.color
-              ? node.color
-              : normalTextColor,
-            fillOpacity: pasteNodeKey && pasteNodeKey === node._key ? 0.4 : 1,
-            fontFamily: "'Microsoft YaHei', sans-serif",
-            userSelect: 'none',
-            textDecoration: node.strikethrough ? 'line-through' : 'unset',
-            fontWeight: fontWeight ? fontWeight : 'normal',
-          }}
-          onDragEnter={handleDragEnter}
-          onDragLeave={handleDragLeave}
-          onDragOver={handleDragOver}
-          onDrop={handleDragEnd}
-        >
-          {node.shorted || node.name || ''}
-        </text>
-      )}
+      <text
+        className={`node-text ${selected === node._key ? 'selected' : ''}`}
+        x={textLocationRes?.x}
+        y={textLocationRes?.y}
+        dominantBaseline="middle"
+        fontSize={FONT_SIZE}
+        style={{
+          fill: node.strikethrough
+            ? '#999'
+            : nodeRectClassName === 'selected' &&
+              !node.color &&
+              node._key !== startId
+            ? '#000000'
+            : node._key === startId
+            ? '#FFF'
+            : node.color
+            ? node.color
+            : normalTextColor,
+          fillOpacity: pasteNodeKey && pasteNodeKey === node._key ? 0.4 : 1,
+          // fontFamily: "'Microsoft YaHei', sans-serif",
+          userSelect: 'none',
+          textDecoration: node.strikethrough ? 'line-through' : 'unset',
+          fontWeight: fontWeight ? fontWeight : 'normal',
+        }}
+        onDragEnter={handleDragEnter}
+        onDragLeave={handleDragLeave}
+        onDragOver={handleDragOver}
+        onDrop={handleDragEnd}
+      >
+        {node.texts
+          ? node.texts.map((text, index) => (
+              <tspan
+                key={index}
+                x={textLocationRes?.x}
+                dy={index === 0 ? undefined : BLOCK_HEIGHT}
+              >
+                {text}
+              </tspan>
+            ))
+          : singleRowLinks
+          ? singleRowLinks.map((item, index) => (
+              <tspan
+                key={index}
+                fill={item.type === 'link' ? selectedBorderColor : undefined}
+                onClick={() => handleClickLink(item.type, item.text)}
+              >
+                {item.text}
+              </tspan>
+            ))
+          : node.name}
+      </text>
 
       {/* endAdornment */}
       {node.endAdornment &&
@@ -847,7 +819,12 @@ Props) => {
       node.endAdornmentHeight ? (
         <node.endAdornment
           x={node.x + node.width - node.endAdornmentWidth - 5}
-          y={node.y + (BLOCK_HEIGHT - (node.endAdornmentHeight || 0)) / 2}
+          y={
+            node.y +
+            ((node.texts?.length || 1) * BLOCK_HEIGHT -
+              (node.endAdornmentHeight || 0)) /
+              2
+          }
           nodeKey={node._key}
         />
       ) : null}
@@ -859,7 +836,7 @@ Props) => {
         >
           <image
             x={node?.x + 15 / 2}
-            y={(node?.y || 0) + BLOCK_HEIGHT}
+            y={(node?.y || 0) + (node.texts?.length || 1) * BLOCK_HEIGHT}
             width={node.imageWidth}
             height={node.imageHeight}
             xlinkHref={node.imageUrl}
@@ -871,7 +848,7 @@ Props) => {
                 <rect
                   key="image-hover-rect"
                   x={node?.x + 15 / 2}
-                  y={(node?.y || 0) + BLOCK_HEIGHT}
+                  y={(node?.y || 0) + (node.texts?.length || 1) * BLOCK_HEIGHT}
                   width={node.imageWidth}
                   height={node.imageHeight}
                   stroke={selectedBorderColor}
@@ -881,7 +858,7 @@ Props) => {
                 <rect
                   key="image-rect"
                   x={node?.x + 15 / 2}
-                  y={(node?.y || 0) + BLOCK_HEIGHT}
+                  y={(node?.y || 0) + (node.texts?.length || 1) * BLOCK_HEIGHT}
                   width={node.imageWidth + 5}
                   height={node.imageHeight + 5}
                   fillOpacity={0}
@@ -889,7 +866,11 @@ Props) => {
                 <rect
                   key="drag-handle"
                   x={node?.x + 15 / 2 + node.imageWidth}
-                  y={node.y + BLOCK_HEIGHT + node.imageHeight}
+                  y={
+                    node.y +
+                    (node.texts?.length || 1) * BLOCK_HEIGHT +
+                    node.imageHeight
+                  }
                   width={5}
                   height={5}
                   stroke={selectedBorderColor}

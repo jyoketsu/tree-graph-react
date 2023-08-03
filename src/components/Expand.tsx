@@ -47,8 +47,13 @@ const Expand = ({
         y = node.y + BLOCK_HEIGHT / 2 - radius;
         break;
     }
-    if (node.imageUrl && node.imageHeight && pos.includes('ottom')) {
-      y += node.imageHeight + 15 / 2;
+    if (pos.includes('ottom')) {
+      if (node.imageUrl && node.imageHeight) {
+        y += node.imageHeight + 15 / 2;
+      }
+      if (node.texts && node.texts.length > 1) {
+        y += (node.texts.length - 1) * BLOCK_HEIGHT;
+      }
     }
     return y;
   }

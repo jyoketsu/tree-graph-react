@@ -70,7 +70,7 @@ function textWidth(fontSize: number) {
   const ele = document.createElement('span');
   ele.innerText = '傑';
   ele.style.fontSize = `${fontSize}px`;
-  ele.style.fontFamily = '"Microsoft YaHei", sans-serif';
+  // ele.style.fontFamily = '"Microsoft YaHei", sans-serif';
   document.body.appendChild(ele);
   const kanjiWidth = ele.offsetWidth;
   ele.innerText = '；';
@@ -95,7 +95,7 @@ function textWidthAll(fontSize: number, text: string) {
   const ele = document.createElement('span');
   ele.innerText = text;
   ele.style.fontSize = `${fontSize}px`;
-  ele.style.fontFamily = '"Microsoft YaHei", sans-serif';
+  // ele.style.fontFamily = '"Microsoft YaHei", sans-serif';
   document.body.appendChild(ele);
   const width = ele.offsetWidth;
   document.body.removeChild(ele);
@@ -104,6 +104,38 @@ function textWidthAll(fontSize: number, text: string) {
     return fontSize / 2;
   }
   return width;
+}
+
+function splitTextIntoParagraphs(
+  text: string,
+  maxWidth: number,
+  fontSize: number
+) {
+  const paragraphs = [];
+  let currentParagraph = '';
+  const ele = document.createElement('span');
+  ele.style.fontSize = `${fontSize}px`;
+  document.body.appendChild(ele);
+  text = text.replace(/\r\n/g, ' ');
+  text = text.replace(/\n/g, ' ');
+
+  for (let index = 0; index < text.length; index++) {
+    const char = text[index];
+    ele.innerText = currentParagraph + char;
+
+    if (ele.offsetWidth <= maxWidth) {
+      currentParagraph += char;
+    } else {
+      paragraphs.push(currentParagraph);
+      currentParagraph = char;
+    }
+  }
+  document.body.removeChild(ele);
+  if (currentParagraph !== '') {
+    paragraphs.push(currentParagraph);
+  }
+
+  return paragraphs;
 }
 
 // 获取全角字符数
@@ -138,11 +170,17 @@ function getNodeWidth(
   showAvatar: boolean,
   avatarRadius: number,
   showChildNum: boolean,
+  textMaxWidth: number,
   inputNodeKey?: string
 ) {
   const padding = 5;
-  const str = node.shorted || node.name;
-  let width = textWidthAll(fontSize, str);
+  let width = textWidthAll(fontSize, node.name);
+  if (width > textMaxWidth) {
+    const texts = splitTextIntoParagraphs(node.name, textMaxWidth, fontSize);
+    node.texts = texts;
+    width = textMaxWidth;
+  }
+
   if (inputNodeKey === node._key && width < 100) {
     width = 100;
   }
@@ -236,16 +274,17 @@ function nodeLocation(
 ) {
   const paddingLeft = 5;
   const startX = paddingLeft;
+  const textHeight = (node.texts?.length || 1) * BLOCK_HEIGHT;
   switch (type) {
     case 'childNum':
       return {
         x: node.x + startX,
-        y: node.y + BLOCK_HEIGHT / 2,
+        y: node.y + textHeight / 2,
       };
     case 'pack':
       return {
         x: node.x + startX + (showChildNum && node.childNum ? 22 + 2 : 0),
-        y: node.y + (BLOCK_HEIGHT - 22) / 2,
+        y: node.y + (textHeight - 22) / 2,
       };
     case 'favorite':
       return {
@@ -254,7 +293,7 @@ function nodeLocation(
           startX +
           (showChildNum && node.childNum ? 22 + 2 : 0) +
           (node.isPack ? 22 + 2 : 0),
-        y: node.y + (BLOCK_HEIGHT - 22) / 2,
+        y: node.y + (textHeight - 22) / 2,
       };
     case 'icon':
       return {
@@ -264,8 +303,8 @@ function nodeLocation(
           (showChildNum && node.childNum ? 22 + 2 : 0) +
           (node.isPack ? 22 + 2 : 0) +
           (node.hasCollect ? 22 + 2 : 0),
-        y: node.y + (BLOCK_HEIGHT - 22) / 2,
-        emojiY: node.y + BLOCK_HEIGHT / 2 + 2,
+        y: node.y + (textHeight - 22) / 2,
+        emojiY: node.y + textHeight / 2 + 2,
       };
     case 'avatar':
       return {
@@ -276,7 +315,7 @@ function nodeLocation(
           (node.isPack ? 22 + 2 : 0) +
           (node.hasCollect ? 22 + 2 : 0) +
           (showIcon && node.icon ? 22 + 2 : 0),
-        y: node.y + (BLOCK_HEIGHT - avatarRadius * 2) / 2,
+        y: node.y + (textHeight - avatarRadius * 2) / 2,
       };
     case 'checkbox':
       return {
@@ -288,7 +327,7 @@ function nodeLocation(
           (node.hasCollect ? 22 + 2 : 0) +
           (showIcon && node.icon ? 22 + 2 : 0) +
           (showAvatar && node.avatarUri ? avatarRadius * 2 + 2 : 0),
-        y: node.y + (BLOCK_HEIGHT - 18) / 2,
+        y: node.y + (textHeight - 18) / 2,
       };
     case 'status':
       return {
@@ -301,7 +340,7 @@ function nodeLocation(
           (showIcon && node.icon ? 22 + 2 : 0) +
           (showAvatar && node.avatarUri ? avatarRadius * 2 + 2 : 0) +
           (node.showCheckbox ? 18 + 2 : 0),
-        y: node.y + (BLOCK_HEIGHT - 22) / 2,
+        y: node.y + (textHeight - 22) / 2,
       };
     case 'startAdornment':
       return {
@@ -315,7 +354,7 @@ function nodeLocation(
           (showAvatar && node.avatarUri ? avatarRadius * 2 + 2 : 0) +
           (node.showCheckbox ? 18 + 2 : 0) +
           (node.showStatus ? 22 + 2 : 0),
-        y: node.y + (BLOCK_HEIGHT - (node.startAdornmentHeight || 0)) / 2,
+        y: node.y + (textHeight - (node.startAdornmentHeight || 0)) / 2,
       };
     case 'text':
       const extWidth = getExtInfoWidth(
@@ -1161,7 +1200,7 @@ function countNodeDescendants(nodeMap: NodeMap, nodeId: string) {
 }
 
 const urlReg =
-  /(http:\/\/+\w+\.[\w\/|\-]{1,}(\.[\w\/|\-,.]{1,}){0,1})|(https:\/\/+\w+\.[\w\/|\-]{1,}(\.[\w\/|\-,.]{1,}){0,1})|(\w+\.[\w\/|\-]{1,}(\.[\w\/|\-,.]{1,}){0,1})/g;
+  /(([\w-]{1,}\.+)+(com|cn|org|net|info)(\/#\/)*\/*[\w\/\?=&%.]*)|(http:\/\/([\w-]{1,}\.+)+(com|cn|org|net|info)(\/#\/)*\/*[\w\/\?=&%.]*)|(https:\/\/([\w-]{1,}\.+)+(com|cn|org|net|info)(\/#\/)*\/*[\w\/\?=&%.]*)/g;
 
 export {
   findNodeById,

@@ -247,7 +247,7 @@ const MobileItem = ({
         height: `${BLOCK_HEIGHT}px`,
         display: 'flex',
         alignItems: 'center',
-        fontFamily: "'Microsoft YaHei', sans-serif",
+        // fontFamily: "'Microsoft YaHei', sans-serif",
         userSelect: 'none',
         cursor: hover ? 'pointer' : 'default',
         paddingLeft: `${node.x - (node._key === startId ? indent : 0)}px`,
@@ -352,7 +352,7 @@ const MobileItem = ({
         <span
           style={{
             fontSize: `${FONT_SIZE}px`,
-            fontFamily: "'Microsoft YaHei', sans-serif",
+            // fontFamily: "'Microsoft YaHei', sans-serif",
             overflow: 'hidden',
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',
@@ -404,7 +404,7 @@ const MobileItem = ({
         <span
           style={{
             fontSize: `${FONT_SIZE}px`,
-            fontFamily: "'Microsoft YaHei', sans-serif",
+            // fontFamily: "'Microsoft YaHei', sans-serif",
             overflow: 'hidden',
             whiteSpace: 'nowrap',
             textOverflow: 'ellipsis',

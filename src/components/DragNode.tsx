@@ -207,7 +207,7 @@ const DragNode = ({
         fontSize={FONT_SIZE}
         style={{
           fill: node.color ? node.color : '#999',
-          fontFamily: "'Microsoft YaHei', sans-serif",
+          // fontFamily: "'Microsoft YaHei', sans-serif",
           userSelect: 'none',
         }}
       >
