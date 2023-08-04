@@ -30,6 +30,7 @@ import {
 } from './services/util';
 import MutilSelectedNodeKey from './interfaces/MutilSelectedNodeKey';
 import { HandleFileChange } from './Tree';
+import _ from 'lodash';
 
 const isMac = /macintosh|mac os x/i.test(navigator.userAgent);
 
@@ -276,6 +277,7 @@ export const Mind = React.forwardRef(
       addNext,
       addChild,
       updateNodeById,
+      updateNodesByIds,
       rename: function () {
         if (selectedId) {
           setshowInput(true);
@@ -286,6 +288,14 @@ export const Mind = React.forwardRef(
       },
       getSelectedId: function () {
         return selectedId;
+      },
+      getSelectedIds: function () {
+        let ids = [];
+        for (let index = 0; index < selectedNodes.length; index++) {
+          const node = selectedNodes[index];
+          ids.push(node._key);
+        }
+        return ids;
       },
     }));
 
@@ -457,6 +467,23 @@ export const Mind = React.forwardRef(
       setshowInput(false);
       setshowNewInput(false);
       const nodes = updateNodeByKey(nodeMap, id, data);
+      setNodeMap(nodes);
+      if (containerRef && containerRef.current) {
+        containerRef.current.focus();
+      }
+      if (handleChange) {
+        handleChange();
+      }
+    }
+
+    function updateNodesByIds(nodeMap: NodeMap, ids: string[], data: any) {
+      setshowInput(false);
+      setshowNewInput(false);
+      let nodes = _.cloneDeep(nodeMap);
+      for (let index = 0; index < ids.length; index++) {
+        const id = ids[index];
+        nodes = updateNodeByKey(nodes, id, data);
+      }
       setNodeMap(nodes);
       if (containerRef && containerRef.current) {
         containerRef.current.focus();

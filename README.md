@@ -262,16 +262,18 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 
 ## Functions
 
-| Method Name    | Description                                                |
-| -------------- | ---------------------------------------------------------- |
-| addNext        | Add a new node as a sibling to the currently selected node |
-| addChild       | Add a new node as a child to the currently selected node   |
-| deleteNode     | Delete the currently selected node                         |
-| saveNodes      | Get the data of all nodes in the tree                      |
-| rename         | Rename the currently selected node                         |
-| getSelectedId  | Get the ID of the currently selected node                  |
-| renameById     | Update the name of a node with a given ID                  |
-| updateNodeById | Update the data of a node with a given ID                  |
+| Method Name      | Description                                                |
+| ---------------- | ---------------------------------------------------------- |
+| addNext          | Add a new node as a sibling to the currently selected node |
+| addChild         | Add a new node as a child to the currently selected node   |
+| deleteNode       | Delete the currently selected node                         |
+| saveNodes        | Get the data of all nodes in the tree                      |
+| rename           | Rename the currently selected node                         |
+| getSelectedId    | Get the ID of the currently selected node                  |
+| getSelectedIds   | Get the IDs of the currently selected nodes                |
+| renameById       | Update the name of a node with a given ID                  |
+| updateNodeById   | Update the data of a node with a given ID                  |
+| updateNodesByIds | Update the data of nodes with given IDs                    |
 
 <br/>
 
