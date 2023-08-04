@@ -218,6 +218,7 @@ export const MenuTree = React.forwardRef(
         BLOCK_HEIGHT,
         indent,
         FONT_SIZE,
+        3000,
         SHOW_ICON,
         false,
         11,

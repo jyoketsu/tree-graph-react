@@ -388,7 +388,7 @@ Props) => {
     if (!node.texts && urlReg.test(node.name)) {
       const name = node.name;
       const matchList = name.match(urlReg);
-      if (!matchList) return;
+      if (!matchList) return undefined;
       const arr = name.replace(urlReg, '!@#').split(/(!@#)/);
       let matchListIndex = 0;
       let links = [];
@@ -402,6 +402,8 @@ Props) => {
         }
       }
       return links;
+    } else {
+      return undefined;
     }
   }, [node.name]);
 
@@ -434,7 +436,6 @@ Props) => {
       }
     }
     let marginLeft = 0;
-    let count = 0;
     if (arr1 && arr1.length) {
       for (let index = 0; index < arr1.length; index++) {
         let name = arr1[index];

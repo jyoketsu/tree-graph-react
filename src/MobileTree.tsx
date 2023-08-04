@@ -139,12 +139,12 @@ export const MobileTree = React.forwardRef(
       saveNodes,
       addNext,
       addChild,
-      rename: function() {
+      rename: function () {
         if (selectedId) {
           setshowInput(true);
         }
       },
-      clearSelect: function() {
+      clearSelect: function () {
         setselectedId(null);
       },
     }));
@@ -172,6 +172,7 @@ export const MobileTree = React.forwardRef(
         blockHeight,
         indent,
         fontSize,
+        3000,
         showIcon,
         false,
         11,
@@ -209,7 +210,7 @@ export const MobileTree = React.forwardRef(
     // 单击节点
     function clickNode(node: CNode) {
       clearTimeout(clickTimeId);
-      clickTimeId = setTimeout(function() {
+      clickTimeId = setTimeout(function () {
         setselectedId(node._key);
         if (handleClickNode) {
           handleClickNode(node);

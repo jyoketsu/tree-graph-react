@@ -861,7 +861,7 @@ export const Mind = React.forwardRef(
         );
         setselectedId(null);
         if (handleClickNode) {
-          handleClickNode(null);
+          handleClickNode(selectionNodes.length ? selectionNodes : null);
         }
         setSelectedNodes(selectionNodes);
         setFrameSelectionStarted(false);

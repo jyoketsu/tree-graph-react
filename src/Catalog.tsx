@@ -77,6 +77,7 @@ export const Catalog = ({
       BLOCK_HEIGHT,
       INDENT,
       FONT_SIZE,
+      3000,
       false,
       false,
       11,
