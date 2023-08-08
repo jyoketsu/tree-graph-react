@@ -102,11 +102,15 @@ export default function calculate(
       root.leftDots = [];
       for (let index = 0; index < leftStarts.length; index++) {
         const element = leftStarts[index];
-        root.leftDots.push(element.y);
+        if (element) {
+          root.leftDots.push(element.y);
+        }
       }
       for (let index = 0; index < rightStarts.length; index++) {
         const element = rightStarts[index];
-        root.rightDots.push(element.y);
+        if (element) {
+          root.rightDots.push(element.y);
+        }
       }
     } else {
       root.x = 85;
@@ -245,25 +249,24 @@ export default function calculate(
     }
 
     if (!node.contract && childrenIds.length) {
-      const firstChildY = nodes[childrenIds[0]].y;
-      const lastChildY = nodes[childrenIds[childrenIds.length - 1]].y;
+      const firstChildY = nodes[childrenIds[0]]?.y;
+      const lastChildY = nodes[childrenIds[childrenIds.length - 1]]?.y;
       // 在子节点的纵向居中
       const middleY =
         firstChildY && lastChildY
           ? (firstChildY + lastChildY) / 2
-          : (y + nodeHeight) / 2;
-      // if (node.father === startId) {
-      //   node.y =
-      //     middleY + BLOCK_HEIGHT / 2 - (BLOCK_HEIGHT * secondZoomRatio) / 2;
-      // } else if (node._key === startId) {
-      //   node.y =
-      //     middleY +
-      //     (BLOCK_HEIGHT * secondZoomRatio) / 2 -
-      //     (BLOCK_HEIGHT * rootZoomRatio) / 2;
-      // } else {
-      //   node.y = middleY;
-      // }
-      node.y = middleY;
+          : (y + childY) / 2;
+      if (node.father === startId) {
+        node.y =
+          middleY + BLOCK_HEIGHT / 2 - (BLOCK_HEIGHT * secondZoomRatio) / 2;
+      } else if (node._key === startId) {
+        node.y =
+          middleY +
+          (BLOCK_HEIGHT * secondZoomRatio) / 2 -
+          (BLOCK_HEIGHT * rootZoomRatio) / 2;
+      } else {
+        node.y = middleY;
+      }
     } else {
       node.y = (y + childY) / 2;
     }

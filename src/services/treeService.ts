@@ -197,6 +197,9 @@ export default function calculate(
       if (node.imageUrl && node.imageHeight) {
         childY += node.imageHeight + 15 / 2;
         lastChildY += node.imageHeight + 15 / 2;
+        if (childY > MAX_Y) {
+          MAX_Y = childY;
+        }
       }
 
       if (childX > MAX_X) {

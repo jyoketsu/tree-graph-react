@@ -820,12 +820,7 @@ Props) => {
       node.endAdornmentHeight ? (
         <node.endAdornment
           x={node.x + node.width - node.endAdornmentWidth - 5}
-          y={
-            node.y +
-            ((node.texts?.length || 1) * BLOCK_HEIGHT -
-              (node.endAdornmentHeight || 0)) /
-              2
-          }
+          y={node.y + (BLOCK_HEIGHT - (node.endAdornmentHeight || 0)) / 2}
           nodeKey={node._key}
         />
       ) : null}
@@ -835,15 +830,6 @@ Props) => {
           onMouseEnter={handleMouseEnterImage}
           onMouseLeave={handleMouseLeaveImage}
         >
-          <image
-            x={node?.x + 15 / 2}
-            y={(node?.y || 0) + (node.texts?.length || 1) * BLOCK_HEIGHT}
-            width={node.imageWidth}
-            height={node.imageHeight}
-            xlinkHref={node.imageUrl}
-            style={{ cursor: 'pointer' }}
-            onClick={handleClickImage}
-          />
           {hoverImage
             ? [
                 <rect
@@ -882,6 +868,15 @@ Props) => {
                 />,
               ]
             : null}
+          <image
+            x={node?.x + 15 / 2}
+            y={(node?.y || 0) + (node.texts?.length || 1) * BLOCK_HEIGHT}
+            width={node.imageWidth}
+            height={node.imageHeight}
+            xlinkHref={node.imageUrl}
+            style={{ cursor: 'pointer' }}
+            onClick={handleClickImage}
+          />
         </g>
       ) : null}
 

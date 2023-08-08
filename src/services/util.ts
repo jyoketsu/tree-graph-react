@@ -274,7 +274,8 @@ function nodeLocation(
 ) {
   const paddingLeft = 5;
   const startX = paddingLeft;
-  const textHeight = (node.texts?.length || 1) * BLOCK_HEIGHT;
+  // const textHeight = (node.texts?.length || 1) * BLOCK_HEIGHT;
+  const textHeight = BLOCK_HEIGHT;
   switch (type) {
     case 'childNum':
       return {
