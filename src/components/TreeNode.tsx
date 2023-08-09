@@ -41,6 +41,7 @@ interface Props {
   hoverBorderColor: string;
   selectedBorderColor: string;
   selectedBackgroundColor: string;
+  nodeColor?: string;
   handleCheck: CheckFunc;
   handleClickAvatar: Function;
   handleClickStatus: Function;
@@ -94,7 +95,7 @@ const TreeNode = ({
   dotColor,
   hoverBorderColor,
   selectedBorderColor,
-  selectedBackgroundColor,
+  nodeColor,
   handleCheck,
   handleClickAvatar,
   handleClickStatus,
@@ -413,7 +414,7 @@ Props) => {
     ? node.backgroundColor
     : node._key === startId
     ? '#CB1B45'
-    : selectedBackgroundColor;
+    : nodeColor || '#f0f0f0';
 
   let nameLinkArr = [];
   if (urlReg.test(node.name)) {
@@ -481,7 +482,8 @@ Props) => {
         break;
       default:
         nodeRectStyle = {
-          fill: node.backgroundColor ? backgroundColor : '#f0f0f0',
+          fill:
+            nodeColor || (node.backgroundColor ? backgroundColor : '#f0f0f0'),
           // fillOpacity: node.backgroundColor ? 1 : 0,
           stroke: hover ? hoverBorderColor : 'unset',
           strokeWidth: 2,

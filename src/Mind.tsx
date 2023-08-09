@@ -89,6 +89,7 @@ export interface MindProps {
   checkBoxWidth?: number;
   pathWidth?: number;
   pathColor?: string;
+  nodeColor?: string;
   // 头像半径
   avatarRadius?: number;
   disableShortcut?: boolean;
@@ -165,6 +166,7 @@ export const Mind = React.forwardRef(
       indent,
       pathWidth,
       pathColor,
+      nodeColor,
       avatarRadius = 11,
       disableShortcut,
       disabled,
@@ -1569,6 +1571,7 @@ export const Mind = React.forwardRef(
                 }
                 avatarRadius={avatarRadius}
                 color={COLOR}
+                nodeColor={nodeColor}
                 alias={new Date().getTime()}
                 selected={selectedId}
                 selectedNodes={selectedNodes}
@@ -1676,6 +1679,8 @@ export const Mind = React.forwardRef(
             textMaxWidth={textMaxWidth}
             avatarRadius={avatarRadius}
             startId={startId}
+            nodeColor={nodeColor}
+            selectedBorderColor={SELECTED_BORDER_COLOR}
             handleFileChange={handleTreePaste}
             showChildNum={showChildNum}
           />

@@ -94,6 +94,7 @@ export interface TreeProps {
   checkBoxWidth?: number;
   pathWidth?: number;
   pathColor?: string;
+  nodeColor?: string;
   // 线条圆角半径
   lineRadius?: number;
   // 头像半径
@@ -175,6 +176,7 @@ export const Tree = React.forwardRef(
       // checkBoxWidth,
       pathWidth,
       pathColor,
+      nodeColor,
       lineRadius,
       avatarRadius = 11,
       disableShortcut,
@@ -1610,6 +1612,7 @@ export const Tree = React.forwardRef(
                 }
                 avatarRadius={avatarRadius}
                 color={COLOR}
+                nodeColor={nodeColor}
                 startId={startId}
                 alias={new Date().getTime()}
                 selected={selectedId}
@@ -1724,6 +1727,8 @@ export const Tree = React.forwardRef(
             showAvatar={SHOW_AVATAR}
             textMaxWidth={textMaxWidth}
             startId={startId}
+            nodeColor={nodeColor}
+            selectedBorderColor={SELECTED_BORDER_COLOR}
             handleFileChange={handleTreePaste}
             showChildNum={showChildNum}
             quickCommandKey={quickCommandKey}

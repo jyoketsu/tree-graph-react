@@ -182,7 +182,7 @@ function getNodeWidth(
   }
 
   if (inputNodeKey === node._key && width < 100) {
-    width = 100;
+    width = textMaxWidth;
   }
 
   const paddingWidth = padding * 2;
@@ -1251,4 +1251,5 @@ export {
   urlReg,
   updateNodeByKey,
   countNodeDescendants,
+  splitTextIntoParagraphs
 };

@@ -470,6 +470,7 @@ MultiCol.args = {
   showStatus: true,
   showChildNum: true,
   // disabled: true,
+  // nodeColor: 'red',
   handleClickDot: (node: any) => console.log('---handleClickDot---', node),
   handleClickMoreButton: (node: any, clientX: number, clientY: number) =>
     console.log('---handleClickMoreButton---', node, clientX, clientY),

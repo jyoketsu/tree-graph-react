@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import CNode from '../interfaces/CNode';
-import { nodeLocation, textWidthAll } from '../services/util';
+import { nodeLocation, splitTextIntoParagraphs } from '../services/util';
 import { HandleFileChange } from '../Tree';
 import { ClickOutside } from './common/ClickOutside';
 
@@ -21,7 +21,9 @@ interface Props {
   avatarRadius: number;
   startId: string;
   textMaxWidth: number;
+  selectedBorderColor: string;
   quickCommandKey?: string;
+  nodeColor?: string;
   handleChangeNodeText: Function;
   handleFileChange?: HandleFileChange;
   handleQuickCommandOpen?: HandleQuickCommandOpen;
@@ -38,7 +40,9 @@ const NodeInput = ({
   avatarRadius,
   startId,
   textMaxWidth,
+  selectedBorderColor,
   quickCommandKey,
+  nodeColor,
   handleChangeNodeText,
   handleFileChange,
   handleQuickCommandOpen,
@@ -46,6 +50,13 @@ const NodeInput = ({
   const inputRef = useRef<any>(null);
   const [value, setValue] = useState('');
   const [selected, setSelected] = useState<CNode | null>(null);
+  const [rows, setRows] = useState(1);
+
+  useEffect(() => {
+    if (selected) {
+      setRows(selected.texts?.length || 1);
+    }
+  }, [selected]);
 
   function handleCommit(e: React.KeyboardEvent) {
     if (composing) {
@@ -87,6 +98,12 @@ const NodeInput = ({
     composing = false;
   };
 
+  const handleChange = (val: string) => {
+    const texts = splitTextIntoParagraphs(val, textMaxWidth, FONT_SIZE || 14);
+    setValue(val);
+    setRows(texts.length);
+  };
+
   useEffect(() => {
     for (let index = 0; index < nodeList.length; index++) {
       const node = nodeList[index];
@@ -119,52 +136,67 @@ const NodeInput = ({
       left = textX ? textX.x : selected.x;
       top = top;
     }
-    inputWidth = selected.texts
-      ? textMaxWidth
-      : textWidthAll(FONT_SIZE || 14, selected.shorted || selected.name);
+    // inputWidth = selected.texts
+    //   ? textMaxWidth
+    //   : textWidthAll(FONT_SIZE || 14, selected.shorted || selected.name);
+    inputWidth = textMaxWidth;
   }
 
   return (
     <ClickOutside onClickOutside={handleClickoutside}>
       {selected ? (
-        <textarea
-          className="node-input"
+        <div
           style={{
-            boxSizing: 'border-box',
-            // border: '1px solid #000000',
-            border: 'unset',
-            // borderRadius: '4px',
-            // padding: '0 5px',
-            padding: 'unset',
-            outline: 'none',
             position: 'absolute',
-            width: `${inputWidth < 100 ? 100 : inputWidth}px`,
-            // height: `${BLOCK_HEIGHT ? BLOCK_HEIGHT + 2 : 30}px`,
-            fontSize: `${FONT_SIZE || 14}px`,
-            top: `${top}px`,
-            left: `${left}px`,
+            top: `${top - 1}px`,
+            left: `${selected.x - 1}px`,
+            width: `${selected.width + 2}px`,
             backgroundColor:
               selected._key === startId
                 ? '#CB1B45'
-                : selected.backgroundColor || '#e8e8e8',
-            color: selected._key === startId ? '#FFF' : selected.color,
-            resize: 'none',
-            lineHeight: `${BLOCK_HEIGHT}px`,
+                : nodeColor || selected.backgroundColor || '#f0f0f0',
+            paddingLeft: `${left - selected.x}px`,
+            borderRadius: '4px',
+            border: `2px solid ${selectedBorderColor}`,
+            boxSizing: 'border-box',
           }}
-          ref={inputRef}
-          autoFocus={true}
-          placeholder="未命名"
-          rows={selected.texts?.length || 1}
-          value={value}
-          onChange={(e) => setValue(e.target.value)}
-          onCompositionStart={handleCompositionStart}
-          onCompositionEnd={handleCompositionEnd}
-          onKeyDown={handleCommit}
-          onMouseDown={(e: React.MouseEvent) => e.stopPropagation()}
-          onMouseMove={(e: React.MouseEvent) => e.stopPropagation()}
-          onContextMenu={(e: React.MouseEvent) => e.stopPropagation()}
-          onPaste={handlePaste}
-        />
+        >
+          <textarea
+            className="node-input"
+            style={{
+              boxSizing: 'border-box',
+              // border: '1px solid #000000',
+              border: 'unset',
+              // borderRadius: '4px',
+              // padding: '0 5px',
+              padding: 'unset',
+              outline: 'none',
+              width: `${inputWidth < 100 ? 100 : inputWidth}px`,
+              // height: `${BLOCK_HEIGHT ? BLOCK_HEIGHT + 2 : 30}px`,
+              fontSize: `${FONT_SIZE || 14}px`,
+              fontFamily: 'inherit',
+              fontWeight: 'inherit',
+              color: selected._key === startId ? '#FFF' : selected.color,
+              resize: 'none',
+              lineHeight: `${BLOCK_HEIGHT}px`,
+              backgroundColor: 'inherit',
+              wordBreak: 'break-all',
+            }}
+            ref={inputRef}
+            autoFocus={true}
+            placeholder="未命名"
+            rows={rows}
+            value={value}
+            onChange={(e) => handleChange(e.target.value)}
+            onCompositionStart={handleCompositionStart}
+            onCompositionEnd={handleCompositionEnd}
+            onKeyDown={handleCommit}
+            onMouseDown={(e: React.MouseEvent) => e.stopPropagation()}
+            onMouseMove={(e: React.MouseEvent) => e.stopPropagation()}
+            onContextMenu={(e: React.MouseEvent) => e.stopPropagation()}
+            onPaste={handlePaste}
+          />
+        </div>
       ) : null}
     </ClickOutside>
   );
