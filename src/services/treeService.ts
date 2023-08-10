@@ -18,8 +18,8 @@ export default function calculate(
   avatarRadius: number,
   rootZoomRatio: number,
   secondZoomRatio: number,
-  startX?: number,
-  startY?: number,
+  startX: number,
+  startY: number,
   columnSpacing?: number,
   collapseMode?: boolean,
   expandedNodeKey?: string | null,
@@ -29,8 +29,8 @@ export default function calculate(
 ) {
   // nodes = JSON.parse(JSON.stringify(nodes));
   nodes = _.cloneDeep(nodes);
-  const start_x = startX || 15;
-  const start_y = startY || 15;
+  const start_x = startX;
+  const start_y = startY;
   // 根节点
   const root = nodes[startId];
   if (!root) {
@@ -127,8 +127,8 @@ export default function calculate(
 
   return {
     max_x: MAX_X,
-    max_y: MAX_Y + ITEM_HEIGHT,
-    max_end: MAX_END,
+    max_y: MAX_Y + ITEM_HEIGHT + startY,
+    max_end: MAX_END + startX,
     second_start_x: second_start_x,
     second_end_x: second_end_x,
     isSingle: isSingle,

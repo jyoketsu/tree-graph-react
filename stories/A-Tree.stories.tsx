@@ -453,6 +453,8 @@ MultiCol.args = {
   // pathColor: '#535953',
   // fontWeight: 800,
   // nodeColor: 'red',
+  // paddingLeft: 1000,
+  // paddingTop: 1000,
   quickCommandKey: '/',
   handleClickNode: (node: any) => console.log('---handleClickNode---', node),
   handleClickDot: (node: any) => console.log('---handleClickDot---', node),

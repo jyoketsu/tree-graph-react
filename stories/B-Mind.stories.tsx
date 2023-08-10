@@ -471,6 +471,8 @@ MultiCol.args = {
   showChildNum: true,
   // disabled: true,
   // nodeColor: 'red',
+  paddingLeft: 1000,
+  paddingTop: 1000,
   handleClickDot: (node: any) => console.log('---handleClickDot---', node),
   handleClickMoreButton: (node: any, clientX: number, clientY: number) =>
     console.log('---handleClickMoreButton---', node, clientX, clientY),
@@ -518,4 +520,6 @@ SingleCol.args = {
   startId: '001',
   singleColumn: true,
   showChildNum: true,
+  paddingLeft: 1000,
+  paddingTop: 1000,
 };

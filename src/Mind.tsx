@@ -115,6 +115,8 @@ export interface MindProps {
   selectedBorderColor?: string;
   selectedBackgroundColor?: string;
   quickCommandKey?: string;
+  paddingLeft?: number;
+  paddingTop?: number;
   handleClickExpand?: Function;
   handleCheck?: Function;
   handleClickAvatar?: NodeClickFunc;
@@ -186,6 +188,8 @@ export const Mind = React.forwardRef(
       selectedBorderColor,
       selectedBackgroundColor,
       quickCommandKey,
+      paddingLeft = 50,
+      paddingTop = 50,
       handleClickExpand,
       handleCheck,
       handleClickAvatar,
@@ -330,6 +334,8 @@ export const Mind = React.forwardRef(
         avatarRadius,
         rootZoomRatio,
         secondZoomRatio,
+        paddingLeft,
+        paddingTop,
         showInput && selectedId ? selectedId : undefined
         // showChildNum
       );

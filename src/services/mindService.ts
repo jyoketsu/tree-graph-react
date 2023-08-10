@@ -18,6 +18,8 @@ export default function calculate(
   avatarRadius: number,
   rootZoomRatio: number,
   secondZoomRatio: number,
+  startX: number,
+  startY: number,
   inputNodeKey?: string
   // showChildNum?: boolean
 ) {
@@ -44,21 +46,28 @@ export default function calculate(
   root.height = rootHeight;
 
   let MAX_X = rootWidth;
-  let MAX_Y = BLOCK_HEIGHT * 2;
+  let MAX_Y = startY + BLOCK_HEIGHT * 2;
   let MAX_END = rootWidth * 1.5;
 
-  let MIN_X = 85;
-  let MIN_END = 55;
+  let MIN_X = startX;
+  let MIN_END = startY;
+  const start_x = startX;
+  const start_y = startY;
 
   let nodeList: CNode[] = [];
 
   if (single) {
-    location(nodes, root, 85, 55);
+    location(nodes, root, start_x, start_y);
   } else {
     if (!root.contract) {
       let { rightStarts, leftStarts } = getStarts(nodes, root);
 
-      let [x1, y1, x2, y2] = [rootWidth + INDENT * 2, 85, -INDENT * 2, 55];
+      let [x1, y1, x2, y2] = [
+        rootWidth + INDENT * 2,
+        start_x,
+        -INDENT * 2,
+        start_y,
+      ];
 
       for (let index = 0; index < rightStarts.length; index++) {
         let node = rightStarts[index];
@@ -88,33 +97,61 @@ export default function calculate(
         }
       }
 
-      const diff = Math.abs(MIN_END);
+      const diff = Math.abs(MIN_END) + startX;
       const nodeKeys = Object.keys(nodes);
       for (let index = 0; index < nodeKeys.length; index++) {
         let node = nodes[nodeKeys[index]];
         node.x = node.x ? node.x + diff : 0;
       }
       MAX_X = MAX_X + Math.abs(MIN_X);
-      MAX_END = MAX_END + Math.abs(MIN_END);
-      root.x = Math.abs(MIN_END);
-      root.y = MAX_Y / 2;
+      MAX_END = MAX_END + Math.abs(MIN_END) + startX;
       root.rightDots = [];
       root.leftDots = [];
+      let minY;
+      let maxY;
       for (let index = 0; index < leftStarts.length; index++) {
         const element = leftStarts[index];
         if (element) {
           root.leftDots.push(element.y);
+          if (index === 0 && element.y) {
+            minY = element.y;
+          }
+          if (index !== 0 && index + 1 === leftStarts.length && element.y) {
+            maxY = element.y;
+          }
         }
       }
+
       for (let index = 0; index < rightStarts.length; index++) {
         const element = rightStarts[index];
         if (element) {
           root.rightDots.push(element.y);
+          if (index === 0 && element.y) {
+            if (!minY) {
+              minY = element.y;
+            } else if (element.y < minY) {
+              minY = element.y;
+            }
+          }
+          if (index !== 0 && index + 1 === rightStarts.length && element.y) {
+            if (!maxY) {
+              maxY = element.y;
+            } else if (element.y < maxY) {
+              maxY = element.y;
+            }
+          }
         }
       }
+
+      root.x = Math.abs(MIN_END) + startX;
+      if (minY && maxY) {
+        root.y = (minY + maxY) / 2;
+      } else {
+        root.y = minY || maxY || MAX_Y / 2;
+      }
     } else {
-      root.x = 85;
-      root.y = 55;
+      root.x = startX;
+      root.y = startY;
       delete root.rightDots;
       delete root.leftDots;
     }
@@ -123,8 +160,8 @@ export default function calculate(
 
   return {
     max_x: MAX_X,
-    max_y: MAX_Y + 100,
-    max_end: MAX_END,
+    max_y: MAX_Y + startY,
+    max_end: MAX_END + startX,
     nodes: nodeList,
   };
 

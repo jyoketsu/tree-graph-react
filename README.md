@@ -295,6 +295,10 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | columnSpacing            | Spacing between columns                                                                    | Number   | No       | 55      |
 | avatarWidth              | Width of the avatar                                                                        | Number   | No       | 22      |
 | pathWidth                | Width of the connecting lines                                                              | Number   | No       | 1       |
+| pathColor                | Color of the connecting lines                                                              | Number   | No       | -       |
+| nodeColor                | Color of the node                                                                          | Number   | No       | -       |
+| paddingLeft              | Padding left                                                                               | Number   | No       | 50      |
+| paddingTop               | Padding top                                                                                | Number   | No       | 50      |
 | avatarRadius             | Avatar border radius                                                                       | Number   | No       | 11      |
 | backgroundColor          | Background color                                                                           | Number   | No       | unset   |
 | color                    | Font color                                                                                 | Number   | No       | #595959 |

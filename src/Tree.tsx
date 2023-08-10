@@ -122,6 +122,8 @@ export interface TreeProps {
   selectedBorderColor?: string;
   selectedBackgroundColor?: string;
   quickCommandKey?: string;
+  paddingLeft?: number;
+  paddingTop?: number;
   handleClickExpand?: Function;
   handleCheck?: Function;
   handleClickAvatar?: NodeClickFunc;
@@ -198,6 +200,8 @@ export const Tree = React.forwardRef(
       selectedBorderColor,
       selectedBackgroundColor,
       quickCommandKey,
+      paddingLeft = 50,
+      paddingTop = 50,
       handleClickExpand,
       handleCheck,
       handleClickAvatar,
@@ -352,8 +356,8 @@ export const Tree = React.forwardRef(
         avatarRadius,
         rootZoomRatio,
         secondZoomRatio,
-        85,
-        55,
+        paddingLeft,
+        paddingTop,
         columnSpacing,
         undefined,
         undefined,
