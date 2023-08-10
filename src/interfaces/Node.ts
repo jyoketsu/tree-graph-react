@@ -21,12 +21,14 @@ export default interface Node {
   avatarUri?: string;
   icon?: string;
   color?: string;
+  bold?: boolean;
+  italic?: boolean;
+  textDecoration?: string;
   backgroundColor?: string;
   dotIcon?: string;
   showCheckbox?: boolean;
   showStatus?: boolean;
   disabled?: boolean;
-  strikethrough?: boolean;
   updateTime?: number;
   url?: string;
   // 节点附件

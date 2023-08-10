@@ -84,7 +84,6 @@ export interface TreeProps {
   textMaxWidth?: number;
   // 节点字体大小
   fontSize?: number;
-  fontWeight?: number;
   // 缩进
   indent?: number;
   // 列間距
@@ -171,7 +170,6 @@ export const Tree = React.forwardRef(
       blockHeight,
       textMaxWidth = 300,
       fontSize,
-      fontWeight,
       indent,
       columnSpacing,
       // avatarWidth,
@@ -1659,7 +1657,6 @@ export const Tree = React.forwardRef(
                   if (handleMouseLeaveAvatar) handleMouseLeaveAvatar(node);
                 }}
                 hideHour={hideHour}
-                fontWeight={fontWeight}
                 dotColor={PATH_COLOR}
                 hoverBorderColor={HOVER_BORDER_COLOR}
                 selectedBorderColor={SELECTED_BORDER_COLOR}

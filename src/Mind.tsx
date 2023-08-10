@@ -81,7 +81,6 @@ export interface MindProps {
   textMaxWidth?: number;
   // 节点字体大小
   fontSize?: number;
-  fontWeight?: number;
   // 缩进
   indent?: number;
   // 头像宽度
@@ -164,7 +163,6 @@ export const Mind = React.forwardRef(
       blockHeight,
       textMaxWidth = 300,
       fontSize,
-      fontWeight,
       indent,
       pathWidth,
       pathColor,
@@ -1613,7 +1611,6 @@ export const Mind = React.forwardRef(
                 }}
                 bottomOptions={true}
                 hideHour={hideHour}
-                fontWeight={fontWeight}
                 dotColor={PATH_COLOR}
                 hoverBorderColor={HOVER_BORDER_COLOR}
                 selectedBorderColor={SELECTED_BORDER_COLOR}

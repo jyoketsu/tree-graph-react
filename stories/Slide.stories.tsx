@@ -181,7 +181,6 @@ const nodes = {
     father: '003',
     sortList: ['012', '013', '014'],
     contract: false,
-    strikethrough: true,
     checked: true,
     hour: 0.1,
     limitDay: 1610726400000,

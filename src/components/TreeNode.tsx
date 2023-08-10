@@ -64,7 +64,6 @@ interface Props {
   bottomOptions?: boolean;
   hideHour?: boolean;
   isMind?: boolean;
-  fontWeight?: number;
   handleFileChange?: HandleFileChange;
   onContextMenu?: (nodeKey: string, event: React.MouseEvent) => void;
   onClickNodeImage?: (url?: string) => void;
@@ -116,7 +115,6 @@ const TreeNode = ({
   pasteNodeKey,
   bottomOptions,
   hideHour,
-  fontWeight,
   handleFileChange,
   onContextMenu,
   onClickNodeImage,
@@ -730,7 +728,6 @@ Props) => {
                   : 0
               }
               fontSize="10"
-              fontWeight="800"
               style={{ userSelect: 'none' }}
             >
               {node.limitDay
@@ -744,7 +741,6 @@ Props) => {
                 x={statusLocationRes ? statusLocationRes.x + 15 : 0}
                 y={statusLocationRes ? statusLocationRes.y + 6 : 0}
                 fontSize="8"
-                fontWeight="800"
                 style={{ userSelect: 'none' }}
               >
                 {node.hour ? (node.hour > 9 ? '9+' : node.hour) : '-'}
@@ -771,22 +767,24 @@ Props) => {
         dominantBaseline="middle"
         fontSize={FONT_SIZE}
         style={{
-          fill: node.strikethrough
-            ? '#999'
-            : nodeRectClassName === 'selected' &&
-              !node.color &&
-              node._key !== startId
-            ? '#000000'
-            : node._key === startId
-            ? '#FFF'
-            : node.color
-            ? node.color
-            : normalTextColor,
+          fill:
+            node.textDecoration === 'line-through'
+              ? '#999'
+              : nodeRectClassName === 'selected' &&
+                !node.color &&
+                node._key !== startId
+              ? '#000000'
+              : node._key === startId
+              ? '#FFF'
+              : node.color
+              ? node.color
+              : normalTextColor,
           fillOpacity: pasteNodeKey && pasteNodeKey === node._key ? 0.4 : 1,
           // fontFamily: "'Microsoft YaHei', sans-serif",
           userSelect: 'none',
-          textDecoration: node.strikethrough ? 'line-through' : 'unset',
-          fontWeight: fontWeight ? fontWeight : 'normal',
+          textDecoration: node.textDecoration,
+          fontWeight: node.bold ? 'bold' : 'normal',
+          fontStyle: node.italic ? 'italic' : 'unset',
         }}
         onDragEnter={handleDragEnter}
         onDragLeave={handleDragLeave}

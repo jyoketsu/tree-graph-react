@@ -207,6 +207,10 @@ const nodes = {
     checked: true,
     hour: 0.1,
     limitDay: 1610726400000,
+    bold: true,
+    italic: true,
+    textDecoration: 'underline',
+    color: 'red',
   },
   '012': {
     _key: '012',
@@ -471,8 +475,8 @@ MultiCol.args = {
   showChildNum: true,
   // disabled: true,
   // nodeColor: 'red',
-  paddingLeft: 1000,
-  paddingTop: 1000,
+  // paddingLeft: 1000,
+  // paddingTop: 1000,
   handleClickDot: (node: any) => console.log('---handleClickDot---', node),
   handleClickMoreButton: (node: any, clientX: number, clientY: number) =>
     console.log('---handleClickMoreButton---', node, clientX, clientY),
