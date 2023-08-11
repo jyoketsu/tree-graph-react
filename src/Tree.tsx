@@ -359,7 +359,8 @@ export const Tree = React.forwardRef(
         columnSpacing,
         undefined,
         undefined,
-        showInput && selectedId ? selectedId : undefined,
+        // showInput && selectedId ? selectedId : undefined,
+        undefined,
         undefined
         // showChildNum
       );

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import CNode from '../interfaces/CNode';
-import { nodeLocation, splitTextIntoParagraphs } from '../services/util';
+import { getTextWidth, nodeLocation, textWidthAll } from '../services/util';
 import { HandleFileChange } from '../Tree';
 import { ClickOutside } from './common/ClickOutside';
 
@@ -51,15 +51,28 @@ const NodeInput = ({
   const [value, setValue] = useState('');
   const [selected, setSelected] = useState<CNode | null>(null);
   const [rows, setRows] = useState(1);
+  const [inputWidth, setInputWidth] = useState(50);
 
   useEffect(() => {
     if (selected) {
       setRows(selected.texts?.length || 1);
+      setInputWidth(
+        selected.texts
+          ? textMaxWidth
+          : textWidthAll(FONT_SIZE || 14, selected.name)
+      );
+      inputRef.current.value = '';
+      inputRef.current.value = selected.name;
+    } else {
+      setInputWidth(50);
     }
   }, [selected]);
 
   function handleCommit(e: React.KeyboardEvent) {
     if (composing) {
+      return;
+    }
+    if ((e.key === 'Enter' || e.key === 'Tab') && e.shiftKey) {
       return;
     }
     if (quickCommandKey && e.key === quickCommandKey) {
@@ -99,9 +112,24 @@ const NodeInput = ({
   };
 
   const handleChange = (val: string) => {
-    const texts = splitTextIntoParagraphs(val, textMaxWidth, FONT_SIZE || 14);
+    const res = getTextWidth(
+      val,
+      textMaxWidth,
+      FONT_SIZE || 14,
+      selected?.bold
+    );
+    setInputWidth(res.width + 12);
+    setRows(res.texts.length || 1);
+    // const width = textWidthAll(FONT_SIZE || 14, val);
+    // if (width > textMaxWidth) {
+    //   setInputWidth(textMaxWidth);
+    //   const texts = splitTextIntoParagraphs(val, textMaxWidth, FONT_SIZE || 14);
+    //   setRows(texts.length);
+    // } else {
+    //   setInputWidth(width + 8);
+    // }
+
     setValue(val);
-    setRows(texts.length);
   };
 
   useEffect(() => {
@@ -117,7 +145,6 @@ const NodeInput = ({
 
   let left = 0;
   let top = 0;
-  let inputWidth = 100;
   if (selected) {
     top = selected.y;
     const textX = nodeLocation(
@@ -136,10 +163,6 @@ const NodeInput = ({
       left = textX ? textX.x : selected.x;
       top = top;
     }
-    // inputWidth = selected.texts
-    //   ? textMaxWidth
-    //   : textWidthAll(FONT_SIZE || 14, selected.shorted || selected.name);
-    inputWidth = textMaxWidth;
   }
 
   return (
@@ -150,7 +173,7 @@ const NodeInput = ({
             position: 'absolute',
             top: `${top - 1}px`,
             left: `${selected.x - 1}px`,
-            width: `${selected.width + 2}px`,
+            minWidth: `${selected.width + 2}px`,
             backgroundColor:
               selected._key === startId
                 ? '#CB1B45'
@@ -171,7 +194,7 @@ const NodeInput = ({
               // padding: '0 5px',
               padding: 'unset',
               outline: 'none',
-              width: `${inputWidth < 100 ? 100 : inputWidth}px`,
+              width: `${inputWidth < 50 ? 50 : inputWidth}px`,
               // height: `${BLOCK_HEIGHT ? BLOCK_HEIGHT + 2 : 30}px`,
               fontSize: `${FONT_SIZE || 14}px`,
               fontFamily: 'inherit',
@@ -181,13 +204,14 @@ const NodeInput = ({
               lineHeight: `${BLOCK_HEIGHT}px`,
               backgroundColor: 'inherit',
               wordBreak: 'break-all',
+              overflow: 'hidden',
             }}
             ref={inputRef}
             autoFocus={true}
             placeholder="未命名"
             rows={rows}
             value={value}
-            onChange={(e) => handleChange(e.target.value)}
+            onChange={(e: any) => handleChange(e.target.value)}
             onCompositionStart={handleCompositionStart}
             onCompositionEnd={handleCompositionEnd}
             onKeyDown={handleCommit}

@@ -333,8 +333,8 @@ export const Mind = React.forwardRef(
         rootZoomRatio,
         secondZoomRatio,
         paddingLeft,
-        paddingTop,
-        showInput && selectedId ? selectedId : undefined
+        paddingTop
+        // showInput && selectedId ? selectedId : undefined
         // showChildNum
       );
 

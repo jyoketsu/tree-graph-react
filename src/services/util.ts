@@ -91,10 +91,13 @@ function textWidth(fontSize: number) {
   };
 }
 
-function textWidthAll(fontSize: number, text: string) {
+function textWidthAll(fontSize: number, text: string, bold?: boolean) {
   const ele = document.createElement('span');
   ele.innerText = text;
   ele.style.fontSize = `${fontSize}px`;
+  if (bold) {
+    ele.style.fontWeight = 'bold';
+  }
   // ele.style.fontFamily = '"Microsoft YaHei", sans-serif';
   document.body.appendChild(ele);
   const width = ele.offsetWidth;
@@ -109,12 +112,16 @@ function textWidthAll(fontSize: number, text: string) {
 function splitTextIntoParagraphs(
   text: string,
   maxWidth: number,
-  fontSize: number
+  fontSize: number,
+  bold?: boolean
 ) {
   const paragraphs = [];
   let currentParagraph = '';
   const ele = document.createElement('span');
   ele.style.fontSize = `${fontSize}px`;
+  if (bold) {
+    ele.style.fontWeight = 'bold';
+  }
   document.body.appendChild(ele);
   text = text.replace(/\r\n/g, ' ');
   text = text.replace(/\n/g, ' ');
@@ -136,6 +143,28 @@ function splitTextIntoParagraphs(
   }
 
   return paragraphs;
+}
+
+function splitTextIntoParagraphsInTexts(
+  texts: string[],
+  textMaxWidth: number,
+  fontSize: number,
+  bold?: boolean
+) {
+  let result: string[] = [];
+
+  for (let i = 0; i < texts.length; i++) {
+    const text = texts[i];
+    const width = textWidthAll(fontSize, text, bold);
+    if (width > textMaxWidth) {
+      const arr = splitTextIntoParagraphs(text, textMaxWidth, fontSize, bold);
+      result.push(...arr);
+    } else {
+      result.push(text);
+    }
+  }
+
+  return result;
 }
 
 // 获取全角字符数
@@ -162,6 +191,45 @@ function getNumberNum(str: string) {
   return res ? res.length : 0;
 }
 
+function getTextWidth(
+  text: string,
+  textMaxWidth: number,
+  fontSize: number,
+  bold?: boolean
+) {
+  let width = 50;
+  let texts: string[] = [];
+
+  if (text.includes('\n')) {
+    const splited = text.split('\n');
+    texts = splitTextIntoParagraphsInTexts(
+      splited,
+      textMaxWidth,
+      fontSize,
+      bold
+    );
+    if (splited.length === texts.length) {
+      let maxText = '';
+      for (let index = 0; index < texts.length; index++) {
+        const element = texts[index];
+        if (element.length > maxText.length) {
+          maxText = element;
+        }
+      }
+      width = textWidthAll(fontSize, maxText, bold);
+    } else {
+      width = textMaxWidth;
+    }
+  } else {
+    width = textWidthAll(fontSize, text, bold);
+    if (width > textMaxWidth) {
+      texts = splitTextIntoParagraphs(text, textMaxWidth, fontSize, bold);
+      width = textMaxWidth;
+    }
+  }
+  return { width, texts };
+}
+
 // 获取节点宽度
 function getNodeWidth(
   node: Node,
@@ -174,14 +242,53 @@ function getNodeWidth(
   inputNodeKey?: string
 ) {
   const padding = 5;
-  let width = textWidthAll(fontSize, node.name);
-  if (width > textMaxWidth) {
-    const texts = splitTextIntoParagraphs(node.name, textMaxWidth, fontSize);
-    node.texts = texts;
-    width = textMaxWidth;
+
+  // -------------------------------------------
+  let width = 50;
+  const res = getTextWidth(node.name, textMaxWidth, fontSize, node.bold);
+  width = res.width;
+  if (res.texts.length) {
+    node.texts = res.texts;
   }
 
-  if (inputNodeKey === node._key && width < 100) {
+  // let width = 50;
+  // if (node.name.includes('\n')) {
+  //   const splited = node.name.split('\n');
+  //   node.texts = splitTextIntoParagraphsInTexts(
+  //     splited,
+  //     textMaxWidth,
+  //     fontSize,
+  //     node.bold
+  //   );
+  //   if (splited.length === node.texts.length) {
+  //     let maxText = '';
+  //     for (let index = 0; index < node.texts.length; index++) {
+  //       const element = node.texts[index];
+  //       if (element.length > maxText.length) {
+  //         maxText = element;
+  //       }
+  //     }
+  //     width = textWidthAll(fontSize, maxText, node.bold ? true : false);
+  //   } else {
+  //     width = textMaxWidth;
+  //   }
+  // } else {
+  //   width = textWidthAll(fontSize, node.name, node.bold ? true : false);
+  //   if (width > textMaxWidth) {
+  //     const texts = splitTextIntoParagraphs(
+  //       node.name,
+  //       textMaxWidth,
+  //       fontSize,
+  //       node.bold ? true : false
+  //     );
+  //     node.texts = texts;
+  //     width = textMaxWidth;
+  //   }
+  // }
+
+  // -------------------------------------------
+
+  if (inputNodeKey === node._key && width < 50) {
     width = textMaxWidth;
   }
 
@@ -199,7 +306,7 @@ function getNodeWidth(
       : 0;
 
   let totalWidth =
-    (width || 100) + paddingWidth + extInfoWidth + endAdornmentWidth;
+    (width || 50) + paddingWidth + extInfoWidth + endAdornmentWidth;
   if (
     node.imageUrl &&
     node.imageWidth &&
@@ -1251,5 +1358,7 @@ export {
   urlReg,
   updateNodeByKey,
   countNodeDescendants,
-  splitTextIntoParagraphs
+  splitTextIntoParagraphs,
+  splitTextIntoParagraphsInTexts,
+  getTextWidth,
 };

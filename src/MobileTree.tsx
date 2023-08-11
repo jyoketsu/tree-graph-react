@@ -178,8 +178,8 @@ export const MobileTree = React.forwardRef(
         11,
         1,
         1,
-        undefined,
-        undefined,
+        0,
+        0,
         undefined,
         collapseMode,
         expandedNodeKey
