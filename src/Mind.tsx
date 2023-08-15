@@ -301,6 +301,8 @@ export const Mind = React.forwardRef(
         }
         return ids;
       },
+      setselectedId: (id: string) => setselectedId(id),
+      setSelectedNodes: (nodes: Node[]) => setSelectedNodes(nodes),
     }));
 
     useEffect(() => {
@@ -662,6 +664,37 @@ export const Mind = React.forwardRef(
       }
     };
 
+    function onPaste(event: React.ClipboardEvent) {
+      event.preventDefault();
+      if (pasteType && pasteNodeKey && selectedId) {
+        if (UNCONTROLLED) {
+          const res = pasteNode(nodeMap, pasteNodeKey, pasteType, selectedId);
+          if (res) {
+            setNodeMap(res);
+            if (handleChange) {
+              handleChange();
+            }
+          }
+        } else if (handlePaste) {
+          handlePaste(pasteNodeKey, pasteType, selectedId);
+        }
+        setPasteNodeKey(null);
+        setPasteType(null);
+      } else {
+        const files = event.clipboardData.files;
+        const node = selectedId ? nodeMap[selectedId] : null;
+        if (files.length && node) {
+          handleTreePaste(node._key, node.name, files);
+        } else {
+          const text = event.clipboardData.getData('text');
+          // 如果用户复制了文字，则将文字黏贴为节点
+          if (text && handlePasteText) {
+            handlePasteText(text);
+          }
+        }
+      }
+    }
+
     async function handleKeyDown(event: KeyboardEvent) {
       if (event.key === ' ' && !spaceKeyDown) {
         spaceKeyDown = true;
@@ -670,11 +703,10 @@ export const Mind = React.forwardRef(
       if (disabled || disableShortcut || showInput || showNewInput) {
         return;
       }
-      event.preventDefault();
-
       const commandKey = isMac ? event.metaKey : event.ctrlKey;
 
       if (quickCommandKey && event.key === quickCommandKey) {
+        event.preventDefault();
         if (handleQuickCommandOpen && selectedId) {
           const el = document.getElementById(`tree-node-${selectedId}`);
           if (el) {
@@ -683,14 +715,19 @@ export const Mind = React.forwardRef(
         }
       } else {
         switch (event.key) {
-          case 'Enter':
+          case 'Enter': {
+            event.preventDefault();
             addNext();
             break;
-          case 'Tab':
+          }
+          case 'Tab': {
+            event.preventDefault();
             addChild();
             break;
+          }
           case 'Delete':
           case 'Backspace': {
+            event.preventDefault();
             if (showDeleteConform) {
               const node = selectedId ? nodeMap[selectedId] : null;
               if (node && node.sortList.length) {
@@ -703,8 +740,8 @@ export const Mind = React.forwardRef(
             }
             break;
           }
-
-          case 'ArrowUp':
+          case 'ArrowUp': {
+            event.preventDefault();
             if (event.shiftKey) {
               shiftUp();
             } else if (selectedId) {
@@ -714,7 +751,9 @@ export const Mind = React.forwardRef(
               }
             }
             break;
-          case 'ArrowDown':
+          }
+          case 'ArrowDown': {
+            event.preventDefault();
             if (event.shiftKey) {
               shiftDown();
             } else if (selectedId) {
@@ -724,8 +763,10 @@ export const Mind = React.forwardRef(
               }
             }
             break;
+          }
           case 'ArrowRight':
           case 'ArrowLeft': {
+            event.preventDefault();
             if (selectedId) {
               const res = changeMindSelect(selectedId, cnodes, event.key);
               if (res) {
@@ -735,14 +776,17 @@ export const Mind = React.forwardRef(
             break;
           }
           // 複製
-          case 'c':
+          case 'c': {
+            event.preventDefault();
             if (commandKey && selectedId) {
               setPasteNodeKey(selectedId);
               setPasteType('copy');
             }
             break;
+          }
           // 剪切
-          case 'x':
+          case 'x': {
+            event.preventDefault();
             if (commandKey && selectedId) {
               // 根節點不允許剪切
               if (selectedId === startId) {
@@ -754,54 +798,26 @@ export const Mind = React.forwardRef(
               setPasteType('cut');
             }
             break;
-          // 粘貼
-          case 'v':
-            if (commandKey && pasteType && pasteNodeKey && selectedId) {
-              if (UNCONTROLLED) {
-                const res = pasteNode(
-                  nodeMap,
-                  pasteNodeKey,
-                  pasteType,
-                  selectedId
-                );
-                if (res) {
-                  setNodeMap(res);
-                  if (handleChange) {
-                    handleChange();
-                  }
-                }
-              } else if (handlePaste) {
-                handlePaste(pasteNodeKey, pasteType, selectedId);
-              }
-              setPasteNodeKey(null);
-              setPasteType(null);
-            } else if (handlePasteText) {
-              // 如果用户复制了文字，则将文字黏贴为节点
-              const text = await navigator.clipboard.readText();
-              if (text) {
-                handlePasteText(text);
-              }
-            }
-            break;
+          }
           default: {
-            if (
-              selectedId &&
-              !showInput &&
-              event.key.length === 1 &&
-              /[a-zA-Z]+/.test(event.key)
-            ) {
-              if (UNCONTROLLED) {
-                let nodes = changeNodeText(nodeMap, selectedId, '');
-                setNodeMap(nodes);
-                if (handleChange) {
-                  handleChange();
-                }
-              }
-              if (handleChangeNodeText) {
-                handleChangeNodeText(selectedId, '');
-              }
-              setshowInput(true);
-            }
+            // if (
+            //   selectedId &&
+            //   !showInput &&
+            //   event.key.length === 1 &&
+            //   /[a-zA-Z]+/.test(event.key)
+            // ) {
+            //   if (UNCONTROLLED) {
+            //     let nodes = changeNodeText(nodeMap, selectedId, '');
+            //     setNodeMap(nodes);
+            //     if (handleChange) {
+            //       handleChange();
+            //     }
+            //   }
+            //   if (handleChangeNodeText) {
+            //     handleChangeNodeText(selectedId, '');
+            //   }
+            //   setshowInput(true);
+            // }
             break;
           }
         }
@@ -1251,6 +1267,7 @@ export const Mind = React.forwardRef(
         onMouseMove={handleMoveNode}
         onMouseUp={handleDragEnd}
         onMouseLeave={handleDragLeave}
+        onPaste={onPaste}
       >
         <svg
           className="tree-svg"

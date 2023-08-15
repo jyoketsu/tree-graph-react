@@ -850,22 +850,6 @@ Props) => {
                   height={node.imageHeight + 5}
                   fillOpacity={0}
                 />,
-                <rect
-                  key="drag-handle"
-                  x={node?.x + 15 / 2 + node.imageWidth}
-                  y={
-                    node.y +
-                    (node.texts?.length || 1) * BLOCK_HEIGHT +
-                    node.imageHeight
-                  }
-                  width={5}
-                  height={5}
-                  stroke={selectedBorderColor}
-                  strokeWidth={2}
-                  fillOpacity={0}
-                  style={{ cursor: 'nwse-resize' }}
-                  onMouseDown={handleStartResizeImage}
-                />,
               ]
             : null}
           <image
@@ -877,6 +861,26 @@ Props) => {
             style={{ cursor: 'pointer' }}
             onClick={handleClickImage}
           />
+          {hoverImage ? (
+            <rect
+              key="drag-handle"
+              x={node?.x + 15 / 2 + node.imageWidth - 4}
+              y={
+                node.y +
+                (node.texts?.length || 1) * BLOCK_HEIGHT +
+                node.imageHeight -
+                4
+              }
+              width={8}
+              height={8}
+              stroke={selectedBorderColor}
+              strokeWidth={2}
+              // fillOpacity={0}
+              fill="#FFF"
+              style={{ cursor: 'nwse-resize' }}
+              onMouseDown={handleStartResizeImage}
+            />
+          ) : null}
         </g>
       ) : null}
 
@@ -960,6 +964,7 @@ Props) => {
               ? 'bottomCenter'
               : 'leftBottom'
           }
+          PATH_COLOR={dotColor}
         />
       ) : null}
       {/* <div

@@ -524,6 +524,6 @@ SingleCol.args = {
   startId: '001',
   singleColumn: true,
   showChildNum: true,
-  paddingLeft: 1000,
-  paddingTop: 1000,
+  // paddingLeft: 1000,
+  // paddingTop: 1000,
 };

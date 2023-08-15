@@ -6,6 +6,7 @@ interface Props {
   BLOCK_HEIGHT: number;
   position?: 'right' | 'left' | 'leftBottom' | 'bottomCenter';
   showChildNum?: boolean;
+  PATH_COLOR: string;
   handleClickExpand: Function;
 }
 
@@ -14,25 +15,44 @@ const Expand = ({
   BLOCK_HEIGHT,
   position,
   showChildNum,
+  PATH_COLOR,
   handleClickExpand,
 }: Props) => {
   function getX() {
     const pos = position || 'right';
+    const diff = node.contract ? 8 : 0;
     switch (pos) {
       case 'right':
-        return node.x + node.width;
+        return node.x + node.width + 2 * diff;
       case 'left':
-        return node.x - 8;
+        return node.x - 8 - diff;
       case 'leftBottom':
-        return node.x;
+        return node.x + 5;
       case 'bottomCenter':
         return node.x + node.width / 2 - 4;
       default:
         return node.x;
     }
   }
+
+  function getPath() {
+    const pos = position || 'right';
+    switch (pos) {
+      case 'right':
+        return `M ${node.x + node.width} ${getY(0)} H ${getX()}`;
+      case 'left':
+        return `M ${node.x} ${getY(0)} H ${getX()}`;
+      case 'leftBottom':
+        return `M ${getX()} ${getY(0)} V ${getY(0) - 16}`;
+      case 'bottomCenter':
+        return `M ${getX()} ${getY(0)} V ${getY(0) - 16}`;
+      default:
+        return '';
+    }
+  }
   function getY(radius: number) {
     const pos = position || 'right';
+    const diff = node.contract ? 16 : 0;
     let y = 0;
     switch (pos) {
       case 'right':
@@ -41,7 +61,7 @@ const Expand = ({
         break;
       case 'leftBottom':
       case 'bottomCenter':
-        y = node.y + BLOCK_HEIGHT - radius;
+        y = node.y + BLOCK_HEIGHT - radius + diff;
         break;
       default:
         y = node.y + BLOCK_HEIGHT / 2 - radius;
@@ -63,8 +83,14 @@ const Expand = ({
       {node.contract ? (
         showChildNum ? (
           <g>
+            <path
+              d={getPath()}
+              fill="none"
+              stroke={PATH_COLOR}
+              strokeWidth={1}
+            />
             <circle
-              cx={getX() + 1}
+              cx={getX()}
               cy={getY(0)}
               r={10}
               fill="#F0F0F0"
@@ -72,8 +98,8 @@ const Expand = ({
               onClick={() => handleClickExpand(node)}
             />
             <text
-              x={getX() + 1}
-              y={getY(0) + 1}
+              x={getX()}
+              y={getY(0)}
               alignmentBaseline="middle"
               textAnchor="middle"
               fontSize={(node.childNum || 0) > 999 ? 10 : 12}
