@@ -309,6 +309,14 @@ export const Mind = React.forwardRef(
       setCompId(guid(8, 16));
     }, []);
 
+    useEffect(() => {
+      document.addEventListener('paste', onPaste);
+
+      return () => {
+        document.removeEventListener('paste', onPaste);
+      };
+    }, [showInput, showNewInput, selectedId, pasteType, pasteNodeKey]);
+
     // 参数nodes发生改变，重设nodeMap
     useEffect(() => {
       setNodeMap(nodes);
@@ -664,7 +672,10 @@ export const Mind = React.forwardRef(
       }
     };
 
-    function onPaste(event: React.ClipboardEvent) {
+    function onPaste(event: ClipboardEvent) {
+      if (showInput || showNewInput) {
+        return;
+      }
       event.preventDefault();
       if (pasteType && pasteNodeKey && selectedId) {
         if (UNCONTROLLED) {
@@ -681,12 +692,12 @@ export const Mind = React.forwardRef(
         setPasteNodeKey(null);
         setPasteType(null);
       } else {
-        const files = event.clipboardData.files;
+        const files = event.clipboardData?.files;
         const node = selectedId ? nodeMap[selectedId] : null;
-        if (files.length && node) {
+        if (files && files.length && node) {
           handleTreePaste(node._key, node.name, files);
         } else {
-          const text = event.clipboardData.getData('text');
+          const text = event.clipboardData?.getData('text');
           // 如果用户复制了文字，则将文字黏贴为节点
           if (text && handlePasteText) {
             handlePasteText(text);
@@ -1261,13 +1272,13 @@ export const Mind = React.forwardRef(
         tabIndex={-1}
         suppressContentEditableWarning={true}
         ref={containerRef}
+        // onPaste={onPaste}
         onKeyDown={(e: any) => handleKeyDown(e)}
         onMouseDown={handleFrameSelectionStart}
         onKeyUp={handleKeyUp}
         onMouseMove={handleMoveNode}
         onMouseUp={handleDragEnd}
         onMouseLeave={handleDragLeave}
-        onPaste={onPaste}
       >
         <svg
           className="tree-svg"

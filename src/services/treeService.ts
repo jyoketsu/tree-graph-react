@@ -183,6 +183,7 @@ export default function calculate(
 
       childX = childX + INDENT;
 
+      // 多行文字的情况
       if (node.texts && node.texts.length > 1) {
         let blockHeight = BLOCK_HEIGHT;
         if (node._key === startId) {
@@ -200,6 +201,10 @@ export default function calculate(
         if (childY > MAX_Y) {
           MAX_Y = childY;
         }
+      }
+      // 节点收缩的情况
+      if (node.contract && node.sortList.length) {
+        childY += 16 + 5;
       }
 
       if (childX > MAX_X) {
