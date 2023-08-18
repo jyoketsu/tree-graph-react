@@ -810,6 +810,9 @@ export const Mind = React.forwardRef(
             }
             break;
           }
+          case 'v': {
+            break;
+          }
           default: {
             // if (
             //   selectedId &&
@@ -829,6 +832,14 @@ export const Mind = React.forwardRef(
             //   }
             //   setshowInput(true);
             // }
+            if (
+              selectedId &&
+              !showInput &&
+              event.key.length === 1 &&
+              /[a-zA-Z]+/.test(event.key)
+            ) {
+              setshowInput(true);
+            }
             break;
           }
         }
@@ -1199,7 +1210,8 @@ export const Mind = React.forwardRef(
         : node.x - INDENT * 2 + 8;
       const endY = dotY + endBlockHeight / 2;
 
-      const x1 = (startX + endX) / 2;
+      // const x1 = (startX + endX) / 2;
+      const x1 = startX;
       const y1 = endY;
 
       const M = `M ${startX} ${startY}`;

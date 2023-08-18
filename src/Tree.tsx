@@ -946,7 +946,9 @@ export const Tree = React.forwardRef(
             }
             break;
           }
-
+          case 'v': {
+            break;
+          }
           default: {
             // if (
             //   selectedId &&
@@ -966,6 +968,15 @@ export const Tree = React.forwardRef(
             //   }
             //   setshowInput(true);
             // }
+
+            if (
+              selectedId &&
+              !showInput &&
+              event.key.length === 1 &&
+              /[a-zA-Z]+/.test(event.key)
+            ) {
+              setshowInput(true);
+            }
             break;
           }
         }
