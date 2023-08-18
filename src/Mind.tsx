@@ -76,8 +76,10 @@ export interface MindProps {
   // 是否单列
   singleColumn?: boolean;
   rowGap?: number;
-  // 节点块高度
-  blockHeight?: number;
+  // 节点文字上下边距
+  topBottomMargin?: number;
+  // 节点文字行高
+  lineHeight?: number;
   textMaxWidth?: number;
   // 节点字体大小
   fontSize?: number;
@@ -160,7 +162,8 @@ export const Mind = React.forwardRef(
       uncontrolled,
       singleColumn,
       rowGap = 12,
-      blockHeight,
+      topBottomMargin = 5,
+      lineHeight = 20,
       textMaxWidth = 300,
       fontSize,
       indent,
@@ -225,7 +228,6 @@ export const Mind = React.forwardRef(
     const radius = 8;
     const rootZoomRatio = root_zoom_ratio || 1.8;
     const secondZoomRatio = second_zoom_ratio || 1.4;
-    const BLOCK_HEIGHT = blockHeight || 30;
     const FONT_SIZE = fontSize || 14;
     const INDENT = indent || 35;
     // const AVATAR_WIDTH = avatarWidth || 22;
@@ -273,6 +275,8 @@ export const Mind = React.forwardRef(
 
     const [compId, setCompId] = useState('');
     const containerRef = useRef<HTMLDivElement>(null);
+
+    const block_height = topBottomMargin * 2 + lineHeight;
 
     // 暴露方法
     useImperativeHandle(ref, () => ({
@@ -333,7 +337,8 @@ export const Mind = React.forwardRef(
         startId,
         singleColumn,
         rowGap,
-        BLOCK_HEIGHT,
+        topBottomMargin,
+        lineHeight,
         INDENT,
         FONT_SIZE,
         textMaxWidth,
@@ -900,7 +905,7 @@ export const Mind = React.forwardRef(
           selectionY,
           selectionWidth,
           selectionHeight,
-          BLOCK_HEIGHT,
+          block_height,
           cnodes
         );
         setselectedId(null);
@@ -990,7 +995,7 @@ export const Mind = React.forwardRef(
             selectionY,
             selectionWidth,
             selectionHeight,
-            BLOCK_HEIGHT,
+            block_height,
             cnodes
           );
           setselectedId(null);
@@ -1124,16 +1129,16 @@ export const Mind = React.forwardRef(
       const diff = INDENT - 8;
       const HlineWidth = diff - radius;
 
-      let startBlockHeight = BLOCK_HEIGHT;
+      let startBlockHeight = block_height;
       if (node._key === startId) {
-        startBlockHeight = BLOCK_HEIGHT * rootZoomRatio;
+        startBlockHeight = block_height * rootZoomRatio;
       } else if (node.father === startId) {
-        startBlockHeight = BLOCK_HEIGHT * secondZoomRatio;
+        startBlockHeight = block_height * secondZoomRatio;
       }
 
-      let endBlockHeight = BLOCK_HEIGHT;
+      let endBlockHeight = block_height;
       if (node._key === startId) {
-        endBlockHeight = BLOCK_HEIGHT * secondZoomRatio;
+        endBlockHeight = block_height * secondZoomRatio;
       }
 
       const startX = !node.toLeft ? node.x + node.width : node.x;
@@ -1156,16 +1161,16 @@ export const Mind = React.forwardRef(
 
     // 每个子节点前的横线
     function path(node: CNode, dotY: any) {
-      let startBlockHeight = BLOCK_HEIGHT;
+      let startBlockHeight = block_height;
       if (node._key === startId) {
-        startBlockHeight = BLOCK_HEIGHT * rootZoomRatio;
+        startBlockHeight = block_height * rootZoomRatio;
       } else if (node.father === startId) {
-        startBlockHeight = BLOCK_HEIGHT * secondZoomRatio;
+        startBlockHeight = block_height * secondZoomRatio;
       }
 
-      let endBlockHeight = BLOCK_HEIGHT;
+      let endBlockHeight = block_height;
       if (node._key === startId) {
-        endBlockHeight = BLOCK_HEIGHT * secondZoomRatio;
+        endBlockHeight = block_height * secondZoomRatio;
       }
 
       const nodeMiddleY = node.y + startBlockHeight / 2;
@@ -1199,8 +1204,8 @@ export const Mind = React.forwardRef(
     }
 
     function rootPath(node: CNode, dotY: any, isLeft?: boolean) {
-      const startBlockHeight = node.height || BLOCK_HEIGHT * rootZoomRatio;
-      const endBlockHeight = BLOCK_HEIGHT * secondZoomRatio;
+      const startBlockHeight = node.height || block_height * rootZoomRatio;
+      const endBlockHeight = block_height * secondZoomRatio;
       const startX = node.x + node.width / 2;
       // const middleY = node.y + startBlockHeight / 2;
       const startY = node.y + startBlockHeight / 2;
@@ -1599,12 +1604,19 @@ export const Mind = React.forwardRef(
               <TreeNode
                 node={node}
                 startId={startId}
-                BLOCK_HEIGHT={
+                topBottomMargin={
                   node._key === startId
-                    ? BLOCK_HEIGHT * rootZoomRatio
+                    ? topBottomMargin * rootZoomRatio
                     : node.father === startId
-                    ? BLOCK_HEIGHT * secondZoomRatio
-                    : BLOCK_HEIGHT
+                    ? topBottomMargin * secondZoomRatio
+                    : topBottomMargin
+                }
+                lineHeight={
+                  node._key === startId
+                    ? lineHeight * rootZoomRatio
+                    : node.father === startId
+                    ? lineHeight * secondZoomRatio
+                    : lineHeight
                 }
                 FONT_SIZE={
                   node._key === startId
@@ -1667,7 +1679,7 @@ export const Mind = React.forwardRef(
           (Math.abs(movedNodeX) > 5 || Math.abs(movedNodeY) > 5) ? (
             <DragNode
               nodeList={cnodes}
-              BLOCK_HEIGHT={BLOCK_HEIGHT}
+              BLOCK_HEIGHT={block_height}
               FONT_SIZE={FONT_SIZE}
               alias={new Date().getTime()}
               showIcon={SHOW_ICON}
@@ -1699,14 +1711,23 @@ export const Mind = React.forwardRef(
             selectedId={selectedId}
             nodeList={cnodes}
             handleChangeNodeText={changeText}
-            BLOCK_HEIGHT={
+            topBottomMargin={
               selectedId === startId
-                ? BLOCK_HEIGHT * rootZoomRatio
+                ? topBottomMargin * rootZoomRatio
                 : nodeMap &&
                   selectedId &&
                   nodeMap[selectedId].father === startId
-                ? BLOCK_HEIGHT * secondZoomRatio
-                : BLOCK_HEIGHT
+                ? topBottomMargin * secondZoomRatio
+                : topBottomMargin
+            }
+            lineHeight={
+              selectedId === startId
+                ? lineHeight * rootZoomRatio
+                : nodeMap &&
+                  selectedId &&
+                  nodeMap[selectedId].father === startId
+                ? lineHeight * secondZoomRatio
+                : lineHeight
             }
             FONT_SIZE={
               selectedId === startId

@@ -14,7 +14,8 @@ interface Props {
   selectedId: string | null;
   nodeList: CNode[];
   showChildNum: boolean;
-  BLOCK_HEIGHT?: number;
+  topBottomMargin: number;
+  lineHeight: number;
   FONT_SIZE?: number;
   showIcon: boolean;
   showAvatar: boolean;
@@ -33,7 +34,8 @@ const NodeInput = ({
   selectedId,
   nodeList,
   showChildNum,
-  BLOCK_HEIGHT,
+  topBottomMargin,
+  lineHeight,
   FONT_SIZE,
   showIcon,
   showAvatar,
@@ -150,7 +152,7 @@ const NodeInput = ({
     const textX = nodeLocation(
       selected,
       'text',
-      BLOCK_HEIGHT || 30,
+      topBottomMargin * 2 + lineHeight,
       showIcon,
       showAvatar,
       avatarRadius,
@@ -201,10 +203,11 @@ const NodeInput = ({
               fontWeight: 'inherit',
               color: selected._key === startId ? '#FFF' : selected.color,
               resize: 'none',
-              lineHeight: `${BLOCK_HEIGHT}px`,
+              lineHeight: `${lineHeight}px`,
               backgroundColor: 'inherit',
               wordBreak: 'break-all',
               overflow: 'hidden',
+              marginTop: `${topBottomMargin}px`,
             }}
             ref={inputRef}
             autoFocus={true}

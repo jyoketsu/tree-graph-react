@@ -9,7 +9,8 @@ export default function calculate(
   startId: string,
   single: boolean | undefined,
   rowGap: number,
-  BLOCK_HEIGHT: number,
+  topBottomMargin: number,
+  lineHeight: number,
   INDENT: number,
   FONT_SIZE: number,
   textMaxWidth: number,
@@ -24,6 +25,7 @@ export default function calculate(
   // showChildNum?: boolean
 ) {
   // nodes = JSON.parse(JSON.stringify(nodes));
+  const BLOCK_HEIGHT = topBottomMargin * 2 + lineHeight;
   nodes = _.cloneDeep(nodes);
   // 根节点
   const root = nodes[startId];
@@ -39,7 +41,9 @@ export default function calculate(
     inputNodeKey
   );
   root.width = rootWidth;
-  let rootHeight = (root.texts?.length || 1) * BLOCK_HEIGHT * rootZoomRatio;
+  let rootHeight =
+    topBottomMargin * rootZoomRatio * 2 +
+    (root.texts?.length || 1) * lineHeight * rootZoomRatio;
   if (root.imageUrl && root.imageHeight) {
     rootHeight += root.imageHeight + 15 / 2;
   }
@@ -210,14 +214,21 @@ export default function calculate(
       inputNodeKey
     );
 
-    let blockHeight = BLOCK_HEIGHT;
+    let line_height = lineHeight;
     if (node._key === startId) {
-      blockHeight = BLOCK_HEIGHT * rootZoomRatio;
+      line_height = lineHeight * rootZoomRatio;
     } else if (node.father === startId) {
-      blockHeight = BLOCK_HEIGHT * secondZoomRatio;
+      line_height = lineHeight * secondZoomRatio;
+    }
+    let top_bottom_margin = topBottomMargin;
+    if (node._key === startId) {
+      top_bottom_margin = topBottomMargin * rootZoomRatio;
+    } else if (node.father === startId) {
+      top_bottom_margin = topBottomMargin * secondZoomRatio;
     }
 
-    let nodeHeight = (node.texts?.length || 1) * blockHeight;
+    let nodeHeight =
+    top_bottom_margin * 2 + (node.texts?.length || 1) * line_height;
     if (node.imageUrl && node.imageHeight) {
       nodeHeight += node.imageHeight + 15 / 2;
     }

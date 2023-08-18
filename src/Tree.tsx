@@ -79,8 +79,10 @@ export interface TreeProps {
   singleColumn?: boolean;
   // 节点元素高度
   itemHeight?: number;
-  // 节点块高度
-  blockHeight?: number;
+  // 节点文字上下边距
+  topBottomMargin?: number;
+  // 节点文字行高
+  lineHeight?: number;
   textMaxWidth?: number;
   // 节点字体大小
   fontSize?: number;
@@ -167,7 +169,8 @@ export const Tree = React.forwardRef(
       uncontrolled,
       singleColumn,
       itemHeight,
-      blockHeight,
+      topBottomMargin = 5,
+      lineHeight = 20,
       textMaxWidth = 300,
       fontSize,
       indent,
@@ -238,7 +241,6 @@ export const Tree = React.forwardRef(
     const secondZoomRatio = second_zoom_ratio || 1.4;
     // const ITEM_HEIGHT = itemHeight || 55;
     const ITEM_HEIGHT = itemHeight || 35;
-    const BLOCK_HEIGHT = blockHeight || 30;
     const FONT_SIZE = fontSize || 14;
     const INDENT = indent || 25;
     const RADIUS = lineRadius || 4;
@@ -291,6 +293,8 @@ export const Tree = React.forwardRef(
 
     const [compId, setCompId] = useState('');
     const containerRef = useRef<HTMLDivElement>(null);
+
+    const block_height = topBottomMargin * 2 + lineHeight;
 
     // 暴露方法
     useImperativeHandle(ref, () => ({
@@ -355,7 +359,8 @@ export const Tree = React.forwardRef(
         startId,
         singleColumn,
         ITEM_HEIGHT,
-        BLOCK_HEIGHT,
+        topBottomMargin,
+        lineHeight,
         INDENT,
         FONT_SIZE,
         textMaxWidth,
@@ -406,10 +411,10 @@ export const Tree = React.forwardRef(
       const startX = node.x;
       const blockHeight =
         node._key === startId
-          ? BLOCK_HEIGHT * rootZoomRatio
+          ? block_height * rootZoomRatio
           : node.father === startId
-          ? BLOCK_HEIGHT * secondZoomRatio
-          : BLOCK_HEIGHT;
+          ? block_height * secondZoomRatio
+          : block_height;
       const Y = node.y + blockHeight / 2;
       const endX = node.x - (INDENT - 5);
       const lineEndX = endX + RADIUS;
@@ -424,12 +429,12 @@ export const Tree = React.forwardRef(
     function childPath(node: CNode) {
       const blockHeight =
         node._key === startId
-          ? BLOCK_HEIGHT * rootZoomRatio
+          ? block_height * rootZoomRatio
           : node.father === startId
-          ? BLOCK_HEIGHT * secondZoomRatio
-          : BLOCK_HEIGHT;
+          ? block_height * secondZoomRatio
+          : block_height;
       const childBlockHeight =
-        node._key === startId ? BLOCK_HEIGHT * secondZoomRatio : BLOCK_HEIGHT;
+        node._key === startId ? block_height * secondZoomRatio : block_height;
       const M = `M ${node.x + 5} ${node.y + blockHeight}`;
       const V = `V ${node.last_child_y + childBlockHeight / 2 - RADIUS}`;
       return `${M} ${V}`;
@@ -1037,7 +1042,7 @@ export const Tree = React.forwardRef(
           selectionY,
           selectionWidth,
           selectionHeight,
-          BLOCK_HEIGHT,
+          block_height,
           cnodes
         );
         setselectedId(null);
@@ -1127,7 +1132,7 @@ export const Tree = React.forwardRef(
             selectionY,
             selectionWidth,
             selectionHeight,
-            BLOCK_HEIGHT,
+            block_height,
             cnodes
           );
           setselectedId(null);
@@ -1642,12 +1647,19 @@ export const Tree = React.forwardRef(
               )}
               <TreeNode
                 node={node}
-                BLOCK_HEIGHT={
+                topBottomMargin={
                   node._key === startId
-                    ? BLOCK_HEIGHT * rootZoomRatio
+                    ? topBottomMargin * rootZoomRatio
                     : node.father === startId
-                    ? BLOCK_HEIGHT * secondZoomRatio
-                    : BLOCK_HEIGHT
+                    ? topBottomMargin * secondZoomRatio
+                    : topBottomMargin
+                }
+                lineHeight={
+                  node._key === startId
+                    ? lineHeight * rootZoomRatio
+                    : node.father === startId
+                    ? lineHeight * secondZoomRatio
+                    : lineHeight
                 }
                 FONT_SIZE={
                   node._key === startId
@@ -1717,7 +1729,7 @@ export const Tree = React.forwardRef(
           (Math.abs(movedNodeX) > 5 || Math.abs(movedNodeY) > 5) ? (
             <DragNode
               nodeList={cnodes}
-              BLOCK_HEIGHT={BLOCK_HEIGHT}
+              BLOCK_HEIGHT={block_height}
               FONT_SIZE={FONT_SIZE}
               alias={new Date().getTime()}
               showIcon={SHOW_ICON}
@@ -1749,14 +1761,23 @@ export const Tree = React.forwardRef(
             selectedId={selectedId}
             nodeList={cnodes}
             handleChangeNodeText={changeText}
-            BLOCK_HEIGHT={
+            topBottomMargin={
               selectedId === startId
-                ? BLOCK_HEIGHT * rootZoomRatio
+                ? topBottomMargin * rootZoomRatio
                 : nodeMap &&
                   selectedId &&
                   nodeMap[selectedId].father === startId
-                ? BLOCK_HEIGHT * secondZoomRatio
-                : BLOCK_HEIGHT
+                ? topBottomMargin * secondZoomRatio
+                : topBottomMargin
+            }
+            lineHeight={
+              selectedId === startId
+                ? lineHeight * rootZoomRatio
+                : nodeMap &&
+                  selectedId &&
+                  nodeMap[selectedId].father === startId
+                ? lineHeight * secondZoomRatio
+                : lineHeight
             }
             FONT_SIZE={
               selectedId === startId

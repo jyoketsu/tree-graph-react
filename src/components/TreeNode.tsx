@@ -21,7 +21,8 @@ const now = new Date(new Date().setHours(0, 0, 0, 0)).getTime();
 interface Props {
   node: CNode;
   startId: string;
-  BLOCK_HEIGHT: number;
+  topBottomMargin: number;
+  lineHeight: number;
   FONT_SIZE: number;
   avatarRadius: number;
   color: string;
@@ -75,7 +76,8 @@ interface Props {
 const TreeNode = ({
   node,
   startId,
-  BLOCK_HEIGHT,
+  topBottomMargin,
+  lineHeight,
   FONT_SIZE,
   avatarRadius,
   color,
@@ -132,9 +134,9 @@ Props) => {
   const [hoverAdd, setHoverAdd] = useState(false);
   const [hoverMore, setHoverMore] = useState(false);
   const [hoverImage, setHoverImage] = useState(false);
-  const textHeight = node.texts
-    ? node.texts.length * BLOCK_HEIGHT
-    : BLOCK_HEIGHT;
+  const blockHeight = topBottomMargin * 2 + lineHeight;
+  const textHeight =
+    topBottomMargin * 2 + (node.texts?.length || 1) * lineHeight;
   const rectHeight =
     node.imageUrl && node.imageWidth && node.imageHeight
       ? textHeight + node.imageHeight + 15 / 2
@@ -289,7 +291,7 @@ Props) => {
     return nodeLocation(
       node,
       type,
-      BLOCK_HEIGHT,
+      blockHeight,
       showIcon,
       showAvatar,
       avatarRadius,
@@ -491,11 +493,11 @@ Props) => {
   }
 
   const normalTextColor = nodeRectClassName ? '#595959' : color;
-  const buttonWidth = moreButtonWidth ? moreButtonWidth : BLOCK_HEIGHT * 0.5;
+  const buttonWidth = moreButtonWidth ? moreButtonWidth : lineHeight * 0.5;
 
   const buttonY = bottomOptions
-    ? node.y + BLOCK_HEIGHT
-    : node.y + (BLOCK_HEIGHT - buttonWidth) / 2;
+    ? node.y + blockHeight
+    : node.y + (blockHeight - buttonWidth) / 2;
 
   const optionsButtonWidth =
     (showAddButton ? buttonWidth : 0) +
@@ -796,7 +798,7 @@ Props) => {
               <tspan
                 key={index}
                 x={textLocationRes?.x}
-                dy={index === 0 ? undefined : BLOCK_HEIGHT}
+                dy={index === 0 ? undefined : lineHeight}
               >
                 {text}
               </tspan>
@@ -820,7 +822,13 @@ Props) => {
       node.endAdornmentHeight ? (
         <node.endAdornment
           x={node.x + node.width - node.endAdornmentWidth - 5}
-          y={node.y + (BLOCK_HEIGHT - (node.endAdornmentHeight || 0)) / 2}
+          y={
+            node.y +
+            (topBottomMargin * 2 +
+              lineHeight -
+              (node.endAdornmentHeight || 0)) /
+              2
+          }
           nodeKey={node._key}
         />
       ) : null}
@@ -835,7 +843,7 @@ Props) => {
                 <rect
                   key="image-hover-rect"
                   x={node?.x + 15 / 2}
-                  y={(node?.y || 0) + (node.texts?.length || 1) * BLOCK_HEIGHT}
+                  y={(node?.y || 0) + (node.texts?.length || 1) * blockHeight}
                   width={node.imageWidth}
                   height={node.imageHeight}
                   stroke={selectedBorderColor}
@@ -845,7 +853,7 @@ Props) => {
                 <rect
                   key="image-rect"
                   x={node?.x + 15 / 2}
-                  y={(node?.y || 0) + (node.texts?.length || 1) * BLOCK_HEIGHT}
+                  y={(node?.y || 0) + (node.texts?.length || 1) * blockHeight}
                   width={node.imageWidth + 5}
                   height={node.imageHeight + 5}
                   fillOpacity={0}
@@ -854,7 +862,7 @@ Props) => {
             : null}
           <image
             x={node?.x + 15 / 2}
-            y={(node?.y || 0) + (node.texts?.length || 1) * BLOCK_HEIGHT}
+            y={(node?.y || 0) + (node.texts?.length || 1) * blockHeight}
             width={node.imageWidth}
             height={node.imageHeight}
             xlinkHref={node.imageUrl}
@@ -867,7 +875,7 @@ Props) => {
               x={node?.x + 15 / 2 + node.imageWidth - 4}
               y={
                 node.y +
-                (node.texts?.length || 1) * BLOCK_HEIGHT +
+                (node.texts?.length || 1) * blockHeight +
                 node.imageHeight -
                 4
               }
@@ -941,7 +949,7 @@ Props) => {
       {node._key !== startId ? (
         <Dot
           node={node}
-          BLOCK_HEIGHT={BLOCK_HEIGHT}
+          BLOCK_HEIGHT={blockHeight}
           handleClick={handleClickDot}
           dragStarted={dragStarted}
           // nodeHover={hover}
@@ -952,7 +960,7 @@ Props) => {
       {hover || selected === node._key || node.contract ? (
         <Expand
           node={node}
-          BLOCK_HEIGHT={BLOCK_HEIGHT}
+          BLOCK_HEIGHT={blockHeight}
           showChildNum={showChildNum}
           handleClickExpand={() => handleExpand(node)}
           position={

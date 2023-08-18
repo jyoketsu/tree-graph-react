@@ -288,7 +288,8 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | ref                      | Reference to call internal methods of the component                                        | -        | No       | -       |
 | singleColumn             | Whether to display the tree in a single column                                             | Boolean  | No       | false   |
 | itemHeight               | Height of the node element                                                                 | Number   | No       | 50      |
-| blockHeight              | Height of the node block                                                                   | Number   | No       | 30      |
+| topBottomMargin          | Node Text Vertical Margins                                                                 | Number   | No       | 5       |
+| lineHeight               | Node Text Line Height                                                                      | Number   | No       | 20      |
 | fontSize                 | Font size of the nodes                                                                     | Number   | No       | 14      |
 | fontWeight               | Font weight of the nodes                                                                   | Number   | No       | -       |
 | indent                   | Indentation                                                                                | Number   | No       | 25      |

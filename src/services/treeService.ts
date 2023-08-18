@@ -9,7 +9,8 @@ export default function calculate(
   startId: string,
   singleColumn: boolean | undefined,
   ITEM_HEIGHT: number,
-  BLOCK_HEIGHT: number,
+  topBottomMargin: number,
+  lineHeight: number,
   INDENT: number,
   FONT_SIZE: number,
   textMaxWidth: number,
@@ -28,6 +29,7 @@ export default function calculate(
   // showChildNum?: boolean
 ) {
   // nodes = JSON.parse(JSON.stringify(nodes));
+  const BLOCK_HEIGHT = topBottomMargin * 2 + lineHeight;
   nodes = _.cloneDeep(nodes);
   const start_x = startX;
   const start_y = startY;
@@ -185,14 +187,14 @@ export default function calculate(
 
       // 多行文字的情况
       if (node.texts && node.texts.length > 1) {
-        let blockHeight = BLOCK_HEIGHT;
+        let line_height = lineHeight;
         if (node._key === startId) {
-          blockHeight = BLOCK_HEIGHT * rootZoomRatio;
+          line_height = lineHeight * rootZoomRatio;
         } else if (node.father === startId) {
-          blockHeight = BLOCK_HEIGHT * secondZoomRatio;
+          line_height = lineHeight * secondZoomRatio;
         }
-        childY += (node.texts.length - 1) * blockHeight;
-        lastChildY += (node.texts.length - 1) * blockHeight;
+        childY += (node.texts.length - 1) * line_height;
+        lastChildY += (node.texts.length - 1) * line_height;
       }
       // 节点有图片的情况
       if (node.imageUrl && node.imageHeight) {
