@@ -42,8 +42,8 @@ export interface MobileTreeProps {
   uncontrolled?: boolean;
   // 节点元素高度
   itemHeight?: number;
-  // 节点块高度
-  blockHeight?: number;
+  topBottomMargin?: number;
+  lineHeight?: number;
   // 节点字体大小
   fontSize?: number;
   // 缩进
@@ -87,7 +87,8 @@ export const MobileTree = React.forwardRef(
       defaultSelectedId,
       uncontrolled = true,
       itemHeight = 30,
-      blockHeight = 30,
+      topBottomMargin = 5,
+      lineHeight = 20,
       fontSize = 14,
       indent = 18,
       disableShortcut,
@@ -169,7 +170,8 @@ export const MobileTree = React.forwardRef(
         startId,
         true,
         itemHeight,
-        blockHeight,
+        topBottomMargin,
+        lineHeight,
         indent,
         fontSize,
         3000,
@@ -514,7 +516,7 @@ export const MobileTree = React.forwardRef(
             startId={startId}
             indent={indent}
             node={node}
-            BLOCK_HEIGHT={blockHeight}
+            BLOCK_HEIGHT={topBottomMargin * 2 + lineHeight}
             FONT_SIZE={fontSize}
             selectedBackgroundColor={selectedBackgroundColor}
             dragLineColor={dragLineColor}

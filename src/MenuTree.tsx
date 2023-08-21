@@ -52,8 +52,8 @@ export interface MenuProps {
   uncontrolled?: boolean;
   // 节点元素高度
   itemHeight?: number;
-  // 节点块高度
-  blockHeight?: number;
+  topBottomMargin?: number;
+  lineHeight?: number;
   // 节点字体大小
   fontSize?: number;
   // 缩进
@@ -117,7 +117,8 @@ export const MenuTree = React.forwardRef(
       defaultSelectedId,
       uncontrolled,
       itemHeight,
-      blockHeight,
+      topBottomMargin = 5,
+      lineHeight = 20,
       fontSize,
       indent = 18,
       disableShortcut,
@@ -151,7 +152,7 @@ export const MenuTree = React.forwardRef(
     let clickTimeId: NodeJS.Timeout;
 
     const ITEM_HEIGHT = itemHeight || 32;
-    const BLOCK_HEIGHT = blockHeight || 30;
+    const BLOCK_HEIGHT = topBottomMargin * 2 + lineHeight;
     const FONT_SIZE = fontSize || 14;
     // const AVATAR_WIDTH = avatarWidth || 22;
     // const CHECK_BOX_WIDTH = checkBoxWidth || 18;
@@ -215,7 +216,8 @@ export const MenuTree = React.forwardRef(
         startId,
         true,
         ITEM_HEIGHT,
-        BLOCK_HEIGHT,
+        topBottomMargin,
+        lineHeight,
         indent,
         FONT_SIZE,
         3000,

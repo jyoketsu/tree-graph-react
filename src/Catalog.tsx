@@ -21,8 +21,8 @@ export interface CatalogProps {
   hoverColor?: string;
   // 节点元素高度
   itemHeight?: number;
-  // 节点块高度
-  blockHeight?: number;
+  topBottomMargin?: number;
+  lineHeight?: number;
   // 节点字体大小
   titleFontSize?: number;
   fontSize?: number;
@@ -42,7 +42,8 @@ export const Catalog = ({
   color,
   hoverColor,
   itemHeight,
-  blockHeight,
+  topBottomMargin = 5,
+  lineHeight = 20,
   titleFontSize,
   fontSize,
   indent,
@@ -52,7 +53,7 @@ export const Catalog = ({
   hideTitle,
 }: CatalogProps) => {
   const ITEM_HEIGHT = itemHeight || 32;
-  const BLOCK_HEIGHT = blockHeight || 30;
+  const BLOCK_HEIGHT = topBottomMargin * 2 + lineHeight;
   const FONT_SIZE = fontSize || 14;
   const INDENT = indent || 18;
   const [nodeMap, setNodeMap] = useState(nodes);
@@ -74,7 +75,8 @@ export const Catalog = ({
       startId,
       true,
       ITEM_HEIGHT,
-      BLOCK_HEIGHT,
+      topBottomMargin,
+      lineHeight,
       INDENT,
       FONT_SIZE,
       3000,
