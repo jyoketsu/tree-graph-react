@@ -843,7 +843,11 @@ Props) => {
                 <rect
                   key="image-hover-rect"
                   x={node?.x + 15 / 2}
-                  y={(node?.y || 0) + (node.texts?.length || 1) * blockHeight}
+                  y={
+                    (node?.y || 0) +
+                    topBottomMargin +
+                    (node.texts?.length || 1) * lineHeight
+                  }
                   width={node.imageWidth}
                   height={node.imageHeight}
                   stroke={selectedBorderColor}
@@ -853,7 +857,11 @@ Props) => {
                 <rect
                   key="image-rect"
                   x={node?.x + 15 / 2}
-                  y={(node?.y || 0) + (node.texts?.length || 1) * blockHeight}
+                  y={
+                    (node?.y || 0) +
+                    topBottomMargin +
+                    (node.texts?.length || 1) * lineHeight
+                  }
                   width={node.imageWidth + 5}
                   height={node.imageHeight + 5}
                   fillOpacity={0}
@@ -862,7 +870,11 @@ Props) => {
             : null}
           <image
             x={node?.x + 15 / 2}
-            y={(node?.y || 0) + (node.texts?.length || 1) * blockHeight}
+            y={
+              (node?.y || 0) +
+              topBottomMargin +
+              (node.texts?.length || 1) * lineHeight
+            }
             width={node.imageWidth}
             height={node.imageHeight}
             xlinkHref={node.imageUrl}
@@ -875,7 +887,8 @@ Props) => {
               x={node?.x + 15 / 2 + node.imageWidth - 4}
               y={
                 node.y +
-                (node.texts?.length || 1) * blockHeight +
+                topBottomMargin +
+                (node.texts?.length || 1) * lineHeight +
                 node.imageHeight -
                 4
               }

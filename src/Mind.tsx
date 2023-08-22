@@ -674,7 +674,7 @@ export const Mind = React.forwardRef(
     }
 
     function saveNodes() {
-      return { rootKey: startId, data: nodeMap };
+      return { rootKey: startId, data: _.cloneDeep(nodeMap) };
     }
 
     const handleKeyUp = (event: React.KeyboardEvent) => {
@@ -734,6 +734,35 @@ export const Mind = React.forwardRef(
           if (el) {
             handleQuickCommandOpen(el);
           }
+        }
+      } else if (commandKey) {
+        switch (event.key) {
+          // 複製
+          case 'c': {
+            event.preventDefault();
+            if (selectedId) {
+              setPasteNodeKey(selectedId);
+              setPasteType('copy');
+            }
+            break;
+          }
+          // 剪切
+          case 'x': {
+            event.preventDefault();
+            if (selectedId) {
+              // 根節點不允許剪切
+              if (selectedId === startId) {
+                setPasteNodeKey(null);
+                setPasteType(null);
+                return;
+              }
+              setPasteNodeKey(selectedId);
+              setPasteType('cut');
+            }
+            break;
+          }
+          default:
+            break;
         }
       } else {
         switch (event.key) {
@@ -795,33 +824,6 @@ export const Mind = React.forwardRef(
                 handleSelectedNodeChanged(res);
               }
             }
-            break;
-          }
-          // 複製
-          case 'c': {
-            event.preventDefault();
-            if (commandKey && selectedId) {
-              setPasteNodeKey(selectedId);
-              setPasteType('copy');
-            }
-            break;
-          }
-          // 剪切
-          case 'x': {
-            event.preventDefault();
-            if (commandKey && selectedId) {
-              // 根節點不允許剪切
-              if (selectedId === startId) {
-                setPasteNodeKey(null);
-                setPasteType(null);
-                return;
-              }
-              setPasteNodeKey(selectedId);
-              setPasteType('cut');
-            }
-            break;
-          }
-          case 'v': {
             break;
           }
           default: {

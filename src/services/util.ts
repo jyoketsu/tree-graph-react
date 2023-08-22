@@ -2,6 +2,7 @@ import Node from '../interfaces/Node';
 import CNode from '../interfaces/CNode';
 import NodeMap from '../interfaces/NodeMap';
 import MutilSelectedNodeKey from '../interfaces/MutilSelectedNodeKey';
+import _ from 'lodash';
 
 function findNodeById(nodes: CNode[], id: string) {
   return nodes.find((node: CNode) => node._key === id);
@@ -631,7 +632,7 @@ function changeSortList(
   selectedId: string,
   type: 'up' | 'down'
 ) {
-  let nodes = { ...nodeMap };
+  let nodes = _.cloneDeep(nodeMap);
   let selectedNode = nodes[selectedId];
   let fatherNode = nodes[selectedNode.father];
   let brotherKeys = fatherNode.sortList;
