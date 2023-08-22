@@ -252,6 +252,7 @@ export const Mind = React.forwardRef(
     const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
     const [showInput, setshowInput] = useState(false);
     const [showNewInput, setshowNewInput] = useState(false);
+    const [inputEmpty, setInputEmpty] = useState(false);
 
     // 拖拽節點相關的狀態
     const [dragStarted, setDragStarted] = useState(false);
@@ -468,6 +469,7 @@ export const Mind = React.forwardRef(
     function changeText(nodeId: string, text: string) {
       setshowInput(false);
       setshowNewInput(false);
+      setInputEmpty(false);
 
       if (UNCONTROLLED) {
         let nodes = changeNodeText(nodeMap, nodeId, text);
@@ -487,6 +489,8 @@ export const Mind = React.forwardRef(
     function updateNodeById(nodeMap: NodeMap, id: string, data: any) {
       setshowInput(false);
       setshowNewInput(false);
+      setInputEmpty(false);
+
       const nodes = updateNodeByKey(nodeMap, id, data);
       setNodeMap(nodes);
       if (containerRef && containerRef.current) {
@@ -500,6 +504,8 @@ export const Mind = React.forwardRef(
     function updateNodesByIds(nodeMap: NodeMap, ids: string[], data: any) {
       setshowInput(false);
       setshowNewInput(false);
+      setInputEmpty(false);
+
       let nodes = _.cloneDeep(nodeMap);
       for (let index = 0; index < ids.length; index++) {
         const id = ids[index];
@@ -843,6 +849,7 @@ export const Mind = React.forwardRef(
               event.key.length === 1 &&
               /[a-zA-Z]+/.test(event.key)
             ) {
+              setInputEmpty(true);
               setshowInput(true);
             }
             break;
@@ -1744,6 +1751,7 @@ export const Mind = React.forwardRef(
             avatarRadius={avatarRadius}
             startId={startId}
             nodeColor={nodeColor}
+            inputEmpty={inputEmpty}
             selectedBorderColor={SELECTED_BORDER_COLOR}
             handleFileChange={handleTreePaste}
             showChildNum={showChildNum}

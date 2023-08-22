@@ -268,6 +268,7 @@ export const Tree = React.forwardRef(
     const [selectedNodes, setSelectedNodes] = useState<Node[]>([]);
     const [showInput, setshowInput] = useState(false);
     const [showNewInput, setshowNewInput] = useState(false);
+    const [inputEmpty, setInputEmpty] = useState(false);
     const [isSingle, setisSingle] = useState(singleColumn);
     // const [showOptionsNode, setShowOptionsNode] = useState<CNode | null>(null);
 
@@ -586,6 +587,7 @@ export const Tree = React.forwardRef(
     function changeText(nodeId: string, text: string) {
       setshowInput(false);
       setshowNewInput(false);
+      setInputEmpty(false);
 
       if (UNCONTROLLED) {
         let nodes = changeNodeText(nodeMap, nodeId, text);
@@ -623,6 +625,8 @@ export const Tree = React.forwardRef(
     function updateNodeById(nodeMap: NodeMap, id: string, data: any) {
       setshowInput(false);
       setshowNewInput(false);
+      setInputEmpty(false);
+
       const nodes = updateNodeByKey(nodeMap, id, data);
       setNodeMap(nodes);
       if (containerRef && containerRef.current) {
@@ -636,6 +640,8 @@ export const Tree = React.forwardRef(
     function updateNodesByIds(nodeMap: NodeMap, ids: string[], data: any) {
       setshowInput(false);
       setshowNewInput(false);
+      setInputEmpty(false);
+
       let nodes = _.cloneDeep(nodeMap);
       for (let index = 0; index < ids.length; index++) {
         const id = ids[index];
@@ -980,6 +986,7 @@ export const Tree = React.forwardRef(
               event.key.length === 1 &&
               /[a-zA-Z]+/.test(event.key)
             ) {
+              setInputEmpty(true);
               setshowInput(true);
             }
             break;
@@ -1794,6 +1801,7 @@ export const Tree = React.forwardRef(
             textMaxWidth={textMaxWidth}
             startId={startId}
             nodeColor={nodeColor}
+            inputEmpty={inputEmpty}
             selectedBorderColor={SELECTED_BORDER_COLOR}
             handleFileChange={handleTreePaste}
             showChildNum={showChildNum}

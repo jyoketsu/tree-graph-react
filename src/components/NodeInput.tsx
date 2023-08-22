@@ -25,6 +25,7 @@ interface Props {
   selectedBorderColor: string;
   quickCommandKey?: string;
   nodeColor?: string;
+  inputEmpty?: boolean;
   handleChangeNodeText: Function;
   handleFileChange?: HandleFileChange;
   handleQuickCommandOpen?: HandleQuickCommandOpen;
@@ -45,6 +46,7 @@ const NodeInput = ({
   selectedBorderColor,
   quickCommandKey,
   nodeColor,
+  inputEmpty,
   handleChangeNodeText,
   handleFileChange,
   handleQuickCommandOpen,
@@ -64,7 +66,9 @@ const NodeInput = ({
           : textWidthAll(FONT_SIZE || 14, selected.name)
       );
       inputRef.current.value = '';
-      inputRef.current.value = selected.name;
+      if (!inputEmpty) {
+        inputRef.current.value = selected.name;
+      }
     } else {
       setInputWidth(50);
     }
