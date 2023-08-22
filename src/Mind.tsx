@@ -40,6 +40,8 @@ let spaceKeyDown = false;
 let lastTime = 0;
 const gapTime = 34;
 
+let changed = false;
+
 interface PasteFunc {
   (
     pasteNodeKey: string,
@@ -315,6 +317,15 @@ export const Mind = React.forwardRef(
     }, []);
 
     useEffect(() => {
+      if (changed) {
+        if (handleChange) {
+          changed = false;
+          handleChange();
+        }
+      }
+    }, [nodeMap]);
+
+    useEffect(() => {
       document.addEventListener('paste', onPaste);
 
       return () => {
@@ -420,7 +431,7 @@ export const Mind = React.forwardRef(
         }
         setNodeMap(nodes);
         if (handleChange) {
-          handleChange();
+          changed = true;
         }
       }
       if (handleClickExpand) {
@@ -437,7 +448,7 @@ export const Mind = React.forwardRef(
         let nodes = checkNode(nodeMap, node._key);
         setNodeMap(nodes);
         if (handleChange) {
-          handleChange();
+          changed = true;
         }
       }
       if (handleCheck) {
@@ -475,7 +486,7 @@ export const Mind = React.forwardRef(
         let nodes = changeNodeText(nodeMap, nodeId, text);
         setNodeMap(nodes);
         if (handleChange) {
-          handleChange();
+          changed = true;
         }
       }
       if (handleChangeNodeText) {
@@ -497,7 +508,7 @@ export const Mind = React.forwardRef(
         containerRef.current.focus();
       }
       if (handleChange) {
-        handleChange();
+        changed = true;
       }
     }
 
@@ -516,7 +527,7 @@ export const Mind = React.forwardRef(
         containerRef.current.focus();
       }
       if (handleChange) {
-        handleChange();
+        changed = true;
       }
     }
 
@@ -542,7 +553,7 @@ export const Mind = React.forwardRef(
         setNodeMap(res.nodes);
         setshowInput(true);
         if (handleChange) {
-          handleChange();
+          changed = true;
         }
       } else {
         if (handleAddNext) {
@@ -568,7 +579,7 @@ export const Mind = React.forwardRef(
         setNodeMap(res.nodes);
         setshowInput(true);
         if (handleChange) {
-          handleChange();
+          changed = true;
         }
       } else {
         if (handleAddChild) {
@@ -588,7 +599,7 @@ export const Mind = React.forwardRef(
         if (UNCONTROLLED) {
           setNodeMap(res.nodes);
           if (handleChange) {
-            handleChange();
+            changed = true;
           }
         } else {
           if (handleShiftUpDown) {
@@ -608,7 +619,7 @@ export const Mind = React.forwardRef(
         if (UNCONTROLLED) {
           setNodeMap(res.nodes);
           if (handleChange) {
-            handleChange();
+            changed = true;
           }
         } else {
           if (handleShiftUpDown) {
@@ -644,7 +655,7 @@ export const Mind = React.forwardRef(
           setSelectedNodes([]);
           setNodeMap(res.nodes);
           if (handleChange) {
-            handleChange();
+            changed = true;
           }
         } else {
           // 批量删除
@@ -659,7 +670,7 @@ export const Mind = React.forwardRef(
           setSelectedNodes([]);
           setNodeMap(nodes);
           if (handleChange) {
-            handleChange();
+            changed = true;
           }
         }
 
@@ -694,7 +705,7 @@ export const Mind = React.forwardRef(
           if (res) {
             setNodeMap(res);
             if (handleChange) {
-              handleChange();
+              changed = true;
             }
           }
         } else if (handlePaste) {
@@ -837,7 +848,7 @@ export const Mind = React.forwardRef(
             //     let nodes = changeNodeText(nodeMap, selectedId, '');
             //     setNodeMap(nodes);
             //     if (handleChange) {
-            //       handleChange();
+            //       changed = true;
             //     }
             //   }
             //   if (handleChangeNodeText) {
@@ -1075,7 +1086,7 @@ export const Mind = React.forwardRef(
                 if (res) {
                   setNodeMap(res);
                   if (handleChange) {
-                    handleChange();
+                    changed = true;
                   }
                 }
               }
@@ -1089,7 +1100,7 @@ export const Mind = React.forwardRef(
               if (res) {
                 setNodeMap(res);
                 if (handleChange) {
-                  handleChange();
+                  changed = true;
                 }
               }
             }
@@ -1279,7 +1290,7 @@ export const Mind = React.forwardRef(
         node.imageHeight = height;
         setNodeMap(nodes);
         if (handleChange) {
-          handleChange();
+          changed = true;
         }
       }
       if (handleResizeNodeImage) {
