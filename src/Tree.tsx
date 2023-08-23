@@ -27,6 +27,7 @@ import {
   getNextSelect,
   countNodeDescendants,
   updateNodeByKey,
+  copyNode,
 } from './services/util';
 import MutilSelectedNodeKey from './interfaces/MutilSelectedNodeKey';
 import _ from 'lodash';
@@ -842,6 +843,7 @@ export const Tree = React.forwardRef(
         }
         localStorage.removeItem('pasteNodeKey');
         localStorage.removeItem('pasteType');
+        localStorage.removeItem('copiedNodes');
       } else {
         const files = event.clipboardData?.files;
         const node = selectedId ? nodeMap[selectedId] : null;
@@ -883,6 +885,7 @@ export const Tree = React.forwardRef(
             if (selectedId) {
               localStorage.setItem('pasteNodeKey', selectedId);
               localStorage.setItem('pasteType', 'copy');
+              copyNode(nodeMap, selectedId);
             }
             break;
           }
@@ -894,6 +897,7 @@ export const Tree = React.forwardRef(
               if (selectedId === startId) {
                 localStorage.removeItem('pasteNodeKey');
                 localStorage.removeItem('pasteType');
+                localStorage.removeItem('copiedNodes');
                 return;
               }
               localStorage.setItem('pasteNodeKey', selectedId);

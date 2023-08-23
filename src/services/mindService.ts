@@ -109,10 +109,12 @@ export default function calculate(
       }
       MAX_X = MAX_X + Math.abs(MIN_X);
       MAX_END = MAX_END + Math.abs(MIN_END) + startX;
+
       root.rightDots = [];
       root.leftDots = [];
       let minY;
       let maxY;
+      
       for (let index = 0; index < leftStarts.length; index++) {
         const element = leftStarts[index];
         if (element) {

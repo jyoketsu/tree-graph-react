@@ -854,33 +854,70 @@ function pasteNode(
     targetNode.sortList.push(pasteNode._key);
     return nodeMap;
   } else if (pasteType === 'copy') {
-    const suffix = guid(8, 16);
-    const newNode = copyNode(pasteNode, suffix, targetNodeKey);
-    // 將newNode的id添加到目標節點children中
-    targetNode.sortList.push(newNode._key);
+    const copiedNodesStr = localStorage.getItem('copiedNodes');
+    if (copiedNodesStr) {
+      const newNodeMap = JSON.parse(copiedNodesStr);
+      nodeMap = { ...nodeMap, ...newNodeMap.nodes };
+      if (nodeMap[newNodeMap.root]) {
+        nodeMap[newNodeMap.root].father = targetNode._key;
+      }
+      // 將newNode的id添加到目標節點children中
+      if (nodeMap[targetNodeKey]) {
+        nodeMap[targetNodeKey].sortList.push(newNodeMap.root);
+      }
+    }
     return nodeMap;
   } else {
     return null;
   }
 
-  function copyNode(node: Node, suffix: string, targetNodeKey?: string) {
+  // function copyNode(node: Node, suffix: string, targetNodeKey?: string) {
+  //   let newNode = JSON.parse(JSON.stringify(node));
+  //   newNode._key = `${newNode._key}-${suffix}`;
+  //   if (targetNodeKey) {
+  //     newNode.father = targetNodeKey;
+  //   } else {
+  //     newNode.father = `${newNode.father}-${suffix}`;
+  //   }
+  //   const sortList = newNode.sortList;
+  //   for (let index = 0; index < sortList.length; index++) {
+  //     const childKey = sortList[index];
+  //     if (nodeMap[childKey]) {
+  //       let node = copyNode(nodeMap[childKey], suffix);
+  //       newNode.sortList[index] = node._key;
+  //     }
+  //   }
+  //   nodeMap[newNode._key] = newNode;
+  //   return newNode;
+  // }
+}
+
+function copyNode(nodeMap: NodeMap, nodeKey: string) {
+  let newNodeMap: NodeMap = {};
+  const suffix = guid(8, 16);
+  const node = nodeMap[nodeKey];
+  if (node) {
+    copy(node, suffix, true);
+    localStorage.setItem(
+      'copiedNodes',
+      JSON.stringify({ nodes: newNodeMap, root: `${nodeKey}-${suffix}` })
+    );
+  }
+  function copy(node: Node, suffix: string, isRoot?: boolean) {
     let newNode = JSON.parse(JSON.stringify(node));
     newNode._key = `${newNode._key}-${suffix}`;
-    if (targetNodeKey) {
-      newNode.father = targetNodeKey;
-    } else {
+    if (!isRoot) {
       newNode.father = `${newNode.father}-${suffix}`;
     }
     const sortList = newNode.sortList;
     for (let index = 0; index < sortList.length; index++) {
       const childKey = sortList[index];
       if (nodeMap[childKey]) {
-        let node = copyNode(nodeMap[childKey], suffix);
-        newNode.sortList[index] = node._key;
+        copy(nodeMap[childKey], suffix);
+        newNode.sortList[index] = `${newNode.sortList[index]}-${suffix}`;
       }
     }
-    nodeMap[newNode._key] = newNode;
-    return newNode;
+    newNodeMap[newNode._key] = newNode;
   }
 }
 
@@ -1362,4 +1399,5 @@ export {
   splitTextIntoParagraphs,
   splitTextIntoParagraphsInTexts,
   getTextWidth,
+  copyNode,
 };

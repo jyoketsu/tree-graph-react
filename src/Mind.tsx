@@ -27,6 +27,7 @@ import {
   getNextSelect,
   updateNodeByKey,
   countNodeDescendants,
+  copyNode,
 } from './services/util';
 import MutilSelectedNodeKey from './interfaces/MutilSelectedNodeKey';
 import { HandleFileChange } from './Tree';
@@ -747,6 +748,7 @@ export const Mind = React.forwardRef(
             if (selectedId) {
               localStorage.setItem('pasteNodeKey', selectedId);
               localStorage.setItem('pasteType', 'copy');
+              copyNode(nodeMap, selectedId);
             }
             break;
           }
