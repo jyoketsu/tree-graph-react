@@ -43,11 +43,7 @@ const gapTime = 34;
 let changed = false;
 
 interface PasteFunc {
-  (
-    pasteNodeKey: string,
-    pasteType: 'copy' | 'cut' | null,
-    targetNodeKey: string
-  ): void;
+  (pasteNodeKey: string, pasteType: string | null, targetNodeKey: string): void;
 }
 
 interface MutiSelectFunc {
@@ -270,12 +266,6 @@ export const Mind = React.forwardRef(
     const [movedNodeY, setMovedNodeY] = useState(0);
     // 拖拽的相關信息
     const [dragInfo, setDragInfo] = useState<DragInfo | null>(null);
-
-    // 粘貼的節點key
-    const [pasteNodeKey, setPasteNodeKey] = useState<string | null>(null);
-    // 粘貼方式
-    const [pasteType, setPasteType] = useState<'copy' | 'cut' | null>(null);
-
     const [compId, setCompId] = useState('');
     const containerRef = useRef<HTMLDivElement>(null);
 
@@ -331,7 +321,7 @@ export const Mind = React.forwardRef(
       return () => {
         document.removeEventListener('paste', onPaste);
       };
-    }, [showInput, showNewInput, selectedId, pasteType, pasteNodeKey]);
+    }, [showInput, showNewInput, selectedId]);
 
     // 参数nodes发生改变，重设nodeMap
     useEffect(() => {
@@ -699,6 +689,9 @@ export const Mind = React.forwardRef(
         return;
       }
       event.preventDefault();
+      const pasteType = localStorage.getItem('pasteType');
+      const pasteNodeKey = localStorage.getItem('pasteNodeKey');
+
       if (pasteType && pasteNodeKey && selectedId) {
         if (UNCONTROLLED) {
           const res = pasteNode(nodeMap, pasteNodeKey, pasteType, selectedId);
@@ -711,8 +704,8 @@ export const Mind = React.forwardRef(
         } else if (handlePaste) {
           handlePaste(pasteNodeKey, pasteType, selectedId);
         }
-        setPasteNodeKey(null);
-        setPasteType(null);
+        localStorage.removeItem('pasteNodeKey');
+        localStorage.removeItem('pasteType');
       } else {
         const files = event.clipboardData?.files;
         const node = selectedId ? nodeMap[selectedId] : null;
@@ -752,8 +745,8 @@ export const Mind = React.forwardRef(
           case 'c': {
             event.preventDefault();
             if (selectedId) {
-              setPasteNodeKey(selectedId);
-              setPasteType('copy');
+              localStorage.setItem('pasteNodeKey', selectedId);
+              localStorage.setItem('pasteType', 'copy');
             }
             break;
           }
@@ -763,12 +756,12 @@ export const Mind = React.forwardRef(
             if (selectedId) {
               // 根節點不允許剪切
               if (selectedId === startId) {
-                setPasteNodeKey(null);
-                setPasteType(null);
+                localStorage.removeItem('pasteNodeKey');
+                localStorage.removeItem('pasteType');
                 return;
               }
-              setPasteNodeKey(selectedId);
-              setPasteType('cut');
+              localStorage.setItem('pasteNodeKey', selectedId);
+              localStorage.setItem('pasteType', 'cut');
             }
             break;
           }
@@ -1651,7 +1644,6 @@ export const Mind = React.forwardRef(
                 alias={new Date().getTime()}
                 selected={selectedId}
                 selectedNodes={selectedNodes}
-                pasteNodeKey={pasteType === 'cut' ? pasteNodeKey : null}
                 showIcon={SHOW_ICON}
                 showAvatar={SHOW_AVATAR}
                 showPreviewButton={showPreviewButton || false}

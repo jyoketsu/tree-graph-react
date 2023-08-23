@@ -832,7 +832,7 @@ function save(c_nodes: Node[]) {
 function pasteNode(
   map: NodeMap,
   pasteNodeKey: string,
-  pasteType: 'copy' | 'cut',
+  pasteType: string,
   targetNodeKey: string
 ) {
   let nodeMap = { ...map };

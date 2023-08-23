@@ -61,7 +61,6 @@ interface Props {
   updateDragInfo: setDragInfoFunc;
   dragStarted: boolean;
   dragEndFromOutside?: Function;
-  pasteNodeKey: string | null;
   bottomOptions?: boolean;
   hideHour?: boolean;
   isMind?: boolean;
@@ -114,7 +113,6 @@ const TreeNode = ({
   dragEndFromOutside,
   mouseEnterAvatar,
   mouseLeaveAvatar,
-  pasteNodeKey,
   bottomOptions,
   hideHour,
   handleFileChange,
@@ -154,6 +152,10 @@ Props) => {
   const gapTime = 166.66;
   let lastTime = 0;
   let width = 0;
+
+  const pasteType = localStorage.getItem('pasteType');
+  const pasteNodeKey =
+    pasteType === 'cut' ? localStorage.getItem('pasteNodeKey') : null;
 
   function handleMouseEnter(e: React.MouseEvent) {
     const crossCompDragId = sessionStorage.getItem('cross-comp-drag');
