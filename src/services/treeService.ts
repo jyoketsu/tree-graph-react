@@ -1,4 +1,4 @@
-import { getNodeWidth, getAncestor } from './util';
+import { getNodeWidth, getAncestor, rainbowColors } from './util';
 import Node from '../interfaces/Node';
 import CNode from '../interfaces/CNode';
 import NodeMap from '../interfaces/NodeMap';
@@ -25,7 +25,8 @@ export default function calculate(
   collapseMode?: boolean,
   expandedNodeKey?: string | null,
   inputNodeKey?: string,
-  hideRoot?: boolean
+  hideRoot?: boolean,
+  rainbowColor?: boolean
   // showChildNum?: boolean
 ) {
   // nodes = JSON.parse(JSON.stringify(nodes));
@@ -33,6 +34,7 @@ export default function calculate(
   nodes = _.cloneDeep(nodes);
   const start_x = startX;
   const start_y = startY;
+  let rainbowIndex = 0;
   // 根节点
   const root = nodes[startId];
   if (!root) {
@@ -151,7 +153,13 @@ export default function calculate(
     return secondLevel;
   }
 
-  function location(nodes: NodeMap, node: Node, x: number, y: number) {
+  function location(
+    nodes: NodeMap,
+    node: Node,
+    x: number,
+    y: number,
+    fatherRainbowColor?: string
+  ) {
     let childX = x;
     let childY = y;
     let lastChildY = y;
@@ -236,6 +244,18 @@ export default function calculate(
       }
     }
 
+    if (rainbowColor) {
+      node.backgroundColor = rainbowColors[rainbowIndex];
+      if (fatherRainbowColor) {
+        node.pathColor = fatherRainbowColor;
+      }
+      if (rainbowIndex + 1 === rainbowColors.length) {
+        rainbowIndex = 0;
+      } else {
+        rainbowIndex++;
+      }
+    }
+
     if (!collapsed) {
       // 遍历子节点
       for (let index = 0; index < childrenIds.length; index++) {
@@ -281,7 +301,13 @@ export default function calculate(
         childY += diffY + 5;
         lastChildY += diffY + 5;
 
-        childY = location(nodes, element, childX, childY);
+        childY = location(
+          nodes,
+          element,
+          childX,
+          childY,
+          rainbowColor ? node.backgroundColor : undefined
+        );
 
         if (childY > MAX_Y) {
           MAX_Y = childY;
@@ -295,6 +321,7 @@ export default function calculate(
     }
 
     node.last_child_y = lastChildY;
+
     nodeList.push(node as CNode);
     return childY;
   }

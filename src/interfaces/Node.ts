@@ -69,4 +69,5 @@ export default interface Node {
   rightDots?: any[];
   leftDots?: any[];
   texts?: string[];
+  pathColor?: string;
 }

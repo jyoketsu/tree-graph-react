@@ -1348,6 +1348,17 @@ function countNodeDescendants(nodeMap: NodeMap, nodeId: string) {
 const urlReg =
   /(([\w-]{1,}\.+)+(com|cn|org|net|info)(\/#\/)*\/*[\w\/\?=&%.]*)|(http:\/\/([\w-]{1,}\.+)+(com|cn|org|net|info)(\/#\/)*\/*[\w\/\?=&%.]*)|(https:\/\/([\w-]{1,}\.+)+(com|cn|org|net|info)(\/#\/)*\/*[\w\/\?=&%.]*)/g;
 
+const rainbowColors = [
+  '#FB6E54',
+  '#FEA726',
+  '#FAE30D',
+  '#AED33F',
+  '#63C193',
+  '#68ADE2',
+  '#A68AC3',
+  '#D77EAA',
+];
+
 export {
   findNodeById,
   textWidth,
@@ -1400,4 +1411,5 @@ export {
   splitTextIntoParagraphsInTexts,
   getTextWidth,
   copyNode,
+  rainbowColors,
 };

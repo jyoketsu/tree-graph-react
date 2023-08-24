@@ -1,4 +1,4 @@
-import { getNodeWidth, getShortedStr } from './util';
+import { getNodeWidth, getShortedStr, rainbowColors } from './util';
 import Node from '../interfaces/Node';
 import CNode from '../interfaces/CNode';
 import NodeMap from '../interfaces/NodeMap';
@@ -21,7 +21,8 @@ export default function calculate(
   secondZoomRatio: number,
   startX: number,
   startY: number,
-  inputNodeKey?: string
+  inputNodeKey?: string,
+  rainbowColor?: boolean
   // showChildNum?: boolean
 ) {
   // nodes = JSON.parse(JSON.stringify(nodes));
@@ -60,6 +61,8 @@ export default function calculate(
 
   let nodeList: CNode[] = [];
 
+  let rainbowIndex = 0;
+
   if (single) {
     location(nodes, root, start_x, start_y);
   } else {
@@ -78,7 +81,7 @@ export default function calculate(
         if (!node) {
           break;
         }
-        y1 = location(nodes, node, x1, y1);
+        y1 = location(nodes, node, x1, y1, undefined);
         if (index + 1 !== rightStarts.length) {
           y1 += rowGap * secondZoomRatio;
           if (y1 > MAX_Y) {
@@ -114,11 +117,11 @@ export default function calculate(
       root.leftDots = [];
       let minY;
       let maxY;
-      
+
       for (let index = 0; index < leftStarts.length; index++) {
         const element = leftStarts[index];
         if (element) {
-          root.leftDots.push(element.y);
+          root.leftDots.push(element);
           if (index === 0 && element.y) {
             minY = element.y;
           }
@@ -131,7 +134,7 @@ export default function calculate(
       for (let index = 0; index < rightStarts.length; index++) {
         const element = rightStarts[index];
         if (element) {
-          root.rightDots.push(element.y);
+          root.rightDots.push(element);
           if (index === 0 && element.y) {
             if (!minY) {
               minY = element.y;
@@ -230,7 +233,7 @@ export default function calculate(
     }
 
     let nodeHeight =
-    top_bottom_margin * 2 + (node.texts?.length || 1) * line_height;
+      top_bottom_margin * 2 + (node.texts?.length || 1) * line_height;
     if (node.imageUrl && node.imageHeight) {
       nodeHeight += node.imageHeight + 15 / 2;
     }
@@ -279,6 +282,15 @@ export default function calculate(
     //   }
     //   childY += (node.texts.length - 1) * blockHeight;
     // }
+
+    if (rainbowColor) {
+      node.backgroundColor = rainbowColors[rainbowIndex];
+      if (rainbowIndex + 1 === rainbowColors.length) {
+        rainbowIndex = 0;
+      } else {
+        rainbowIndex++;
+      }
+    }
 
     if (!node.contract) {
       // 遍历子节点

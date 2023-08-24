@@ -117,6 +117,7 @@ export interface MindProps {
   quickCommandKey?: string;
   paddingLeft?: number;
   paddingTop?: number;
+  rainbowColor?: boolean;
   handleClickExpand?: Function;
   handleCheck?: Function;
   handleClickAvatar?: NodeClickFunc;
@@ -190,6 +191,7 @@ export const Mind = React.forwardRef(
       quickCommandKey,
       paddingLeft = 50,
       paddingTop = 50,
+      rainbowColor,
       handleClickExpand,
       handleCheck,
       handleClickAvatar,
@@ -351,9 +353,9 @@ export const Mind = React.forwardRef(
         rootZoomRatio,
         secondZoomRatio,
         paddingLeft,
-        paddingTop
-        // showInput && selectedId ? selectedId : undefined
-        // showChildNum
+        paddingTop,
+        undefined,
+        rainbowColor
       );
 
       if (cal) {
@@ -361,7 +363,7 @@ export const Mind = React.forwardRef(
         setmaxY(cal.max_y);
         setmaxEnd(cal.max_end);
       }
-    }, [nodeMap, startId, singleColumn, showInput]);
+    }, [nodeMap, startId, singleColumn, showInput, rainbowColor]);
 
     useEffect(() => {
       if (defaultSelectedId) {
@@ -1559,7 +1561,9 @@ export const Mind = React.forwardRef(
                       <path
                         key={index}
                         d={path(node, dotY)}
-                        stroke={PATH_COLOR}
+                        stroke={
+                          rainbowColor ? node.backgroundColor : PATH_COLOR
+                        }
                         strokeWidth={PATH_WIDTH}
                         fill="transparent"
                       />
@@ -1569,22 +1573,26 @@ export const Mind = React.forwardRef(
               {node._key === startId && !singleColumn ? (
                 <g>
                   {node.leftDots
-                    ? node.leftDots.map((dotY, index) => (
+                    ? node.leftDots.map((dot, index) => (
                         <path
                           key={`leftDots-${index}`}
-                          d={rootPath(node, dotY, true)}
-                          stroke={PATH_COLOR}
+                          d={rootPath(node, dot.y, true)}
+                          stroke={
+                            rainbowColor ? dot.backgroundColor : PATH_COLOR
+                          }
                           strokeWidth={PATH_WIDTH * 1.5}
                           fill="transparent"
                         />
                       ))
                     : null}
                   {node.rightDots
-                    ? node.rightDots.map((dotY, index) => (
+                    ? node.rightDots.map((dot, index) => (
                         <path
                           key={`rightDots-${index}`}
-                          d={rootPath(node, dotY, false)}
-                          stroke={PATH_COLOR}
+                          d={rootPath(node, dot.y, false)}
+                          stroke={
+                            rainbowColor ? dot.backgroundColor : PATH_COLOR
+                          }
                           strokeWidth={PATH_WIDTH * 1.5}
                           fill="transparent"
                         />
@@ -1610,7 +1618,7 @@ export const Mind = React.forwardRef(
                     node.dots[0],
                     node.dots[node.dots.length - 1]
                   )}
-                  stroke={PATH_COLOR}
+                  stroke={rainbowColor ? node.backgroundColor : PATH_COLOR}
                   strokeWidth={PATH_WIDTH}
                   fill="transparent"
                 />
@@ -1642,7 +1650,7 @@ export const Mind = React.forwardRef(
                 }
                 avatarRadius={avatarRadius}
                 color={COLOR}
-                nodeColor={nodeColor}
+                nodeColor={rainbowColor ? undefined : nodeColor}
                 alias={new Date().getTime()}
                 selected={selectedId}
                 selectedNodes={selectedNodes}

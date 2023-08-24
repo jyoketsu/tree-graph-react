@@ -124,6 +124,7 @@ export interface TreeProps {
   quickCommandKey?: string;
   paddingLeft?: number;
   paddingTop?: number;
+  rainbowColor?: boolean;
   handleClickExpand?: Function;
   handleCheck?: Function;
   handleClickAvatar?: NodeClickFunc;
@@ -202,6 +203,7 @@ export const Tree = React.forwardRef(
       quickCommandKey,
       paddingLeft = 50,
       paddingTop = 50,
+      rainbowColor,
       handleClickExpand,
       handleCheck,
       handleClickAvatar,
@@ -379,7 +381,8 @@ export const Tree = React.forwardRef(
         undefined,
         // showInput && selectedId ? selectedId : undefined,
         undefined,
-        undefined
+        undefined,
+        rainbowColor
         // showChildNum
       );
 
@@ -392,7 +395,7 @@ export const Tree = React.forwardRef(
         setSecondEndX(cal.second_end_x);
         setisSingle(cal.isSingle);
       }
-    }, [nodeMap, startId, singleColumn, showInput]);
+    }, [nodeMap, startId, singleColumn, showInput, rainbowColor]);
 
     useEffect(() => {
       if (defaultSelectedId) {
@@ -1579,7 +1582,7 @@ export const Tree = React.forwardRef(
                       <path
                         d={fatherPath(node)}
                         fill="none"
-                        stroke={PATH_COLOR}
+                        stroke={rainbowColor ? node.pathColor : PATH_COLOR}
                         strokeWidth={PATH_WIDTH}
                       />
                     ) : null}
@@ -1587,7 +1590,9 @@ export const Tree = React.forwardRef(
                       <path
                         d={childPath(node)}
                         fill="none"
-                        stroke={PATH_COLOR}
+                        stroke={
+                          rainbowColor ? node.backgroundColor : PATH_COLOR
+                        }
                         strokeWidth={PATH_WIDTH}
                       />
                     ) : null}
@@ -1606,7 +1611,7 @@ export const Tree = React.forwardRef(
                     <path
                       d={fatherPath(node)}
                       fill="none"
-                      stroke={PATH_COLOR}
+                      stroke={rainbowColor ? node.pathColor : PATH_COLOR}
                       strokeWidth={PATH_WIDTH}
                     />
                   ) : null}
@@ -1621,7 +1626,7 @@ export const Tree = React.forwardRef(
                     <path
                       d={childPath(node)}
                       fill="none"
-                      stroke={PATH_COLOR}
+                      stroke={rainbowColor ? node.backgroundColor : PATH_COLOR}
                       strokeWidth={PATH_WIDTH}
                     />
                   ) : null}
@@ -1634,7 +1639,7 @@ export const Tree = React.forwardRef(
                     <path
                       d={rootHpaht(node.height, node.y)}
                       fill="none"
-                      stroke={PATH_COLOR}
+                      stroke={rainbowColor ? '#CB1B45' : PATH_COLOR}
                       strokeWidth={PATH_WIDTH}
                     />
                   ) : null}
@@ -1645,7 +1650,7 @@ export const Tree = React.forwardRef(
                     <path
                       d={rootVpath(node)}
                       fill="none"
-                      stroke={PATH_COLOR}
+                      stroke={rainbowColor ? '#CB1B45' : PATH_COLOR}
                       strokeWidth={PATH_WIDTH}
                     />
                   ) : null}
@@ -1656,7 +1661,7 @@ export const Tree = React.forwardRef(
                     <path
                       d={rootBottomVpath(node)}
                       fill="none"
-                      stroke={PATH_COLOR}
+                      stroke={rainbowColor ? '#CB1B45' : PATH_COLOR}
                       strokeWidth={PATH_WIDTH}
                     />
                   ) : null}
@@ -1687,7 +1692,7 @@ export const Tree = React.forwardRef(
                 }
                 avatarRadius={avatarRadius}
                 color={COLOR}
-                nodeColor={nodeColor}
+                nodeColor={rainbowColor ? undefined : nodeColor}
                 startId={startId}
                 alias={new Date().getTime()}
                 selected={selectedId}
