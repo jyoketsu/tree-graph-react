@@ -1,4 +1,5 @@
 import {
+  getDescendantKeys,
   getNodeWidth,
   getShortedStr,
   lightRainbowColors,
@@ -121,20 +122,61 @@ export default function calculate(
       MAX_X = MAX_X + Math.abs(MIN_X);
       MAX_END = MAX_END + Math.abs(MIN_END) + startX;
 
+      // ---start---
+      let rightCenterY = 0;
+      if (rightStarts.length === 1) {
+        // @ts-ignore
+        rightCenterY = rightStarts[0].y;
+      } else if (rightStarts.length > 1) {
+        rightCenterY =
+          // @ts-ignore
+          (rightStarts[0].y + rightStarts[rightStarts.length - 1].y) / 2;
+      }
+
+      let leftCenterY = 0;
+      if (leftStarts.length === 1) {
+        // @ts-ignore
+        leftCenterY = leftStarts[0].y;
+      } else if (leftStarts.length > 1) {
+        leftCenterY =
+          // @ts-ignore
+          (leftStarts[0].y + leftStarts[leftStarts.length - 1].y) / 2;
+      }
+      if (rightCenterY && leftCenterY && leftCenterY !== rightCenterY) {
+        const diffY = Math.abs(leftCenterY - rightCenterY);
+        MAX_Y += diffY;
+        let targetNodes = [];
+        if (rightCenterY < leftCenterY) {
+          targetNodes = rightStarts;
+          rightCenterY += diffY;
+        } else {
+          targetNodes = leftStarts;
+          leftCenterY += diffY;
+        }
+        const keys = getDescendantKeys(
+          targetNodes.map((item) => item._key),
+          nodes
+        );
+        for (let index = 0; index < keys.length; index++) {
+          let node = nodes[keys[index]];
+          node.y = node.y ? node.y + diffY : 0;
+          if (node.dots) {
+            for (let index = 0; index < node.dots.length; index++) {
+              node.dots[index] = node.dots[index] + diffY;
+            }
+          }
+        }
+      }
+      // ---end---
+
       root.rightDots = [];
       root.leftDots = [];
-      let minY;
-      let maxY;
 
       for (let index = 0; index < leftStarts.length; index++) {
         const element = leftStarts[index];
         if (element) {
           root.leftDots.push(element);
           if (index === 0 && element.y) {
-            minY = element.y;
-          }
-          if (index !== 0 && index + 1 === leftStarts.length && element.y) {
-            maxY = element.y;
           }
         }
       }
@@ -143,28 +185,14 @@ export default function calculate(
         const element = rightStarts[index];
         if (element) {
           root.rightDots.push(element);
-          if (index === 0 && element.y) {
-            if (!minY) {
-              minY = element.y;
-            } else if (element.y < minY) {
-              minY = element.y;
-            }
-          }
-          if (index !== 0 && index + 1 === rightStarts.length && element.y) {
-            if (!maxY) {
-              maxY = element.y;
-            } else if (element.y < maxY) {
-              maxY = element.y;
-            }
-          }
         }
       }
 
       root.x = Math.abs(MIN_END) + startX;
-      if (minY && maxY) {
-        root.y = (minY + maxY) / 2;
+      if (rightCenterY) {
+        root.y = rightCenterY;
       } else {
-        root.y = minY || maxY || MAX_Y / 2;
+        root.y = MAX_Y / 2;
       }
     } else {
       root.x = startX;

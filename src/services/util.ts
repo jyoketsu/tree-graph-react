@@ -572,6 +572,27 @@ export const getAncestor = (
   return ancestorList;
 };
 
+export const getDescendantKeys = (nodeKeys: string[], nodeMap: NodeMap) => {
+  const getChildKeys = (nodeKey: string) => {
+    const node = nodeMap[nodeKey];
+    if (node) {
+      keys.push(node._key);
+      const sortList = node.sortList;
+      for (let index = 0; index < sortList.length; index++) {
+        const childKey = sortList[index];
+        getChildKeys(childKey);
+      }
+    }
+  };
+
+  let keys: string[] = [];
+  for (let index = 0; index < nodeKeys.length; index++) {
+    const nodeKey = nodeKeys[index];
+    getChildKeys(nodeKey);
+  }
+  return keys;
+};
+
 function addChildNode(nodeMap: NodeMap, selectedId: string, value?: string) {
   let nodes = { ...nodeMap };
   const childNode: Node = {
