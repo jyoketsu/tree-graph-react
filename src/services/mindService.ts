@@ -1,4 +1,9 @@
-import { getNodeWidth, getShortedStr, rainbowColors } from './util';
+import {
+  getNodeWidth,
+  getShortedStr,
+  lightRainbowColors,
+  rainbowColors,
+} from './util';
 import Node from '../interfaces/Node';
 import CNode from '../interfaces/CNode';
 import NodeMap from '../interfaces/NodeMap';
@@ -64,7 +69,10 @@ export default function calculate(
   let rainbowIndex = 0;
 
   if (single) {
-    location(nodes, root, start_x, start_y);
+    // if (rainbowColor) {
+    //   root.backgroundColor = '#CB1B45';
+    // }
+    location(nodes, root, start_x, start_y, undefined, '#CB1B45');
   } else {
     if (!root.contract) {
       let { rightStarts, leftStarts } = getStarts(nodes, root);
@@ -197,7 +205,8 @@ export default function calculate(
     node: Node,
     x: number,
     y: number,
-    toLeft?: boolean
+    toLeft?: boolean,
+    backgroundColor?: string
   ) {
     const shorted = getShortedStr(node.name);
     if (shorted) {
@@ -284,11 +293,15 @@ export default function calculate(
     // }
 
     if (rainbowColor) {
-      node.backgroundColor = rainbowColors[rainbowIndex];
-      if (rainbowIndex + 1 === rainbowColors.length) {
-        rainbowIndex = 0;
+      if (node.father === startId) {
+        node.backgroundColor = rainbowColors[rainbowIndex];
+        if (rainbowIndex + 1 === rainbowColors.length) {
+          rainbowIndex = 0;
+        } else {
+          rainbowIndex++;
+        }
       } else {
-        rainbowIndex++;
+        node.backgroundColor = backgroundColor;
       }
     }
 
@@ -299,7 +312,17 @@ export default function calculate(
         if (!element) {
           break;
         }
-        childY = location(nodes, element, childX, childY, toLeft);
+        childY = location(
+          nodes,
+          element,
+          childX,
+          childY,
+          toLeft,
+          rainbowColor && node.father === startId
+            ? // @ts-ignore
+              lightRainbowColors[node.backgroundColor]
+            : backgroundColor
+        );
         node.dots.push(element.y);
         if (index + 1 !== childrenIds.length) {
           childY += rowGap;

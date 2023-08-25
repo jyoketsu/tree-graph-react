@@ -1,4 +1,9 @@
-import { getNodeWidth, getAncestor, rainbowColors } from './util';
+import {
+  getNodeWidth,
+  getAncestor,
+  rainbowColors,
+  lightRainbowColors,
+} from './util';
 import Node from '../interfaces/Node';
 import CNode from '../interfaces/CNode';
 import NodeMap from '../interfaces/NodeMap';
@@ -86,7 +91,6 @@ export default function calculate(
 
       for (let index = 0; index < secondLevel.length; index++) {
         const element = secondLevel[index];
-
         let diffY = rootHeight + ITEM_HEIGHT * 2;
         if (index === 0) {
           SECOND_START_NODE_ID = element?._key;
@@ -119,7 +123,10 @@ export default function calculate(
     nodeList.push(root as CNode);
   } else {
     // 单列视图
-    location(nodes, root, start_x, start_y);
+    if (rainbowColor) {
+      root.backgroundColor = '#CB1B45';
+    }
+    location(nodes, root, start_x, start_y, '#CB1B45');
   }
 
   // let nodeList = [];
@@ -158,7 +165,8 @@ export default function calculate(
     node: Node,
     x: number,
     y: number,
-    fatherRainbowColor?: string
+    fatherRainbowColor?: string,
+    backgroundColor?: string
   ) {
     let childX = x;
     let childY = y;
@@ -245,14 +253,20 @@ export default function calculate(
     }
 
     if (rainbowColor) {
-      node.backgroundColor = rainbowColors[rainbowIndex];
+      if (node.father === startId) {
+        node.backgroundColor = rainbowColors[rainbowIndex];
+        if (rainbowIndex + 1 === rainbowColors.length) {
+          rainbowIndex = 0;
+        } else {
+          rainbowIndex++;
+        }
+      }
+
       if (fatherRainbowColor) {
         node.pathColor = fatherRainbowColor;
       }
-      if (rainbowIndex + 1 === rainbowColors.length) {
-        rainbowIndex = 0;
-      } else {
-        rainbowIndex++;
+      if (backgroundColor) {
+        node.backgroundColor = backgroundColor;
       }
     }
 
@@ -306,7 +320,13 @@ export default function calculate(
           element,
           childX,
           childY,
-          rainbowColor ? node.backgroundColor : undefined
+          rainbowColor && node.father === startId
+            ? node.backgroundColor
+            : fatherRainbowColor,
+          rainbowColor && node.father === startId
+            ? // @ts-ignore
+              lightRainbowColors[node.backgroundColor]
+            : backgroundColor
         );
 
         if (childY > MAX_Y) {

@@ -1359,6 +1359,17 @@ const rainbowColors = [
   '#D77EAA',
 ];
 
+const lightRainbowColors = {
+  '#FB6E54': '#fcad9f',
+  '#FEA726': '#fecd85',
+  '#FAE30D': '#fbef76',
+  '#AED33F': '#d1e693',
+  '#63C193': '#a7dbc2',
+  '#68ADE2': '#aad0ee',
+  '#A68AC3': '#ccbddd',
+  '#D77EAA': '#e8b6cf',
+};
+
 export {
   findNodeById,
   textWidth,
@@ -1412,4 +1423,5 @@ export {
   getTextWidth,
   copyNode,
   rainbowColors,
+  lightRainbowColors,
 };

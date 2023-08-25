@@ -1626,7 +1626,11 @@ export const Tree = React.forwardRef(
                     <path
                       d={childPath(node)}
                       fill="none"
-                      stroke={rainbowColor ? node.backgroundColor : PATH_COLOR}
+                      stroke={
+                        rainbowColor
+                          ? node.pathColor || node.backgroundColor
+                          : PATH_COLOR
+                      }
                       strokeWidth={PATH_WIDTH}
                     />
                   ) : null}
