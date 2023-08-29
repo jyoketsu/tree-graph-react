@@ -1,4 +1,10 @@
-import React, { useState, useEffect, useRef, useImperativeHandle } from 'react';
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useImperativeHandle,
+  useCallback,
+} from 'react';
 import NodeMap from './interfaces/NodeMap';
 import Node from './interfaces/Node';
 import CNode from './interfaces/CNode';
@@ -28,6 +34,11 @@ import {
   countNodeDescendants,
   updateNodeByKey,
   copyNode,
+  download,
+  createObjectUrl,
+  downloadSvgAsPng,
+  getImgData,
+  downloadSvgAsPdf,
 } from './services/util';
 import MutilSelectedNodeKey from './interfaces/MutilSelectedNodeKey';
 import _ from 'lodash';
@@ -292,6 +303,10 @@ export const Tree = React.forwardRef(
 
     const block_height = topBottomMargin * 2 + lineHeight;
 
+    const [startExport, setStartExport] = useState<'' | 'svg' | 'png' | 'pdf'>(
+      ''
+    );
+
     // 暴露方法
     useImperativeHandle(ref, () => ({
       deleteNode: deletenode,
@@ -324,7 +339,50 @@ export const Tree = React.forwardRef(
       // closeOptions: function() {
       //   setShowOptionsNode(null);
       // },
+      exportImage: (type: 'svg' | 'png' | 'pdf') => {
+        window.postMessage({ name: 'export-status', message: 'start' }, '/');
+        setStartExport(type);
+      },
     }));
+
+    const downloadImage = useCallback(async () => {
+      if (startExport) {
+        const name = nodeMap[startId].name;
+        let svg = document.getElementsByClassName('tree-svg')[0].outerHTML;
+        const imageHrefRegex = /<image\s[^>]*href="([^"]*)"/g;
+        const imageMatches = svg.match(imageHrefRegex);
+        if (imageMatches) {
+          const hrefRegex = /href="([^"]+)"/;
+          for (let index = 0; index < imageMatches.length; index++) {
+            const match = imageMatches[index].toString();
+            const matches = match.match(hrefRegex);
+            if (matches) {
+              const href = matches[1];
+              const base64 = await getImgData(href);
+              if (base64) {
+                svg = svg.replace(href, base64 as string);
+              }
+            }
+          }
+        }
+
+        if (startExport === 'svg') {
+          download(createObjectUrl([svg], 'image/svg'), `${name}.svg`);
+        }
+        if (startExport === 'png') {
+          await downloadSvgAsPng(svg, maxEnd + 100, maxY + ITEM_HEIGHT, name);
+        }
+        if (startExport === 'pdf') {
+          await downloadSvgAsPdf(svg, maxEnd + 100, maxY + ITEM_HEIGHT, name);
+        }
+        setStartExport('');
+        window.postMessage({ name: 'export-status', message: 'end' }, '/');
+      }
+    }, [cnodes]);
+
+    useEffect(() => {
+      downloadImage();
+    }, [cnodes]);
 
     useEffect(() => {
       setCompId(guid(8, 16));
@@ -374,8 +432,8 @@ export const Tree = React.forwardRef(
         avatarRadius,
         rootZoomRatio,
         secondZoomRatio,
-        paddingLeft,
-        paddingTop,
+        startExport ? 50 : paddingLeft,
+        startExport ? 50 : paddingTop,
         columnSpacing,
         undefined,
         undefined,
@@ -395,7 +453,7 @@ export const Tree = React.forwardRef(
         setSecondEndX(cal.second_end_x);
         setisSingle(cal.isSingle);
       }
-    }, [nodeMap, startId, singleColumn, showInput, rainbowColor]);
+    }, [nodeMap, startId, singleColumn, showInput, rainbowColor, startExport]);
 
     useEffect(() => {
       if (defaultSelectedId) {
@@ -1342,6 +1400,8 @@ export const Tree = React.forwardRef(
           width={maxEnd + 100}
           height={maxY + ITEM_HEIGHT}
           style={{ backgroundColor: BACKGROUND_COLOR }}
+          xmlns="http://www.w3.org/2000/svg"
+          // xmlnsXlink="http://www.w3.org/1999/xlink"
         >
           <defs>
             <filter id="filterShadow" x="0" y="0" width="200%" height="200%">

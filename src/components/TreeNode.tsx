@@ -643,7 +643,7 @@ Props) => {
             y={iconLocationRes?.y}
             width="22"
             height="22"
-            xlinkHref={node.icon}
+            href={node.icon}
             style={{ cursor: 'pointer' }}
             onClick={handleClickPreview}
           />
@@ -669,7 +669,7 @@ Props) => {
             y={circleLocationRes?.y}
             width={avatarRadius * 2}
             height={avatarRadius * 2}
-            xlinkHref={node.avatarUri}
+            href={node.avatarUri}
             clipPath={`url(#${alias}-avatar-clip-${node._key})`}
             preserveAspectRatio="xMidYMid slice"
           />
@@ -879,7 +879,7 @@ Props) => {
             }
             width={node.imageWidth}
             height={node.imageHeight}
-            xlinkHref={node.imageUrl}
+            href={node.imageUrl}
             style={{ cursor: 'pointer' }}
             onClick={handleClickImage}
           />

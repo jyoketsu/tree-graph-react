@@ -274,6 +274,7 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | renameById       | Update the name of a node with a given ID                  |
 | updateNodeById   | Update the data of a node with a given ID                  |
 | updateNodesByIds | Update the data of nodes with given IDs                    |
+| exportImage      | Export image (type: 'svg', 'png' , 'pdf')                  |
 
 <br/>
 

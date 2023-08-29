@@ -40,10 +40,10 @@ const nodes: NodeMap = {
     // icon: 'https://cdn-icare.qingtime.cn/docFolder.svg',
     icon: '😀',
     dotIcon: 'https://cdn-icare.qingtime.cn/shareOut1.svg?v=1604893936765',
-    imageUrl:
-      'https://image.api.playstation.com/trophy/np/NPWR12518_00_009C1232E900005FE409857E926767DFE9CAC7F371/CCDC60CADE4B3970C348FEFDE0094BA95C0A802F.PNG',
-    imageWidth: 320,
-    imageHeight: 176,
+    // imageUrl:
+    //   'https://image.api.playstation.com/trophy/np/NPWR12518_00_009C1232E900005FE409857E926767DFE9CAC7F371/CCDC60CADE4B3970C348FEFDE0094BA95C0A802F.PNG',
+    // imageWidth: 320,
+    // imageHeight: 176,
   },
   '003': {
     _key: '003',
@@ -286,10 +286,10 @@ const nodes: NodeMap = {
     father: '011',
     sortList: [],
     checked: true,
-    imageUrl:
-      'https://image.api.playstation.com/trophy/np/NPWR06418_00_00152378687F66194A957179F8D1FA81A759297BDC/70A10BD8B6A5C767F2E6973E0DACB11D93B7C06D.PNG',
-    imageWidth: 320,
-    imageHeight: 176,
+    // imageUrl:
+    //   'https://image.api.playstation.com/trophy/np/NPWR06418_00_00152378687F66194A957179F8D1FA81A759297BDC/70A10BD8B6A5C767F2E6973E0DACB11D93B7C06D.PNG',
+    // imageWidth: 320,
+    // imageHeight: 176,
     hour: 0.1,
     limitDay: 1610726400000,
   },
@@ -490,15 +490,24 @@ const Template: Story<TreeProps> = (args) => {
         // onClick={() => alert(JSON.stringify(treeRef.current.saveNodes()))}
         onClick={() => console.log('---nodes---', treeRef.current.saveNodes())}
       >
-        保存
+        Save
       </button>
-      <button onClick={() => treeRef.current.addNext()}>添加节点</button>
-      <button onClick={() => treeRef.current.addChild()}>添加子节点</button>
-      <button onClick={() => treeRef.current.deleteNode()}>删除节点</button>
-      <button draggable>拖拽这个节点到树</button>
+      <button onClick={() => treeRef.current.addNext()}>Add silbing</button>
+      <button onClick={() => treeRef.current.addChild()}>Add child</button>
+      <button onClick={() => treeRef.current.deleteNode()}>Delete</button>
+      <button draggable>Drag this node to the tree</button>
       {/* <button onClick={() => alert(treeRef.current.getSelectedId())}>
         获取选中节点
       </button> */}
+      <button onClick={() => treeRef.current.exportImage('svg')}>
+        Export svg
+      </button>
+      <button onClick={() => treeRef.current.exportImage('png')}>
+        Export png
+      </button>
+      <button onClick={() => treeRef.current.exportImage('pdf')}>
+        Export pdf
+      </button>
       <Tree ref={treeRef} {...args} />
     </div>
   );
@@ -529,8 +538,8 @@ MultiCol.args = {
   // pathColor: '#535953',
   // fontWeight: 800,
   // nodeColor: 'red',
-  // paddingLeft: 1000,
-  // paddingTop: 1000,
+  paddingLeft: 1000,
+  paddingTop: 1000,
   quickCommandKey: '/',
   handleClickNode: (node: any) => console.log('---handleClickNode---', node),
   handleClickDot: (node: any) => console.log('---handleClickDot---', node),

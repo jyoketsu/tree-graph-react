@@ -3,6 +3,7 @@ import CNode from '../interfaces/CNode';
 import NodeMap from '../interfaces/NodeMap';
 import MutilSelectedNodeKey from '../interfaces/MutilSelectedNodeKey';
 import _ from 'lodash';
+import { jsPDF } from 'jspdf';
 
 function findNodeById(nodes: CNode[], id: string) {
   return nodes.find((node: CNode) => node._key === id);
@@ -1367,7 +1368,7 @@ function countNodeDescendants(nodeMap: NodeMap, nodeId: string) {
 }
 
 const urlReg =
-  /(([\w-]{1,}\.+)+(com|cn|org|net|info)(\/#\/)*\/*[\w\/\?=&%.]*)|(http:\/\/([\w-]{1,}\.+)+(com|cn|org|net|info)(\/#\/)*\/*[\w\/\?=&%.]*)|(https:\/\/([\w-]{1,}\.+)+(com|cn|org|net|info)(\/#\/)*\/*[\w\/\?=&%.]*)/g;
+  /(([\w-]{1,}\.+)+([a-zA-Z]+)(\/#\/)*\/*[\w\/\?=&%.]*)|(http:\/\/([\w-]{1,}\.+)+([a-zA-Z]+)(\/#\/)*\/*[\w\/\?=&%.]*)|(https:\/\/([\w-]{1,}\.+)+([a-zA-Z]+)(\/#\/)*\/*[\w\/\?=&%.]*)/g;
 
 const rainbowColors = [
   '#FB6E54',
@@ -1381,15 +1382,141 @@ const rainbowColors = [
 ];
 
 const lightRainbowColors = {
-  '#FB6E54': '#fcad9f',
-  '#FEA726': '#fecd85',
-  '#FAE30D': '#fbef76',
-  '#AED33F': '#d1e693',
-  '#63C193': '#a7dbc2',
-  '#68ADE2': '#aad0ee',
-  '#A68AC3': '#ccbddd',
-  '#D77EAA': '#e8b6cf',
+  '#FB6E54': '#fcbdb2',
+  '#FEA726': '#fed79d',
+  '#FAE30D': '#fbf291',
+  '#AED33F': '#daeba8',
+  '#63C193': '#b8e2ce',
+  '#68ADE2': '#bbd9f1',
+  '#A68AC3': '#d6cae3',
+  '#D77EAA': '#ecc4d8',
 };
+
+export function createObjectUrl(content: string[], type: string) {
+  return window.URL.createObjectURL(new Blob(content, { type: type }));
+}
+
+export function download(url: string, fileName?: string) {
+  const a = document.createElement('a');
+  a.href = url;
+  if (fileName) {
+    a.download = fileName;
+  } else {
+    const reg = /([^\/]+)\.([^\/]+)$/i;
+    const matchs = url.match(reg);
+    a.download = matchs ? matchs[0] : 'file';
+  }
+  a.click();
+}
+
+export function downloadSvgAsPng(
+  svg: string,
+  width: number,
+  height: number,
+  title: string
+) {
+  let image = new Image();
+  image.src =
+    'data:image/svg+xml;base64,' +
+    window.btoa(unescape(encodeURIComponent(svg)));
+
+  let canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+
+  let context = canvas.getContext('2d');
+
+  return new Promise(async function (resolve, reject) {
+    try {
+      image.onload = () => {
+        if (context) {
+          context.drawImage(image, 0, 0);
+          var a = document.createElement('a');
+          a.href = canvas.toDataURL('image/png');
+          a.download = title;
+          a.click();
+          resolve({ status: true });
+        }
+      };
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+/**
+ * 图像转Base64
+ */
+function getBase64Image(img: HTMLImageElement) {
+  let canvas = document.createElement('canvas');
+  canvas.width = img.width;
+  canvas.height = img.height;
+  let ctx = canvas.getContext('2d');
+  if (ctx) {
+    ctx.drawImage(img, 0, 0, img.width, img.height);
+    const ext = img.src.substring(img.src.lastIndexOf('.') + 1).toLowerCase();
+    const dataURL = canvas.toDataURL('image/' + ext);
+    return dataURL;
+  } else {
+    return '';
+  }
+}
+
+export function getImgData(imgUrl: string) {
+  let image = new Image();
+  image.crossOrigin = 'Anonymous';
+  image.src = imgUrl;
+  return new Promise(async function (resolve, reject) {
+    try {
+      image.onload = () => {
+        const base64 = getBase64Image(image);
+        resolve(base64);
+      };
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
+
+export function downloadSvgAsPdf(
+  svg: string,
+  width: number,
+  height: number,
+  title: string
+) {
+  let image = new Image();
+  image.src =
+    'data:image/svg+xml;base64,' +
+    window.btoa(unescape(encodeURIComponent(svg)));
+
+  let canvas = document.createElement('canvas');
+  canvas.width = width;
+  canvas.height = height;
+
+  let context = canvas.getContext('2d');
+
+  return new Promise(async function (resolve, reject) {
+    try {
+      image.onload = () => {
+        if (context) {
+          context.drawImage(image, 0, 0);
+          const imageData = canvas.toDataURL('image/png');
+
+          const doc = new jsPDF(
+            width > height ? 'landscape' : 'portrait',
+            'px',
+            [width, height]
+          );
+          doc.addImage(imageData, 'JPEG', 0, 0, width, height);
+          doc.save(`${title}.pdf`);
+          resolve({ status: true });
+        }
+      };
+    } catch (error) {
+      reject(error);
+    }
+  });
+}
 
 export {
   findNodeById,

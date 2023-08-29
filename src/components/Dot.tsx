@@ -96,7 +96,7 @@ Props) => {
           y={node.y + BLOCK_HEIGHT / 2 - (hover ? 9 : 5)}
           width={hover ? 18 : 10}
           height={hover ? 18 : 10}
-          xlinkHref={node.dotIcon}
+          href={node.dotIcon}
         />
       ) : null}
     </g>

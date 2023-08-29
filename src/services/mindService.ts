@@ -79,9 +79,9 @@ export default function calculate(
       let { rightStarts, leftStarts } = getStarts(nodes, root);
 
       let [x1, y1, x2, y2] = [
-        rootWidth + INDENT * 2,
+        rootWidth + INDENT * 4,
         start_x,
-        -INDENT * 2,
+        -INDENT * 4,
         start_y,
       ];
 

@@ -105,7 +105,7 @@ const DragNode = ({
           y={iconLocationRes ? iconLocationRes.y + movedNodeY : 0}
           width="22"
           height="22"
-          xlinkHref={node.icon}
+          href={node.icon}
         />
       ) : null}
       {/* 头像/图片 */}
@@ -131,7 +131,7 @@ const DragNode = ({
               y={circleLocationRes ? circleLocationRes.y + movedNodeY : 0}
               width="22"
               height="22"
-              xlinkHref={node.avatarUri}
+              href={node.avatarUri}
               clipPath={`url(#${alias}-avatar-clip-${node._key})`}
             />,
           ]
