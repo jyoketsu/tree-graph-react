@@ -1371,25 +1371,21 @@ const urlReg =
   /(([\w-]{1,}\.+)+([a-zA-Z]+)(\/#\/)*\/*[\w\/\?=&%.]*)|(http:\/\/([\w-]{1,}\.+)+([a-zA-Z]+)(\/#\/)*\/*[\w\/\?=&%.]*)|(https:\/\/([\w-]{1,}\.+)+([a-zA-Z]+)(\/#\/)*\/*[\w\/\?=&%.]*)/g;
 
 const rainbowColors = [
-  '#FB6E54',
-  '#FEA726',
-  '#FAE30D',
-  '#AED33F',
-  '#63C193',
-  '#68ADE2',
-  '#A68AC3',
-  '#D77EAA',
+  '#f9423a',
+  '#f6a04d',
+  '#f3d321',
+  '#00bc7b',
+  '#486aff',
+  '#4d49be',
 ];
 
 const lightRainbowColors = {
-  '#FB6E54': '#fcbdb2',
-  '#FEA726': '#fed79d',
-  '#FAE30D': '#fbf291',
-  '#AED33F': '#daeba8',
-  '#63C193': '#b8e2ce',
-  '#68ADE2': '#bbd9f1',
-  '#A68AC3': '#d6cae3',
-  '#D77EAA': '#ecc4d8',
+  '#f9423a': '#fed9d8',
+  '#f6a04d': '#fdecdb',
+  '#f3d321': '#fdf6d3',
+  '#00bc7b': '#ccf2e5',
+  '#486aff': '#dae1ff',
+  '#4d49be': '#dbdbf2',
 };
 
 export function createObjectUrl(content: string[], type: string) {
