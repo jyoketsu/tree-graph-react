@@ -1397,8 +1397,8 @@ export const Tree = React.forwardRef(
         <svg
           className="tree-svg"
           viewBox={`0 0 ${maxEnd + 100} ${maxY + ITEM_HEIGHT}`}
-          width={maxEnd + 100}
-          height={maxY + ITEM_HEIGHT}
+          width={startExport ? (maxEnd + 100) * 2 : maxEnd + 100}
+          height={startExport ? (maxY + ITEM_HEIGHT) * 2 : maxY + ITEM_HEIGHT}
           style={{ backgroundColor: BACKGROUND_COLOR }}
           xmlns="http://www.w3.org/2000/svg"
           // xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -1755,7 +1755,7 @@ export const Tree = React.forwardRef(
                     : FONT_SIZE
                 }
                 avatarRadius={avatarRadius}
-                color={COLOR}
+                color={rainbowColor && node.father === startId ? '#FFF' : COLOR}
                 nodeColor={rainbowColor ? undefined : nodeColor}
                 startId={startId}
                 alias={new Date().getTime()}

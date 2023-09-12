@@ -247,7 +247,12 @@ function getNodeWidth(
 
   // -------------------------------------------
   let width = 50;
-  const res = getTextWidth(node.name, textMaxWidth, fontSize, node.bold);
+  const res = getTextWidth(
+    node.name || 'untitled',
+    textMaxWidth,
+    fontSize,
+    node.bold
+  );
   width = res.width;
   if (res.texts.length) {
     node.texts = res.texts;
@@ -1417,8 +1422,8 @@ export function downloadSvgAsPng(
     window.btoa(unescape(encodeURIComponent(svg)));
 
   let canvas = document.createElement('canvas');
-  canvas.width = width;
-  canvas.height = height;
+  canvas.width = width * 2;
+  canvas.height = height * 2;
 
   let context = canvas.getContext('2d');
 
@@ -1486,8 +1491,8 @@ export function downloadSvgAsPdf(
     window.btoa(unescape(encodeURIComponent(svg)));
 
   let canvas = document.createElement('canvas');
-  canvas.width = width;
-  canvas.height = height;
+  canvas.width = width * 2;
+  canvas.height = height * 2;
 
   let context = canvas.getContext('2d');
 

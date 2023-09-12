@@ -421,7 +421,7 @@ const TreeNode = ({
         <ClickOutside onClickOutside={handleClickoutside}>
           <input
             autoFocus={true}
-            placeholder="未命名"
+            placeholder="untitled"
             value={value}
             style={{
               boxSizing: 'border-box',

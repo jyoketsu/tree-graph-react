@@ -478,8 +478,8 @@ MultiCol.args = {
   showChildNum: true,
   // disabled: true,
   // nodeColor: 'red',
-  // paddingLeft: 1000,
-  // paddingTop: 1000,
+  paddingLeft: 500,
+  paddingTop: 500,
   handleClickDot: (node: any) => console.log('---handleClickDot---', node),
   handleClickMoreButton: (node: any, clientX: number, clientY: number) =>
     console.log('---handleClickMoreButton---', node, clientX, clientY),

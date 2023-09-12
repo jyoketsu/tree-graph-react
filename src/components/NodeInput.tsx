@@ -63,7 +63,7 @@ const NodeInput = ({
       setInputWidth(
         selected.texts
           ? textMaxWidth
-          : textWidthAll(FONT_SIZE || 14, selected.name)
+          : textWidthAll(FONT_SIZE || 14, selected.name || 'untitled')
       );
       inputRef.current.value = '';
       if (!inputEmpty) {
@@ -119,7 +119,7 @@ const NodeInput = ({
 
   const handleChange = (val: string) => {
     const res = getTextWidth(
-      val,
+      val || 'untitled',
       textMaxWidth,
       FONT_SIZE || 14,
       selected?.bold
@@ -215,7 +215,7 @@ const NodeInput = ({
             }}
             ref={inputRef}
             autoFocus={true}
-            placeholder="未命名"
+            placeholder="untitled"
             rows={rows}
             value={value}
             onChange={(e: any) => handleChange(e.target.value)}

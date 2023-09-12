@@ -36,6 +36,7 @@ interface Props {
   moreButtonWidth?: number;
   showIcon: boolean;
   showAvatar: boolean;
+  selectedColor?: string;
   singleColumn?: boolean;
   hideBorder?: boolean;
   dotColor: string;
@@ -85,6 +86,7 @@ const TreeNode = ({
   selectedNodes,
   showIcon,
   showAvatar,
+  selectedColor,
   singleColumn,
   hideBorder,
   showPreviewButton,
@@ -494,7 +496,7 @@ Props) => {
     }
   }
 
-  const normalTextColor = nodeRectClassName ? '#595959' : color;
+  const normalTextColor = color;
   const buttonWidth = moreButtonWidth ? moreButtonWidth : lineHeight * 0.5;
 
   const buttonY = bottomOptions
@@ -777,7 +779,7 @@ Props) => {
               : nodeRectClassName === 'selected' &&
                 !node.color &&
                 node._key !== startId
-              ? '#000000'
+              ? selectedColor || '#000000'
               : node._key === startId
               ? '#FFF'
               : node.color
