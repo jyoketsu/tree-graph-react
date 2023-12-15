@@ -13,7 +13,6 @@ interface HandleQuickCommandOpen {
 interface Props {
   selectedId: string | null;
   nodeList: CNode[];
-  showChildNum: boolean;
   topBottomMargin: number;
   lineHeight: number;
   FONT_SIZE?: number;
@@ -34,7 +33,6 @@ interface Props {
 const NodeInput = ({
   selectedId,
   nodeList,
-  showChildNum,
   topBottomMargin,
   lineHeight,
   FONT_SIZE,
@@ -160,7 +158,7 @@ const NodeInput = ({
       showIcon,
       showAvatar,
       avatarRadius,
-      showChildNum
+      true
     );
     if (selected.toLeft && !selected.name) {
       // left = textX ? textX.x + 85 : selected.x + 85;

@@ -6,6 +6,7 @@ import Expand from '../components/Expand';
 import DragInfo from '../interfaces/DragInfo';
 import { isEmoji, nodeLocation, textWidthAll, urlReg } from '../services/util';
 import { HandleFileChange } from '..';
+import Add from './Add';
 
 interface CheckFunc {
   (node: CNode, event: MouseEvent): void;
@@ -29,11 +30,6 @@ interface Props {
   alias: number;
   selected: string | null;
   selectedNodes: Node[];
-  showPreviewButton: boolean;
-  showAddButton: boolean;
-  showMoreButton: boolean;
-  showChildNum: boolean;
-  moreButtonWidth?: number;
   showIcon: boolean;
   showAvatar: boolean;
   selectedColor?: string;
@@ -43,6 +39,7 @@ interface Props {
   hoverBorderColor: string;
   selectedBorderColor: string;
   selectedBackgroundColor: string;
+  treeBackgroundColor: string;
   nodeColor?: string;
   handleCheck: CheckFunc;
   handleClickAvatar: Function;
@@ -50,8 +47,6 @@ interface Props {
   handleClickNode: Function;
   handleDbClickNode: Function;
   clickPreview: Function;
-  clickAdd: Function;
-  clickMore: Function;
   handleClickDot: Function;
   handleExpand: Function;
   mouseEnterAvatar?: Function;
@@ -69,6 +64,8 @@ interface Props {
   onContextMenu?: (nodeKey: string, event: React.MouseEvent) => void;
   onClickNodeImage?: (url?: string) => void;
   onResizeImage: (nodeKey: string, width: number) => void;
+  handleAddChild: () => void;
+  handleAddNext: () => void;
 }
 
 // let timer: NodeJS.Timeout;
@@ -89,14 +86,10 @@ const TreeNode = ({
   selectedColor,
   singleColumn,
   hideBorder,
-  showPreviewButton,
-  showAddButton,
-  showMoreButton,
-  showChildNum,
-  moreButtonWidth,
   dotColor,
   hoverBorderColor,
   selectedBorderColor,
+  treeBackgroundColor,
   nodeColor,
   handleCheck,
   handleClickAvatar,
@@ -104,8 +97,6 @@ const TreeNode = ({
   handleClickNode,
   handleDbClickNode,
   clickPreview,
-  clickAdd,
-  clickMore,
   updateDragInfo,
   handleDragStart,
   dragStarted,
@@ -121,6 +112,8 @@ const TreeNode = ({
   onContextMenu,
   onClickNodeImage,
   onResizeImage,
+  handleAddChild,
+  handleAddNext,
 }: // nodeOptionsOpened,
 Props) => {
   const [hover, sethover] = useState(false);
@@ -130,9 +123,6 @@ Props) => {
   const [clickY, setclickY] = useState(0);
   // const [hoverMore, setHoverMore] = useState(false);
   const [y, setY] = useState(0);
-  const [hoverPreview, setHoverPreview] = useState(false);
-  const [hoverAdd, setHoverAdd] = useState(false);
-  const [hoverMore, setHoverMore] = useState(false);
   const [hoverImage, setHoverImage] = useState(false);
   const blockHeight = topBottomMargin * 2 + lineHeight;
   const textHeight =
@@ -188,30 +178,6 @@ Props) => {
     }
   }
 
-  function handleMouseEnterPreview() {
-    setHoverPreview(true);
-  }
-
-  function handleMouseLeavePreview() {
-    setHoverPreview(false);
-  }
-
-  function handleMouseEnterAdd() {
-    setHoverAdd(true);
-  }
-
-  function handleMouseLeaveAdd() {
-    setHoverAdd(false);
-  }
-
-  function handleMouseEnterMore() {
-    setHoverMore(true);
-  }
-
-  function handleMouseLeaveMore() {
-    setHoverMore(false);
-  }
-
   // function handleMouseEnterMore() {
   //   setHoverMore(true);
   //   // timer = setTimeout(() => {
@@ -226,16 +192,6 @@ Props) => {
 
   function handleClickPreview() {
     clickPreview(node);
-  }
-
-  function handleClickAdd(event: React.MouseEvent) {
-    event.stopPropagation();
-    clickAdd(node, event);
-  }
-
-  function handleClickMore(event: React.MouseEvent) {
-    // clearTimeout(timer);
-    clickMore(node, event);
   }
 
   function handleDragEnter() {
@@ -378,8 +334,6 @@ Props) => {
     window.removeEventListener('mouseup', mouseUpHandle);
   }
 
-  // const childNumLocationRes =
-  //   showChildNum && node.childNum ? location(node, 'childNum') : null;
   const textLocationRes = location(node, 'text');
   const circleLocationRes = location(node, 'avatar');
   const checkLocationRes = location(node, 'checkbox');
@@ -497,39 +451,8 @@ Props) => {
   }
 
   const normalTextColor = color;
-  const buttonWidth = moreButtonWidth ? moreButtonWidth : lineHeight * 0.5;
 
-  const buttonY = bottomOptions
-    ? node.y + blockHeight
-    : node.y + (blockHeight - buttonWidth) / 2;
-
-  const optionsButtonWidth =
-    (showAddButton ? buttonWidth : 0) +
-    (showPreviewButton ? buttonWidth : 0) +
-    (showMoreButton ? buttonWidth : 0);
-
-  const previewButtonX =
-    node.x + node.width + 2 - (bottomOptions ? optionsButtonWidth : 0);
-
-  const addButtonX =
-    node.x +
-    node.width +
-    2 +
-    (showPreviewButton ? buttonWidth : 0) -
-    (bottomOptions ? optionsButtonWidth : 0);
-  const moreButtonX =
-    node.x +
-    node.width +
-    2 +
-    (showPreviewButton ? buttonWidth : 0) +
-    (showAddButton ? buttonWidth : 0) -
-    (bottomOptions ? optionsButtonWidth : 0);
-
-  const totalButtonWidth =
-    2 +
-    (showPreviewButton ? buttonWidth : 0) +
-    (showAddButton ? buttonWidth : 0) +
-    (showMoreButton ? buttonWidth : 0);
+  const totalButtonWidth = 2;
 
   return node.x && node.y ? (
     <g
@@ -559,10 +482,10 @@ Props) => {
       {/* 外框 */}
       {/* 隱式外框，用戶擴大鼠標感應面積 */}
       <rect
-        x={node.x}
+        x={node.x - 10}
         y={node.y}
-        width={node.name ? node.width + totalButtonWidth : 100}
-        height={rectHeight}
+        width={node.name ? node.width + totalButtonWidth + 20 : 100 + 20}
+        height={rectHeight + 10}
         fillOpacity={0}
       />
       {/* 顯式外框 */}
@@ -585,28 +508,6 @@ Props) => {
           ...nodeRectStyle,
         }}
       />
-      {/* {showChildNum && node.childNum ? (
-        <g>
-          <circle
-            cx={(childNumLocationRes?.x || 0) + 11}
-            cy={childNumLocationRes?.y || 0}
-            r="11"
-            fill={backgroundColor}
-            style={{ filter: 'brightness(0.86)' }}
-          />
-          <text
-            x={(childNumLocationRes?.x || 0) + 11}
-            y={(childNumLocationRes?.y || 0) + 1}
-            alignmentBaseline="middle"
-            textAnchor="middle"
-            fontSize={node.childNum > 999 ? 10 : 12}
-            fill={node._key === startId ? '#FFF' : node.color || color}
-            style={{ userSelect: 'none' }}
-          >
-            {node.childNum > 999 ? '999+' : node.childNum}
-          </text>
-        </g>
-      ) : null} */}
       {node.isPack ? (
         <use
           key="pack"
@@ -909,60 +810,6 @@ Props) => {
         </g>
       ) : null}
 
-      {true ? (
-        // || nodeOptionsOpened
-        <g
-          style={{
-            opacity: hover && !dragStarted ? 1 : 0,
-          }}
-        >
-          {/* 預覽按鈕 */}
-          {showPreviewButton ? (
-            <use
-              href="#preview"
-              x={hoverPreview ? previewButtonX - 2 : previewButtonX}
-              y={hoverPreview ? buttonY - 2 : buttonY}
-              width={hoverPreview ? buttonWidth + 2 : buttonWidth}
-              height={hoverPreview ? buttonWidth + 2 : buttonWidth}
-              onClick={handleClickPreview}
-              // fill={hoverPreview ? '#000000' : '#757676'}
-              fill={color}
-              onMouseEnter={handleMouseEnterPreview}
-              onMouseLeave={handleMouseLeavePreview}
-            />
-          ) : null}
-          {/* 新增按鈕 */}
-          {showAddButton ? (
-            <use
-              href="#add"
-              x={hoverAdd ? addButtonX - 2 : addButtonX}
-              y={hoverAdd ? buttonY - 2 : buttonY}
-              width={hoverAdd ? buttonWidth + 2 : buttonWidth}
-              height={hoverAdd ? buttonWidth + 2 : buttonWidth}
-              onClick={handleClickAdd}
-              // fill={hoverAdd ? '#000000' : '#757676'}
-              fill={color}
-              onMouseEnter={handleMouseEnterAdd}
-              onMouseLeave={handleMouseLeaveAdd}
-            />
-          ) : null}
-          {/* 选项/更多按钮 */}
-          {showMoreButton ? (
-            <use
-              href="#more"
-              x={hoverMore ? moreButtonX - 2 : moreButtonX}
-              y={hoverMore ? buttonY - 2 : buttonY}
-              width={hoverMore ? buttonWidth + 2 : buttonWidth}
-              height={hoverMore ? buttonWidth + 2 : buttonWidth}
-              onClick={handleClickMore}
-              // fill={hoverMore ? '#000000' : '#757676'}
-              fill={color}
-              onMouseEnter={handleMouseEnterMore}
-              onMouseLeave={handleMouseLeaveMore}
-            />
-          ) : null}
-        </g>
-      ) : null}
       {node._key !== startId ? (
         <Dot
           node={node}
@@ -974,11 +821,14 @@ Props) => {
           position={node.toLeft ? 'right' : 'left'}
         />
       ) : null}
-      {hover || selected === node._key || node.contract ? (
+      {node.contract || (hover && node._key !== selected) ? (
         <Expand
           node={node}
           BLOCK_HEIGHT={blockHeight}
-          showChildNum={showChildNum}
+          rectHeight={rectHeight}
+          backgroundColor={
+            treeBackgroundColor === 'unset' ? '#FFF' : treeBackgroundColor
+          }
           handleClickExpand={() => handleExpand(node)}
           position={
             bottomOptions
@@ -990,6 +840,25 @@ Props) => {
               : 'leftBottom'
           }
           PATH_COLOR={dotColor}
+        />
+      ) : null}
+      {node._key === selected && !node.contract ? (
+        <Add
+          node={node}
+          BLOCK_HEIGHT={blockHeight}
+          rectHeight={rectHeight}
+          position={
+            bottomOptions
+              ? node.toLeft
+                ? 'left'
+                : 'right'
+              : node._key === startId && !singleColumn
+              ? 'bottomCenter'
+              : 'leftBottom'
+          }
+          PATH_COLOR={dotColor}
+          handleAddChild={handleAddChild}
+          handleAddNext={handleAddNext}
         />
       ) : null}
       {/* <div

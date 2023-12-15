@@ -311,10 +311,6 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | checkBoxWidth            | Width of the checkbox                                                                      | Number   | No       | 18      |
 | disableShortcut          | Whether to disable keyboard shortcuts                                                      | Number   | No       | -       |
 | disabled                 | Whether the tree is read-only                                                              | Number   | No       | -       |
-| showPreviewButton        | Whether to show the node preview button                                                    | boolean  | No       | -       |
-| showAddButton            | Whether to show the "add node" button                                                      | boolean  | No       | -       |
-| showMoreButton           | Whether to show the "more" button                                                          | boolean  | No       | -       |
-| moreButtonWidth          | Width of the node's action buttons                                                         | boolean  | No       | -       |
 | showIcon                 | Whether to show the icons                                                                  | boolean  | No       | true    |
 | showAvatar               | Whether to show the avatars                                                                | Boolean  | -        |         |
 | avatarUri                | Avatar URL                                                                                 | String   | -        |         |
@@ -329,8 +325,6 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | handleAddChild           | Event for adding a child node (parameters: selectedNode)                                   | Function | No       | -       |
 | handleDeleteNode         | Event for deleting nodes (parameters: selectedId, selectedNodes)                           | Function | No       | -       |
 | handleClickPreviewButton | Click event for the preview button (parameters: clickNode)                                 | Function | No       | -       |
-| handleClickAddButton     | Click event for the "add node" button (parameters: clickNode)                              | Function | No       | -       |
-| handleClickMoreButton    | Click event for the "more" button (parameters: clickNode)                                  | Function | No       | -       |
 | handleClickDot           | Click event for dots                                                                       | Function | No       | -       |
 | handleShiftUpDown        | Move node up/down (parameters: id, sortList, type)                                         | Function | No       | -       |
 | handleSave               | Save the tree                                                                              | Function | No       | -       |

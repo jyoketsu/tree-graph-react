@@ -1376,21 +1376,21 @@ const urlReg =
   /(([\w-]{1,}\.+)+([a-zA-Z]+)(\/#\/)*\/*[\w\/\?=&%.]*)|(http:\/\/([\w-]{1,}\.+)+([a-zA-Z]+)(\/#\/)*\/*[\w\/\?=&%.]*)|(https:\/\/([\w-]{1,}\.+)+([a-zA-Z]+)(\/#\/)*\/*[\w\/\?=&%.]*)/g;
 
 const rainbowColors = [
-  '#f9423a',
-  '#f6a04d',
-  '#f3d321',
-  '#00bc7b',
-  '#486aff',
-  '#4d49be',
+  '#fa6761',
+  '#f7b370',
+  '#f5db4d',
+  '#32c995',
+  '#6c87ff',
+  '#706dcb',
 ];
 
 const lightRainbowColors = {
-  '#f9423a': '#fed9d8',
-  '#f6a04d': '#fdecdb',
-  '#f3d321': '#fdf6d3',
-  '#00bc7b': '#ccf2e5',
-  '#486aff': '#dae1ff',
-  '#4d49be': '#dbdbf2',
+  '#fa6761': '#fed9d8',
+  '#f7b370': '#fdecdb',
+  '#f5db4d': '#fdf6d3',
+  '#32c995': '#ccf2e5',
+  '#6c87ff': '#dae1ff',
+  '#706dcb': '#dbdbf2',
 };
 
 export function createObjectUrl(content: string[], type: string) {

@@ -14,7 +14,6 @@ interface Props {
   movedNodeX: number;
   movedNodeY: number;
   dragInfo: DragInfo | null;
-  showChildNum: boolean;
   mutilMode?: boolean;
 }
 
@@ -30,7 +29,6 @@ const DragNode = ({
   movedNodeY,
   dragInfo,
   mutilMode,
-  showChildNum,
 }: Props) => {
   const [node, setNode] = useState<CNode | null>(null);
 
@@ -52,7 +50,7 @@ const DragNode = ({
       showIcon,
       showAvatar,
       avatarRadius,
-      showChildNum
+      true
     );
   }
 

@@ -105,10 +105,6 @@ export interface MindProps {
   avatarRadius?: number;
   disableShortcut?: boolean;
   disabled?: boolean;
-  showPreviewButton?: boolean;
-  showAddButton?: boolean;
-  showMoreButton?: boolean;
-  showChildNum?: boolean;
   moreButtonWidth?: number;
   // nodeOptions?: any;
   showIcon?: boolean;
@@ -140,8 +136,6 @@ export interface MindProps {
   handleAddChild?: Function;
   handleDeleteNode?: Function;
   handleClickPreviewButton?: Function;
-  handleClickAddButton?: NodeClickFunc;
-  handleClickMoreButton?: NodeClickFunc;
   handleClickDot?: Function;
   handleShiftUpDown?: Function;
   handleDrag?: Function;
@@ -180,15 +174,10 @@ export const Mind = React.forwardRef(
       indent,
       pathWidth,
       pathColor,
-      nodeColor,
+      nodeColor = '#f0f0f0',
       avatarRadius = 11,
       disableShortcut,
       disabled,
-      showPreviewButton,
-      showAddButton,
-      showMoreButton,
-      showChildNum = false,
-      moreButtonWidth,
       showIcon,
       showAvatar,
       hideHour,
@@ -214,8 +203,6 @@ export const Mind = React.forwardRef(
       handleAddChild,
       handleDeleteNode,
       handleClickPreviewButton,
-      handleClickAddButton,
-      handleClickMoreButton,
       handleClickDot,
       handleShiftUpDown,
       handleDrag,
@@ -931,28 +918,9 @@ export const Mind = React.forwardRef(
     //   setShowOptionsNode(node);
     // }
 
-    function clickMore(
-      node: CNode,
-      event: React.MouseEvent<HTMLButtonElement>
-    ) {
-      if (handleClickMoreButton) {
-        const selectedKeys = selectedNodes.map((item) => item._key);
-        if (selectedKeys.length && selectedKeys.includes(node._key)) {
-          event.stopPropagation();
-        }
-        handleClickMoreButton(node, event.currentTarget);
-      }
-    }
-
     function clickPreview(node: CNode) {
       if (handleClickPreviewButton) {
         handleClickPreviewButton(node);
-      }
-    }
-
-    function clickAdd(node: CNode, event: React.MouseEvent<HTMLButtonElement>) {
-      if (handleClickAddButton) {
-        handleClickAddButton(node, event.currentTarget);
       }
     }
 
@@ -1406,16 +1374,75 @@ export const Mind = React.forwardRef(
               <feBlend in="SourceGraphic" in2="blurOut" mode="normal"></feBlend>
             </filter>
 
-            <g
-              id="contract"
-              width="10"
-              height="10"
-              viewBox="0,0,10,10"
+            <symbol
+              id="contract-up"
+              width="20"
+              height="20"
+              viewBox="0,0,1024,1024"
               preserveAspectRatio="xMinYMin meet"
             >
-              <circle cx="5" cy="5" r="5" fill="#F0F0F0" stroke="#BFBFBF" />
-              <path d="M 2 5 H 8 5" stroke="#666" strokeWidth="1.6" />
-            </g>
+              <circle cx="512" cy="512" r="400"  fill={nodeColor} />
+              <path
+                d="M512 39.367111c259.982222 0 472.632889 212.707556 472.632889 472.632889 0 259.982222-212.707556 472.632889-472.632889 472.632889C252.017778 984.632889 39.367111 771.925333 39.367111 512 39.367111 252.017778 252.074667 39.367111 512 39.367111z m0 68.266667C289.792 107.633778 107.633778 289.792 107.633778 512c0 222.208 182.158222 404.366222 404.366222 404.366222 222.208 0 404.366222-182.158222 404.366222-404.366222 0-222.208-182.158222-404.366222-404.366222-404.366222z"
+                fill={COLOR}
+              ></path>
+              <path
+                d="M256 589.255111a40.163556 40.163556 0 0 1 13.141333-29.184l219.704889-203.036444a34.133333 34.133333 0 0 1 46.307556 0l219.875555 203.150222c17.009778 15.701333 17.351111 42.211556 0.739556 58.424889l-5.006222 4.152889a41.870222 41.870222 0 0 1-52.224-3.299556L519.68 454.883556a11.377778 11.377778 0 0 0-15.36 0l-178.801778 164.522666a41.756444 41.756444 0 0 1-57.173333-0.682666 40.049778 40.049778 0 0 1-11.889778-22.812445l-0.455111-6.656z"
+                fill={COLOR}
+              ></path>
+            </symbol>
+
+            <symbol
+              id="contract-left"
+              width="20"
+              height="20"
+              viewBox="0,0,1024,1024"
+              preserveAspectRatio="xMinYMin meet"
+            >
+              <circle cx="512" cy="512" r="400" fill={nodeColor} />
+              <path
+                d="M512 39.367111c259.982222 0 472.632889 212.707556 472.632889 472.632889 0 259.982222-212.707556 472.632889-472.632889 472.632889C252.017778 984.632889 39.367111 771.925333 39.367111 512 39.367111 252.017778 252.074667 39.367111 512 39.367111z m0 68.266667C289.792 107.633778 107.633778 289.792 107.633778 512c0 222.208 182.158222 404.366222 404.366222 404.366222 222.208 0 404.366222-182.158222 404.366222-404.366222 0-222.208-182.158222-404.366222-404.366222-404.366222z"
+                fill={COLOR}
+              ></path>
+              <path
+                d="M594.944 261.688889a40.163556 40.163556 0 0 0-29.184 13.141333L362.723556 494.535111a34.133333 34.133333 0 0 0 0 46.307556l203.150222 219.875555c15.701333 17.009778 42.211556 17.351111 58.424889 0.739556l4.152889-5.006222a41.870222 41.870222 0 0 0-3.299556-52.224L460.572444 525.368889a11.377778 11.377778 0 0 1 0-15.36l164.522667-178.801778a41.756444 41.756444 0 0 0-0.682667-57.173333 40.049778 40.049778 0 0 0-22.812444-11.889778l-6.656-0.455111z"
+                fill={COLOR}
+              ></path>
+            </symbol>
+            <symbol
+              id="contract-right"
+              width="20"
+              height="20"
+              viewBox="0,0,1024,1024"
+              preserveAspectRatio="xMinYMin meet"
+            >
+              <circle cx="512" cy="512" r="400" fill={nodeColor} />
+              <path
+                d="M512 39.367111c259.982222 0 472.632889 212.707556 472.632889 472.632889 0 259.982222-212.707556 472.632889-472.632889 472.632889C252.017778 984.632889 39.367111 771.925333 39.367111 512 39.367111 252.017778 252.074667 39.367111 512 39.367111z m0 68.266667C289.792 107.633778 107.633778 289.792 107.633778 512c0 222.208 182.158222 404.366222 404.366222 404.366222 222.208 0 404.366222-182.158222 404.366222-404.366222 0-222.208-182.158222-404.366222-404.366222-404.366222z"
+                fill={COLOR}
+              ></path>
+              <path
+                d="M462.108444 261.688889a40.163556 40.163556 0 0 1 29.184 13.141333l202.979556 219.704889a34.133333 34.133333 0 0 1 0 46.307556l-203.093333 219.875555a40.106667 40.106667 0 0 1-58.424889 0.739556l-4.152889-5.006222a41.870222 41.870222 0 0 1 3.299555-52.224l164.522667-178.858667a11.377778 11.377778 0 0 0 0-15.36L431.957333 331.207111a41.756444 41.756444 0 0 1 0.682667-57.173333 40.049778 40.049778 0 0 1 22.812444-11.889778l6.656-0.455111z"
+                fill={COLOR}
+              ></path>
+            </symbol>
+            <symbol
+              id="add"
+              width="20"
+              height="20"
+              viewBox="0,0,1024,1024"
+              preserveAspectRatio="xMinYMin meet"
+            >
+              <circle cx="512" cy="512" r="400" fill={COLOR} />
+              <path
+                d="M244.622222 467.228444m44.544 0l445.155556 0q44.544 0 44.544 44.544l0-0.056888q0 44.544-44.544 44.544l-445.155556 0q-44.544 0-44.544-44.544l0 0.056888q0-44.544 44.544-44.544Z"
+                fill={nodeColor}
+              ></path>
+              <path
+                d="M556.259556 289.166222v445.212445a44.544 44.544 0 1 1-89.031112 0V289.166222a44.544 44.544 0 0 1 89.031112 0z"
+                fill={nodeColor}
+              ></path>
+            </symbol>
             <g
               id="expand"
               width="10"
@@ -1553,59 +1580,6 @@ export const Mind = React.forwardRef(
                 </g>
               </g>
             </symbol>
-            <symbol
-              id="preview"
-              width="200"
-              height="200"
-              viewBox="0,0,1024,1024"
-              preserveAspectRatio="xMinYMin meet"
-            >
-              <path
-                d="M466 146c41.6 0 82.1 7.9 120.4 23.4 39.7 16.1 75.3 39.7 105.8 70.3 58.2 58.3 91.5 135.7 93.6 218 2.1 82-26.8 160.7-81.4 221.6l-11.9 13.3-13.3 11.9C620.7 757 544.9 786 465.9 786c-41.6 0-82.1-7.9-120.4-23.4-39.7-16.1-75.3-39.7-105.8-70.3-30.6-30.6-54.2-66.2-70.3-105.8-15.6-38.4-23.4-79-23.4-120.5 0-41.6 7.9-82.1 23.4-120.4 16.1-39.7 39.7-75.3 70.3-105.8 30.6-30.6 66.2-54.2 105.8-70.3C383.9 153.8 424.4 146 466 146m0-40c-92.1 0-184.3 35.1-254.6 105.4-140.6 140.6-140.6 368.5 0 509.1C281.7 790.8 373.8 826 465.9 826c85.9 0 171.8-30.6 240-91.7L889.8 918l28.3-28.3L734.3 706C861 564.7 856.4 347.3 720.5 211.4 650.2 141.1 558.1 106 466 106z"
-                fill="inherit"
-              ></path>
-              <rect
-                fillOpacity="0"
-                x="0"
-                y="0"
-                width="1024"
-                height="1024"
-              ></rect>
-            </symbol>
-            <symbol id="add" viewBox="0 0 1024 1024" width="200" height="200">
-              <path
-                d="M543.978319 543.978319l352.427678 0c17.665335 0 31.975249-14.312984 31.975249-31.978319 0-17.665335-14.308891-31.978319-31.975249-31.978319L543.978319 480.021681l0-352.426655c0-17.665335-14.312984-31.975249-31.978319-31.975249-17.665335 0-31.978319 14.308891-31.978319 31.975249l0 352.426655-352.426655 0c-17.665335 0-31.975249 14.310937-31.975249 31.976272 0 8.833179 3.577478 16.829294 9.363252 22.615067 5.785773 5.785773 13.778818 9.365298 22.611997 9.365298l352.426655 0 0 352.426655c0 8.833179 3.578502 16.826224 9.364275 22.611997s13.781888 9.363252 22.615067 9.363252c17.665335 0 31.977295-14.308891 31.977295-31.975249L543.978319 543.978319z"
-                fill="inherit"
-              ></path>
-              <rect
-                fillOpacity="0"
-                x="0"
-                y="0"
-                width="1024"
-                height="1024"
-              ></rect>
-            </symbol>
-            <symbol id="more" viewBox="0 0 1024 1024" width="200" height="200">
-              <path
-                d="M512 255.262708m-87.020936 0a85.039 85.039 0 1 0 174.041872 0 85.039 85.039 0 1 0-174.041872 0Z"
-                fill="inherit"
-              ></path>
-              <path
-                d="M512 511.792269m-87.020936 0a85.039 85.039 0 1 0 174.041872 0 85.039 85.039 0 1 0-174.041872 0Z"
-                fill="inherit"
-              ></path>
-              <path
-                d="M512 765.572206m-87.020936 0a85.039 85.039 0 1 0 174.041872 0 85.039 85.039 0 1 0-174.041872 0Z"
-                fill="inherit"
-              ></path>
-              <rect
-                fillOpacity="0"
-                x="0"
-                y="0"
-                width="1024"
-                height="1024"
-              ></rect>
-            </symbol>
           </defs>
           {cnodes.map((node, index) => (
             <g
@@ -1711,18 +1685,12 @@ export const Mind = React.forwardRef(
                 avatarRadius={avatarRadius}
                 color={rainbowColor && node.father === startId ? '#FFF' : COLOR}
                 nodeColor={rainbowColor ? undefined : nodeColor}
+                treeBackgroundColor={BACKGROUND_COLOR}
                 alias={new Date().getTime()}
                 selected={selectedId}
                 selectedNodes={selectedNodes}
                 showIcon={SHOW_ICON}
                 showAvatar={SHOW_AVATAR}
-                showPreviewButton={showPreviewButton || false}
-                showAddButton={
-                  disabled || node.disabled ? false : showAddButton || false
-                }
-                showMoreButton={showMoreButton || false}
-                showChildNum={showChildNum}
-                moreButtonWidth={moreButtonWidth}
                 handleClickDot={clickDot}
                 handleExpand={handleExpand}
                 handleCheck={check}
@@ -1731,8 +1699,6 @@ export const Mind = React.forwardRef(
                 handleClickNode={clickNode}
                 handleDbClickNode={dbClickNode}
                 clickPreview={clickPreview}
-                clickAdd={clickAdd}
-                clickMore={clickMore}
                 updateDragInfo={updateDragInfo}
                 handleDragStart={handleDragStart}
                 dragStarted={dragStarted}
@@ -1753,6 +1719,8 @@ export const Mind = React.forwardRef(
                 onContextMenu={handleContextMenu}
                 onClickNodeImage={handleClickNodeImage}
                 onResizeImage={handleResizeImage}
+                handleAddChild={addChild}
+                handleAddNext={addNext}
               />
             </g>
           ))}
@@ -1771,7 +1739,6 @@ export const Mind = React.forwardRef(
               movedNodeY={movedNodeY}
               dragInfo={dragInfo}
               mutilMode={selectedNodes.length > 1 ? true : false}
-              showChildNum={showChildNum}
             />
           ) : null}
           {frameSelectionStarted ? (
@@ -1829,7 +1796,6 @@ export const Mind = React.forwardRef(
             inputEmpty={inputEmpty}
             selectedBorderColor={SELECTED_BORDER_COLOR}
             handleFileChange={handleTreePaste}
-            showChildNum={showChildNum}
           />
         ) : null}
       </div>
