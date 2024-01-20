@@ -56,7 +56,7 @@ interface Props {
   handleDragStart: Function;
   updateDragInfo: setDragInfoFunc;
   dragStarted: boolean;
-  dragEndFromOutside?: Function;
+  dragEndFromOutside?: (node: CNode, dataTransferText: string) => void;
   bottomOptions?: boolean;
   hideHour?: boolean;
   isMind?: boolean;
@@ -127,10 +127,15 @@ Props) => {
   const blockHeight = topBottomMargin * 2 + lineHeight;
   const textHeight =
     topBottomMargin * 2 + (node.texts?.length || 1) * lineHeight;
-  const rectHeight =
+  const imageHeight =
     node.imageUrl && node.imageWidth && node.imageHeight
-      ? textHeight + node.imageHeight + 15 / 2
-      : textHeight;
+      ? node.imageHeight + 15 / 2
+      : 0;
+  const bottomAdornmentHeight =
+    node.bottomAdornmentHeight && node.bottomAdornment
+      ? node.bottomAdornmentHeight
+      : 0;
+  const rectHeight = textHeight + imageHeight + bottomAdornmentHeight;
 
   const iconIsEmoji = useMemo(() => isEmoji(node.icon), [node.icon]);
 
@@ -199,7 +204,9 @@ Props) => {
   }
 
   function handleDragLeave() {
-    setDragIn(false);
+    setTimeout(() => {
+      setDragIn(false);
+    }, 50);
   }
 
   function handleDragOver(event: React.MouseEvent) {
@@ -214,7 +221,7 @@ Props) => {
     } else {
       setDragIn(false);
       if (dragEndFromOutside) {
-        dragEndFromOutside(node);
+        dragEndFromOutside(node, event.dataTransfer.getData('text/plain'));
       }
     }
   }
@@ -477,6 +484,10 @@ Props) => {
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       onContextMenu={handleContextMenu}
+      onDragEnter={handleDragEnter}
+      onDragLeave={handleDragLeave}
+      onDragOver={handleDragOver}
+      onDrop={handleDragEnd}
       style={{ position: 'relative' }}
     >
       {/* 外框 */}
@@ -659,11 +670,13 @@ Props) => {
       {node.startAdornment &&
       node.startAdornmentWidth &&
       node.startAdornmentHeight ? (
-        <node.startAdornment
-          x={startAdornmentLocationRes?.x || 0}
-          y={startAdornmentLocationRes?.y || 0}
-          nodeKey={node._key}
-        />
+        <g style={{ pointerEvents: dragIn ? 'none' : undefined }}>
+          <node.startAdornment
+            x={startAdornmentLocationRes?.x || 0}
+            y={startAdornmentLocationRes?.y || 0}
+            nodeKey={node._key}
+          />
+        </g>
       ) : null}
 
       {/* 文字 */}
@@ -692,11 +705,8 @@ Props) => {
           textDecoration: node.textDecoration,
           fontWeight: node.bold ? 'bold' : 'normal',
           fontStyle: node.italic ? 'italic' : 'unset',
+          pointerEvents: dragIn ? 'none' : undefined,
         }}
-        onDragEnter={handleDragEnter}
-        onDragLeave={handleDragLeave}
-        onDragOver={handleDragOver}
-        onDrop={handleDragEnd}
       >
         {node.texts
           ? node.texts.map((text, index) => (
@@ -725,17 +735,31 @@ Props) => {
       {node.endAdornment &&
       node.endAdornmentWidth &&
       node.endAdornmentHeight ? (
-        <node.endAdornment
-          x={node.x + node.width - node.endAdornmentWidth - 5}
-          y={
-            node.y +
-            (topBottomMargin * 2 +
-              lineHeight -
-              (node.endAdornmentHeight || 0)) /
-              2
-          }
-          nodeKey={node._key}
-        />
+        <g style={{ pointerEvents: dragIn ? 'none' : undefined }}>
+          <node.endAdornment
+            x={node.x + node.width - node.endAdornmentWidth - 5}
+            y={
+              node.y +
+              (topBottomMargin * 2 +
+                lineHeight -
+                (node.endAdornmentHeight || 0)) /
+                2
+            }
+            nodeKey={node._key}
+          />
+        </g>
+      ) : null}
+      {/* bottomAdornment */}
+      {node.bottomAdornment &&
+      node.bottomAdornmentWidth &&
+      node.bottomAdornmentHeight ? (
+        <g style={{ pointerEvents: dragIn ? 'none' : undefined }}>
+          <node.bottomAdornment
+            x={node.x}
+            y={node.y + rectHeight - bottomAdornmentHeight}
+            nodeKey={node._key}
+          />
+        </g>
       ) : null}
       {/* 图片 */}
       {node.imageUrl && node.imageWidth && node.imageHeight ? (

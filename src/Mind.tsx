@@ -140,7 +140,7 @@ export interface MindProps {
   handleShiftUpDown?: Function;
   handleDrag?: Function;
   handlePaste?: PasteFunc;
-  dragEndFromOutside?: Function;
+  dragEndFromOutside?: (node: CNode, dataTransferText: string) => void;
   handleMouseEnterAvatar?: Function;
   handleMouseLeaveAvatar?: Function;
   handleCrossCompDrag?: Function;
@@ -1381,7 +1381,7 @@ export const Mind = React.forwardRef(
               viewBox="0,0,1024,1024"
               preserveAspectRatio="xMinYMin meet"
             >
-              <circle cx="512" cy="512" r="400"  fill={nodeColor} />
+              <circle cx="512" cy="512" r="400" fill={nodeColor} />
               <path
                 d="M512 39.367111c259.982222 0 472.632889 212.707556 472.632889 472.632889 0 259.982222-212.707556 472.632889-472.632889 472.632889C252.017778 984.632889 39.367111 771.925333 39.367111 512 39.367111 252.017778 252.074667 39.367111 512 39.367111z m0 68.266667C289.792 107.633778 107.633778 289.792 107.633778 512c0 222.208 182.158222 404.366222 404.366222 404.366222 222.208 0 404.366222-182.158222 404.366222-404.366222 0-222.208-182.158222-404.366222-404.366222-404.366222z"
                 fill={COLOR}

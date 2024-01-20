@@ -65,8 +65,8 @@ const Expand = ({
       case 'left':
         return `M ${node.x} ${getY(0)} H ${getX()}`;
       case 'leftBottom':
-        return `M ${getX() + 10} ${node.y + BLOCK_HEIGHT} V ${
-          node.y + BLOCK_HEIGHT + 2
+        return `M ${getX() + 10} ${node.y + rectHeight} V ${
+          node.y + rectHeight + 2
         }`;
       case 'bottomCenter':
         return `M ${node.x + node.width / 2} ${node.y + BLOCK_HEIGHT} V ${

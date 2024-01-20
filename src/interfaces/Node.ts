@@ -58,6 +58,15 @@ export default interface Node {
   endAdornmentWidth?: number;
   endAdornmentHeight?: number;
   endAdornmentContent?: any;
+  // bottom adornment
+  bottomAdornment?: React.FC<{
+    x: number;
+    y: number;
+    nodeKey: string;
+  }>;
+  bottomAdornmentWidth?: number;
+  bottomAdornmentHeight?: number;
+  bottomAdornmentContent?: any;
   // 以下为计算属性
   x?: number;
   y?: number;

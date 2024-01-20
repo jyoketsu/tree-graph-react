@@ -144,6 +144,19 @@ const nodes: NodeMap = {
     ),
     endAdornmentWidth: 18,
     endAdornmentHeight: 18,
+    bottomAdornment: ({ x, y, nodeKey }) => (
+      <text
+        x={x + 15}
+        y={y + 30 / 2}
+        dominantBaseline="middle"
+        fontSize="12px"
+        onClick={() => alert(nodeKey)}
+      >
+        this is bottom endAdornment
+      </text>
+    ),
+    bottomAdornmentWidth: 200,
+    bottomAdornmentHeight: 30,
   },
   '005': {
     _key: '005',
@@ -495,7 +508,18 @@ const Template: Story<TreeProps> = (args) => {
       <button onClick={() => treeRef.current.addNext()}>Add silbing</button>
       <button onClick={() => treeRef.current.addChild()}>Add child</button>
       <button onClick={() => treeRef.current.deleteNode()}>Delete</button>
-      <button draggable>Drag this node to the tree</button>
+      <button
+        draggable
+        onDragStart={(event: React.DragEvent) => {
+          // 设置拖动时传递的文本数据
+          event.dataTransfer.setData(
+            'text/plain',
+            'Hello, this is some custom data!'
+          );
+        }}
+      >
+        Drag this node to the tree
+      </button>
       {/* <button onClick={() => alert(treeRef.current.getSelectedId())}>
         获取选中节点
       </button> */}
@@ -559,8 +583,8 @@ MultiCol.args = {
     console.log('---handleClickAvatar---', node),
   handleClickStatus: (node: any, element: any) =>
     console.log('---handleClickStatus---', node, element),
-  dragEndFromOutside: (node: any) =>
-    console.log('---dragEndFromOutside---', node),
+  dragEndFromOutside: (node: any, text: string) =>
+    console.log('---dragEndFromOutside---', node, text),
   handleMouseEnterAvatar: (node: any) =>
     console.log('---handleMouseEnterAvatar---', node),
   handleMouseLeaveAvatar: (node: any) =>

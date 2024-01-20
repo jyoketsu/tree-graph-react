@@ -146,7 +146,7 @@ export interface TreeProps {
   handleShiftUpDown?: Function;
   handleDrag?: Function;
   handlePaste?: PasteFunc;
-  dragEndFromOutside?: Function;
+  dragEndFromOutside?: (node: CNode, dataTransferText: string) => void;
   handleMouseEnterAvatar?: Function;
   handleMouseLeaveAvatar?: Function;
   handleCrossCompDrag?: Function;

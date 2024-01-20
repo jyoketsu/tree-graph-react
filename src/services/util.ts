@@ -322,6 +322,14 @@ function getNodeWidth(
     totalWidth = node.imageWidth + padding + paddingWidth;
   }
 
+  if (
+    node.bottomAdornmentWidth &&
+    node.bottomAdornment &&
+    node.bottomAdornmentWidth > totalWidth
+  ) {
+    totalWidth = node.bottomAdornmentWidth;
+  }
+
   return totalWidth;
 }
 

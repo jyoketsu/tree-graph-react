@@ -220,6 +220,14 @@ export default function calculate(
           MAX_Y = childY;
         }
       }
+      // 节点有bottomAdornment的情况
+      if (node.bottomAdornment && node.bottomAdornmentHeight) {
+        childY += node.bottomAdornmentHeight;
+        lastChildY += node.bottomAdornmentHeight;
+        if (childY > MAX_Y) {
+          MAX_Y = childY;
+        }
+      }
       // 节点收缩的情况
       if (node.contract && node.sortList.length) {
         childY += 16 + 5;

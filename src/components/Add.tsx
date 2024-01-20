@@ -63,8 +63,8 @@ const Add = ({
       case 'left':
         return `M ${node.x} ${getY(position, 0)} H ${getX(position) + 3}`;
       case 'leftBottom':
-        return `M ${getX(position) + 10} ${node.y + BLOCK_HEIGHT} V ${
-          node.y + BLOCK_HEIGHT + 4
+        return `M ${getX(position) + 10} ${node.y + rectHeight} V ${
+          node.y + rectHeight + 4
         }`;
       case 'bottomCenter':
         return `M ${node.x + node.width / 2} ${node.y + BLOCK_HEIGHT} V ${

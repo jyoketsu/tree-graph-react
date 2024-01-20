@@ -17,8 +17,7 @@ yarn start
 yarn storybook
 
 ## PS: Storybook must run under Node 16.
-nvm install 16 --lts
-nvm use 16
+nvm use
 ```
 
 ## [live demo](https://jyoketsu.github.io/tree-graph-react/)
@@ -331,7 +330,7 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | handleDrag               | Drag nodes (parameters: dragInfo)                                                          | Function | No       | -       |
 | handlePaste              | Copy nodes (parameters: pasteNodeKey, pasteType, targetNodeKey)                            | Function | No       | -       |
 | hideHour                 | Hide task hours                                                                            | boolean  | No       | -       |
-| dragEndFromOutside       | Drag nodes from outside the tree (parameters: node)                                        | Function | No       | -       |
+| dragEndFromOutside       | Drag nodes from outside the tree (parameters: node, dataTransferText)                      | Function | No       | -       |
 | handleMouseEnterAvatar   | Mouse enter event for avatars (parameters: node)                                           | Function | No       | -       |
 | handleMouseLeaveAvatar   | Mouse leave event for avatars (parameters: node)                                           | Function | No       | -       |
 | handleChange             | Tree data change event                                                                     | Function | No       | -       |
