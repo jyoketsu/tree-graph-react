@@ -274,6 +274,9 @@ export default function calculate(
     if (node.imageUrl && node.imageHeight) {
       nodeHeight += node.imageHeight + 15 / 2;
     }
+    if (node.bottomAdornment && node.bottomAdornmentHeight) {
+      nodeHeight += node.bottomAdornmentHeight;
+    }
 
     node.x = x;
     node.width = nodeWidth;

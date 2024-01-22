@@ -211,11 +211,22 @@ const nodes = {
     name: '原型、界面設計',
     father: '011',
     sortList: [],
-
     checked: true,
-
     hour: 0.1,
     limitDay: 1610726400000,
+    bottomAdornment: ({ x, y, nodeKey }) => (
+      <text
+        x={x + 8}
+        y={y + 30 / 2}
+        dominantBaseline="middle"
+        fontSize="12px"
+        onClick={() => alert(nodeKey)}
+      >
+        this is bottom endAdornment
+      </text>
+    ),
+    bottomAdornmentWidth: 200,
+    bottomAdornmentHeight: 30,
   },
   '013': {
     _key: '013',
@@ -478,8 +489,8 @@ MultiCol.args = {
   showChildNum: true,
   // disabled: true,
   // nodeColor: 'red',
-  paddingLeft: 500,
-  paddingTop: 500,
+  paddingLeft: 50,
+  paddingTop: 50,
   handleClickDot: (node: any) => console.log('---handleClickDot---', node),
   handleClickMoreButton: (node: any, clientX: number, clientY: number) =>
     console.log('---handleClickMoreButton---', node, clientX, clientY),
