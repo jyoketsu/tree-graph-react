@@ -125,6 +125,12 @@ export interface MindProps {
   paddingLeft?: number;
   paddingTop?: number;
   rainbowColor?: boolean;
+  customAdornment?: React.FC<{
+    x: number;
+    y: number;
+    height: number;
+    nodeKey: string;
+  }>;
   handleClickExpand?: Function;
   handleCheck?: Function;
   handleClickAvatar?: NodeClickFunc;
@@ -192,6 +198,7 @@ export const Mind = React.forwardRef(
       paddingLeft = 50,
       paddingTop = 50,
       rainbowColor,
+      customAdornment,
       handleClickExpand,
       handleCheck,
       handleClickAvatar,
@@ -1691,6 +1698,7 @@ export const Mind = React.forwardRef(
                 selectedNodes={selectedNodes}
                 showIcon={SHOW_ICON}
                 showAvatar={SHOW_AVATAR}
+                customAdornment={customAdornment}
                 handleClickDot={clickDot}
                 handleExpand={handleExpand}
                 handleCheck={check}

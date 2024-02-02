@@ -41,6 +41,12 @@ interface Props {
   selectedBackgroundColor: string;
   treeBackgroundColor: string;
   nodeColor?: string;
+  customAdornment?: React.FC<{
+    x: number;
+    y: number;
+    height: number;
+    nodeKey: string;
+  }>;
   handleCheck: CheckFunc;
   handleClickAvatar: Function;
   handleClickStatus: Function;
@@ -91,6 +97,7 @@ const TreeNode = ({
   selectedBorderColor,
   treeBackgroundColor,
   nodeColor,
+  customAdornment,
   handleCheck,
   handleClickAvatar,
   handleClickStatus,
@@ -464,6 +471,7 @@ Props) => {
   return node.x && node.y ? (
     <g
       id={`tree-node-${node._key}`}
+      className="tree-node"
       onClick={() => handleClickNode(node)}
       onDoubleClick={() => handleDbClickNode(node)}
       // onMouseDown={(e: React.MouseEvent) => handleDragStart(node, e)}
@@ -761,6 +769,13 @@ Props) => {
           />
         </g>
       ) : null}
+      {customAdornment &&
+        customAdornment({
+          x: node.x,
+          y: node.y,
+          height: rectHeight,
+          nodeKey: node._key,
+        })}
       {/* 图片 */}
       {node.imageUrl && node.imageWidth && node.imageHeight ? (
         <g
