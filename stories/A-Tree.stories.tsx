@@ -598,6 +598,17 @@ MultiCol.args = {
   handleContextMenu: (nodeKey: string, event: React.MouseEvent) =>
     console.log('---handleContextMenu---', nodeKey, event),
   // handleClickNodeImage: (url: string) => alert(url),
+  // customAdornment: ({ x, y, height, nodeKey }) => (
+  //   <text
+  //     x={x}
+  //     y={y + height}
+  //     dominantBaseline="middle"
+  //     fontSize="12px"
+  //     onClick={() => alert(nodeKey)}
+  //   >
+  //     custom-adornment
+  //   </text>
+  // ),
 };
 
 export const MultiColDark = Template.bind({});

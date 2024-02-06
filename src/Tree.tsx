@@ -136,6 +136,12 @@ export interface TreeProps {
   paddingLeft?: number;
   paddingTop?: number;
   rainbowColor?: boolean;
+  customAdornment?: React.FC<{
+    x: number;
+    y: number;
+    height: number;
+    nodeKey: string;
+  }>;
   handleClickExpand?: Function;
   handleCheck?: Function;
   handleClickAvatar?: NodeClickFunc;
@@ -208,6 +214,7 @@ export const Tree = React.forwardRef(
       paddingLeft = 50,
       paddingTop = 50,
       rainbowColor,
+      customAdornment,
       handleClickExpand,
       handleCheck,
       handleClickAvatar,
@@ -1717,6 +1724,7 @@ export const Tree = React.forwardRef(
                 //     ? true
                 //     : false
                 // }
+                customAdornment={customAdornment}
                 handleClickDot={clickDot}
                 handleExpand={handleExpand}
                 handleCheck={check}
