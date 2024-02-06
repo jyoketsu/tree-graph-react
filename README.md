@@ -328,7 +328,7 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | handleShiftUpDown        | Move node up/down (parameters: id, sortList, type)                                         | Function | No       | -       |
 | handleSave               | Save the tree                                                                              | Function | No       | -       |
 | handleDrag               | Drag nodes (parameters: dragInfo)                                                          | Function | No       | -       |
-| handlePaste              | Copy nodes (parameters: pasteNodeKey, pasteType, targetNodeKey)                            | Function | No       | -       |
+| handlePaste              | Copy nodes (parameters: pasteNodeKey, pasteType, targetNodeKey, event)                     | Function | No       | -       |
 | hideHour                 | Hide task hours                                                                            | boolean  | No       | -       |
 | dragEndFromOutside       | Drag nodes from outside the tree (parameters: node, dataTransferText)                      | Function | No       | -       |
 | handleMouseEnterAvatar   | Mouse enter event for avatars (parameters: node)                                           | Function | No       | -       |
@@ -338,7 +338,7 @@ const MyComp = () => <Tree nodes={nodes} startId="001" />;
 | handleMutiSelect         | Multi-select nodes (parameters: selectedNodes)                                             | Function | No       | -       |
 | handleFileChange         | To handle file changes (parameters: nodeKey: string,nodeName:string, files: FileList)      | Function | No       | -       |
 | handleQuickCommandOpen   | To handle the event after pressing the `quickCommandKey` (parameters: nodeEl: HTMLElement) | Function | No       | -       |
-| handlePasteText          | To handle the event after pasting text. (parameters: text: string)                         | Function | No       | -       |
+| handlePasteText          | To handle the event after pasting text. (parameters: text: string, event: ClipboardEvent)  | Function | No       | -       |
 | handleContextMenu        | To handle the right-click event. (parameters: nodeKey: string, event: React.MouseEvent)    | Function | No       | -       |
 | handleClickNodeImage     | To handle click node image event. (parameters: url: string)                                | Function | No       | -       |
 | handleResizeNodeImage    | To handle the node image resize. (parameters: nodeKey: string, nodeWidth: number)          | Function | No       | -       |
