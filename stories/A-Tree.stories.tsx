@@ -560,7 +560,7 @@ MultiCol.args = {
   // fontWeight: 800,
   // nodeColor: 'red',
   rainbowColor: true,
-  paddingLeft: 200,
+  paddingLeft: 1000,
   paddingTop: 200,
   quickCommandKey: '/',
   // startNodeBg:'#4b5cc4',
