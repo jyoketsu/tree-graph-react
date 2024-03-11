@@ -125,6 +125,7 @@ export interface MindProps {
   paddingLeft?: number;
   paddingTop?: number;
   rainbowColor?: boolean;
+  startNodeBg?: string;
   customAdornment?: React.FC<{
     x: number;
     y: number;
@@ -198,6 +199,7 @@ export const Mind = React.forwardRef(
       paddingLeft = 50,
       paddingTop = 50,
       rainbowColor,
+      startNodeBg = '#CB1B45',
       customAdornment,
       handleClickExpand,
       handleCheck,
@@ -1699,6 +1701,7 @@ export const Mind = React.forwardRef(
                 showIcon={SHOW_ICON}
                 showAvatar={SHOW_AVATAR}
                 customAdornment={customAdornment}
+                startNodeBg={startNodeBg}
                 handleClickDot={clickDot}
                 handleExpand={handleExpand}
                 handleCheck={check}
@@ -1801,6 +1804,7 @@ export const Mind = React.forwardRef(
             avatarRadius={avatarRadius}
             startId={startId}
             nodeColor={rainbowColor ? undefined : nodeColor}
+            startNodeBg={startNodeBg}
             inputEmpty={inputEmpty}
             selectedBorderColor={SELECTED_BORDER_COLOR}
             handleFileChange={handleTreePaste}

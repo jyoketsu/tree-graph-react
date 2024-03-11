@@ -131,6 +131,7 @@ export interface TreeProps {
   paddingLeft?: number;
   paddingTop?: number;
   rainbowColor?: boolean;
+  startNodeBg?: string;
   customAdornment?: React.FC<{
     x: number;
     y: number;
@@ -209,6 +210,7 @@ export const Tree = React.forwardRef(
       paddingLeft = 50,
       paddingTop = 50,
       rainbowColor,
+      startNodeBg = '#CB1B45',
       customAdornment,
       handleClickExpand,
       handleCheck,
@@ -1651,7 +1653,7 @@ export const Tree = React.forwardRef(
                     <path
                       d={rootHpaht(node.height, node.y)}
                       fill="none"
-                      stroke={rainbowColor ? '#CB1B45' : PATH_COLOR}
+                      stroke={rainbowColor ? startNodeBg : PATH_COLOR}
                       strokeWidth={PATH_WIDTH}
                     />
                   ) : null}
@@ -1662,7 +1664,7 @@ export const Tree = React.forwardRef(
                     <path
                       d={rootVpath(node)}
                       fill="none"
-                      stroke={rainbowColor ? '#CB1B45' : PATH_COLOR}
+                      stroke={rainbowColor ? startNodeBg : PATH_COLOR}
                       strokeWidth={PATH_WIDTH}
                     />
                   ) : null}
@@ -1673,83 +1675,87 @@ export const Tree = React.forwardRef(
                     <path
                       d={rootBottomVpath(node)}
                       fill="none"
-                      stroke={rainbowColor ? '#CB1B45' : PATH_COLOR}
+                      stroke={rainbowColor ? startNodeBg : PATH_COLOR}
                       strokeWidth={PATH_WIDTH}
                     />
                   ) : null}
                 </g>
               )}
-              <TreeNode
-                node={node}
-                topBottomMargin={
-                  node._key === startId
-                    ? topBottomMargin * rootZoomRatio
-                    : node.father === startId
-                    ? topBottomMargin * secondZoomRatio
-                    : topBottomMargin
-                }
-                lineHeight={
-                  node._key === startId
-                    ? lineHeight * rootZoomRatio
-                    : node.father === startId
-                    ? lineHeight * secondZoomRatio
-                    : lineHeight
-                }
-                FONT_SIZE={
-                  node._key === startId
-                    ? FONT_SIZE * rootZoomRatio
-                    : node.father === startId
-                    ? FONT_SIZE * secondZoomRatio
-                    : FONT_SIZE
-                }
-                avatarRadius={avatarRadius}
-                color={COLOR}
-                nodeColor={rainbowColor ? undefined : nodeColor}
-                startId={startId}
-                alias={new Date().getTime()}
-                selected={selectedId}
-                selectedNodes={selectedNodes}
-                singleColumn={singleColumn}
-                showIcon={SHOW_ICON}
-                showAvatar={SHOW_AVATAR}
-                treeBackgroundColor={BACKGROUND_COLOR}
-                // openOptions={clickOptionsButton}
-                // nodeOptionsOpened={
-                //   showOptionsNode && node._key === showOptionsNode._key
-                //     ? true
-                //     : false
-                // }
-                customAdornment={customAdornment}
-                handleClickDot={clickDot}
-                handleExpand={handleExpand}
-                handleCheck={check}
-                handleClickAvatar={clickAvatar}
-                handleClickStatus={clickStatus}
-                handleClickNode={clickNode}
-                handleDbClickNode={dbClickNode}
-                clickPreview={clickPreview}
-                updateDragInfo={updateDragInfo}
-                dragStarted={dragStarted}
-                handleDragStart={handleDragStart}
-                dragEndFromOutside={dragEndFromOutside}
-                mouseEnterAvatar={(node: CNode) => {
-                  if (handleMouseEnterAvatar) handleMouseEnterAvatar(node);
-                }}
-                mouseLeaveAvatar={(node: CNode) => {
-                  if (handleMouseLeaveAvatar) handleMouseLeaveAvatar(node);
-                }}
-                hideHour={hideHour}
-                dotColor={PATH_COLOR}
-                hoverBorderColor={HOVER_BORDER_COLOR}
-                selectedBorderColor={SELECTED_BORDER_COLOR}
-                selectedBackgroundColor={SELECTED_BACKGROUND_COLOR}
-                handleFileChange={handleFileChange}
-                onContextMenu={handleContextMenu}
-                onClickNodeImage={handleClickNodeImage}
-                onResizeImage={handleResizeImage}
-                handleAddChild={addChild}
-                handleAddNext={addNext}
-              />
+              {showInput && node._key === selectedId ? null : (
+                <TreeNode
+                  node={node}
+                  topBottomMargin={
+                    node._key === startId
+                      ? topBottomMargin * rootZoomRatio
+                      : node.father === startId
+                      ? topBottomMargin * secondZoomRatio
+                      : topBottomMargin
+                  }
+                  lineHeight={
+                    node._key === startId
+                      ? lineHeight * rootZoomRatio
+                      : node.father === startId
+                      ? lineHeight * secondZoomRatio
+                      : lineHeight
+                  }
+                  FONT_SIZE={
+                    node._key === startId
+                      ? FONT_SIZE * rootZoomRatio
+                      : node.father === startId
+                      ? FONT_SIZE * secondZoomRatio
+                      : FONT_SIZE
+                  }
+                  avatarRadius={avatarRadius}
+                  color={COLOR}
+                  nodeColor={rainbowColor ? undefined : nodeColor}
+                  startId={startId}
+                  alias={new Date().getTime()}
+                  selected={selectedId}
+                  selectedNodes={selectedNodes}
+                  singleColumn={singleColumn}
+                  showIcon={SHOW_ICON}
+                  showAvatar={SHOW_AVATAR}
+                  treeBackgroundColor={BACKGROUND_COLOR}
+                  // openOptions={clickOptionsButton}
+                  // nodeOptionsOpened={
+                  //   showOptionsNode && node._key === showOptionsNode._key
+                  //     ? true
+                  //     : false
+                  // }
+                  startNodeBg={startNodeBg}
+                  customAdornment={customAdornment}
+                  disabled={disabled}
+                  handleClickDot={clickDot}
+                  handleExpand={handleExpand}
+                  handleCheck={check}
+                  handleClickAvatar={clickAvatar}
+                  handleClickStatus={clickStatus}
+                  handleClickNode={clickNode}
+                  handleDbClickNode={dbClickNode}
+                  clickPreview={clickPreview}
+                  updateDragInfo={updateDragInfo}
+                  dragStarted={dragStarted}
+                  handleDragStart={handleDragStart}
+                  dragEndFromOutside={dragEndFromOutside}
+                  mouseEnterAvatar={(node: CNode) => {
+                    if (handleMouseEnterAvatar) handleMouseEnterAvatar(node);
+                  }}
+                  mouseLeaveAvatar={(node: CNode) => {
+                    if (handleMouseLeaveAvatar) handleMouseLeaveAvatar(node);
+                  }}
+                  hideHour={hideHour}
+                  dotColor={PATH_COLOR}
+                  hoverBorderColor={HOVER_BORDER_COLOR}
+                  selectedBorderColor={SELECTED_BORDER_COLOR}
+                  selectedBackgroundColor={SELECTED_BACKGROUND_COLOR}
+                  handleFileChange={handleFileChange}
+                  onContextMenu={handleContextMenu}
+                  onClickNodeImage={handleClickNodeImage}
+                  onResizeImage={handleResizeImage}
+                  handleAddChild={addChild}
+                  handleAddNext={addNext}
+                />
+              )}
             </g>
           ))}
           {/* 拖拽用節點 */}
@@ -1819,6 +1825,7 @@ export const Tree = React.forwardRef(
             showIcon={SHOW_ICON}
             showAvatar={SHOW_AVATAR}
             textMaxWidth={textMaxWidth}
+            startNodeBg={startNodeBg}
             startId={startId}
             nodeColor={rainbowColor ? undefined : nodeColor}
             inputEmpty={inputEmpty}

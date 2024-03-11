@@ -117,7 +117,8 @@ export default function calculate(
     if (second_start_x && second_end_x) {
       root.x = (second_end_x + second_start_x) / 2 - (root.width || 0) / 2;
     } else {
-      root.x = (MAX_END - (root.width || 0)) / 2;
+      // root.x = (MAX_END - (root.width || 0)) / 2;
+      root.x = (MAX_Y + ITEM_HEIGHT * 2 + startY - root.width) / 2;
     }
     root.y = start_y;
     nodeList.push(root as CNode);

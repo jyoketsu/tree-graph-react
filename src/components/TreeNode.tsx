@@ -40,6 +40,7 @@ interface Props {
   selectedBorderColor: string;
   selectedBackgroundColor: string;
   treeBackgroundColor: string;
+  startNodeBg: string;
   nodeColor?: string;
   customAdornment?: React.FC<{
     x: number;
@@ -47,6 +48,7 @@ interface Props {
     height: number;
     nodeKey: string;
   }>;
+  disabled?: boolean;
   handleCheck: CheckFunc;
   handleClickAvatar: Function;
   handleClickStatus: Function;
@@ -96,8 +98,10 @@ const TreeNode = ({
   hoverBorderColor,
   selectedBorderColor,
   treeBackgroundColor,
+  startNodeBg,
   nodeColor,
   customAdornment,
+  disabled,
   handleCheck,
   handleClickAvatar,
   handleClickStatus,
@@ -385,7 +389,7 @@ Props) => {
   const backgroundColor = node.backgroundColor
     ? node.backgroundColor
     : node._key === startId
-    ? '#CB1B45'
+    ? startNodeBg
     : nodeColor || '#f0f0f0';
 
   let nameLinkArr = [];
@@ -860,7 +864,7 @@ Props) => {
           position={node.toLeft ? 'right' : 'left'}
         />
       ) : null}
-      {node.contract || (hover && node._key !== selected) ? (
+      {node.contract || (hover && (node._key !== selected || disabled)) ? (
         <Expand
           node={node}
           BLOCK_HEIGHT={blockHeight}
@@ -881,7 +885,7 @@ Props) => {
           PATH_COLOR={dotColor}
         />
       ) : null}
-      {node._key === selected && !node.contract ? (
+      {node._key === selected && !node.contract && !disabled ? (
         <Add
           node={node}
           BLOCK_HEIGHT={blockHeight}

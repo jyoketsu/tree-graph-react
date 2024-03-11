@@ -21,6 +21,7 @@ interface Props {
   avatarRadius: number;
   startId: string;
   textMaxWidth: number;
+  startNodeBg:string;
   selectedBorderColor: string;
   quickCommandKey?: string;
   nodeColor?: string;
@@ -40,6 +41,7 @@ const NodeInput = ({
   showAvatar,
   avatarRadius,
   startId,
+  startNodeBg,
   textMaxWidth,
   selectedBorderColor,
   quickCommandKey,
@@ -179,9 +181,16 @@ const NodeInput = ({
             left: `${selected.x - 1}px`,
             minWidth: `${selected.width + 2}px`,
             backgroundColor:
-              selected._key === startId
-                ? '#CB1B45'
-                : nodeColor || selected.backgroundColor || '#f0f0f0',
+              // selected._key === startId
+              //   ? '#CB1B45'
+              //   : nodeColor || selected.backgroundColor || '#f0f0f0',
+
+              selected.backgroundColor
+                ? selected.backgroundColor
+                : selected._key === startId
+                ? startNodeBg
+                : nodeColor || '#f0f0f0',
+
             paddingLeft: `${left - selected.x}px`,
             borderRadius: '4px',
             border: `2px solid ${selectedBorderColor}`,
