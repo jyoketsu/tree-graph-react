@@ -55,7 +55,12 @@ const gapTime = 34;
 let changed = false;
 
 interface PasteFunc {
-  (pasteNodeKey: string, pasteType: string | null, targetNodeKey: string): void;
+  (
+    pasteNodeKey: string,
+    pasteType: string | null,
+    targetNodeKey: string,
+    event: ClipboardEvent
+  ): void;
 }
 
 interface MutiSelectFunc {
@@ -71,7 +76,7 @@ interface HandleQuickCommandOpen {
 }
 
 interface HandlePasteText {
-  (text: string): void;
+  (text: string, event: ClipboardEvent): void;
 }
 
 export interface MindProps {
@@ -759,7 +764,7 @@ export const Mind = React.forwardRef(
             }
           }
         } else if (handlePaste) {
-          handlePaste(pasteNodeKey, pasteType, selectedId);
+          handlePaste(pasteNodeKey, pasteType, selectedId, event);
         }
         localStorage.removeItem('pasteNodeKey');
         localStorage.removeItem('pasteType');
@@ -772,7 +777,7 @@ export const Mind = React.forwardRef(
           const text = event.clipboardData?.getData('text');
           // 如果用户复制了文字，则将文字黏贴为节点
           if (text && handlePasteText) {
-            handlePasteText(text);
+            handlePasteText(text, event);
           }
         }
       }
