@@ -69,6 +69,9 @@ interface MutiSelectFunc {
 interface NodeClickFunc {
   (node: CNode, targetEl: HTMLElement): void;
 }
+interface StatusClickFunc {
+  (node: CNode, targetEl: HTMLElement, event: React.MouseEvent): void;
+}
 export interface HandleFileChange {
   (nodeKey: string, nodeName: string, files: FileList): void;
 }
@@ -146,7 +149,7 @@ export interface TreeProps {
   handleClickExpand?: Function;
   handleCheck?: Function;
   handleClickAvatar?: NodeClickFunc;
-  handleClickStatus?: NodeClickFunc;
+  handleClickStatus?: StatusClickFunc;
   handleClickNode?: Function;
   handleDbClickNode?: Function;
   handleChangeNodeText?: Function;
@@ -641,7 +644,7 @@ export const Tree = React.forwardRef(
     ) {
       if (handleClickStatus) {
         event.stopPropagation();
-        handleClickStatus(node, event.currentTarget);
+        handleClickStatus(node, event.currentTarget, event);
       }
     }
 

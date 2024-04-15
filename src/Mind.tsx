@@ -70,6 +70,9 @@ interface MutiSelectFunc {
 interface NodeClickFunc {
   (node: CNode, targetEl: HTMLElement): void;
 }
+interface StatusClickFunc {
+  (node: CNode, targetEl: HTMLElement, event: React.MouseEvent): void;
+}
 
 interface HandleQuickCommandOpen {
   (nodeEl: HTMLElement): void;
@@ -140,7 +143,7 @@ export interface MindProps {
   handleClickExpand?: Function;
   handleCheck?: Function;
   handleClickAvatar?: NodeClickFunc;
-  handleClickStatus?: NodeClickFunc;
+  handleClickStatus?: StatusClickFunc;
   handleClickNode?: Function;
   handleDbClickNode?: Function;
   handleChangeNodeText?: Function;
@@ -524,7 +527,7 @@ export const Mind = React.forwardRef(
     ) {
       if (handleClickStatus) {
         event.stopPropagation();
-        handleClickStatus(node, event.currentTarget);
+        handleClickStatus(node, event.currentTarget, event);
       }
     }
 
