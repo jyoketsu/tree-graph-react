@@ -392,6 +392,10 @@ Props) => {
     ? startNodeBg
     : nodeColor || '#f0f0f0';
 
+  if (node.name === '1.1. Element') {
+    console.log('------1.1. Element------', backgroundColor, nodeColor);
+  }
+
   let nameLinkArr = [];
   if (urlReg.test(node.name)) {
     let arr1: string[] = [];
@@ -458,8 +462,7 @@ Props) => {
         break;
       default:
         nodeRectStyle = {
-          fill:
-            nodeColor || (node.backgroundColor ? backgroundColor : '#f0f0f0'),
+          fill: backgroundColor,
           // fillOpacity: node.backgroundColor ? 1 : 0,
           stroke: hover ? hoverBorderColor : 'unset',
           strokeWidth: 2,
